@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { settingsQuery } from '@/lib/sanity/queries/queries';
+import { SITE_NAME } from '@/lib/siteConfig';
 import Logo from '../icons/Logo';
 import LanguageToggle from '../modules/LanguageToggle';
 import NavBar from './NavBar';
@@ -18,7 +19,7 @@ export default async function Header() {
             <Link className="flex items-center space-x-4" href="/">
               <Logo />
               <span className="text-lg md:text-2xl font-bold">
-                {settings?.title || 'Umkhandlu'}
+                {settings?.title || SITE_NAME}
               </span>
             </Link>
           </div>

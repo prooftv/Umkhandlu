@@ -4,6 +4,7 @@ import { generateWebSiteJsonLd } from '@/lib/sanity/client/jsonLd';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { formatMetaData } from '@/lib/sanity/client/seo';
 import { homePageQuery, settingsQuery } from '@/lib/sanity/queries/queries';
+import { SITE_NAME } from '@/lib/siteConfig';
 
 export async function generateMetadata() {
   try {
@@ -12,7 +13,7 @@ export async function generateMetadata() {
     });
 
     if (!homePage?.seo) {
-      return { title: 'Umkhandlu' };
+      return { title: SITE_NAME };
     }
 
     return {
@@ -22,7 +23,7 @@ export async function generateMetadata() {
       },
     };
   } catch {
-    return { title: 'Umkhandlu' };
+    return { title: SITE_NAME };
   }
 }
 
@@ -64,7 +65,7 @@ export default async function Page() {
 
     const { _id, _type, pageSections } = homePage;
     const jsonLd = generateWebSiteJsonLd(
-      settings?.title || 'Umkhandlu',
+      settings?.title || SITE_NAME,
       settings?.description || undefined
     );
 

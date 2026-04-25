@@ -1,8 +1,6 @@
-/**
- * Default data used as placeholders and initial values
- */
+import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/siteConfig';
 
-export const title = 'Umkhandlu';
+export const title = SITE_NAME;
 
 export const description = [
   {
@@ -13,7 +11,7 @@ export const description = [
         _key: '4a58edd077880',
         _type: 'span',
         marks: [],
-        text: 'Community-driven digital platform for traditional councils, youth programs, and local governance.',
+        text: SITE_DESCRIPTION,
       },
     ],
     markDefs: [],
@@ -21,4 +19,4 @@ export const description = [
   },
 ];
 
-export const ogImageTitle = 'Umkhandlu — Community Digital Platform';
+export const ogImageTitle = `${SITE_NAME} — Community Digital Platform`;

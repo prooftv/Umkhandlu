@@ -1,4 +1,5 @@
 'use client';
+import { SITE_NAME } from '@/lib/siteConfig';
 
 /**
  * This config is used to configure your Sanity Studio.
@@ -47,7 +48,7 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
 export default defineConfig({
   basePath: '/studio',
   name: 'default',
-  title: 'Umkhandlu',
+  title: SITE_NAME,
   projectId: clientEnv.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: clientEnv.NEXT_PUBLIC_SANITY_DATASET,
   plugins: [

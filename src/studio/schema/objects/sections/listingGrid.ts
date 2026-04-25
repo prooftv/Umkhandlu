@@ -11,7 +11,7 @@ export default defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      initialValue: 'Explore Mndozo',
+      initialValue: 'Explore Our Community',
       validation: (rule) => rule.required(),
     }),
     defineField({

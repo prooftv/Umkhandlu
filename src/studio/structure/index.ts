@@ -10,10 +10,11 @@ import {
   UsersIcon,
 } from '@sanity/icons';
 import type { StructureResolver } from 'sanity/structure';
+import { SITE_NAME } from '@/lib/siteConfig';
 
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title('Umkhandlu')
+    .title(SITE_NAME)
     .items([
       // Pages
       S.listItem()
