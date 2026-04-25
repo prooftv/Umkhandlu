@@ -6,6 +6,8 @@ import { formatMetaData } from '@/lib/sanity/client/seo';
 import { homePageQuery, settingsQuery } from '@/lib/sanity/queries/queries';
 import { SITE_NAME } from '@/lib/siteConfig';
 
+export const revalidate = 60;
+
 export async function generateMetadata() {
   try {
     const { data: homePage } = await sanityFetch({
@@ -84,7 +86,8 @@ export default async function Page() {
         />
       </>
     );
-  } catch {
+  } catch (error) {
+    console.error('Homepage fetch failed:', error);
     return <EmptyState />;
   }
 }
