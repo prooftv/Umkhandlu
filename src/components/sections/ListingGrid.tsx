@@ -9,6 +9,10 @@ type Listing = {
   description?: string;
   location?: string;
   contactInfo?: string;
+  whatsappContact?: string;
+  servicesOffered?: string[];
+  operatingHours?: string;
+  verifiedByInduna?: boolean;
   featured?: boolean;
   image?: { asset?: { _ref?: string }; alt?: string };
 };
@@ -91,7 +95,17 @@ export default function ListingGrid({ section }: Props) {
                     </span>
                   )}
                 </div>
-                <h3 className="text-lg font-semibold mb-1">{listing.name}</h3>
+                <h3 className="text-lg font-semibold mb-1">
+                  {listing.name}
+                  {listing.verifiedByInduna && (
+                    <span
+                      className="ml-1 text-green-600"
+                      title="Verified by Induna"
+                    >
+                      ✓
+                    </span>
+                  )}
+                </h3>
                 {listing.description && (
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                     {listing.description}
@@ -105,6 +119,34 @@ export default function ListingGrid({ section }: Props) {
                     📞 {listing.contactInfo}
                   </p>
                 )}
+                {listing.whatsappContact && (
+                  <a
+                    href={`https://wa.me/${listing.whatsappContact.replace(/[^0-9+]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-green-600 text-xs mt-1 inline-block hover:underline"
+                  >
+                    💬 WhatsApp
+                  </a>
+                )}
+                {listing.operatingHours && (
+                  <p className="text-gray-500 text-xs mt-1">
+                    🕐 {listing.operatingHours}
+                  </p>
+                )}
+                {listing.servicesOffered &&
+                  listing.servicesOffered.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {listing.servicesOffered.map((service) => (
+                        <span
+                          key={service}
+                          className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
+                        >
+                          {service}
+                        </span>
+                      ))}
+                    </div>
+                  )}
               </div>
             </article>
           ))}
