@@ -19,7 +19,7 @@ type Props = {
 function LogoImage({ logo, name }: { logo: LogoItem['logo']; name: string }) {
   return (
     <Image
-      src={urlForImage(logo)?.width(200).height(80).fit('max').url() as string}
+      src={urlForImage(logo!)?.width(200).height(80).fit('max').url() as string}
       alt={name}
       width={200}
       height={80}

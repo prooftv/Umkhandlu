@@ -15,6 +15,7 @@
     "check:fix": "biome check --write .",
     "dev": "npm-run-all --parallel --race next:dev watch-typegen",
     "built": "npm run next:build",
+    "vercel-build": "next build",
     "start": "npm run next:start",
     "sanity:typegen": "mkdir -p ./.sanity && sanity schema extract --path=.sanity/schema.json && sanity typegen generate",
     "typecheck": "tsc --noEmit",

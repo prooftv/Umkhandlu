@@ -1,6 +1,7 @@
 import { defineQuery } from 'next-sanity';
 import {
   categoryFragment,
+  linkFragment,
   listingFragment,
   menuFragment,
   noticeFragment,
