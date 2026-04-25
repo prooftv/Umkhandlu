@@ -112,6 +112,14 @@ export default defineType({
       description: 'e.g. GTM-XXXXXXX — leave empty to disable.',
       group: 'analytics',
     }),
+    defineField({
+      name: 'webhookUrl',
+      title: 'Form Webhook URL',
+      type: 'url',
+      description:
+        'Webhook endpoint for contact/subscribe form submissions (e.g. n8n, Make, Zapier). Leave empty to disable.',
+      group: 'analytics',
+    }),
   ],
   preview: {
     prepare() {

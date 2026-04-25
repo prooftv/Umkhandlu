@@ -412,15 +412,169 @@ This data is valuable to:
 
 ---
 
-## 10. Technical Summary
+## 10. Service Packages
+
+Three deployment packages for different council needs and budgets:
+
+### Package 1: Digital Council Starter Kit
+
+**For:** Councils that need basic digital presence and communication.
+
+| Included | Details |
+|---|---|
+| Website | Homepage, About, Leadership, Contact |
+| Notices | Meeting announcements, alerts |
+| Leadership | Inkosi + Izinduna + Council profiles |
+| Directory | Schools, clinics (basic listings) |
+| Newsletter | Subscription form |
+| i18n | Zulu/English toggle |
+| SEO | Full sitemap, OG tags, JSON-LD |
+
+**Content setup:** 1 week
+**Training:** 2 hours (Council Admin)
+
+---
+
+### Package 2: Youth & Opportunities Layer
+
+**For:** Councils focused on youth engagement and economic development.
+
+*Includes everything in Package 1, plus:*
+
+| Included | Details |
+|---|---|
+| Opportunities | Jobs, training, bursaries, funding (deadline-aware) |
+| Programs | Youth events, skills programs, school collaborations |
+| Blog | Community stories, learner content |
+| Gallery | Event photo coverage |
+| Ad Banners | Sponsor placement with scheduling |
+| Logo Grid | Partners and sponsors display |
+
+**Content setup:** 2 weeks
+**Training:** 4 hours (Council Admin + Youth Rep)
+
+---
+
+### Package 3: Governance & Land Transparency
+
+**For:** Councils aligned with Ingonyama Trust that need full governance visibility.
+
+*Includes everything in Packages 1 and 2, plus:*
+
+| Included | Details |
+|---|---|
+| Land Process | Step-by-step land allocation visual timeline |
+| Documents & Records | Meeting minutes, resolutions, policies (with PDF) |
+| Area Pages | Per-isigodi digital twins with auto-linked content |
+| Jurisdiction Map | Villages/areas with induna references |
+| Full Directory | All listing types with area relationships |
+| Analytics | GTM integration, POPIA cookie consent |
+| Webhook Integration | Form data delivery to n8n/Make/Zapier |
+
+**Content setup:** 4 weeks
+**Training:** 6 hours (Council Admin + Izinduna + Youth Rep)
+
+---
+
+## 11. Mndozo Pilot Execution Plan
+
+Week-by-week operational plan for the first live deployment.
+
+### Pre-Launch (Week 0)
+
+| Task | Owner | Deliverable |
+|---|---|---|
+| Deploy to Vercel + custom domain | Unami | Live site at umkhandlu.org (or similar) |
+| Create Sanity project + dataset | Unami | CMS accessible at /studio |
+| Configure settings (title, contact, social) | Unami | Site identity live |
+| Train Council Admin on CMS | Unami | Admin can log in and create content |
+
+### Week 1 — Foundation
+
+| Task | Owner | Deliverable |
+|---|---|---|
+| Create Inkosi profile | Council Admin | Leadership page has chief |
+| Create 3-5 Induna profiles | Council Admin | Each with role and area |
+| Create 3 Council Member profiles | Council Admin | Team grid populated |
+| Publish 2 notices (upcoming meeting + announcement) | Council Admin | Notices section live |
+| Build homepage (hero + notices + leadership + CTA) | Unami | Homepage live |
+| Build About page | Unami | About page live |
+
+**Milestone:** Site is live with leadership and notices. Shareable link.
+
+### Week 2 — Structure
+
+| Task | Owner | Deliverable |
+|---|---|---|
+| Create 3 area listings (izigodi) | Council Admin | Area pages auto-generate |
+| Link induna to each area | Council Admin | Area pages show headman |
+| Add 5 directory listings (Duck Ponds High, Umlandomusha High, local clinic, 2 businesses) | Induna / Admin | Directory populated |
+| Link listings to areas | Council Admin | Area pages show local infrastructure |
+| Build Land & Development page with process section | Unami | Land allocation process visible |
+| Upload 1 meeting minutes document | Council Admin | Records section has content |
+
+**Milestone:** Community can see their area, their induna, their schools and clinics.
+
+### Week 3 — Engagement
+
+| Task | Owner | Deliverable |
+|---|---|---|
+| Train Youth Rep on CMS | Unami | Youth Rep can create content |
+| Publish 2 opportunities (1 job, 1 training) | Youth Rep | Opportunities section live |
+| Create 1 program (June 22 youth event) | Youth Rep | Programs section live |
+| Publish 1 blog post (community story) | Youth Rep | Blog has content |
+| Add 5 photos to gallery | Youth Rep | Media page has content |
+| Share site on WhatsApp groups | Council Admin | Community awareness |
+
+**Milestone:** Youth engagement layer active. Opportunities visible.
+
+### Week 4 — Polish & Handover
+
+| Task | Owner | Deliverable |
+|---|---|---|
+| Add sponsor/partner logos | Council Admin | Credibility visible |
+| Configure contact form + map | Unami | Contact page functional |
+| Set up webhook (n8n or email) | Unami | Form submissions delivered |
+| Review all content for accuracy | Council Admin | Quality check |
+| Document weekly content cadence | Unami | ROLES.md handed over |
+| Formal handover to council | Unami | Council owns the platform |
+
+**Milestone:** Platform fully operational. Council is self-sufficient for content.
+
+### Ongoing (Post-Launch)
+
+| Cadence | Task | Owner |
+|---|---|---|
+| Weekly | Publish notices (meetings, announcements) | Council Admin |
+| Weekly | 1 blog post or community story | Youth Rep |
+| Weekly | Update opportunities (add new, mark expired) | Youth Rep |
+| Monthly | Review directory listings for accuracy | Induna |
+| Monthly | Upload meeting minutes | Council Admin |
+| Quarterly | Review analytics + content performance | Unami |
+
+---
+
+## 12. Content Roles & Ownership
+
+See [ROLES.md](./ROLES.md) for the full content ownership model, including:
+
+- Role definitions (Council Admin, Induna, Youth Rep, Unami)
+- Content permissions per role
+- Approval flow for sensitive content
+- Weekly content cadence
+- Training requirements
+
+---
+
+## 13. Technical Summary
 
 | Metric | Count |
 |---|---|
 | Document types | 9 |
 | Page builder sections | 19 |
 | Singletons | 3 |
-| Frontend routes | 10 |
-| Server actions | 3 |
+| Frontend routes | 12 |
+| Server actions | 3 (with webhook delivery) |
 | UI components | 7 |
 | Module components | 13 |
 | Section components | 19 |
@@ -428,6 +582,26 @@ This data is valuable to:
 | Tests | 13 (all passing) |
 | TypeScript errors | 0 (new) |
 | Biome lint errors | 0 |
+
+---
+
+## 14. Positioning
+
+### For Councils
+
+> "Umkhandlu gives your traditional council a digital presence that reflects your authority, communicates with your community, and creates visibility for development and opportunities."
+
+### For Ingonyama Trust
+
+> "Umkhandlu is a digital infrastructure platform that enables traditional councils to communicate, document governance, and unlock local economic and youth development opportunities — creating structured community data that currently does not exist in digital form."
+
+### For NGOs & Donors
+
+> "Umkhandlu provides structured, real-time data on community infrastructure, governance activity, and youth engagement across traditional authority areas — enabling targeted intervention and measurable impact."
+
+### For Government
+
+> "Umkhandlu digitises the local governance layer, creating a transparent communication channel between traditional councils and the communities they serve — aligned with existing authority structures."
 
 ---
 

@@ -20,6 +20,7 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   address,
   socialLinks,
   gtmId,
+  webhookUrl,
   ${menuFragment}
 }`);
 
@@ -48,13 +49,15 @@ export const getPageQuery = defineQuery(`
 `);
 
 export const getSitemapQuery = defineQuery(`
-  *[((_type in ["page", "post", "category", "person"] && defined(slug.current)) || (_type == "listing" && listingType == "area" && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
+  *[((_type in ["page", "post", "category", "person", "notice", "opportunity"] && defined(slug.current)) || (_type == "listing" && listingType == "area" && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
     "href": select(
       _type == "page" => "/" + slug.current,
       _type == "post" => "/blog/" + slug.current,
       _type == "category" => "/category/" + slug.current,
       _type == "person" => "/author/" + slug.current,
       _type == "listing" => "/areas/" + slug.current,
+      _type == "notice" => "/notices/" + slug.current,
+      _type == "opportunity" => "/opportunities/" + slug.current,
       _type == "blogPage" => "/blog",
       _type == "homePage" => "/",
       slug.current
@@ -117,6 +120,43 @@ export const areaDetailQuery = defineQuery(`
 
 export const areaSlugs = defineQuery(`
   *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current
+`);
+
+export const noticeDetailQuery = defineQuery(`
+  *[_type == "notice" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    noticeType,
+    date,
+    excerpt,
+    content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
+    pinned,
+    "relatedArea": relatedArea->{ name, "slug": slug.current }
+  }
+`);
+
+export const noticeSlugs = defineQuery(`
+  *[_type == "notice" && defined(slug.current)][0..$limit].slug.current
+`);
+
+export const opportunityDetailQuery = defineQuery(`
+  *[_type == "opportunity" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    opportunityType,
+    description,
+    organization,
+    deadline,
+    link,
+    featured,
+    "relatedArea": relatedArea->{ name, "slug": slug.current }
+  }
+`);
+
+export const opportunitySlugs = defineQuery(`
+  *[_type == "opportunity" && defined(slug.current)][0..$limit].slug.current
 `);
 
 export const postsArchiveQuery = defineQuery(`
