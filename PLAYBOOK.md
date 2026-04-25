@@ -119,10 +119,10 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `person` | Leadership, council, community profiles | Name, role, type (inkosi/induna/council/youth/community/author), skills, organization |
 | `category` | Content categories | Title, slug, description |
 | `notice` | Community notices | Title, type (meeting/announcement/resolution/alert/opportunity), date, pinned, relatedArea |
-| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, contact, WhatsApp, services, hours, verified, image, featured, induna, relatedListings |
+| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, contact, WhatsApp, services, hours, verification level, image, featured, induna, relatedListings |
 | `opportunity` | Jobs, training, bursaries, funding | Title, type, description, organization, deadline, apply link, relatedArea, featured |
 | `program` | Youth events, skills programs, school collabs | Title, type, status (upcoming/active/completed), date, relatedArea |
-| `record` | Governance documents | Title, type (minutes/resolution/policy/report), date, summary, content, PDF file, relatedArea |
+| `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report), date, summary, status, approvedBy, content, PDF file, relatedArea |
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
 
 #### 3 Singletons
