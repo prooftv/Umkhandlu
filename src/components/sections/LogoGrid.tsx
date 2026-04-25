@@ -1,7 +1,18 @@
+import Link from 'next/link';
 import { Image } from 'next-sanity/image';
 import { urlForImage } from '@/lib/sanity/client/utils';
 
-type LogoItem = {
+type Sponsor = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  organization?: string;
+  website?: string;
+  logo?: { asset?: { _ref?: string } };
+  image?: { asset?: { _ref?: string } };
+};
+
+type InlineLogo = {
   _key: string;
   name: string;
   url?: string;
@@ -12,15 +23,16 @@ type Props = {
   section: {
     heading?: string;
     description?: string;
-    logos?: LogoItem[];
+    sponsors?: Sponsor[];
+    logos?: InlineLogo[];
   };
 };
 
-function LogoImage({ logo, name }: { logo: LogoItem['logo']; name: string }) {
+function LogoImage({ src, alt }: { src: string; alt: string }) {
   return (
     <Image
-      src={urlForImage(logo!)?.width(200).height(80).fit('max').url() as string}
-      alt={name}
+      src={src}
+      alt={alt}
       width={200}
       height={80}
       className="object-contain max-h-16 grayscale hover:grayscale-0 transition-all duration-300"
@@ -28,12 +40,24 @@ function LogoImage({ logo, name }: { logo: LogoItem['logo']; name: string }) {
   );
 }
 
+function getSponsorImage(sponsor: Sponsor): string | null {
+  const source = sponsor.logo?.asset?._ref
+    ? sponsor.logo
+    : sponsor.image?.asset?._ref
+      ? sponsor.image
+      : null;
+  if (!source) return null;
+  return urlForImage(source)?.width(200).height(80).fit('max').url() ?? null;
+}
+
 export default function LogoGrid({ section }: Props) {
-  const { heading, description, logos } = section;
+  const { heading, description, sponsors, logos } = section;
 
-  if (!logos?.length) return null;
+  const validSponsors =
+    sponsors?.filter((s) => s.logo?.asset?._ref || s.image?.asset?._ref) ?? [];
+  const validLogos = logos?.filter((l) => l.logo?.asset?._ref) ?? [];
 
-  const validLogos = logos.filter((item) => item.logo?.asset?._ref);
+  if (validSponsors.length === 0 && validLogos.length === 0) return null;
 
   return (
     <section className="py-12 md:py-16">
@@ -45,8 +69,44 @@ export default function LogoGrid({ section }: Props) {
           )}
         </div>
         <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 max-w-4xl mx-auto">
-          {validLogos.map((item) =>
-            item.url ? (
+          {validSponsors.map((sponsor) => {
+            const src = getSponsorImage(sponsor);
+            if (!src) return null;
+            const alt =
+              sponsor.organization ||
+              `${sponsor.firstName} ${sponsor.lastName}`;
+
+            return sponsor.website ? (
+              <a
+                key={sponsor._id}
+                href={sponsor.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0"
+                title={alt}
+              >
+                <LogoImage src={src} alt={alt} />
+              </a>
+            ) : (
+              <Link
+                key={sponsor._id}
+                href={`/people/${sponsor._id}`}
+                className="shrink-0"
+                title={alt}
+              >
+                <LogoImage src={src} alt={alt} />
+              </Link>
+            );
+          })}
+
+          {validLogos.map((item) => {
+            const src = urlForImage(item.logo as { asset?: { _ref?: string } })
+              ?.width(200)
+              .height(80)
+              .fit('max')
+              .url() as string;
+
+            return item.url ? (
               <a
                 key={item._key}
                 href={item.url}
@@ -55,14 +115,14 @@ export default function LogoGrid({ section }: Props) {
                 className="shrink-0"
                 title={item.name}
               >
-                <LogoImage logo={item.logo} name={item.name} />
+                <LogoImage src={src} alt={item.name} />
               </a>
             ) : (
               <div key={item._key} className="shrink-0" title={item.name}>
-                <LogoImage logo={item.logo} name={item.name} />
+                <LogoImage src={src} alt={item.name} />
               </div>
-            )
-          )}
+            );
+          })}
         </div>
       </div>
     </section>

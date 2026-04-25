@@ -21,9 +21,19 @@ export default defineType({
       rows: 2,
     }),
     defineField({
-      name: 'logos',
-      title: 'Logos',
+      name: 'sponsors',
+      title: 'Sponsors (from People)',
       type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'person' }] }],
+      description:
+        'Reference existing sponsor/partner profiles. Their logo and website will be used.',
+    }),
+    defineField({
+      name: 'logos',
+      title: 'Additional Logos (inline)',
+      type: 'array',
+      description:
+        'For organizations not in the People directory. Sponsors from People appear first.',
       of: [
         {
           type: 'object',
@@ -52,15 +62,15 @@ export default defineType({
           },
         },
       ],
-      validation: (rule) => rule.min(1),
     }),
   ],
   preview: {
-    select: { title: 'heading', logos: 'logos' },
-    prepare({ title, logos }) {
+    select: { title: 'heading', sponsors: 'sponsors', logos: 'logos' },
+    prepare({ title, sponsors, logos }) {
+      const count = (sponsors?.length || 0) + (logos?.length || 0);
       return {
         title: title || 'Logo Grid',
-        subtitle: `${logos?.length || 0} partners`,
+        subtitle: `${count} partner${count !== 1 ? 's' : ''}`,
       };
     },
   },

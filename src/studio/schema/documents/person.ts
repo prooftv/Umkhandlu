@@ -86,6 +86,20 @@ export default defineType({
       description: 'e.g. Unami Foundation, Ingonyama Trust, School name',
     }),
     defineField({
+      name: 'website',
+      title: 'Website URL',
+      type: 'url',
+      description: 'Organization or personal website.',
+    }),
+    defineField({
+      name: 'logo',
+      title: 'Organization Logo',
+      type: 'image',
+      description: 'For sponsors/partners — displayed in logo grids.',
+      options: { hotspot: true },
+      hidden: ({ parent }) => parent?.personType !== 'sponsor',
+    }),
+    defineField({
       name: 'skills',
       title: 'Skills',
       type: 'array',

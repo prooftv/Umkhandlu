@@ -158,6 +158,8 @@ export const personFragment = /* groq */ `
   email,
   phone,
   organization,
+  website,
+  logo,
   skills,
   biography,
   "slug": slug.current,
@@ -305,6 +307,19 @@ export const logoGridSectionFragment = /* groq */ `
   _type,
   heading,
   description,
+  "sponsors": sponsors[]->{
+    _id,
+    firstName,
+    lastName,
+    organization,
+    website,
+    logo {
+      ${imageFragment}
+    },
+    image {
+      ${imageFragment}
+    }
+  },
   logos[] {
     _key,
     name,
