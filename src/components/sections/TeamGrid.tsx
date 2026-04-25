@@ -29,7 +29,7 @@ function Initials({
   lastName: string;
 }) {
   return (
-    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-blue-400 text-white text-3xl font-bold">
+    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/80 to-secondary/80 text-white text-3xl font-bold">
       {firstName[0]}
       {lastName[0]}
     </div>
@@ -82,7 +82,7 @@ export default function TeamGrid({ section }: Props) {
                   />
                 )}
               </div>
-              <h3 className="text-lg font-semibold group-hover:text-pink-600 transition-colors">
+              <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
                 {member.firstName} {member.lastName}
               </h3>
               {member.role && (

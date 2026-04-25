@@ -27,7 +27,7 @@ export default function Stats({ section }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
           {items.map((stat) => (
             <div key={stat._key}>
-              <p className="text-4xl md:text-5xl font-bold text-pink-500 mb-2">
+              <p className="text-4xl md:text-5xl font-bold text-primary mb-2">
                 {stat.value}
               </p>
               <p className="text-gray-600 text-sm">{stat.label}</p>

@@ -48,8 +48,8 @@ export default function HeroSection({
                 className="rounded-4xl shadow-xl"
               />
             )}
-            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-pink-500 rounded-full opacity-50"></div>
-            <div className="absolute -top-4 -right-4 w-16 h-16 bg-blue-500 rounded-full opacity-50"></div>
+            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-primary rounded-full opacity-50"></div>
+            <div className="absolute -top-4 -right-4 w-16 h-16 bg-secondary rounded-full opacity-50"></div>
           </div>
         </div>
       </div>

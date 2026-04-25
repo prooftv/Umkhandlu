@@ -59,7 +59,7 @@ export default function NoticeList({ section }: Props) {
                         {notice.noticeType}
                       </Badge>
                       {notice.pinned && (
-                        <span className="text-xs text-pink-600 font-medium">
+                        <span className="text-xs text-primary font-medium">
                           📌 Pinned
                         </span>
                       )}

@@ -33,7 +33,7 @@ export default function Process({ section }: Props) {
             {steps.map((step, index) => (
               <div key={step._key} className="flex gap-6">
                 <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0">
                     {index + 1}
                   </div>
                   {index < steps.length - 1 && (

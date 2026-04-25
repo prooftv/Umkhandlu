@@ -50,7 +50,7 @@ export default function ContactForm({ section }: Props) {
                   id="contact-name"
                   name="name"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/60"
                 />
               </div>
               <div>
@@ -65,7 +65,7 @@ export default function ContactForm({ section }: Props) {
                   id="contact-email"
                   name="email"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/60"
                 />
               </div>
               <div>
@@ -80,7 +80,7 @@ export default function ContactForm({ section }: Props) {
                   name="message"
                   rows={4}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/60"
                 />
               </div>
               <Button

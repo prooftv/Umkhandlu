@@ -92,7 +92,7 @@ export default function ListingGrid({ section }: Props) {
                     {typeLabels[listing.listingType] || listing.listingType}
                   </span>
                   {listing.featured && (
-                    <span className="text-xs text-pink-600 font-medium ml-auto">
+                    <span className="text-xs text-primary font-medium ml-auto">
                       ⭐ Featured
                     </span>
                   )}

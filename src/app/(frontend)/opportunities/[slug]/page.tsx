@@ -55,7 +55,7 @@ export default async function OpportunityPage(props: Props) {
             <span className="text-sm text-gray-500">{opp.organization}</span>
           )}
           {opp.featured && (
-            <span className="text-sm text-pink-600">⭐ Featured</span>
+            <span className="text-sm text-primary">⭐ Featured</span>
           )}
           {isExpired && <Badge variant="destructive">Closed</Badge>}
         </div>

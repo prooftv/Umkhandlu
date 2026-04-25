@@ -70,13 +70,13 @@ export default function PersonArchiveByline({
               {person.email && (
                 <a
                   href={`mailto:${person.email}`}
-                  className="hover:text-pink-600"
+                  className="hover:text-primary"
                 >
                   ✉ {person.email}
                 </a>
               )}
               {person.phone && (
-                <a href={`tel:${person.phone}`} className="hover:text-pink-600">
+                <a href={`tel:${person.phone}`} className="hover:text-primary">
                   📞 {person.phone}
                 </a>
               )}

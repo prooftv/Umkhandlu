@@ -66,7 +66,7 @@ export default function RecordList({ section }: Props) {
                     href={record.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-pink-600 text-sm font-medium hover:text-pink-700 shrink-0"
+                    className="text-primary text-sm font-medium hover:text-primary shrink-0"
                   >
                     📄 Download
                   </a>

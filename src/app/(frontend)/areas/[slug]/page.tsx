@@ -197,7 +197,7 @@ export default async function AreaPage(props: Props) {
                   <div className="flex items-center gap-2 mb-1">
                     <Badge variant="outline">{notice.noticeType}</Badge>
                     {notice.pinned && (
-                      <span className="text-xs text-pink-600">📌</span>
+                      <span className="text-xs text-primary">📌</span>
                     )}
                   </div>
                   <h3 className="font-semibold">{notice.title}</h3>
@@ -285,7 +285,7 @@ export default async function AreaPage(props: Props) {
                       href={opp.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-pink-600 text-sm font-medium"
+                      className="text-primary text-sm font-medium"
                     >
                       Apply →
                     </a>

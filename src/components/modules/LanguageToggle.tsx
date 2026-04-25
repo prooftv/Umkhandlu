@@ -26,7 +26,7 @@ export default function LanguageToggle() {
           onClick={() => setLocale(code)}
           className={`px-2 py-1 rounded transition-colors ${
             locale === code
-              ? 'bg-pink-500 text-white font-medium'
+              ? 'bg-primary text-white font-medium'
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >

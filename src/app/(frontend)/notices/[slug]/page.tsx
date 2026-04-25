@@ -53,7 +53,7 @@ export default async function NoticePage(props: Props) {
             </time>
           )}
           {notice.pinned && (
-            <span className="text-sm text-pink-600">📌 Pinned</span>
+            <span className="text-sm text-primary">📌 Pinned</span>
           )}
         </div>
         <h1 className="text-3xl md:text-5xl font-bold mb-4">{notice.title}</h1>

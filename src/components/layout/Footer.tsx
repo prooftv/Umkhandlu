@@ -199,7 +199,7 @@ export default async function Footer() {
             </p>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-pink-500 to-blue-500" />
+        <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-secondary" />
       </footer>
     );
   } catch {

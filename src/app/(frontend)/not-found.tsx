@@ -12,7 +12,7 @@ export default function NotFound() {
       <p className="text-xl text-gray-600 mb-8">{t('notFound.description')}</p>
       <Link
         href="/"
-        className="inline-block px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+        className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors"
       >
         {t('notFound.goHome')}
       </Link>

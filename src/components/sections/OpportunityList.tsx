@@ -85,7 +85,7 @@ export default function OpportunityList({ section }: Props) {
                             opp.opportunityType}
                         </Badge>
                         {opp.featured && (
-                          <span className="text-xs text-pink-600 font-medium">
+                          <span className="text-xs text-primary font-medium">
                             ⭐ Featured
                           </span>
                         )}
@@ -97,7 +97,7 @@ export default function OpportunityList({ section }: Props) {
                       </div>
                       <Link
                         href={`/opportunities/${opp.slug}`}
-                        className="text-lg font-semibold mb-1 hover:text-pink-600 transition-colors"
+                        className="text-lg font-semibold mb-1 hover:text-primary transition-colors"
                       >
                         {opp.title}
                       </Link>

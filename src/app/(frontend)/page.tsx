@@ -35,7 +35,7 @@ function EmptyState() {
       </p>
       <p className="text-gray-500 mb-4">
         This site is ready. Open{' '}
-        <a href="/studio" className="text-pink-600 underline">
+        <a href="/studio" className="text-primary underline">
           Sanity Studio
         </a>{' '}
         to start adding content.
