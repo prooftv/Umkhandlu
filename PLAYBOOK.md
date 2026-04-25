@@ -12,11 +12,11 @@
 
 ## 1. Executive Summary
 
-Umkhandlu is digital governance infrastructure for traditional authorities. It digitises governance, community infrastructure, economic activity, and youth development — creating the first structured digital record of rural communities under traditional authority.
+Umkhandlu is lightweight digital governance infrastructure for traditional authorities. It digitises governance, community infrastructure, economic activity, and youth development — creating a structured, council-owned digital record of rural communities under traditional authority.
 
 This is not a website. It is a **community intelligence layer** that sits on top of existing traditional authority structures without replacing them.
 
-Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems.
+Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems. All content and data is controlled and published by the council.
 
 ### Why Now
 
@@ -422,7 +422,7 @@ Revenue flows to the council, creating sustainability and buy-in:
 | **Monthly support** | Hosting, CMS maintenance, content support | Monthly retainer |
 | **Integration upgrades** | WhatsApp, n8n, map, advanced features | Phase-based |
 | **Template licensing** | Additional council deployments from same codebase | Per deployment |
-| **Data partnerships** | Anonymised community intelligence for NGOs/government (with council consent) | Later stage |
+| **Data partnerships** | Council-approved data insights for planning and development partners | Future phase |
 
 This positions Unami as **infrastructure provider**, not a dev shop.
 
