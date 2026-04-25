@@ -1,8 +1,10 @@
 # Umkhandlu — Project Playbook
 
-## Community Digital Platform for Traditional Councils
+> **Umkhandlu turns traditional councils into digitally structured governance nodes — without changing how they govern.**
 
-**Version:** 2.0
+## Digital Governance Infrastructure for Traditional Authorities
+
+**Version:** 2.1
 **Status:** Production-Ready
 **Repository:** github.com/prooftv/Umkhandlu
 
@@ -10,9 +12,19 @@
 
 ## 1. Executive Summary
 
-Umkhandlu is a digital platform that gives traditional councils (izinduna, amakhosi) a structured online presence. It digitises governance, community infrastructure, economic activity, and youth development — creating the first structured digital record of rural communities under traditional authority.
+Umkhandlu is digital governance infrastructure for traditional authorities. It digitises governance, community infrastructure, economic activity, and youth development — creating the first structured digital record of rural communities under traditional authority.
 
-This is not a website. It is a **digital governance and community intelligence layer** that sits on top of existing traditional authority structures without replacing them.
+This is not a website. It is a **community intelligence layer** that sits on top of existing traditional authority structures without replacing them.
+
+Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems.
+
+### Why Now
+
+- Increasing pressure for land transparency under the Ingonyama Trust Board
+- Growing need for rural digital inclusion aligned with national ICT strategies
+- Youth unemployment requiring localised opportunity pipelines
+- Lack of structured rural data blocking investment and service delivery
+- Traditional governance operating offline while the world moves digital
 
 ### The Problem
 
@@ -375,19 +387,48 @@ The frontend layout injects these as CSS custom properties, overriding the defau
 
 ### Future Integrations (Phase 2+)
 
-| Integration | Purpose |
-|---|---|
-| **n8n / Make** | Workflow automation (WhatsApp notifications, opportunity scraping) |
-| **Supabase** | Database for form submissions, user accounts |
-| **Interactive Map** | Mapbox/Google Maps with pins for schools, clinics, businesses |
-| **UNCIP** | Child safety alerts integration |
-| **Unami Schools** | Linked school platforms |
-| **Unami Drones** | Skills program content pipeline |
-| **WhatsApp Business API** | Community notifications via Moments |
+The platform is built with an integration-ready architecture — webhook endpoints, server actions, and environment-driven configuration that connects to external systems without code changes.
+
+| Integration | Purpose | Connection Point |
+|---|---|---|
+| **n8n / Make** | Workflow automation (WhatsApp notifications, opportunity scraping) | Webhook URL in Settings |
+| **Supabase** | Database for form submissions, user accounts | Server actions |
+| **Interactive Map** | Mapbox/Google Maps with pins for schools, clinics, businesses | Listing coordinates (Phase 2 field) |
+| **UNCIP** | Child safety alerts integration | Notice type extension |
+| **Unami Schools** | Linked school platforms | Listing references |
+| **Unami Drones** | Skills program content pipeline | Program type extension |
+| **WhatsApp Business API** | Community notifications via Moments | n8n → WABA → community groups |
 
 ---
 
-## 8. Content Population Guide
+## 8. Commercial Model
+
+### Council Revenue (Advertising Packages)
+
+Revenue flows to the council, creating sustainability and buy-in:
+
+| Tier | What They Get | Suggested Price |
+|---|---|---|
+| Basic | Directory listing | Free |
+| Featured | Top of grid + verified badge | R100/month |
+| Premium | Featured + ad banner on pages | R300/month |
+| Sponsor | Premium + logo on homepage | R500/month |
+
+### Unami Revenue (Service Model)
+
+| Revenue Stream | Description | Pricing |
+|---|---|---|
+| **Setup fee** | Deployment, Sanity project, initial content, training | Once-off per council |
+| **Monthly support** | Hosting, CMS maintenance, content support | Monthly retainer |
+| **Integration upgrades** | WhatsApp, n8n, map, advanced features | Phase-based |
+| **Template licensing** | Additional council deployments from same codebase | Per deployment |
+| **Data partnerships** | Anonymised community intelligence for NGOs/government (with council consent) | Later stage |
+
+This positions Unami as **infrastructure provider**, not a dev shop.
+
+---
+
+## 9. Content Population Guide
 
 ### Priority Order for Launch
 
@@ -417,7 +458,7 @@ The frontend layout injects these as CSS custom properties, overriding the defau
 
 ---
 
-## 9. Competitive Positioning
+## 10. Competitive Positioning
 
 ### What Makes This Different
 
@@ -452,7 +493,7 @@ This data is valuable to:
 
 ---
 
-## 10. Service Packages
+## 11. Service Packages
 
 Three deployment packages for different council needs and budgets:
 
@@ -516,7 +557,7 @@ Three deployment packages for different council needs and budgets:
 
 ---
 
-## 11. Mndozo Pilot Execution Plan
+## 12. Mndozo Pilot Execution Plan
 
 Week-by-week operational plan for the first live deployment.
 
@@ -594,7 +635,7 @@ Week-by-week operational plan for the first live deployment.
 
 ---
 
-## 12. Content Roles & Ownership
+## 13. Content Roles & Ownership
 
 See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
@@ -606,7 +647,7 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 ---
 
-## 13. Technical Summary
+## 14. Technical Summary
 
 | Metric | Count |
 |---|---|
@@ -623,7 +664,7 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 ---
 
-## 14. Positioning
+## 15. Positioning
 
 ### For Councils
 
@@ -645,7 +686,7 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 ---
 
-## 15. Ingonyama Trust Alignment
+## 16. Ingonyama Trust Alignment
 
 ### The Gap This Platform Fills
 
