@@ -32,7 +32,7 @@ const client = createClient({
   useCdn: false,
 });
 
-// ─── DATA ────────────────────────────────────────────────────
+// ─── SETTINGS ────────────────────────────────────────────────
 
 const settings = {
   _id: 'siteSettings',
@@ -42,20 +42,22 @@ const settings = {
     'Official digital platform of the Mndozo Traditional Council. Serving the community through leadership, development, and transparency.',
   contactEmail: 'info@mndozo.umkhandlu.org',
   contactPhone: '+27 XX XXX XXXX',
-  address: 'Mndozo, KwaZulu-Natal, South Africa',
+  address: 'Mndozo, Amajuba District, KwaZulu-Natal, South Africa',
   primaryColor: '#16a34a',
   secondaryColor: '#f59e0b',
 };
+
+// ─── PEOPLE ──────────────────────────────────────────────────
 
 const inkosi = {
   _id: 'person-inkosi',
   _type: 'person',
   firstName: 'Inkosi',
-  lastName: 'Mndozo',
-  slug: { _type: 'slug', current: 'inkosi-mndozo' },
+  lastName: 'Kubheka',
+  slug: { _type: 'slug', current: 'inkosi-kubheka' },
   role: 'Inkosi',
   personType: 'inkosi',
-  organization: 'Mndozo Traditional Authority',
+  organization: 'Mndozo Traditional Council',
 };
 
 const izinduna = [
@@ -63,9 +65,9 @@ const izinduna = [
     _id: 'person-induna-1',
     _type: 'person',
     firstName: 'Induna',
-    lastName: 'KwaNtuli',
-    slug: { _type: 'slug', current: 'induna-kwantuli' },
-    role: 'Induna — KwaNtuli Isigodi',
+    lastName: 'Dlamini',
+    slug: { _type: 'slug', current: 'induna-dlamini' },
+    role: 'Induna — Isigodi KwaNtuli',
     personType: 'induna',
   },
   {
@@ -74,7 +76,7 @@ const izinduna = [
     firstName: 'Induna',
     lastName: 'KwaMthembu',
     slug: { _type: 'slug', current: 'induna-kwamthembu' },
-    role: 'Induna — KwaMthembu Isigodi',
+    role: 'Induna — Isigodi KwaMthembu',
     personType: 'induna',
   },
   {
@@ -83,109 +85,130 @@ const izinduna = [
     firstName: 'Induna',
     lastName: 'KwaNdlovu',
     slug: { _type: 'slug', current: 'induna-kwandlovu' },
-    role: 'Induna — KwaNdlovu Isigodi',
+    role: 'Induna — Isigodi KwaNdlovu',
     personType: 'induna',
   },
 ];
 
+// ─── AREA ────────────────────────────────────────────────────
+
 const area = {
   _id: 'listing-area-mndozo',
   _type: 'listing',
-  name: 'Mndozo',
+  name: 'Mndozo Traditional Area',
   slug: { _type: 'slug', current: 'mndozo' },
   listingType: 'area',
   description:
-    'The central area of the Mndozo Traditional Council jurisdiction, home to schools, clinics, and community facilities.',
-  location: 'Mndozo, KwaZulu-Natal',
+    'A rural traditional authority area under the Mndozo Traditional Council, comprising multiple isigodi, schools, clinics, and community infrastructure.',
+  location: 'Amajuba District, KwaZulu-Natal',
   featured: true,
   induna: { _type: 'reference', _ref: 'person-induna-1' },
 };
+
+// ─── LISTINGS ────────────────────────────────────────────────
 
 const listings = [
   {
     _id: 'listing-school-1',
     _type: 'listing',
     name: 'Duck Ponds High School',
-    slug: { _type: 'slug', current: 'duck-ponds-high' },
+    slug: { _type: 'slug', current: 'duck-ponds-high-school' },
     listingType: 'school',
-    description: 'Secondary school serving the Mndozo community.',
+    description: 'Public secondary school serving the Mndozo catchment area.',
     location: 'Mndozo, KwaZulu-Natal',
-    servicesOffered: ['Grades 8-12', 'Matric'],
+    servicesOffered: ['Grades 8-12', 'NSC Matric', 'Sports & Culture'],
     verifiedByInduna: 'induna',
   },
   {
     _id: 'listing-school-2',
     _type: 'listing',
     name: 'Umlandomusha High School',
-    slug: { _type: 'slug', current: 'umlandomusha-high' },
+    slug: { _type: 'slug', current: 'umlandomusha-high-school' },
     listingType: 'school',
-    description: 'Secondary school in the greater Mndozo area.',
-    location: 'Mndozo, KwaZulu-Natal',
-    servicesOffered: ['Grades 8-12', 'Matric'],
+    description: 'Rural secondary school supporting surrounding villages.',
+    location: 'Utrecht region, KwaZulu-Natal',
+    servicesOffered: ['Grades 8-12', 'Matric Rewrite Support'],
     verifiedByInduna: 'induna',
   },
   {
     _id: 'listing-clinic-1',
     _type: 'listing',
-    name: 'Mndozo Clinic',
-    slug: { _type: 'slug', current: 'mndozo-clinic' },
+    name: 'Mndozo Community Clinic',
+    slug: { _type: 'slug', current: 'mndozo-community-clinic' },
     listingType: 'clinic',
-    description: 'Primary healthcare facility serving the Mndozo community.',
+    description:
+      'Primary healthcare facility under provincial Department of Health.',
     location: 'Mndozo, KwaZulu-Natal',
-    servicesOffered: ['Primary care', 'Maternal health', 'HIV/TB services'],
-    operatingHours: 'Mon-Fri 7:30-16:00',
+    servicesOffered: [
+      'Primary healthcare',
+      'HIV/TB treatment',
+      'Maternal care',
+      'Immunisation',
+    ],
+    operatingHours: 'Mon–Fri 07:30–16:00',
     verifiedByInduna: 'council',
   },
   {
     _id: 'listing-business-1',
     _type: 'listing',
-    name: 'Mndozo General Store',
-    slug: { _type: 'slug', current: 'mndozo-general-store' },
+    name: 'KwaNdlovu General Store',
+    slug: { _type: 'slug', current: 'kwandlovu-general-store' },
     listingType: 'business',
-    description: 'Local spaza shop and general supplies.',
-    location: 'Mndozo Main Road',
+    description:
+      'Community spaza shop providing daily essentials and groceries.',
+    location: 'KwaNdlovu area, Mndozo',
     verifiedByInduna: 'community',
   },
 ];
+
+// ─── NOTICES ─────────────────────────────────────────────────
 
 const notices = [
   {
     _id: 'notice-meeting-1',
     _type: 'notice',
-    title: 'Community Meeting — Monthly Council Session',
-    slug: { _type: 'slug', current: 'monthly-council-meeting' },
+    title: 'Monthly Traditional Council Meeting',
+    slug: {
+      _type: 'slug',
+      current: 'monthly-traditional-council-meeting',
+    },
     noticeType: 'meeting',
     date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     excerpt:
-      'All community members are invited to attend the monthly council meeting. Agenda includes land allocation updates and community development projects.',
+      'All community members are invited to attend the monthly traditional council meeting. Agenda includes land allocation updates, infrastructure planning, and youth development initiatives.',
     pinned: true,
     relatedArea: { _type: 'reference', _ref: 'listing-area-mndozo' },
   },
   {
-    _id: 'notice-announcement-1',
+    _id: 'notice-water-1',
     _type: 'notice',
-    title: 'Water Supply Maintenance Notice',
-    slug: { _type: 'slug', current: 'water-supply-maintenance' },
+    title: 'Water Supply Interruption Notice',
+    slug: { _type: 'slug', current: 'water-supply-interruption' },
     noticeType: 'announcement',
     date: new Date().toISOString(),
     excerpt:
-      'Scheduled maintenance on the community water supply. Please store water in advance. Expected duration: 2 days.',
+      'Temporary interruption of water supply due to maintenance of community infrastructure. Residents are advised to store sufficient water.',
     pinned: false,
     relatedArea: { _type: 'reference', _ref: 'listing-area-mndozo' },
   },
   {
     _id: 'notice-resolution-1',
     _type: 'notice',
-    title: 'Resolution: New Community Hall Development',
-    slug: { _type: 'slug', current: 'community-hall-resolution' },
+    title: 'Resolution: Community Hall Construction Approved',
+    slug: {
+      _type: 'slug',
+      current: 'community-hall-construction-approved',
+    },
     noticeType: 'resolution',
     date: new Date().toISOString(),
     excerpt:
-      'The council has resolved to proceed with the construction of a new community hall in Isigodi A. Construction to begin next quarter.',
+      'The council has approved the development of a new multipurpose community hall in KwaNtuli isigodi. Construction planning to commence in the next quarter.',
     pinned: false,
     relatedArea: { _type: 'reference', _ref: 'listing-area-mndozo' },
   },
 ];
+
+// ─── HOMEPAGE ────────────────────────────────────────────────
 
 const homePage = {
   _id: 'homePage',
@@ -227,16 +250,28 @@ const homePage = {
       description: 'The traditional authority serving the Mndozo community.',
       members: [
         { _key: 'ref-1', _type: 'reference', _ref: 'person-inkosi' },
-        { _key: 'ref-2', _type: 'reference', _ref: 'person-induna-1' },
-        { _key: 'ref-3', _type: 'reference', _ref: 'person-induna-2' },
-        { _key: 'ref-4', _type: 'reference', _ref: 'person-induna-3' },
+        {
+          _key: 'ref-2',
+          _type: 'reference',
+          _ref: 'person-induna-1',
+        },
+        {
+          _key: 'ref-3',
+          _type: 'reference',
+          _ref: 'person-induna-2',
+        },
+        {
+          _key: 'ref-4',
+          _type: 'reference',
+          _ref: 'person-induna-3',
+        },
       ],
     },
     {
       _key: 'cta-1',
       _type: 'cta',
-      heading: 'Get Involved',
-      text: 'Join us in building a stronger Mndozo. Attend meetings, share opportunities, and stay informed.',
+      heading: 'Community Participation',
+      text: 'Stay informed and engaged with council activities. Attend meetings, share opportunities, and help build a stronger Mndozo.',
     },
   ],
 };
@@ -246,19 +281,15 @@ const homePage = {
 async function seed() {
   const transaction = client.transaction();
 
-  // Settings
   transaction.createOrReplace(settings);
-
-  // People
   transaction.createOrReplace(inkosi);
+
   for (const induna of izinduna) {
     transaction.createOrReplace(induna);
   }
 
-  // Area
   transaction.createOrReplace(area);
 
-  // Listings
   for (const listing of listings) {
     transaction.createOrReplace(listing);
   }
@@ -274,12 +305,10 @@ async function seed() {
     })
   );
 
-  // Notices
   for (const notice of notices) {
     transaction.createOrReplace(notice);
   }
 
-  // Home Page
   transaction.createOrReplace(homePage);
 
   console.log('Seeding Mndozo council data...');
