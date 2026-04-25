@@ -7,6 +7,12 @@ type Props = {
     image?: { asset?: { _ref?: string }; alt?: string };
     link?: string;
     sponsorName?: string;
+    sponsor?: {
+      firstName: string;
+      lastName: string;
+      organization?: string;
+      website?: string;
+    };
     startDate?: string;
     endDate?: string;
     size?: 'full' | 'half';
@@ -16,8 +22,9 @@ type Props = {
 export default function AdBanner({ section }: Props) {
   const {
     image,
-    link,
-    sponsorName,
+    link: manualLink,
+    sponsorName: manualName,
+    sponsor,
     startDate,
     endDate,
     size = 'full',
@@ -28,6 +35,11 @@ export default function AdBanner({ section }: Props) {
   const now = new Date().toISOString().split('T')[0];
   if (startDate && now < startDate) return null;
   if (endDate && now > endDate) return null;
+
+  const displayName = sponsor
+    ? sponsor.organization || `${sponsor.firstName} ${sponsor.lastName}`
+    : manualName;
+  const displayLink = sponsor?.website || manualLink;
 
   const width = size === 'half' ? 600 : 1200;
   const height = size === 'half' ? 150 : 200;
@@ -41,7 +53,7 @@ export default function AdBanner({ section }: Props) {
           .fit('crop')
           .url() as string
       }
-      alt={image.alt || sponsorName || 'Sponsored content'}
+      alt={image.alt || displayName || 'Sponsored content'}
       width={width}
       height={height}
       sizes={size === 'half' ? '50vw' : '100vw'}
@@ -54,9 +66,9 @@ export default function AdBanner({ section }: Props) {
       <div
         className={`container mx-auto px-4 ${size === 'half' ? 'max-w-xl' : ''}`}
       >
-        {link ? (
+        {displayLink ? (
           <a
-            href={link}
+            href={displayLink}
             target="_blank"
             rel="noopener noreferrer sponsored"
             className="block"
@@ -66,9 +78,9 @@ export default function AdBanner({ section }: Props) {
         ) : (
           banner
         )}
-        {sponsorName && (
+        {displayName && (
           <p className="text-xs text-gray-400 text-center mt-1">
-            Sponsored by {sponsorName}
+            Sponsored by {displayName}
           </p>
         )}
       </div>

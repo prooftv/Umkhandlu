@@ -336,6 +336,12 @@ export const adBannerSectionFragment = /* groq */ `
   image,
   link,
   sponsorName,
+  "sponsor": sponsor->{
+    firstName,
+    lastName,
+    organization,
+    website
+  },
   startDate,
   endDate,
   size

@@ -11,7 +11,7 @@ export default defineType({
       name: 'title',
       title: 'Internal Title',
       type: 'string',
-      description: 'For internal reference only — not displayed on the site.',
+      description: 'For internal reference only — not displayed.',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -30,14 +30,29 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'link',
-      title: 'Link URL',
-      type: 'url',
+      name: 'sponsor',
+      title: 'Sponsor (from People)',
+      type: 'reference',
+      to: [{ type: 'person' }],
+      description:
+        'Link to a sponsor profile. Their name and website will be used automatically. Leave empty to set manually below.',
+      options: {
+        filter: 'personType == "sponsor"',
+      },
     }),
     defineField({
       name: 'sponsorName',
-      title: 'Sponsor / Advertiser Name',
+      title: 'Sponsor Name (manual)',
       type: 'string',
+      description: 'Only used if no sponsor is selected above.',
+      hidden: ({ parent }) => !!parent?.sponsor,
+    }),
+    defineField({
+      name: 'link',
+      title: 'Link URL (manual)',
+      type: 'url',
+      description: 'Only used if no sponsor is selected above.',
+      hidden: ({ parent }) => !!parent?.sponsor,
     }),
     defineField({
       name: 'startDate',
@@ -65,8 +80,27 @@ export default defineType({
     }),
   ],
   preview: {
-    select: { title: 'title', sponsor: 'sponsorName', media: 'image' },
-    prepare({ title, sponsor, media }) {
+    select: {
+      title: 'title',
+      manualSponsor: 'sponsorName',
+      refSponsorFirst: 'sponsor.firstName',
+      refSponsorLast: 'sponsor.lastName',
+      refSponsorOrg: 'sponsor.organization',
+      media: 'image',
+    },
+    prepare({
+      title,
+      manualSponsor,
+      refSponsorFirst,
+      refSponsorLast,
+      refSponsorOrg,
+      media,
+    }) {
+      const sponsor =
+        refSponsorOrg ||
+        (refSponsorFirst
+          ? `${refSponsorFirst} ${refSponsorLast}`
+          : manualSponsor);
       return {
         title: title || 'Ad Banner',
         subtitle: sponsor ? `Sponsor: ${sponsor}` : 'Ad Banner',
