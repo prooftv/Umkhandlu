@@ -455,6 +455,20 @@ export const embedSectionFragment = /* groq */ `
   aspectRatio
 `;
 
+export const quoteSectionFragment = /* groq */ `
+  _type,
+  text,
+  "author": author->{
+    firstName,
+    lastName,
+    role,
+    image
+  },
+  authorName,
+  authorRole,
+  image
+`;
+
 export const contactFormSectionFragment = /* groq */ `
   _type,
   heading,
@@ -485,6 +499,7 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'postList' => {${postListSectionFragment}},
     _type == 'process' => {${processSectionFragment}},
     _type == 'programList' => {${programListSectionFragment}},
+    _type == 'quote' => {${quoteSectionFragment}},
     _type == 'recordList' => {${recordListSectionFragment}},
     _type == 'richText' => {${richTextSectionFragment}},
     _type == 'stats' => {${statsSectionFragment}},

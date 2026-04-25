@@ -16,6 +16,7 @@ import opportunityList from '../objects/sections/opportunityList';
 import postList from '../objects/sections/postList';
 import process from '../objects/sections/process';
 import programList from '../objects/sections/programList';
+import quote from '../objects/sections/quote';
 import recordList from '../objects/sections/recordList';
 import richText from '../objects/sections/richText';
 import stats from '../objects/sections/stats';
@@ -40,6 +41,7 @@ const pageSectionsObjects = [
   postList,
   process,
   programList,
+  quote,
   recordList,
   richText,
   stats,

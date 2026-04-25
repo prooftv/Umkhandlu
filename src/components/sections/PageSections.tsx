@@ -22,6 +22,7 @@ import OpportunityList from './OpportunityList';
 import PostList from './PostList';
 import Process from './Process';
 import ProgramList from './ProgramList';
+import Quote from './Quote';
 import RecordList from './RecordList';
 import RichText from './RichText';
 import Stats from './Stats';
@@ -47,6 +48,7 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   opportunityList: OpportunityList,
   process: Process,
   programList: ProgramList,
+  quote: Quote,
   recordList: RecordList,
   richText: RichText,
   stats: Stats,
