@@ -4,18 +4,7 @@ Community digital platform for traditional councils, youth programs, and local g
 
 ## What This Is
 
-Umkhandlu is the digital hub for traditional councils (izinduna, amakhosi). It provides:
-
-- CMS-driven pages with a modular page builder
-- Community notices (meetings, announcements, alerts, opportunities)
-- Leadership profiles with roles and organizations
-- Blog/stories for youth content and community updates
-- Photo galleries for events and media
-- Contact forms with optional map embeds
-- Newsletter subscriptions
-- Zulu/English language toggle
-- Google Tag Manager integration (CMS-configurable)
-- Full SEO: sitemap, JSON-LD, Open Graph, canonical URLs
+A modular, CMS-driven platform that gives traditional councils a structured digital presence. Editors compose pages from 23 section types without touching code. The same codebase serves multiple councils — each with its own content, brand colors, and domain.
 
 ## Tech Stack
 
@@ -29,28 +18,15 @@ Umkhandlu is the digital hub for traditional councils (izinduna, amakhosi). It p
 
 ## Getting Started
 
-### 1. Install dependencies
-
 ```bash
 npm install
-```
-
-### 2. Configure environment
-
-```bash
 cp .env.example .env.local
-```
-
-Fill in your Sanity project ID, dataset, and API token.
-
-### 3. Start development
-
-```bash
+# Fill in Sanity project ID, dataset, and API token
 npm run dev
 ```
 
-- Frontend: [http://localhost:3000](http://localhost:3000)
-- Sanity Studio: [http://localhost:3000/studio](http://localhost:3000/studio)
+- Frontend: http://localhost:3000
+- Sanity Studio: http://localhost:3000/studio
 
 ## Environment Variables
 
@@ -61,97 +37,119 @@ npm run dev
 | `NEXT_PUBLIC_SANITY_API_VERSION` | Sanity API version |
 | `NEXT_PUBLIC_SITE_URL` | Public site URL |
 | `NEXT_PUBLIC_SANITY_STUDIO_URL` | Studio URL |
-| `NEXT_PUBLIC_GTM_ID` | Google Tag Manager ID (optional, also configurable in CMS) |
+| `NEXT_PUBLIC_GTM_ID` | Google Tag Manager ID (optional) |
 | `SANITY_API_READ_TOKEN` | Server-side Sanity read token |
 | `MAX_STATIC_PARAMS` | Max static params for ISR |
 
 ## Content Architecture
 
-### Document Types
+### 10 Document Types
 
 | Type | Purpose |
 |---|---|
-| `page` | Generic pages (About, Land, Youth, Schools, Projects, etc.) |
+| `page` | Generic CMS pages |
 | `post` | Blog posts, stories, learner content |
-| `person` | Leadership, council members, sponsors, authors |
+| `person` | Leadership, council members, community profiles |
 | `category` | Content categories |
-| `notice` | Community notices (meeting, announcement, alert, opportunity) |
+| `notice` | Community notices (meeting, announcement, resolution, alert, opportunity) |
+| `listing` | Directory (school, clinic, business, accommodation, church, facility, area) |
+| `opportunity` | Jobs, training, bursaries, funding |
+| `program` | Youth events, skills programs, school collaborations |
+| `record` | Governance documents (minutes, resolutions, policies, reports) |
+| `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
 
-### Page Builder Sections (11)
+### 23 Page Builder Sections
 
-| Section | Use Case |
+| Section | Purpose |
 |---|---|
 | `hero` | Page hero with heading, rich text, image, CTA buttons |
-| `mediaText` | Image + text side-by-side (configurable position) |
+| `richText` | Heading + rich text body content |
+| `mediaText` | Image + text side-by-side with buttons |
 | `cta` | Call to action with gradient background |
+| `quote` | Testimonial / chief's message with author photo |
+| `faq` | Collapsible Q&A accordion |
+| `stats` | Bold numbers + labels grid |
+| `embed` | YouTube videos, iframes, embedded content |
 | `cardGrid` | Grid of content cards |
 | `postList` | Latest blog posts |
 | `teamGrid` | Leadership/council member profiles |
-| `noticeList` | Community notices (filterable by type, pinnable) |
+| `noticeList` | Community notices (filterable, pinnable) |
+| `opportunityList` | Jobs, training, bursaries (deadline-aware) |
+| `programList` | Programs & events (filterable by status) |
+| `listingGrid` | Community directory (filterable by type) |
+| `recordList` | Governance documents (filterable by type) |
+| `process` | Step-by-step visual timeline |
 | `gallery` | Photo gallery with captions |
-| `contactForm` | Contact form with optional Google Maps embed |
-| `subscribe` | Newsletter signup |
+| `contactForm` | Contact form with server action + optional map |
+| `subscribe` | Newsletter signup with server action |
+| `logoGrid` | Sponsors/partners logos |
+| `adBanner` | Sponsor banners with date scheduling |
 | `divider` | Visual separator |
 
-### Singletons
+### 3 Singletons
 
 | Singleton | Purpose |
 |---|---|
 | `homePage` | Homepage content + page builder |
-| `blogPage` | Blog listing page SEO |
-| `settings` | Site title, description, menu, social links, contact info, GTM ID |
+| `blogPage` | Blog listing page + page builder + SEO |
+| `settings` | Site title, description, menu, branding, social links, contact info, GTM, webhook |
 
 ## Sanity Studio Structure
 
 ```
-Umkhandlu
+[Site Name]
 ├── Home
 ├── Blog Page
 ├── Pages
 ├── ─────────
-├── Posts & Stories
 ├── Community Notices
-├── Categories
+├── Documents & Records
 ├── ─────────
 ├── Leadership & People
+├── Programs & Events
+├── Opportunities
+├── ─────────
+├── Posts & Stories
+├── Categories
+├── ─────────
+├── Directory Listings
+├── Sponsors & Partners
 ├── ─────────
 └── Site Settings
     ├── General (title, description, menu, OG image)
-    ├── Social & Contact (email, phone, address, social URLs, WhatsApp)
-    └── Analytics (GTM ID)
+    ├── Branding (primary color, secondary color)
+    ├── Social & Contact (email, phone, address, social URLs)
+    └── Analytics (GTM ID, webhook URL)
 ```
 
-## Folder Structure
+## Theming
 
-```
-src/
-├── actions/          # Server actions (subscribe, contact, draft mode)
-├── app/
-│   ├── (frontend)/   # Public routes
-│   ├── api/          # API routes
-│   └── studio/       # Sanity Studio
-├── components/
-│   ├── icons/        # SVG icon components
-│   ├── layout/       # Header, Footer, NavBar, Main
-│   ├── modules/      # Data-aware components (PostCard, Byline, etc.)
-│   ├── sections/     # Page builder sections
-│   ├── templates/    # Page templates (Post, Page, PostRiver)
-│   └── ui/           # Pure UI components (Button, Badge, Pagination)
-├── env/              # Environment variable config
-├── hooks/            # Custom React hooks
-├── lib/
-│   ├── i18n/         # Zulu/English translations + locale context
-│   └── sanity/       # Client, queries, fragments, SEO, JSON-LD
-├── studio/
-│   ├── components/   # Custom Sanity Studio components
-│   ├── schema/       # All Sanity schemas
-│   └── structure/    # Studio navigation structure
-└── utils/            # Utility functions
-```
+Brand colors are controlled from the CMS:
+
+1. Open Studio → Site Settings → **Branding**
+2. Set Primary Brand Color (hex, e.g. `#16a34a`)
+3. Set Secondary Brand Color (hex, e.g. `#f59e0b`)
+4. The entire site updates — buttons, links, gradients, badges, everything
+
+Defaults in `src/app/globals.css` are used when CMS colors aren't set.
+
+## Multi-Council Deployment
+
+The same codebase serves any traditional council. To deploy for a different council:
+
+| What to change | Where |
+|---|---|
+| Site name + description | `src/lib/siteConfig.ts` (2 lines) |
+| Sanity project | `.env.local` (project ID + dataset) |
+| Domain | Vercel settings |
+| Brand colors | CMS Settings → Branding |
+| All content | CMS documents |
+
+Zero council-specific strings exist in component or route code.
 
 ## i18n (Zulu / English)
 
-The language toggle in the header switches between English and isiZulu. Translations are in `src/lib/i18n/translations.ts`. Usage in client components:
+Language toggle in the header switches between English and isiZulu. Translations in `src/lib/i18n/translations.ts`:
 
 ```tsx
 import { useLocale } from '@/lib/i18n/LocaleContext';
@@ -162,7 +160,18 @@ function MyComponent() {
 }
 ```
 
-CMS content (headings, body text) is managed in Sanity and is not translated by this system — that requires Sanity's document internationalization plugin for full bilingual CMS content.
+## Area Pages
+
+Each area/isigodi gets a page at `/areas/[slug]` that auto-assembles:
+- Induna (headman) from person reference
+- Related listings (schools, clinics, businesses)
+- Area-specific notices, programs, and opportunities
+
+Content links via `relatedArea` references on notices, programs, opportunities, and records.
+
+## Forms & Webhooks
+
+Contact and subscribe forms validate with Valibot and POST to a webhook URL configured in CMS Settings → Analytics. Works with n8n, Make, Zapier, or any webhook endpoint.
 
 ## Scripts
 
@@ -174,7 +183,11 @@ CMS content (headings, body text) is managed in Sanity and is not translated by 
 | `npm run lint` | Lint with Biome |
 | `npm run test` | Run tests with Vitest |
 | `npm run typecheck` | TypeScript type check |
-| `ANALYZE=true npm run next:build` | Bundle analysis |
+
+## Documentation
+
+- [PLAYBOOK.md](./PLAYBOOK.md) — Strategic project playbook for proposals
+- [ROLES.md](./ROLES.md) — Content ownership model and roles
 
 ## License
 

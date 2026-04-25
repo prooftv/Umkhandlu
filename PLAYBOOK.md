@@ -2,7 +2,7 @@
 
 ## Community Digital Platform for Traditional Councils
 
-**Version:** 1.0
+**Version:** 2.0
 **Status:** Production-Ready
 **Repository:** github.com/prooftv/Umkhandlu
 
@@ -110,19 +110,20 @@ This is NOT "a website for the council." This is a **digital layer around existi
 
 ### Content Architecture
 
-#### 9 Document Types
+#### 10 Document Types
 
 | Type | Purpose | Key Fields |
 |---|---|---|
 | `page` | Generic CMS pages | Name, slug, page builder sections, SEO |
 | `post` | Blog posts, stories, learner content | Title, author, categories, content, image, SEO |
-| `person` | Leadership, council, sponsors, community | Name, role, type (inkosi/induna/council/youth/sponsor/community), skills, organization |
+| `person` | Leadership, council, community profiles | Name, role, type (inkosi/induna/council/youth/community/author), skills, organization |
 | `category` | Content categories | Title, slug, description |
 | `notice` | Community notices | Title, type (meeting/announcement/resolution/alert/opportunity), date, pinned, relatedArea |
-| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, contact, image, featured, induna reference, relatedListings |
+| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, contact, WhatsApp, services, hours, verified, image, featured, induna, relatedListings |
 | `opportunity` | Jobs, training, bursaries, funding | Title, type, description, organization, deadline, apply link, relatedArea, featured |
 | `program` | Youth events, skills programs, school collabs | Title, type, status (upcoming/active/completed), date, relatedArea |
 | `record` | Governance documents | Title, type (minutes/resolution/policy/report), date, summary, content, PDF file, relatedArea |
+| `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
 
 #### 3 Singletons
 
@@ -130,31 +131,36 @@ This is NOT "a website for the council." This is a **digital layer around existi
 |---|---|
 | `homePage` | Homepage content + page builder |
 | `blogPage` | Blog listing page SEO |
-| `settings` | Site title, description, menu, social links (Facebook, Twitter, Instagram, YouTube, WhatsApp), contact info (email, phone, address), GTM ID, default OG image |
+| `settings` | Site title, description, menu, branding (primary/secondary colors), social links (Facebook, Twitter, Instagram, YouTube, WhatsApp), contact info (email, phone, address), GTM ID, webhook URL, default OG image |
 
-#### 19 Page Builder Sections
+#### 23 Page Builder Sections
 
 Any page can be composed from these sections in any order:
 
 | Section | Purpose |
 |---|---|
 | `hero` | Page hero with heading, rich text, image, CTA buttons |
-| `mediaText` | Image + text side-by-side (configurable left/right) |
+| `richText` | Heading + rich text body content |
+| `mediaText` | Image + text side-by-side (configurable left/right) with buttons |
 | `cta` | Call to action with gradient background |
+| `quote` | Testimonial / chief's message with author photo and role |
+| `faq` | Collapsible Q&A accordion |
+| `stats` | Bold numbers + labels grid |
+| `embed` | YouTube videos, iframes, embedded content (configurable aspect ratio) |
 | `cardGrid` | Grid of content cards with headings and rich text |
 | `postList` | Latest blog posts from CMS |
 | `teamGrid` | Leadership/council member profiles with photos and roles |
 | `noticeList` | Community notices (filterable by type, pinnable) |
 | `opportunityList` | Jobs, training, bursaries (deadline-aware, auto-hides expired) |
 | `programList` | Programs & events (filterable by status) |
-| `listingGrid` | Community directory (filterable by type: school/clinic/business/church/area) |
+| `listingGrid` | Community directory (filterable by type: school/clinic/business/accommodation/church/area) |
 | `recordList` | Governance documents (filterable by type) |
 | `process` | Step-by-step visual timeline (for land allocation, governance processes) |
 | `gallery` | Photo gallery with captions and hover reveal |
 | `contactForm` | Contact form with server action + optional Google Maps embed |
 | `subscribe` | Newsletter signup with server action |
 | `logoGrid` | Sponsors/partners logo display (grayscale → color on hover) |
-| `adBanner` | Sponsor banners with date scheduling and size options |
+| `adBanner` | Sponsor banners with date scheduling, size options, sponsor reference |
 | `divider` | Visual separator |
 
 ### Area Pages (Community Digital Twins)
@@ -199,7 +205,7 @@ All content is linked via `relatedArea` references — when editors create a not
 ### Sanity Studio Navigation
 
 ```
-Umkhandlu
+[Site Name]
 ├── Home
 ├── Blog Page
 ├── Pages
@@ -215,8 +221,13 @@ Umkhandlu
 ├── Categories
 ├── ─────────
 ├── Directory Listings 📍
+├── Sponsors & Partners ⭐
 ├── ─────────
 └── Site Settings ⚙️
+    ├── General (title, description, menu, OG image)
+    ├── Branding (primary color, secondary color)
+    ├── Social & Contact (email, phone, address, social URLs, WhatsApp)
+    └── Analytics (GTM ID, webhook URL)
 ```
 
 ---
@@ -320,31 +331,47 @@ npm run dev
 
 ## 7. Scalability — The Unami Digital Framework
 
-Umkhandlu is designed as a **reusable template** for any traditional council. The same codebase can serve multiple communities:
+Umkhandlu is designed as a **reusable template** for any traditional council. The same codebase can serve multiple communities.
 
-### Template Model
+### Multi-Council Deployment (Verified)
 
-```
-Umkhandlu (Base Template)
-├── Council A (Mndozo) — customised content via Sanity
-├── Council B (Another area) — same code, different Sanity dataset
-├── Council C — same code, different Sanity dataset
-└── ...
-```
+To deploy for a different council, change:
+
+| What | Where | Example |
+|---|---|---|
+| Site name + description | `src/lib/siteConfig.ts` (2 lines) | `SITE_NAME = 'Umkhandlu waseNquthu'` |
+| Sanity project | `.env.local` env vars | Different project ID + dataset |
+| Domain | Vercel settings | `nquthu.umkhandlu.org` |
+| Brand colors | CMS Settings → Branding | `#16a34a` green |
+| All content | CMS documents | Different leadership, notices, listings |
+
+Zero council-specific strings exist in component or route code. Every "Umkhandlu" reference flows from `siteConfig.ts` as a fallback — once CMS settings are populated, the CMS values take over.
 
 ### What Changes Per Deployment
 
-- Sanity dataset (content)
-- Environment variables
-- Domain name
-- Logo and branding (via CMS settings)
+- `siteConfig.ts` (2 lines: name + description)
+- Environment variables (Sanity project, domain)
+- CMS content (all documents)
+- Brand colors (from CMS Settings → Branding)
+- Logo (via CMS or replace `src/components/icons/Logo.tsx`)
 
 ### What Stays the Same
 
-- All code, components, sections, schemas
+- All 23 page builder sections
+- All 10 document types
+- All routes and components
 - SEO infrastructure
 - Analytics integration
 - i18n system
+- Forms and webhooks
+
+### CMS-Driven Theming
+
+Brand colors are set from Sanity Studio → Settings → Branding:
+- Primary Brand Color (hex) — buttons, links, accents, gradients
+- Secondary Brand Color (hex) — gradients, secondary elements
+
+The frontend layout injects these as CSS custom properties, overriding the defaults in `globals.css`. No code changes or redeployment needed.
 
 ### Future Integrations (Phase 2+)
 
@@ -583,17 +610,15 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 | Metric | Count |
 |---|---|
-| Document types | 9 |
-| Page builder sections | 19 |
+| Document types | 10 |
+| Page builder sections | 23 |
 | Singletons | 3 |
-| Frontend routes | 12 |
+| Frontend routes | 13 |
 | Server actions | 3 (with webhook delivery) |
 | UI components | 7 |
-| Module components | 13 |
-| Section components | 19 |
+| Total components | 55 |
 | i18n translation keys | 50+ |
 | Tests | 13 (all passing) |
-| TypeScript errors | 0 (new) |
 | Biome lint errors | 0 |
 
 ---
