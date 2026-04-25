@@ -12,7 +12,7 @@ type Listing = {
   whatsappContact?: string;
   servicesOffered?: string[];
   operatingHours?: string;
-  verifiedByInduna?: boolean;
+  verifiedByInduna?: string;
   featured?: boolean;
   image?: { asset?: { _ref?: string }; alt?: string };
 };
@@ -44,6 +44,19 @@ const typeLabels: Record<string, string> = {
   facility: 'Facility',
   area: 'Village / Area',
 };
+
+function VerifiedBadge({ level }: { level?: string }) {
+  if (!level || level === 'community') return null;
+  const isCouncil = level === 'council';
+  return (
+    <span
+      className="ml-1 text-green-600"
+      title={isCouncil ? 'Council Approved' : 'Verified by Induna'}
+    >
+      {isCouncil ? '✓✓' : '✓'}
+    </span>
+  );
+}
 
 export default function ListingGrid({ section }: Props) {
   const { heading, description, listings } = section;
@@ -99,14 +112,7 @@ export default function ListingGrid({ section }: Props) {
                 </div>
                 <h3 className="text-lg font-semibold mb-1">
                   {listing.name}
-                  {listing.verifiedByInduna && (
-                    <span
-                      className="ml-1 text-green-600"
-                      title="Verified by Induna"
-                    >
-                      ✓
-                    </span>
-                  )}
+                  <VerifiedBadge level={listing.verifiedByInduna} />
                 </h3>
                 {listing.description && (
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">

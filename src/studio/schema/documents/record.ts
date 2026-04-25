@@ -28,6 +28,8 @@ export default defineType({
         list: [
           { title: 'Meeting Minutes', value: 'minutes' },
           { title: 'Resolution', value: 'resolution' },
+          { title: 'Land Allocation', value: 'land-allocation' },
+          { title: 'Dispute Resolution', value: 'dispute-resolution' },
           { title: 'Public Notice', value: 'public-notice' },
           { title: 'Policy', value: 'policy' },
           { title: 'Report', value: 'report' },
@@ -48,6 +50,33 @@ export default defineType({
       title: 'Summary',
       type: 'text',
       rows: 3,
+    }),
+    defineField({
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Approved', value: 'approved' },
+          { title: 'Pending', value: 'pending' },
+          { title: 'Rejected', value: 'rejected' },
+          { title: 'Resolved', value: 'resolved' },
+        ],
+      },
+      description: 'For land allocations and dispute resolutions.',
+      hidden: ({ parent }) =>
+        parent?.recordType !== 'land-allocation' &&
+        parent?.recordType !== 'dispute-resolution',
+    }),
+    defineField({
+      name: 'approvedBy',
+      title: 'Approved / Resolved By',
+      type: 'reference',
+      to: [{ type: 'person' }],
+      description: 'The Inkosi or authority who approved this decision.',
+      hidden: ({ parent }) =>
+        parent?.recordType !== 'land-allocation' &&
+        parent?.recordType !== 'dispute-resolution',
     }),
     defineField({
       name: 'content',

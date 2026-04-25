@@ -81,11 +81,17 @@ export default defineType({
     }),
     defineField({
       name: 'verifiedByInduna',
-      title: 'Verified by Induna',
-      type: 'boolean',
-      initialValue: false,
-      description:
-        'Indicates this listing has been verified by the local induna.',
+      title: 'Verification Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Community Submitted', value: 'community' },
+          { title: 'Verified by Induna', value: 'induna' },
+          { title: 'Council Approved', value: 'council' },
+        ],
+      },
+      initialValue: 'community',
+      description: 'Level of verification for this listing.',
       hidden: ({ parent }) => parent?.listingType === 'area',
     }),
     defineField({

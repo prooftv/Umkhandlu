@@ -127,11 +127,19 @@ export default async function AreaPage(props: Props) {
                   </p>
                   <h3 className="font-semibold">
                     {listing.name}
-                    {listing.verifiedByInduna && (
-                      <span className="ml-1 text-green-600" title="Verified">
-                        ✓
-                      </span>
-                    )}
+                    {listing.verifiedByInduna &&
+                      listing.verifiedByInduna !== 'community' && (
+                        <span
+                          className="ml-1 text-green-600"
+                          title={
+                            listing.verifiedByInduna === 'council'
+                              ? 'Council Approved'
+                              : 'Verified by Induna'
+                          }
+                        >
+                          {listing.verifiedByInduna === 'council' ? '✓✓' : '✓'}
+                        </span>
+                      )}
                   </h3>
                   {listing.description && (
                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">

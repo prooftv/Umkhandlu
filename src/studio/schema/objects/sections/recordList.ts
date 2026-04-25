@@ -23,6 +23,8 @@ export default defineType({
           { title: 'All', value: 'all' },
           { title: 'Meeting Minutes', value: 'minutes' },
           { title: 'Resolutions', value: 'resolution' },
+          { title: 'Land Allocations', value: 'land-allocation' },
+          { title: 'Dispute Resolutions', value: 'dispute-resolution' },
           { title: 'Public Notices', value: 'public-notice' },
           { title: 'Policies', value: 'policy' },
           { title: 'Reports', value: 'report' },

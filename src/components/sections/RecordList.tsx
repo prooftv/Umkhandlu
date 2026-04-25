@@ -6,6 +6,8 @@ type Record = {
   recordType: string;
   date: string;
   summary?: string;
+  status?: string;
+  approvedBy?: { firstName: string; lastName: string; role?: string };
   fileUrl?: string;
 };
 
@@ -19,9 +21,21 @@ type Props = {
 const typeLabels: globalThis.Record<string, string> = {
   minutes: 'Minutes',
   resolution: 'Resolution',
+  'land-allocation': 'Land Allocation',
+  'dispute-resolution': 'Dispute Resolution',
   'public-notice': 'Public Notice',
   policy: 'Policy',
   report: 'Report',
+};
+
+const statusColors: globalThis.Record<
+  string,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
+  approved: 'default',
+  pending: 'outline',
+  rejected: 'destructive',
+  resolved: 'secondary',
 };
 
 export default function RecordList({ section }: Props) {
@@ -59,6 +73,21 @@ export default function RecordList({ section }: Props) {
                     <p className="text-gray-600 text-sm mt-1">
                       {record.summary}
                     </p>
+                  )}
+                  {record.status && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant={statusColors[record.status] || 'outline'}>
+                        {record.status}
+                      </Badge>
+                      {record.approvedBy && (
+                        <span className="text-xs text-gray-500">
+                          by {record.approvedBy.firstName}{' '}
+                          {record.approvedBy.lastName}
+                          {record.approvedBy.role &&
+                            ` (${record.approvedBy.role})`}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
                 {record.fileUrl && (

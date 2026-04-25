@@ -55,7 +55,7 @@ npm run dev
 | `listing` | Directory (school, clinic, business, accommodation, church, facility, area) |
 | `opportunity` | Jobs, training, bursaries, funding |
 | `program` | Youth events, skills programs, school collaborations |
-| `record` | Governance documents (minutes, resolutions, policies, reports) |
+| `record` | Governance documents (minutes, resolutions, land allocations, dispute resolutions, policies, reports) |
 | `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
 
 ### 23 Page Builder Sections

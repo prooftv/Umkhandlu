@@ -633,6 +633,8 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 > "Umkhandlu is a digital infrastructure platform that enables traditional councils to communicate, document governance, and unlock local economic and youth development opportunities — creating structured community data that currently does not exist in digital form."
 
+> "We prepare councils for structured engagement with the Ingonyama Trust Board by digitising governance processes, land allocation decisions, and community infrastructure at council level."
+
 ### For NGOs & Donors
 
 > "Umkhandlu provides structured, real-time data on community infrastructure, governance activity, and youth engagement across traditional authority areas — enabling targeted intervention and measurable impact."
@@ -640,6 +642,63 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 ### For Government
 
 > "Umkhandlu digitises the local governance layer, creating a transparent communication channel between traditional councils and the communities they serve — aligned with existing authority structures."
+
+---
+
+## 15. Ingonyama Trust Alignment
+
+### The Gap This Platform Fills
+
+The Ingonyama Trust Board typically sees the formalised layer: lease agreements, legal applications, disputes. They do NOT see the community-level governance that precedes formalisation — early land discussions, council approvals, local economic activity, infrastructure mapping.
+
+Umkhandlu captures this **pre-Trust data layer** without overstepping into Trust territory.
+
+### How the Platform Maps to the Real Land Allocation Flow
+
+| Real-World Step | Platform Feature | What Gets Created |
+|---|---|---|
+| 1. Resident approaches Induna | Area page + induna profile | Local authority is visible |
+| 2. Induna consults local knowledge | Listing directory (who/what is where) | Community infrastructure is mapped |
+| 3. Matter goes to Umkhandlu meeting | Notice (type: meeting) | Meeting is announced publicly |
+| 4. Council discusses and decides | Record (type: minutes) | Decision is documented |
+| 5. Site inspection | Process section step | Procedure is transparent |
+| 6. Inkosi approves | Record (type: land-allocation, status: approved, approvedBy: Inkosi) | Decision is permanently recorded |
+| 7. PTO / letter issued | Record with PDF attachment | Document is archived digitally |
+| 8. Trust registration | Final process step | Aligns with formal system |
+
+### Land Allocation Records
+
+The `record` document type supports `land-allocation` records with:
+- **Status**: Approved, Pending, Rejected
+- **Approved By**: Reference to the Inkosi or authority (person document)
+- **Related Area**: Linked to the specific isigodi
+- **PDF attachment**: Permission to Occupy or formal letter
+- **Summary**: Public-facing description of the decision (no PII)
+
+This creates a **transparency layer** — the public outcome of land decisions — without storing applicant personal information. The actual register stays with the council.
+
+### Dispute Resolution Records
+
+Same pattern: `dispute-resolution` records capture the **resolved outcome** with status (Resolved/Pending) and the authority who resolved it. No party names or sensitive details on the public site.
+
+### Verification Trust Scoring
+
+Every directory listing has a verification level:
+- **Community Submitted** — unverified, added by anyone
+- **Verified by Induna** — local headman confirms it exists (✓)
+- **Council Approved** — full council verification (✓✓)
+
+This creates a trust layer in community data that NGOs, government, and the Trust can rely on.
+
+### What NOT to Say to the Trust
+
+❌ "We integrate with Ingonyama Trust"
+❌ "We digitise Trust land"
+❌ "We replace the land allocation process"
+
+✅ "We support traditional councils with digital governance tools"
+✅ "We prepare councils for structured engagement with the Trust"
+✅ "We create community-level data that can feed into provincial systems"
 
 ---
 

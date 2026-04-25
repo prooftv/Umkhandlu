@@ -406,6 +406,8 @@ export const recordFragment = /* groq */ `
   recordType,
   date,
   summary,
+  status,
+  "approvedBy": approvedBy->{ firstName, lastName, role },
   "fileUrl": file.asset->url,
 `;
 
