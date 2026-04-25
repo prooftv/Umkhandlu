@@ -5,7 +5,7 @@ import { draftMode } from 'next/headers';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import Main from '@/components/layout/Main';
-import { sanityFetch } from '@/lib/sanity/client/live';
+import { SanityLive, sanityFetch } from '@/lib/sanity/client/live';
 import { settingsQuery } from '@/lib/sanity/queries/queries';
 import { handleError } from './client-utils';
 
