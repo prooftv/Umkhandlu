@@ -2,6 +2,7 @@ import {
   BellIcon,
   CogIcon,
   DocumentIcon,
+  FolderIcon,
   HomeIcon,
   PinIcon,
   RocketIcon,
@@ -26,22 +27,29 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // Content
-      S.documentTypeListItem('post').title('Posts & Stories'),
+      // Governance
       S.documentTypeListItem('notice')
         .title('Community Notices')
         .icon(BellIcon),
-      S.documentTypeListItem('category').title('Categories'),
+      S.documentTypeListItem('record')
+        .title('Documents & Records')
+        .icon(FolderIcon),
 
       S.divider(),
 
-      // People
+      // People & Programs
       S.documentTypeListItem('person')
         .title('Leadership & People')
         .icon(UsersIcon),
       S.documentTypeListItem('program')
         .title('Programs & Events')
         .icon(RocketIcon),
+
+      S.divider(),
+
+      // Content
+      S.documentTypeListItem('post').title('Posts & Stories'),
+      S.documentTypeListItem('category').title('Categories'),
 
       S.divider(),
 

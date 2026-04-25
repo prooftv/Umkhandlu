@@ -31,6 +31,7 @@ export default defineType({
           { title: 'Business', value: 'business' },
           { title: 'Church', value: 'church' },
           { title: 'Community Facility', value: 'facility' },
+          { title: 'Village / Area', value: 'area' },
         ],
         layout: 'radio',
         direction: 'horizontal',

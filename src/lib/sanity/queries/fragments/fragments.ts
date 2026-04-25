@@ -346,6 +346,42 @@ export const programListSectionFragment = /* groq */ `
   }
 `;
 
+export const processSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  steps[] {
+    _key,
+    title,
+    description
+  },
+  footnote
+`;
+
+export const recordFragment = /* groq */ `
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  recordType,
+  date,
+  summary,
+  "fileUrl": file.asset->url,
+`;
+
+export const recordListSectionFragment = /* groq */ `
+  _type,
+  heading,
+  filterType,
+  limit,
+  "records": *[_type == 'record' && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    recordType == ^.filterType
+  )] | order(date desc) [0...^.limit] {
+    ${recordFragment}
+  }
+`;
+
 export const contactFormSectionFragment = /* groq */ `
   _type,
   heading,
@@ -371,7 +407,9 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'mediaText' => {${mediaTextSectionFragment}},
     _type == 'noticeList' => {${noticeListSectionFragment}},
     _type == 'postList' => {${postListSectionFragment}},
+    _type == 'process' => {${processSectionFragment}},
     _type == 'programList' => {${programListSectionFragment}},
+    _type == 'recordList' => {${recordListSectionFragment}},
     _type == 'subscribe' => {${subscribeSectionFragment}},
     _type == 'teamGrid' => {${teamGridSectionFragment}}
   },

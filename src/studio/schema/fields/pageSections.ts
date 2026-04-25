@@ -11,7 +11,9 @@ import logoGrid from '../objects/sections/logoGrid';
 import mediaText from '../objects/sections/mediaText';
 import noticeList from '../objects/sections/noticeList';
 import postList from '../objects/sections/postList';
+import process from '../objects/sections/process';
 import programList from '../objects/sections/programList';
+import recordList from '../objects/sections/recordList';
 import subscribe from '../objects/sections/subscribe';
 import teamGrid from '../objects/sections/teamGrid';
 
@@ -28,7 +30,9 @@ const pageSectionsObjects = [
   mediaText,
   noticeList,
   postList,
+  process,
   programList,
+  recordList,
   subscribe,
   teamGrid,
 ];
