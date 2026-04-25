@@ -56,6 +56,38 @@ export default defineType({
       description: 'Phone number, email, or other contact details.',
     }),
     defineField({
+      name: 'whatsappContact',
+      title: 'WhatsApp Number',
+      type: 'string',
+      description: 'International format, e.g. +27612345678',
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
+      name: 'servicesOffered',
+      title: 'Services Offered',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'e.g. Primary care, Maternity, Dispensary (clinics) or Grades 8-12, Matric (schools) or Plumbing, Electrical (businesses)',
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
+      name: 'operatingHours',
+      title: 'Operating Hours',
+      type: 'string',
+      description: 'e.g. Mon-Fri 8:00-16:00, Sat 8:00-12:00',
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
+      name: 'verifiedByInduna',
+      title: 'Verified by Induna',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Indicates this listing has been verified by the local induna.',
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',

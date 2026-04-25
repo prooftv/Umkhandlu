@@ -277,6 +277,10 @@ export const listingFragment = /* groq */ `
   description,
   location,
   contactInfo,
+  whatsappContact,
+  servicesOffered,
+  operatingHours,
+  verifiedByInduna,
   featured,
   image,
 `;

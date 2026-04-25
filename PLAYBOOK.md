@@ -266,6 +266,19 @@ Umkhandlu
 - `rel="sponsored"` on links
 - Sponsors/partners logo grid (grayscale → color on hover)
 
+### Advertising Packages (Council Revenue Model)
+
+| Tier | What They Get | Suggested Price |
+|---|---|---|
+| **Basic** | Directory listing (name, contact, location) | Free |
+| **Featured** | Basic + featured badge (top of listingGrid) + verified by induna | R100/month |
+| **Premium** | Featured + adBanner on relevant pages (date-scheduled) | R300/month |
+| **Sponsor** | Premium + logoGrid placement on homepage + all pages | R500/month |
+
+Positioning: *"Supporting local businesses and community development"* — not commercialisation.
+
+Revenue flows to the council, not Unami. This creates council buy-in and sustainability.
+
 ---
 
 ## 6. Deployment
