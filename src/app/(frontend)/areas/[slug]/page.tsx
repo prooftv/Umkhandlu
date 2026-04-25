@@ -100,25 +100,84 @@ export default async function AreaPage(props: Props) {
           <h2 className="text-2xl font-bold mb-4">In This Area</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {area.relatedListings.map((listing) => (
-              <div
+              <article
                 key={listing._id}
-                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm"
+                className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
               >
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                  {listing.listingType}
-                </p>
-                <h3 className="font-semibold">{listing.name}</h3>
-                {listing.location && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    📍 {listing.location}
-                  </p>
+                {listing.image?.asset?._ref && (
+                  <div className="relative h-36">
+                    <Image
+                      src={
+                        urlForImage(listing.image)
+                          ?.width(400)
+                          .height(200)
+                          .fit('crop')
+                          .url() as string
+                      }
+                      alt={listing.image?.alt || listing.name}
+                      width={400}
+                      height={200}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
                 )}
-                {listing.contactInfo && (
-                  <p className="text-sm text-gray-500">
-                    📞 {listing.contactInfo}
+                <div className="p-4">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                    {listing.listingType}
                   </p>
-                )}
-              </div>
+                  <h3 className="font-semibold">
+                    {listing.name}
+                    {listing.verifiedByInduna && (
+                      <span className="ml-1 text-green-600" title="Verified">
+                        ✓
+                      </span>
+                    )}
+                  </h3>
+                  {listing.description && (
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                      {listing.description}
+                    </p>
+                  )}
+                  {listing.location && (
+                    <p className="text-xs text-gray-500 mt-2">
+                      📍 {listing.location}
+                    </p>
+                  )}
+                  {listing.contactInfo && (
+                    <p className="text-xs text-gray-500">
+                      📞 {listing.contactInfo}
+                    </p>
+                  )}
+                  {listing.whatsappContact && (
+                    <a
+                      href={`https://wa.me/${listing.whatsappContact.replace(/[^0-9+]/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 text-xs mt-1 inline-block hover:underline"
+                    >
+                      💬 WhatsApp
+                    </a>
+                  )}
+                  {listing.operatingHours && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      🕐 {listing.operatingHours}
+                    </p>
+                  )}
+                  {listing.servicesOffered &&
+                    listing.servicesOffered.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {listing.servicesOffered.map((service) => (
+                          <span
+                            key={service}
+                            className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
+                          >
+                            {service}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                </div>
+              </article>
             ))}
           </div>
         </section>
