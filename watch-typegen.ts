@@ -32,11 +32,11 @@ const getFileType = (filePath: string): FileType => {
 };
 
 // Shared event handler function
-const handleFileEvent = (event: string, filePath: string): void => {
+const handleFileEvent = (_event: string, filePath: string): void => {
   const fileType = getFileType(filePath);
   if (fileType === FileType.SCHEMA) {
     console.log('📜 Schema updated - running Sanity Typegen...');
-    exec('npm run sanity:typegen', (err, stdout, stderr) => {
+    exec('npm run sanity:typegen', (err, _stdout, stderr) => {
       if (err) {
         console.error(`Error running Sanity Typegen: ${err.message}`);
         return;
@@ -48,9 +48,11 @@ const handleFileEvent = (event: string, filePath: string): void => {
   if (fileType === FileType.QUERY) {
     console.log('🟢 Query updated - running Sanity Typegen...');
 
-    exec('npx sanity typegen generate', (err, stdout, stderr) => {
+    exec('npx sanity typegen generate', (err, _stdout, stderr) => {
       if (err) {
-        console.error(`Error running npx sanity typegen generate: ${err.message}`);
+        console.error(
+          `Error running npx sanity typegen generate: ${err.message}`
+        );
         return;
       }
       console.log('Sanity Typegen generated successfully');
@@ -72,8 +74,12 @@ watcher
   .on('add', (filePath: string) => handleFileEvent('File added', filePath))
   .on('change', (filePath: string) => handleFileEvent('File changed', filePath))
   .on('unlink', (filePath: string) => handleFileEvent('File deleted', filePath))
-  .on('addDir', (dirPath: string) => handleFileEvent('Directory added', dirPath))
-  .on('unlinkDir', (dirPath: string) => handleFileEvent('Directory removed', dirPath))
+  .on('addDir', (dirPath: string) =>
+    handleFileEvent('Directory added', dirPath)
+  )
+  .on('unlinkDir', (dirPath: string) =>
+    handleFileEvent('Directory removed', dirPath)
+  )
   .on('error', (error: unknown) => console.error(`⚠️ Watcher error: ${error}`));
 
 process.on('SIGINT', () => {

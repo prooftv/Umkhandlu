@@ -20,10 +20,15 @@ export const urlForImage = (source: { asset?: { _ref?: string } }) => {
 export function resolveOpenGraphImage(
   image?: SeoFragmentType['metaImage'],
   width = 1200,
-  height = 627,
+  height = 627
 ) {
   if (!image) return;
-  const url = imageBuilder.image(image)?.width(width).height(height).fit('crop').url();
+  const url = imageBuilder
+    .image(image)
+    ?.width(width)
+    .height(height)
+    .fit('crop')
+    .url();
   if (!url) return;
   return { url, width, height };
 }

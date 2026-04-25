@@ -6,10 +6,13 @@ const baseUrl = getBaseUrl();
 export default function robots(): MetadataRoute.Robots {
   if (process.env.NODE_ENV === 'production') {
     return {
-      rules: {
-        userAgent: '*',
-        allow: '/',
-      },
+      rules: [
+        {
+          userAgent: '*',
+          allow: '/',
+          disallow: ['/studio', '/api/'],
+        },
+      ],
       sitemap: `${baseUrl}/sitemap.xml`,
     };
   }

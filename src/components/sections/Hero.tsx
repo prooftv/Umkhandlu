@@ -5,27 +5,42 @@ import { urlForImage } from '@/lib/sanity/client/utils';
 import type { HeroSectionFragmentType } from '@/lib/sanity/queries/fragments/fragment.types';
 import ButtonsGroup from '../modules/ButtonsGroup';
 
-export default function HeroSection({ section }: { section: HeroSectionFragmentType }) {
+export default function HeroSection({
+  section,
+}: {
+  section: HeroSectionFragmentType;
+}) {
   return (
     <section className="py-10 md:py-14 bg-white">
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">{section?.heading}</h1>
-            <PortableText className="text-xl" value={section.text as PortableTextBlock[]} />
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              {section?.heading}
+            </h1>
+            <PortableText
+              className="text-xl"
+              value={section.text as PortableTextBlock[]}
+            />
 
-            {section?.buttons && section?.buttons.length ? (
-              <div className="mt-8 gap-4 flex">
-                {section?.buttons.length > 1 && (
-                  <ButtonsGroup className="w-full md:w-auto" buttons={section?.buttons} />
-                )}
+            {section?.buttons && section?.buttons.length > 0 && (
+              <div className="mt-8">
+                <ButtonsGroup
+                  className="w-full md:w-auto"
+                  buttons={section.buttons}
+                />
               </div>
-            ) : null}
+            )}
           </div>
           <div className="relative">
             {section.image?.asset && (
               <Image
-                src={urlForImage(section.image)?.width(1000).height(667).url() as string}
+                src={
+                  urlForImage(section.image)
+                    ?.width(1000)
+                    .height(667)
+                    .url() as string
+                }
                 alt={section?.image?.alt || ''}
                 width={600}
                 height={400}

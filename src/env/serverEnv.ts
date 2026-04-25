@@ -10,7 +10,7 @@ const envSchema = {
     v.transform(parseInt),
     v.number(),
     v.minValue(1),
-    v.maxValue(1000),
+    v.maxValue(1000)
   ),
 };
 const serverEnv = createEnv(envSchema);

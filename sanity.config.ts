@@ -33,6 +33,10 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
       return slug ? `/blog/${slug}` : undefined;
     case 'page':
       return slug ? `/${slug}` : undefined;
+    case 'category':
+      return slug ? `/category/${slug}` : undefined;
+    case 'person':
+      return slug ? `/author/${slug}` : undefined;
     default:
       console.warn('Invalid document type:', documentType);
       return undefined;
@@ -43,7 +47,7 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
 export default defineConfig({
   basePath: '/studio',
   name: 'default',
-  title: 'Ignite for Sanity',
+  title: 'Umkhandlu',
   projectId: clientEnv.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: clientEnv.NEXT_PUBLIC_SANITY_DATASET,
   plugins: [
@@ -83,7 +87,7 @@ export default defineConfig({
               locations: [
                 {
                   title: doc?.name || 'Untitled',
-                  href: resolveHref('page', doc?.slug)!,
+                  href: resolveHref('page', doc?.slug) ?? '/',
                 },
               ],
             }),
@@ -97,7 +101,7 @@ export default defineConfig({
               locations: [
                 {
                   title: doc?.title || 'Untitled',
-                  href: resolveHref('post', doc?.slug)!,
+                  href: resolveHref('post', doc?.slug) ?? '/',
                 },
                 {
                   title: 'Home',

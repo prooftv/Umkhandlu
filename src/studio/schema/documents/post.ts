@@ -56,7 +56,8 @@ export default defineType({
             // Custom validation to ensure alt text is provided if the image is present. https://www.sanity.io/docs/validation
             return rule.custom((alt, context) => {
               if (
-                (context.document?.coverImage as { asset?: { _ref?: string } })?.asset?._ref &&
+                (context.document?.coverImage as { asset?: { _ref?: string } })
+                  ?.asset?._ref &&
                 !alt
               ) {
                 return 'Required';
@@ -118,7 +119,9 @@ export default defineType({
     },
     prepare({ title, media, authorFirstName, authorLastName, date }) {
       const subtitles = [
-        authorFirstName && authorLastName && `by ${authorFirstName} ${authorLastName}`,
+        authorFirstName &&
+          authorLastName &&
+          `by ${authorFirstName} ${authorLastName}`,
         date && `on ${format(parseISO(date), 'LLL d, yyyy')}`,
       ].filter(Boolean);
 

@@ -7,7 +7,10 @@ import { type PaginatedResult, paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { formatMetaData } from '@/lib/sanity/client/seo';
 import { blogPageQuery, postsArchiveQuery } from '@/lib/sanity/queries/queries';
-import type { BlogPageQueryResult, PostsArchiveQueryResult } from '@/sanity.types';
+import type {
+  BlogPageQueryResult,
+  PostsArchiveQueryResult,
+} from '@/sanity.types';
 
 const loadPostsPageData = async (): Promise<{
   blogPage: BlogPageQueryResult;
@@ -51,7 +54,9 @@ export default async function PostPage() {
   }
 
   return (
-    <Page title={`${routeData.blogPage?.name} - Page ${routeData.posts.currentPage}`}>
+    <Page
+      title={`${routeData.blogPage?.name} - Page ${routeData.posts.currentPage}`}
+    >
       <PostRiver
         listingData={routeData.posts.data}
         currentPage={routeData.posts.currentPage}

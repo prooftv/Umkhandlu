@@ -11,6 +11,11 @@ import {
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   title,
   description,
+  contactEmail,
+  contactPhone,
+  address,
+  socialLinks,
+  gtmId,
   ${menuFragment}
 }`);
 
@@ -39,10 +44,13 @@ export const getPageQuery = defineQuery(`
 `);
 
 export const getSitemapQuery = defineQuery(`
-  *[((_type in ["page", "post"] && defined(slug.current)) || (_type == "homePage")) && seo.noIndex != true]{
+  *[((_type in ["page", "post", "category", "person"] && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
     "href": select(
       _type == "page" => "/" + slug.current,
-      _type == "post" => "/posts/" + slug.current,
+      _type == "post" => "/blog/" + slug.current,
+      _type == "category" => "/category/" + slug.current,
+      _type == "person" => "/author/" + slug.current,
+      _type == "blogPage" => "/blog",
       _type == "homePage" => "/",
       slug.current
     ),

@@ -7,17 +7,24 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import type { SubscribeSectionFragmentType } from '@/lib/sanity/queries/fragments/fragment.types';
 
-const SubscribeForm = ({ section }: { section: SubscribeSectionFragmentType }) => {
-  const [state, formAction, pending] = useActionState<Partial<ActionResponse>, FormData>(
-    (state, formData) => {
-      return subscribeAction(formData);
-    },
-    {},
-  );
+const SubscribeForm = ({
+  section,
+}: {
+  section: SubscribeSectionFragmentType;
+}) => {
+  const [state, formAction, pending] = useActionState<
+    Partial<ActionResponse>,
+    FormData
+  >((_state, formData) => {
+    return subscribeAction(formData);
+  }, {});
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <form className="flex flex-col md:flex-row gap-4 justify-center w-full" action={formAction}>
+      <form
+        className="flex flex-col md:flex-row gap-4 justify-center w-full"
+        action={formAction}
+      >
         <div className="flex-grow max-w-md">
           <label htmlFor="email" className="sr-only">
             Email address
@@ -31,7 +38,12 @@ const SubscribeForm = ({ section }: { section: SubscribeSectionFragmentType }) =
             required
           />
         </div>
-        <Button type="submit" variant={'outline'} size={'xl'} disabled={pending}>
+        <Button
+          type="submit"
+          variant={'outline'}
+          size={'xl'}
+          disabled={pending}
+        >
           {section.buttonText}
         </Button>
       </form>

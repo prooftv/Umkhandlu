@@ -34,7 +34,7 @@ describe('createEnv', () => {
     };
 
     expect(() => createEnv(schema)).toThrow(
-      'process is not available. This function should run in a Node.js environment.',
+      'process is not available. This function should run in a Node.js environment.'
     );
 
     global.process = originalProcess;

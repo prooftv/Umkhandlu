@@ -6,10 +6,12 @@ import type { ActionResponse } from './types';
 const EmailSchema = v.pipe(
   v.string(),
   v.nonEmpty('Please enter your email.'),
-  v.email('The email is badly formatted.'),
+  v.email('The email is badly formatted.')
 );
 
-export const subscribeAction = async (formData: FormData): Promise<ActionResponse> => {
+export const subscribeAction = async (
+  formData: FormData
+): Promise<ActionResponse> => {
   'use server';
 
   try {

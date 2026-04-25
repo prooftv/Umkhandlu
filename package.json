@@ -1,5 +1,5 @@
 {
-  "name": "@10up/sanity-ignite",
+  "name": "umkhandlu",
   "private": true,
   "version": "1.0.0",
   "scripts": {
@@ -34,6 +34,7 @@
     "@sanity/vision": "^3.81.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.476.0",
     "next": "15.2.8",
     "next-sanity": "^9.9.6",

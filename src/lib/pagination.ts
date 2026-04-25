@@ -8,7 +8,7 @@ export type PaginatedResult<T extends { results: unknown; total: number }> = {
 export const paginatedData = <T extends { results: unknown; total: number }>(
   data: T,
   page: number,
-  perPage: number,
+  perPage: number
 ): PaginatedResult<T> => {
   const totalPages = Math.ceil(data.total / perPage);
 

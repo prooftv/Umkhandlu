@@ -1,8 +1,8 @@
 import type { PortableTextBlock } from 'next-sanity';
-import React from 'react';
 import Byline from '@/components/modules/Byline';
 import CoverImage from '@/components/modules/CoverImage';
 import CustomPortableText from '@/components/modules/PortableText';
+import { generateArticleJsonLd } from '@/lib/sanity/client/jsonLd';
 import type { PostFragmentType } from '@/lib/sanity/queries/fragments/fragment.types';
 
 type Props = {
@@ -10,8 +10,14 @@ type Props = {
 };
 
 const Post = ({ post }: Props) => {
+  const jsonLd = generateArticleJsonLd(post);
+
   return (
     <div className="container mx-auto max-w-5xl pt-5 md:pt-8 pb-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {post.image?.asset?._ref ? (
         <div className="mb-6 md:mb-14">
           <CoverImage image={post.image} priority />

@@ -5,14 +5,23 @@ import { Badge } from '@/components/ui/Badge';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import type { PersonFragmentType } from '@/lib/sanity/queries/fragments/fragment.types';
 
-export default function PersonArchiveByline({ person }: { person: PersonFragmentType }) {
+export default function PersonArchiveByline({
+  person,
+}: {
+  person: PersonFragmentType;
+}) {
   return (
     <div className="mb-12">
       <div className="flex flex-col items-center md:items-start md:flex-row gap-8 md:gap-12">
         <div className="relative max-w-[300px] w-full h-[300px]">
           {person.image ? (
             <Image
-              src={urlForImage(person.image)?.width(800).height(800).url() as string}
+              src={
+                urlForImage(person.image)
+                  ?.width(800)
+                  .height(800)
+                  .url() as string
+              }
               alt={`Photo of ${person.firstName} ${person.lastName}`}
               style={{
                 objectFit: 'cover',
@@ -34,10 +43,17 @@ export default function PersonArchiveByline({ person }: { person: PersonFragment
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               {person.firstName} {person.lastName}
             </h1>
-            {person.role ? <Badge>{person.role}</Badge> : null}
+            <div className="flex items-center gap-2 flex-wrap">
+              {person.role ? <Badge>{person.role}</Badge> : null}
+              {person.organization ? (
+                <Badge variant="outline">{person.organization}</Badge>
+              ) : null}
+            </div>
           </div>
           {person.biography ? (
-            <CustomPortableText value={person.biography as PortableTextBlock[]} />
+            <CustomPortableText
+              value={person.biography as PortableTextBlock[]}
+            />
           ) : null}
         </div>
       </div>

@@ -134,8 +134,8 @@ export const mediaTextSectionFragment = /* groq */ `
   _type,
   heading,
   text,
-  media,
-  mediaPosition,
+  image,
+  imagePosition,
   ${buttonsFragment}
 `;
 
@@ -154,6 +154,8 @@ export const personFragment = /* groq */ `
   lastName,
   image,
   role,
+  personType,
+  organization,
   biography,
   "slug": slug.current,
 `;
@@ -204,7 +206,8 @@ export const ctaSectionFragment = /* groq */ `
 export const subscribeSectionFragment = /* groq */ `
   _type,
   heading,
-  text
+  content,
+  buttonText
 `;
 
 export const cardGridFragment = /* groq */ `
@@ -221,18 +224,88 @@ export const cardGridsSectionFragment = /* groq */ `
   },
 `;
 
+export const teamGridSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  "members": members[]->{${personFragment}}
+`;
+
+export const noticeFragment = /* groq */ `
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  noticeType,
+  date,
+  excerpt,
+  pinned,
+`;
+
+export const noticeListSectionFragment = /* groq */ `
+  _type,
+  heading,
+  numberOfNotices,
+  filterType,
+  "notices": *[_type == 'notice' && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    noticeType == ^.filterType
+  )] | order(pinned desc, date desc) [0...^.numberOfNotices] {
+    ${noticeFragment}
+  }
+`;
+
+export const gallerySectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  images[] {
+    _key,
+    alt,
+    caption,
+    ${imageFragment}
+  }
+`;
+
+export const logoGridSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  logos[] {
+    _key,
+    name,
+    url,
+    logo {
+      ${imageFragment}
+    }
+  }
+`;
+
+export const contactFormSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  showMap,
+  mapEmbedUrl
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageSections[]{
     ...,
     _key,
     _type,
     _type == 'cardGrid' => {${cardGridsSectionFragment}},
+    _type == 'contactForm' => {${contactFormSectionFragment}},
     _type == 'cta' => {${ctaSectionFragment}},
     _type == 'divider' => {${dividerSectionFragment}},
+    _type == 'gallery' => {${gallerySectionFragment}},
     _type == 'hero' => {${heroSectionFragment}},
+    _type == 'logoGrid' => {${logoGridSectionFragment}},
     _type == 'mediaText' => {${mediaTextSectionFragment}},
+    _type == 'noticeList' => {${noticeListSectionFragment}},
     _type == 'postList' => {${postListSectionFragment}},
-    _type == 'subscribe' => {${subscribeSectionFragment}}
+    _type == 'subscribe' => {${subscribeSectionFragment}},
+    _type == 'teamGrid' => {${teamGridSectionFragment}}
   },
 `;
 

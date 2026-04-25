@@ -30,9 +30,17 @@
         "noUnusedVariables": "error"
       },
       "suspicious": {
-        "noExplicitAny": "error"
+        "noExplicitAny": "error",
+        "noFocusedTests": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "a11y": {
+        "useSemanticElements": "warn"
       },
       "style": {
+        "noNonNullAssertion": "warn",
         "useImportType": "error",
         "useConsistentArrayType": {
           "level": "error",

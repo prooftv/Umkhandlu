@@ -16,8 +16,14 @@ export default function CoverImage(props: CoverImageProps) {
       className="rounded-2xl shadow-md transition-shadow object-cover"
       fill={true}
       alt={stegaClean(source?.alt) || ''}
-      src={urlForImage(source)?.height(720).width(1280).auto('format').url() as string}
-      sizes="100vw"
+      src={
+        urlForImage(source)
+          ?.height(720)
+          .width(1280)
+          .auto('format')
+          .url() as string
+      }
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1280px"
       priority={priority}
     />
   ) : (

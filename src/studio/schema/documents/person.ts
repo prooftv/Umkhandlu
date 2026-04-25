@@ -1,11 +1,6 @@
 import { UserIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 
-/**
- * Person schema.  Define and edit the fields for the 'person' content type.
- * Learn more: https://www.sanity.io/docs/schema-types
- */
-
 export default defineType({
   name: 'person',
   title: 'People',
@@ -48,15 +43,37 @@ export default defineType({
       ],
       options: {
         hotspot: true,
-        aiAssist: {
-          imageDescriptionField: 'alt',
-        },
+        aiAssist: { imageDescriptionField: 'alt' },
       },
     }),
     defineField({
       name: 'role',
-      title: 'Role',
+      title: 'Role / Title',
       type: 'string',
+      description: 'e.g. Inkosi, Council Member, Youth Coordinator, Sponsor',
+    }),
+    defineField({
+      name: 'personType',
+      title: 'Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Leadership', value: 'leadership' },
+          { title: 'Council Member', value: 'council' },
+          { title: 'Youth', value: 'youth' },
+          { title: 'Sponsor / Partner', value: 'sponsor' },
+          { title: 'Author', value: 'author' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      initialValue: 'council',
+    }),
+    defineField({
+      name: 'organization',
+      title: 'Organization',
+      type: 'string',
+      description: 'e.g. Unami Foundation, Ingonyama Trust, School name',
     }),
     defineField({
       name: 'biography',
@@ -64,19 +81,18 @@ export default defineType({
       type: 'blockContent',
     }),
   ],
-
-  // List preview configuration. https://www.sanity.io/docs/previews-list-views
   preview: {
     select: {
       firstName: 'firstName',
       lastName: 'lastName',
+      role: 'role',
       image: 'image',
     },
-    prepare(selection) {
+    prepare({ firstName, lastName, role, image }) {
       return {
-        title: `${selection.firstName} ${selection.lastName}`,
-        subtitle: 'Person',
-        media: selection.image,
+        title: `${firstName} ${lastName}`,
+        subtitle: role || 'Person',
+        media: image,
       };
     },
   },

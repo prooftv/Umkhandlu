@@ -5,6 +5,7 @@ import { serverEnv } from '@/env/serverEnv';
 import { getDocumentLink } from '@/lib/links';
 import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
+import { formatMetaData } from '@/lib/sanity/client/seo';
 import { postPagesSlugs, postQuery } from '@/lib/sanity/queries/queries';
 import type { PostQueryResult } from '@/sanity.types';
 
@@ -30,7 +31,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     return {};
   }
 
+  const seo = routeData.seo
+    ? formatMetaData(routeData.seo, routeData.title || '')
+    : {
+        title: routeData.title,
+      };
+
   return {
+    ...seo,
     alternates: {
       canonical: getDocumentLink(routeData, true),
     },

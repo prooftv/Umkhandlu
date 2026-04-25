@@ -7,14 +7,17 @@ import { type PaginatedResult, paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { formatMetaData } from '@/lib/sanity/client/seo';
 import { blogPageQuery, postsArchiveQuery } from '@/lib/sanity/queries/queries';
-import type { BlogPageQueryResult, PostsArchiveQueryResult } from '@/sanity.types';
+import type {
+  BlogPageQueryResult,
+  PostsArchiveQueryResult,
+} from '@/sanity.types';
 
 type Props = {
   params: Promise<{ page: string }>;
 };
 
 const loadPostsPageData = async (
-  props: Props,
+  props: Props
 ): Promise<{
   blogPage: BlogPageQueryResult;
   posts: PaginatedResult<PostsArchiveQueryResult>;
@@ -58,7 +61,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     return {};
   }
 
-  const seo = formatMetaData(routeData.blogPage.seo, routeData.blogPage?.name || '');
+  const seo = formatMetaData(
+    routeData.blogPage.seo,
+    routeData.blogPage?.name || ''
+  );
   seo.title += ` - Page ${routeData.posts.currentPage}`;
 
   return seo;
@@ -76,7 +82,9 @@ export default async function PostPage(props: Props) {
   }
 
   return (
-    <Page title={`${routeData.blogPage?.name} - Page ${routeData.posts.currentPage}`}>
+    <Page
+      title={`${routeData.blogPage?.name} - Page ${routeData.posts.currentPage}`}
+    >
       <PostRiver
         listingData={routeData.posts.data}
         currentPage={routeData.posts.currentPage}

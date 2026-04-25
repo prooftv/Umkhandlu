@@ -1,226 +1,181 @@
-# Ignite for Sanity
+# Umkhandlu
 
-A Sanity starter kit providing modern, clean designs for your content-driven websites. Built with Next.js and Tailwind CSS.
+Community digital platform for traditional councils, youth programs, and local governance. Built with Next.js, Sanity CMS, and Tailwind CSS.
 
-Out of the box it includes schema for pages, posts, categories, authors, and global settings. Pages are structured with a page builder that lets you compose a number of components: hero, CTA, post list, subscribe, content, etc.
+## What This Is
 
-## Key Dependencies
+Umkhandlu is the digital hub for traditional councils (izinduna, amakhosi). It provides:
 
-- Next.js
-- Sanity
-- Tailwind CSS
-- Shadcn/ui
-- React
-- TypeScript
-- Vitest
+- CMS-driven pages with a modular page builder
+- Community notices (meetings, announcements, alerts, opportunities)
+- Leadership profiles with roles and organizations
+- Blog/stories for youth content and community updates
+- Photo galleries for events and media
+- Contact forms with optional map embeds
+- Newsletter subscriptions
+- Zulu/English language toggle
+- Google Tag Manager integration (CMS-configurable)
+- Full SEO: sitemap, JSON-LD, Open Graph, canonical URLs
+
+## Tech Stack
+
+- **Next.js 15** (App Router, Turbopack)
+- **Sanity v3** (Headless CMS + Studio)
+- **Tailwind CSS v4** + shadcn/ui
+- **TypeScript**
+- **Valibot** (validation)
+- **Vitest** (testing)
+- **Biome** (linting + formatting)
 
 ## Getting Started
 
-### 1. Initialize template with Sanity CLI
+### 1. Install dependencies
 
 ```bash
-npm create sanity@latest -- --template 10up/sanity-ignite
+npm install
 ```
 
-This will install your NPM dependencies and populate the `.env.local` file.
+### 2. Configure environment
 
-### 2. Start the Development Server
+```bash
+cp .env.example .env.local
+```
+
+Fill in your Sanity project ID, dataset, and API token.
+
+### 3. Start development
 
 ```bash
 npm run dev
 ```
 
-### 3. Open the Project and sign in to Sanity
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Sanity Studio: [http://localhost:3000/studio](http://localhost:3000/studio)
 
-Open the next app locally at [http://localhost:3000](http://localhost:3000) and the Sanity Studio at [http://localhost:3000/studio](http://localhost:3000/studio).
+## Environment Variables
+
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project ID |
+| `NEXT_PUBLIC_SANITY_DATASET` | Sanity dataset name |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | Sanity API version |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL |
+| `NEXT_PUBLIC_SANITY_STUDIO_URL` | Studio URL |
+| `NEXT_PUBLIC_GTM_ID` | Google Tag Manager ID (optional, also configurable in CMS) |
+| `SANITY_API_READ_TOKEN` | Server-side Sanity read token |
+| `MAX_STATIC_PARAMS` | Max static params for ISR |
+
+## Content Architecture
+
+### Document Types
+
+| Type | Purpose |
+|---|---|
+| `page` | Generic pages (About, Land, Youth, Schools, Projects, etc.) |
+| `post` | Blog posts, stories, learner content |
+| `person` | Leadership, council members, sponsors, authors |
+| `category` | Content categories |
+| `notice` | Community notices (meeting, announcement, alert, opportunity) |
+
+### Page Builder Sections (11)
+
+| Section | Use Case |
+|---|---|
+| `hero` | Page hero with heading, rich text, image, CTA buttons |
+| `mediaText` | Image + text side-by-side (configurable position) |
+| `cta` | Call to action with gradient background |
+| `cardGrid` | Grid of content cards |
+| `postList` | Latest blog posts |
+| `teamGrid` | Leadership/council member profiles |
+| `noticeList` | Community notices (filterable by type, pinnable) |
+| `gallery` | Photo gallery with captions |
+| `contactForm` | Contact form with optional Google Maps embed |
+| `subscribe` | Newsletter signup |
+| `divider` | Visual separator |
+
+### Singletons
+
+| Singleton | Purpose |
+|---|---|
+| `homePage` | Homepage content + page builder |
+| `blogPage` | Blog listing page SEO |
+| `settings` | Site title, description, menu, social links, contact info, GTM ID |
+
+## Sanity Studio Structure
+
+```
+Umkhandlu
+├── Home
+├── Blog Page
+├── Pages
+├── ─────────
+├── Posts & Stories
+├── Community Notices
+├── Categories
+├── ─────────
+├── Leadership & People
+├── ─────────
+└── Site Settings
+    ├── General (title, description, menu, OG image)
+    ├── Social & Contact (email, phone, address, social URLs, WhatsApp)
+    └── Analytics (GTM ID)
+```
 
 ## Folder Structure
 
 ```
-
-🔥 sanity-ignite
-├── 📂 src                  # Main source code directory
-│ ├── 📂 app                # Next.js application
-│ │ ├── 📂 (frontend)       # Frontend routes
-│ │ ├── 📂 studio           # Sanity Studio route
-│ │ ├── 📂 api              # API routes (Next.js route handlers)
-│ ├── 📂 components         # UI components and icons
-│ │ ├── 📂 icons            # Custom SVG/icon components
-│ │ ├── 📂 ui               # Presentational UI components with no side effects
-│ │ ├── 📂 modules          # Components that receive Sanity data and may call server actions
-│ │ ├── 📂 sections         # Page builder sections
-│ │ ├── 📂 templates        # Page templates
-│ ├── 📂 hooks              # Custom react hooks
-│ ├── 📂 actions            # Server-side actions
-│ ├── 📂 env                # Environment specific functions and `.env` validation
-│ ├── 📂 lib                # Shared libraries and integrations
-│ │ ├── 📂 sanity           # Sanity integration
-│ │ │ ├── 📂 queries        # Sanity GraphQL/GROQ queries
-│ │ │ ├── 📂 client         # Sanity client configuration
-│ │ ├── 📂 (example)        # Every integration (e.g., CRM, Newsletter SDKs) gets its own subfolder
-│ ├── 📂 studio             # Sanity Studio configuration
-│ │ ├── 📂 schemas          # Schema definitions for Sanity content models
-│ │ ├── 📂 components       # Custom Sanity components
-│ │ ├── 📂 plugins          # Custom Sanity plugins
-│ │ ├── 📂 structure        # Custom Sanity structure definitions
-│ ├── 📂 utils              # Utility functions and TypeScript types
+src/
+├── actions/          # Server actions (subscribe, contact, draft mode)
+├── app/
+│   ├── (frontend)/   # Public routes
+│   ├── api/          # API routes
+│   └── studio/       # Sanity Studio
+├── components/
+│   ├── icons/        # SVG icon components
+│   ├── layout/       # Header, Footer, NavBar, Main
+│   ├── modules/      # Data-aware components (PostCard, Byline, etc.)
+│   ├── sections/     # Page builder sections
+│   ├── templates/    # Page templates (Post, Page, PostRiver)
+│   └── ui/           # Pure UI components (Button, Badge, Pagination)
+├── env/              # Environment variable config
+├── hooks/            # Custom React hooks
+├── lib/
+│   ├── i18n/         # Zulu/English translations + locale context
+│   └── sanity/       # Client, queries, fragments, SEO, JSON-LD
+├── studio/
+│   ├── components/   # Custom Sanity Studio components
+│   ├── schema/       # All Sanity schemas
+│   └── structure/    # Studio navigation structure
+└── utils/            # Utility functions
 ```
 
-### 📂 `src/components` - UI Component Structure
+## i18n (Zulu / English)
 
-- **`ui/` - Presentational UI Components**
+The language toggle in the header switches between English and isiZulu. Translations are in `src/lib/i18n/translations.ts`. Usage in client components:
 
-  - This folder contains **pure UI components** that have **no side effects**.
-  - Components here can be used **both in client and server components**.
-  - **🚫 Do not use:** Sanity types, data fetching, or global state within these components.
+```tsx
+import { useLocale } from '@/lib/i18n/LocaleContext';
 
-- **`modules/` - Components that Accept Sanity Data**
-
-  - These components receive **data from Sanity queries** and might contain logic to manipulate or render that data.
-  - No direct data fetching should happen inside these components.
-  - They can, however, call **server actions** that fetch or modify data.
-
-- **`sections/` - Page Builder Sections**
-
-  - Large, structured UI sections that form reusable parts of pages.
-  - Used to assemble pages dynamically in a CMS-driven way.
-
-- **`templates/` - Page Templates**
-
-  - Higher-level layout structures that can be shared between multiple routes.
-
-- **`icons/` - Custom SVG/Icon Components**
-  - Collection of SVG-based components used throughout the UI.
-  - Icons should be stored as SVG files and imported as React components. Icons should NOT be added as React components directly.
-
----
-
-### 📂 `src/lib` - Shared Libraries & Integrations
-
-- **`sanity/` - Sanity Integration**
-
-  - **`queries/`** → Contains all Sanity **GROQ queries** used in the frontend.
-  - **`client/`** → Configures the Sanity client and SanityLive client used for API calls
-
-- **`(example)/` - External Service Integrations**
-  - Each external service (e.g., CRM, Newsletter SDKs) should have its own **subfolder** under `lib/`.
-  - Example: `/lib/newsletter/` for newsletter subscriptions, `/lib/crm/` for CRM integrations.
-
----
-
-### 📂 `src/studio` - Sanity Studio Configuration
-
-This folder contains everything needed to **configure and customize Sanity Studio**, the headless content operating system used in this project.
-
-- **`schemas/` - Content Models**
-
-  - Defines the schema of content in Sanity (e.g., `Post`, `Author`, `Category`).
-
-- **`components/` - Custom Sanity Components**
-
-  - Custom React components that enhance the Sanity Studio interface.
-  - These might include **custom inputs, preview components, or UI overrides**.
-
-- **`plugins/` - Sanity Plugins**
-
-  - Third-party or custom plugins that **extend Sanity’s functionality**.
-  - Examples: AI-powered content suggestions, media management, or real-time collaboration tools.
-
-- **`structure/` - Custom Studio Structure**
-  - Defines how content is **organized** inside the Sanity Studio UI.
-  - Custom menus, navigation rules, and UI layouts are configured here.
-
-## 🌍 Environment Variables (`.env` Files)
-
-The project uses **environment variables** to store **configuration values** that differ between environments (e.g., local development, testing, and production). These variables are stored in `.env` files, which Next.js loads automatically. Read more on the Nex.js Docs [here](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables).
-
-### 📂 Available `.env` Files
-
-| File               | Purpose                                                                                           |
-| ------------------ | ------------------------------------------------------------------------------------------------- |
-| **`.env.local`**   | Stores **local** environment variables. This file is **git-ignored** and should not be committed. |
-| **`.env.example`** | A **template** for environment variables. It lists required variables without actual values.      |
-| **`.env.test`**    | Contains environment variables used specifically for running **unit tests**.                      |
-
----
-
-## 🛠️ How to Use `.env` Files
-
-### 1️⃣ **Setting Up Your Local Environment**
-
-Before running the project locally, copy `.env.example` and create a `.env.local` file:
-
-```sh
-cp .env.example .env.local
+function MyComponent() {
+  const { t } = useLocale();
+  return <p>{t('blog.readMore')}</p>;
+}
 ```
 
-Then, **fill in the required values** based on your local setup.
+CMS content (headings, body text) is managed in Sanity and is not translated by this system — that requires Sanity's document internationalization plugin for full bilingual CMS content.
 
-### 2️⃣ **Validation of Environment Variables**
+## Scripts
 
-This project uses **valibot** for schema validation of environment variables.
-To add a new environment variable:
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Start dev server + type generation |
+| `npm run next:build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | Lint with Biome |
+| `npm run test` | Run tests with Vitest |
+| `npm run typecheck` | TypeScript type check |
+| `ANALYZE=true npm run next:build` | Bundle analysis |
 
-1. Update the `.env.example` file
-2. Add the new variable to the `envSchema` object in `src/env/serverEnv.ts` or `src/env/clientEnv.ts`
+## License
 
-### 3️⃣ **Accessing Environment Variables in Code**
-
-All environment variables should be accessed using the `serverEnv` or `clientEnv` objects.
-
-Example:
-
-```ts
-const projectId = serverEnv.NEXT_PUBLIC_SANITY_PROJECT_ID;
-```
-
-💡 **Public vs. Private Variables:**
-
-- Variables **prefixed with `NEXT_PUBLIC_`** are **exposed to the browser** and can be used in client-side code. Validation of these variables is done in `src/env/clientEnv.ts`.
-- Variables **without `NEXT_PUBLIC_`** remain **server-only**. Validation of these variables is done in `src/env/serverEnv.ts`.
-
-### 4️⃣ **Testing with `.env.test`**
-
-When running unit or integration tests, the `.env.test` file is loaded automatically.
-
----
-
-### 🔒 Best Practices
-
-✔️ **Never commit `.env.local`!** It's ignored by `.gitignore`.  
-✔️ **Use `.env.example`** to document required variables without exposing secrets.  
-✔️ **Keep private keys and API secrets out of `NEXT_PUBLIC_` variables.**
-
----
-
-## Linter and Code Formatting
-
-This project uses ESLint and Prettier for code linting and formatting. Run the following commands to lint and format your code:
-
-```bash
-npm run lint # Lint the code
-```
-
-### Custom ESLint Configurations
-
-This project has custom ESLint rules configured for the following scenarios:
-
-- Sanity Studio
-  - `next-sanity` package cannot be imported into the studio. This is a frontend only package.
-- Next.js Frontend
-  - Assets from the sanity studio or from studio related packages cannot be imported into the frontend. They can only be used in the `sanity.config.ts` file or in the `src/studio` folder. This is to prevent the frontend from loading unoptimized studio assets.
-
-### Analyze Bundle Sizes
-
-Sanity Ignite uses the `@next/bundle-analyzer` plugin to analyze the bundle sizes of the project. To run the bundle analyzer, run the following command:
-
-```bash
-ANALYZE=true npm run next:build
-```
-
-## Learn More
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Sanity Documentation](https://www.sanity.io/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Shadcn/ui Documentation](https://ui.shadcn.com)
+Private project.

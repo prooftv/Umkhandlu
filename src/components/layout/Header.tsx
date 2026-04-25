@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { settingsQuery } from '@/lib/sanity/queries/queries';
 import Logo from '../icons/Logo';
+import LanguageToggle from '../modules/LanguageToggle';
 import NavBar from './NavBar';
 
 export default async function Header() {
@@ -20,11 +21,16 @@ export default async function Header() {
           {typeof settings.title !== 'undefined' && (
             <Link className="flex items-center space-x-4" href="/">
               <Logo />
-              <span className="text-lg md:text-2xl font-bold">{settings.title}</span>
+              <span className="text-lg md:text-2xl font-bold">
+                {settings.title}
+              </span>
             </Link>
           )}
         </div>
-        <NavBar menuItems={settings.menu || []} />
+        <div className="flex items-center gap-4">
+          <LanguageToggle />
+          <NavBar menuItems={settings.menu || []} />
+        </div>
       </div>
     </header>
   );

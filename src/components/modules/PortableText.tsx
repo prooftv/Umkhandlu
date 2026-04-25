@@ -9,7 +9,11 @@
  */
 
 import Image from 'next/image';
-import { PortableText, type PortableTextBlock, type PortableTextComponents } from 'next-sanity';
+import {
+  PortableText,
+  type PortableTextBlock,
+  type PortableTextComponents,
+} from 'next-sanity';
 import type { PropsWithChildren, ReactNode } from 'react';
 import Link from '@/components/modules/Link';
 import { urlForImage } from '@/lib/sanity/client/utils';
@@ -126,10 +130,14 @@ export default function CustomPortableText({
     },
     list: {
       bullet: ({ children }) => (
-        <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-gray-700">{children}</ul>
+        <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-gray-700">
+          {children}
+        </ul>
       ),
       number: ({ children }) => (
-        <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-gray-700">{children}</ol>
+        <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-gray-700">
+          {children}
+        </ol>
       ),
     },
     listItem: {
@@ -138,7 +146,9 @@ export default function CustomPortableText({
     },
     marks: {
       code: ({ children }) => (
-        <code className="bg-gray-100 rounded px-1 py-0.5 font-mono text-sm">{children}</code>
+        <code className="bg-gray-100 rounded px-1 py-0.5 font-mono text-sm">
+          {children}
+        </code>
       ),
       em: ({ children }) => <em className="italic">{children}</em>,
       link: ({
@@ -155,13 +165,20 @@ export default function CustomPortableText({
         }
 
         return (
-          <Link link={customLink} className="text-primary hover:no-underline underline">
+          <Link
+            link={customLink}
+            className="text-primary hover:no-underline underline"
+          >
             {children}
           </Link>
         );
       },
-      strong: ({ children }) => <strong className="font-bold">{children}</strong>,
-      'strike-through': ({ children }) => <del className="line-through">{children}</del>,
+      strong: ({ children }) => (
+        <strong className="font-bold">{children}</strong>
+      ),
+      'strike-through': ({ children }) => (
+        <del className="line-through">{children}</del>
+      ),
       underline: ({ children }) => <u className="underline">{children}</u>,
       sup: ({ children }) => <sup className="text-xs">{children}</sup>,
       sub: ({ children }) => <sub className="text-xs">{children}</sub>,

@@ -1,4 +1,5 @@
 import category from './documents/category';
+import notice from './documents/notice';
 import page from './documents/page';
 import person from './documents/person';
 import post from './documents/post';
@@ -8,12 +9,17 @@ import link from './objects/link';
 import menuItem from './objects/menuItem';
 import card from './objects/sections/card';
 import cardGrid from './objects/sections/cardGrid';
+import contactForm from './objects/sections/contactForm';
 import cta from './objects/sections/cta';
 import divider from './objects/sections/divider';
+import gallery from './objects/sections/gallery';
 import hero from './objects/sections/hero';
+import logoGrid from './objects/sections/logoGrid';
 import mediaText from './objects/sections/mediaText';
+import noticeList from './objects/sections/noticeList';
 import postList from './objects/sections/postList';
 import subscribe from './objects/sections/subscribe';
+import teamGrid from './objects/sections/teamGrid';
 import seoTypes from './objects/seo';
 import blogPage from './singletons/blogPage';
 import homePage from './singletons/homePage';
@@ -30,6 +36,7 @@ export const schemaTypes = [
   post,
   person,
   category,
+  notice,
 
   // Sections
   cta,
@@ -38,8 +45,13 @@ export const schemaTypes = [
   postList,
   card,
   cardGrid,
+  contactForm,
   divider,
+  gallery,
+  logoGrid,
+  noticeList,
   subscribe,
+  teamGrid,
 
   // Objects
   blockContent,

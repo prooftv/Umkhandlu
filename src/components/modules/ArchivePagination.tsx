@@ -18,7 +18,7 @@ type ArchivePaginationProps = {
 function generatePaginationItems(
   currentPage: number,
   totalPages: number,
-  pagesToShow: number,
+  pagesToShow: number
 ): number[] {
   if (totalPages <= 0 || pagesToShow <= 0) return [];
 
@@ -65,7 +65,11 @@ export function ArchivePagination({
   const previousPage = newCurrentPage > 1 ? newCurrentPage - 1 : null;
   const nextPage = newCurrentPage < totalPages ? newCurrentPage + 1 : null;
 
-  const pages = generatePaginationItems(newCurrentPage, totalPages, itemsToShow);
+  const pages = generatePaginationItems(
+    newCurrentPage,
+    totalPages,
+    itemsToShow
+  );
 
   return (
     <Pagination className="mt-10">
@@ -77,14 +81,19 @@ export function ArchivePagination({
         )}
         {pages.map((page) => (
           <PaginationItem key={page}>
-            <PaginationLink href={pageLink(page, linkBase)} isActive={currentPage === page}>
+            <PaginationLink
+              href={pageLink(page, linkBase)}
+              isActive={currentPage === page}
+            >
               {page}
             </PaginationLink>
           </PaginationItem>
         ))}
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
+        {pages[pages.length - 1] < totalPages && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
         {nextPage && (
           <PaginationItem>
             <PaginationNext href={pageLink(nextPage, linkBase)} />

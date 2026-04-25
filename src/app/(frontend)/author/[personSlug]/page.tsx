@@ -9,7 +9,11 @@ import { getDocumentLink } from '@/lib/links';
 import { paginatedData } from '@/lib/pagination';
 import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { personQuery, personSlugs, postsArchiveQuery } from '@/lib/sanity/queries/queries';
+import {
+  personQuery,
+  personSlugs,
+  postsArchiveQuery,
+} from '@/lib/sanity/queries/queries';
 
 type Props = {
   params: Promise<{ personSlug: string }>;

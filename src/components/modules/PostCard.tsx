@@ -9,7 +9,6 @@ import type { PostCardFragmentType } from '@/lib/sanity/queries/fragments/fragme
 
 export default function PostCard({ post }: { post: PostCardFragmentType }) {
   const { title, excerpt, date, author, image, categories } = post;
-
   const featuredCategory = categories?.[0];
 
   return (
@@ -19,7 +18,7 @@ export default function PostCard({ post }: { post: PostCardFragmentType }) {
           {image ? (
             <Image
               src={urlForImage(image)?.width(1000).height(667).url() as string}
-              alt={image?.alt || 'Blog Post Image'}
+              alt={image?.alt || title || 'Post image'}
               style={{
                 objectFit: 'cover',
                 position: 'absolute',
@@ -30,6 +29,7 @@ export default function PostCard({ post }: { post: PostCardFragmentType }) {
               }}
               width={1000}
               height={667}
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
           ) : null}
@@ -38,18 +38,23 @@ export default function PostCard({ post }: { post: PostCardFragmentType }) {
           <div className="flex items-center space-x-4 mb-2">
             {featuredCategory && (
               <Badge variant="default" asChild>
-                <Link href={getDocumentLink(featuredCategory)}>{featuredCategory.title}</Link>
+                <Link href={getDocumentLink(featuredCategory)}>
+                  {featuredCategory.title}
+                </Link>
               </Badge>
             )}
             <ReadTime wordCount={post.wordCount} />
           </div>
           {date ? (
-            <time className="text-sm text-gray-500 mb-4">
+            <time dateTime={date} className="text-sm text-gray-500 mb-4">
               {new Date(date).toLocaleDateString()}
             </time>
           ) : null}
-          <h3 className="text-2xl font-bold mb-">
-            <Link href={`/blog/${post.slug}`} className="hover:text-pink-600 transition-colors">
+          <h3 className="text-2xl font-bold mb-2">
+            <Link
+              href={`/blog/${post.slug}`}
+              className="hover:text-pink-600 transition-colors"
+            >
               {title}
             </Link>
           </h3>
