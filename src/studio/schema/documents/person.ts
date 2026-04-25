@@ -62,6 +62,7 @@ export default defineType({
           { title: 'Council Member', value: 'council' },
           { title: 'Youth', value: 'youth' },
           { title: 'Sponsor / Partner', value: 'sponsor' },
+          { title: 'Community Member', value: 'community' },
           { title: 'Author', value: 'author' },
         ],
         layout: 'radio',
@@ -74,6 +75,14 @@ export default defineType({
       title: 'Organization',
       type: 'string',
       description: 'e.g. Unami Foundation, Ingonyama Trust, School name',
+    }),
+    defineField({
+      name: 'skills',
+      title: 'Skills',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Skills or trades (e.g. Builder, Mechanic, Farmer, Designer)',
     }),
     defineField({
       name: 'biography',

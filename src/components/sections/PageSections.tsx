@@ -5,6 +5,7 @@ import { useOptimistic } from 'next-sanity/hooks';
 import type { ElementType } from 'react';
 import { dataAttr } from '@/lib/sanity/client/utils';
 import type { SectionsType } from '@/lib/sanity/queries/fragments/fragment.types';
+import AdBanner from './AdBanner';
 import CardGrid from './CardGrid';
 import ContactForm from './ContactForm';
 import CTA from './CTA';
@@ -16,10 +17,12 @@ import LogoGrid from './LogoGrid';
 import MediaText from './MediaText';
 import NoticeList from './NoticeList';
 import PostList from './PostList';
+import ProgramList from './ProgramList';
 import Subscribe from './Subscribe';
 import TeamGrid from './TeamGrid';
 
 const SECTION_COMPONENTS: Record<string, ElementType> = {
+  adBanner: AdBanner,
   hero: Hero,
   mediaText: MediaText,
   cta: CTA,
@@ -32,6 +35,7 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   listingGrid: ListingGrid,
   logoGrid: LogoGrid,
   noticeList: NoticeList,
+  programList: ProgramList,
   teamGrid: TeamGrid,
 } as const;
 
