@@ -12,11 +12,13 @@
 
 ## 1. Executive Summary
 
-Umkhandlu is lightweight digital governance infrastructure for traditional authorities. It digitises governance, community infrastructure, economic activity, and youth development — creating a structured, council-owned digital record of rural communities under traditional authority.
+Umkhandlu is lightweight digital governance infrastructure for traditional authorities. It structures and publishes governance information, community infrastructure, economic activity, and youth development digitally — creating a structured, council-owned digital record of rural communities under traditional authority.
 
-This is not a website. It is a **community intelligence layer** that sits on top of existing traditional authority structures without replacing them.
+This is not a website. It is a **community intelligence layer** that sits on top of existing traditional authority structures without replacing them. In practice, this means a structured system for publishing notices, records, directories, and opportunities.
 
-Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems. All content and data is controlled and published by the council.
+Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems. All content and data is controlled and published by the council. The platform does not store personal applicant data or replace official council records.
+
+The platform is designed for low-frequency, practical use — even a small number of updates (notices, records, listings) maintains its value.
 
 ### Why Now
 
@@ -32,7 +34,7 @@ Umkhandlu ensures that traditional councils own, control, and structure their ow
 - No structured digital visibility for communities under Ingonyama Trust land
 - No central information system for residents, NGOs, or government departments
 - Youth have no digital pipeline for opportunities, content, or engagement
-- Local economy (spaza shops, services, trades) is completely invisible digitally
+- Local economy (spaza shops, services, trades) is largely invisible in structured digital systems
 
 ### The Solution
 
