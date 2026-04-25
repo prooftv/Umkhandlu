@@ -27,6 +27,7 @@ const typeIcons: Record<string, string> = {
   business: '💼',
   church: '⛪',
   facility: '🏛️',
+  area: '🏘️',
 };
 
 const typeLabels: Record<string, string> = {
@@ -35,6 +36,7 @@ const typeLabels: Record<string, string> = {
   business: 'Business',
   church: 'Church',
   facility: 'Facility',
+  area: 'Village / Area',
 };
 
 export default function ListingGrid({ section }: Props) {

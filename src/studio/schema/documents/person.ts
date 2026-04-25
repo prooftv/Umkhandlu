@@ -58,9 +58,10 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Leadership', value: 'leadership' },
+          { title: 'Inkosi (Chief)', value: 'inkosi' },
+          { title: 'Induna (Headman)', value: 'induna' },
           { title: 'Council Member', value: 'council' },
-          { title: 'Youth', value: 'youth' },
+          { title: 'Youth Representative', value: 'youth' },
           { title: 'Sponsor / Partner', value: 'sponsor' },
           { title: 'Community Member', value: 'community' },
           { title: 'Author', value: 'author' },
