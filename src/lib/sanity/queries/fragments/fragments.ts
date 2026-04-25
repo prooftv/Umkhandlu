@@ -252,7 +252,7 @@ export const noticeListSectionFragment = /* groq */ `
   "notices": *[_type == 'notice' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     noticeType == ^.filterType
-  )] | order(pinned desc, date desc) [0...^.numberOfNotices] {
+  )] | order(pinned desc, date desc) [0...20] {
     ${noticeFragment}
   }
 `;
@@ -295,7 +295,7 @@ export const listingGridSectionFragment = /* groq */ `
   "listings": *[_type == 'listing' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     listingType == ^.filterType
-  )] | order(featured desc, name asc) [0...^.limit] {
+  )] | order(featured desc, name asc) [0...20] {
     ${listingFragment}
   }
 `;
@@ -355,7 +355,7 @@ export const opportunityListSectionFragment = /* groq */ `
   "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     opportunityType == ^.filterType
-  )] | order(featured desc, deadline asc) [0...^.limit] {
+  )] | order(featured desc, deadline asc) [0...20] {
     ${opportunityFragment}
   }
 `;
@@ -381,7 +381,7 @@ export const programListSectionFragment = /* groq */ `
   "programs": *[_type == 'program' && select(
     ^.filterStatus == 'all' || !defined(^.filterStatus) => true,
     status == ^.filterStatus
-  )] | order(date desc) [0...^.limit] {
+  )] | order(date desc) [0...20] {
     ${programFragment}
   }
 `;
@@ -419,7 +419,7 @@ export const recordListSectionFragment = /* groq */ `
   "records": *[_type == 'record' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     recordType == ^.filterType
-  )] | order(date desc) [0...^.limit] {
+  )] | order(date desc) [0...20] {
     ${recordFragment}
   }
 `;
