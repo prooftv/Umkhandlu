@@ -2,6 +2,7 @@
 
 import * as v from 'valibot';
 import type { ActionResponse } from './types';
+import { sendToWebhook } from './webhook';
 
 const EmailSchema = v.pipe(
   v.string(),
@@ -15,26 +16,19 @@ export const subscribeAction = async (
   'use server';
 
   try {
-    // biome-ignorelint/correctness/noUnusedVariables: starter code
     const email = v.parse(EmailSchema, formData.get('email'));
 
-    // Add your newsletter signup logic here
+    const sent = await sendToWebhook('subscribe', { email });
 
-    return {
-      status: 'success',
-      error: null,
-    };
-  } catch (error: unknown) {
-    if (v.isValiError(error)) {
-      return {
-        status: 'error',
-        error: error.message,
-      };
+    if (!sent) {
+      return { status: 'error', error: 'Failed to subscribe.' };
     }
 
-    return {
-      status: 'error',
-      error: 'An unknown error occurred.',
-    };
+    return { status: 'success', error: null };
+  } catch (error: unknown) {
+    if (v.isValiError(error)) {
+      return { status: 'error', error: error.message };
+    }
+    return { status: 'error', error: 'An unknown error occurred.' };
   }
 };

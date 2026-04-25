@@ -2,6 +2,7 @@
 
 import * as v from 'valibot';
 import type { ActionResponse } from './types';
+import { sendToWebhook } from './webhook';
 
 const ContactSchema = v.object({
   name: v.pipe(v.string(), v.nonEmpty('Name is required.')),
@@ -29,8 +30,11 @@ export const contactAction = async (
       message: formData.get('message'),
     });
 
-    // TODO: Integrate with email service, n8n webhook, or database
-    console.log('Contact form submission:', data);
+    const sent = await sendToWebhook('contact', data);
+
+    if (!sent) {
+      return { status: 'error', error: 'Failed to send message.' };
+    }
 
     return { status: 'success', error: null };
   } catch (error: unknown) {
