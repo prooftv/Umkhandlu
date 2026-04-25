@@ -31,5 +31,5 @@
     ".sanity/sanity.types.ts",
     "watch-typegen.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "scripts"]
 }
