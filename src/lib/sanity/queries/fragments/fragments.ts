@@ -156,6 +156,7 @@ export const personFragment = /* groq */ `
   role,
   personType,
   organization,
+  skills,
   biography,
   "slug": slug.current,
 `;
@@ -308,6 +309,43 @@ export const logoGridSectionFragment = /* groq */ `
   }
 `;
 
+export const adBannerSectionFragment = /* groq */ `
+  _type,
+  title,
+  image,
+  link,
+  sponsorName,
+  startDate,
+  endDate,
+  size
+`;
+
+export const programFragment = /* groq */ `
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  programType,
+  status,
+  date,
+  description,
+  image,
+`;
+
+export const programListSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  filterStatus,
+  limit,
+  "programs": *[_type == 'program' && select(
+    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,
+    status == ^.filterStatus
+  )] | order(date desc) [0...^.limit] {
+    ${programFragment}
+  }
+`;
+
 export const contactFormSectionFragment = /* groq */ `
   _type,
   heading,
@@ -321,6 +359,7 @@ export const pageBuilderFragment = /* groq */ `
     ...,
     _key,
     _type,
+    _type == 'adBanner' => {${adBannerSectionFragment}},
     _type == 'cardGrid' => {${cardGridsSectionFragment}},
     _type == 'contactForm' => {${contactFormSectionFragment}},
     _type == 'cta' => {${ctaSectionFragment}},
@@ -332,6 +371,7 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'mediaText' => {${mediaTextSectionFragment}},
     _type == 'noticeList' => {${noticeListSectionFragment}},
     _type == 'postList' => {${postListSectionFragment}},
+    _type == 'programList' => {${programListSectionFragment}},
     _type == 'subscribe' => {${subscribeSectionFragment}},
     _type == 'teamGrid' => {${teamGridSectionFragment}}
   },
