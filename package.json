@@ -21,6 +21,7 @@
     "typecheck": "tsc --noEmit",
     "watch-typegen": "tsx watch-typegen.ts",
     "test": "vitest",
+    "seed:mndozo": "tsx scripts/seed-mndozo.ts",
     "prepare": "husky install"
   },
   "dependencies": {
