@@ -50,7 +50,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   return {
-    title: `Author ${person.firstName} ${person.lastName}`,
+    title: `${person.firstName} ${person.lastName}`,
     alternates: {
       canonical: getDocumentLink(person, true),
     },
