@@ -31,27 +31,22 @@ export default defineType({
     }),
     defineField({
       name: 'sponsor',
-      title: 'Sponsor (from People)',
+      title: 'Sponsor',
       type: 'reference',
-      to: [{ type: 'person' }],
+      to: [{ type: 'sponsor' }],
       description:
-        'Link to a sponsor profile. Their name and website will be used automatically. Leave empty to set manually below.',
-      options: {
-        filter: 'personType == "sponsor"',
-      },
+        'Link to a sponsor. Name and website auto-fill. Leave empty to set manually.',
     }),
     defineField({
       name: 'sponsorName',
       title: 'Sponsor Name (manual)',
       type: 'string',
-      description: 'Only used if no sponsor is selected above.',
       hidden: ({ parent }) => !!parent?.sponsor,
     }),
     defineField({
       name: 'link',
       title: 'Link URL (manual)',
       type: 'url',
-      description: 'Only used if no sponsor is selected above.',
       hidden: ({ parent }) => !!parent?.sponsor,
     }),
     defineField({
@@ -83,24 +78,11 @@ export default defineType({
     select: {
       title: 'title',
       manualSponsor: 'sponsorName',
-      refSponsorFirst: 'sponsor.firstName',
-      refSponsorLast: 'sponsor.lastName',
-      refSponsorOrg: 'sponsor.organization',
+      refSponsor: 'sponsor.name',
       media: 'image',
     },
-    prepare({
-      title,
-      manualSponsor,
-      refSponsorFirst,
-      refSponsorLast,
-      refSponsorOrg,
-      media,
-    }) {
-      const sponsor =
-        refSponsorOrg ||
-        (refSponsorFirst
-          ? `${refSponsorFirst} ${refSponsorLast}`
-          : manualSponsor);
+    prepare({ title, manualSponsor, refSponsor, media }) {
+      const sponsor = refSponsor || manualSponsor;
       return {
         title: title || 'Ad Banner',
         subtitle: sponsor ? `Sponsor: ${sponsor}` : 'Ad Banner',

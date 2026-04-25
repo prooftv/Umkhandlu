@@ -57,10 +57,13 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // Directory
+      // Directory & Sponsors
       S.documentTypeListItem('listing')
         .title('Directory Listings')
         .icon(PinIcon),
+      S.documentTypeListItem('sponsor')
+        .title('Sponsors & Partners')
+        .icon(StarIcon),
 
       S.divider(),
 

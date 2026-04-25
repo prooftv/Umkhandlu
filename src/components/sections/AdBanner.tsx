@@ -8,9 +8,7 @@ type Props = {
     link?: string;
     sponsorName?: string;
     sponsor?: {
-      firstName: string;
-      lastName: string;
-      organization?: string;
+      name: string;
       website?: string;
     };
     startDate?: string;
@@ -36,9 +34,7 @@ export default function AdBanner({ section }: Props) {
   if (startDate && now < startDate) return null;
   if (endDate && now > endDate) return null;
 
-  const displayName = sponsor
-    ? sponsor.organization || `${sponsor.firstName} ${sponsor.lastName}`
-    : manualName;
+  const displayName = sponsor?.name || manualName;
   const displayLink = sponsor?.website || manualLink;
 
   const width = size === 'half' ? 600 : 1200;

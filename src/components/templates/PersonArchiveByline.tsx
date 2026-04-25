@@ -10,7 +10,6 @@ const typeLabels: Record<string, string> = {
   induna: 'Induna',
   council: 'Council Member',
   youth: 'Youth Representative',
-  sponsor: 'Sponsor / Partner',
   community: 'Community Member',
   author: 'Author',
 };

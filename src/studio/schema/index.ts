@@ -7,6 +7,7 @@ import person from './documents/person';
 import post from './documents/post';
 import program from './documents/program';
 import record from './documents/record';
+import sponsor from './documents/sponsor';
 import blockContent from './objects/blockContent';
 import button from './objects/button';
 import link from './objects/link';
@@ -51,6 +52,7 @@ export const schemaTypes = [
   opportunity,
   program,
   record,
+  sponsor,
 
   // Sections
   adBanner,

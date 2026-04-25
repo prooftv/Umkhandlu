@@ -158,8 +158,6 @@ export const personFragment = /* groq */ `
   email,
   phone,
   organization,
-  website,
-  logo,
   skills,
   biography,
   "slug": slug.current,
@@ -303,31 +301,22 @@ export const listingGridSectionFragment = /* groq */ `
   }
 `;
 
+export const sponsorFragment = /* groq */ `
+  _id,
+  _type,
+  name,
+  "slug": slug.current,
+  sponsorType,
+  logo,
+  website,
+  description,
+`;
+
 export const logoGridSectionFragment = /* groq */ `
   _type,
   heading,
   description,
-  "sponsors": sponsors[]->{
-    _id,
-    firstName,
-    lastName,
-    organization,
-    website,
-    logo {
-      ${imageFragment}
-    },
-    image {
-      ${imageFragment}
-    }
-  },
-  logos[] {
-    _key,
-    name,
-    url,
-    logo {
-      ${imageFragment}
-    }
-  }
+  "sponsors": sponsors[]->{${sponsorFragment}}
 `;
 
 export const adBannerSectionFragment = /* groq */ `
@@ -337,9 +326,7 @@ export const adBannerSectionFragment = /* groq */ `
   link,
   sponsorName,
   "sponsor": sponsor->{
-    firstName,
-    lastName,
-    organization,
+    name,
     website
   },
   startDate,

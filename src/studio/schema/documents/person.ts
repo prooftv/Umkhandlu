@@ -62,7 +62,6 @@ export default defineType({
           { title: 'Induna (Headman)', value: 'induna' },
           { title: 'Council Member', value: 'council' },
           { title: 'Youth Representative', value: 'youth' },
-          { title: 'Sponsor / Partner', value: 'sponsor' },
           { title: 'Community Member', value: 'community' },
           { title: 'Author', value: 'author' },
         ],
@@ -84,20 +83,6 @@ export default defineType({
       title: 'Organization',
       type: 'string',
       description: 'e.g. Unami Foundation, Ingonyama Trust, School name',
-    }),
-    defineField({
-      name: 'website',
-      title: 'Website URL',
-      type: 'url',
-      description: 'Organization or personal website.',
-    }),
-    defineField({
-      name: 'logo',
-      title: 'Organization Logo',
-      type: 'image',
-      description: 'For sponsors/partners — displayed in logo grids.',
-      options: { hotspot: true },
-      hidden: ({ parent }) => parent?.personType !== 'sponsor',
     }),
     defineField({
       name: 'skills',
