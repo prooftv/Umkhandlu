@@ -26,6 +26,7 @@ const typeColors: Record<
 > = {
   meeting: 'default',
   announcement: 'secondary',
+  resolution: 'secondary',
   alert: 'destructive',
   opportunity: 'outline',
 };
@@ -44,9 +45,10 @@ export default function NoticeList({ section }: Props) {
           </h2>
           <div className="space-y-4">
             {notices.map((notice) => (
-              <article
+              <Link
+                href={`/notices/${notice.slug}`}
                 key={notice._id}
-                className="p-5 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                className="block p-5 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
@@ -78,7 +80,7 @@ export default function NoticeList({ section }: Props) {
                     </time>
                   )}
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
           <div className="text-center mt-8">

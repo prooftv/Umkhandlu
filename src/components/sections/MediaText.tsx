@@ -1,5 +1,6 @@
 import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
+import ButtonsGroup from '@/components/modules/ButtonsGroup';
 import PortableText from '@/components/modules/PortableText';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import type { MediaTextSectionFragmentType } from '@/lib/sanity/queries/fragments/fragment.types';
@@ -43,6 +44,9 @@ export default function MediaTextSection({
         <div className="text-xl mb-5">
           <PortableText value={section.content as PortableTextBlock[]} />
         </div>
+        {section?.buttons && section.buttons.length > 0 && (
+          <ButtonsGroup buttons={section.buttons} size="lg" />
+        )}
       </div>
     </div>
   );

@@ -44,6 +44,7 @@ export default function HeroSection({
                 alt={section?.image?.alt || ''}
                 width={600}
                 height={400}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="rounded-4xl shadow-xl"
               />
             )}

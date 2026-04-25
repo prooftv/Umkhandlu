@@ -1,9 +1,11 @@
+import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 
 type Opportunity = {
   _id: string;
   title: string;
+  slug: string;
   opportunityType: string;
   description: string;
   organization?: string;
@@ -93,9 +95,12 @@ export default function OpportunityList({ section }: Props) {
                           </span>
                         )}
                       </div>
-                      <h3 className="text-lg font-semibold mb-1">
+                      <Link
+                        href={`/opportunities/${opp.slug}`}
+                        className="text-lg font-semibold mb-1 hover:text-pink-600 transition-colors"
+                      >
                         {opp.title}
-                      </h3>
+                      </Link>
                       <p className="text-gray-600 text-sm line-clamp-2">
                         {opp.description}
                       </p>

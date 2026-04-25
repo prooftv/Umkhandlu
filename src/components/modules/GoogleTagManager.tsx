@@ -1,5 +1,10 @@
+'use client';
+
 import Script from 'next/script';
+import { useEffect, useState } from 'react';
 import { clientEnv } from '@/env/clientEnv';
+
+const CONSENT_KEY = 'cookie-consent';
 
 export default function GoogleTagManager({
   gtmId: cmsGtmId,
@@ -7,8 +12,20 @@ export default function GoogleTagManager({
   gtmId?: string | null;
 }) {
   const gtmId = cmsGtmId || clientEnv.NEXT_PUBLIC_GTM_ID;
+  const [consented, setConsented] = useState(false);
 
-  if (!gtmId) return null;
+  useEffect(() => {
+    const consent = localStorage.getItem(CONSENT_KEY);
+    setConsented(consent === 'accepted');
+
+    const handleStorage = () => {
+      setConsented(localStorage.getItem(CONSENT_KEY) === 'accepted');
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  if (!gtmId || !consented) return null;
 
   return (
     <>

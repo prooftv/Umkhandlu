@@ -217,7 +217,6 @@ export const cardGridFragment = /* groq */ `
   _type,
   heading,
   ${contentFragment}
-  icon,
 `;
 
 export const cardGridsSectionFragment = /* groq */ `

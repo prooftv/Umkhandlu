@@ -63,7 +63,23 @@ export default async function Footer() {
                   href="/blog"
                   className="hover:text-gray-900 transition-colors"
                 >
-                  Posts
+                  Posts & Stories
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/notices"
+                  className="hover:text-gray-900 transition-colors"
+                >
+                  Notices
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/opportunities"
+                  className="hover:text-gray-900 transition-colors"
+                >
+                  Opportunities
                 </Link>
               </li>
             </ul>
