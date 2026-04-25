@@ -13,13 +13,13 @@ Operational checklist for deploying Umkhandlu for a new council. Follow in order
 
 ## 2. Code
 
-- [ ] Clone repo: `git clone https://github.com/prooftv/Umkhandlu.git`
-- [ ] Edit `src/lib/siteConfig.ts`:
+- [ ] In the shared repo, edit `src/lib/siteConfig.ts`:
   ```ts
   export const SITE_NAME = 'Council Name Here';
   export const SITE_DESCRIPTION = 'Description here.';
   ```
-- [ ] Commit and push to a new branch or fork
+- [ ] This is a fallback only — CMS Settings title/description override it once populated
+- [ ] Do NOT fork or branch per council — all councils share the same codebase
 
 ## 3. Vercel Project
 
@@ -104,8 +104,42 @@ This enables all subdomains to route to Vercel automatically.
 | Sanity project | 5 min |
 | Code config | 2 min |
 | Vercel project + env vars | 10 min |
-| Domain + DNS | 5 min |
+| Domain + DNS | 5–30 min (DNS propagation varies) |
 | CORS | 2 min |
-| First content | 30-60 min |
+| First content | 30–60 min |
 | Verify | 5 min |
-| **Total** | **~1.5 hours** |
+| **Total** | **2–4 hours** (first deployment; faster after practice) |
+
+---
+
+## Troubleshooting
+
+**Site shows "Oops" error or blank page:**
+1. Check Vercel env vars — all 7 required vars must be set
+2. Check `SANITY_API_READ_TOKEN` is valid (not expired)
+3. Check `MAX_STATIC_PARAMS` is set (e.g. `50`)
+4. Redeploy in Vercel (Settings → Deployments → Redeploy)
+
+**Site shows empty state ("This site is ready"):**
+- No homePage document exists in Sanity yet
+- Open `/studio` and create a Home Page with at least one section
+
+**Studio won't load or shows CORS error:**
+- Add your deployment URL to Sanity CORS origins (step 5)
+- Include both `https://` and `http://localhost:3000`
+
+**Subdomain not resolving:**
+- DNS propagation can take up to 48 hours (usually 5–30 min)
+- Verify CNAME record exists: `councilname` → `cname.vercel-dns.com`
+- Check Vercel project has the subdomain assigned (Settings → Domains)
+
+**Brand colors not applying:**
+- Open Studio → Site Settings → Branding
+- Enter hex codes with `#` prefix (e.g. `#16a34a`)
+- Publish the settings document
+- Hard refresh the site (Ctrl+Shift+R)
+
+**Forms not delivering data:**
+- Check Settings → Analytics → Webhook URL is set
+- Test the webhook URL independently (e.g. with curl or webhook.site)
+- If no webhook is set, form data logs to server console only
