@@ -18,6 +18,8 @@ import cardGrid from './objects/sections/cardGrid';
 import contactForm from './objects/sections/contactForm';
 import cta from './objects/sections/cta';
 import divider from './objects/sections/divider';
+import embed from './objects/sections/embed';
+import faq from './objects/sections/faq';
 import gallery from './objects/sections/gallery';
 import hero from './objects/sections/hero';
 import listingGrid from './objects/sections/listingGrid';
@@ -29,6 +31,8 @@ import postList from './objects/sections/postList';
 import process from './objects/sections/process';
 import programList from './objects/sections/programList';
 import recordList from './objects/sections/recordList';
+import richText from './objects/sections/richText';
+import stats from './objects/sections/stats';
 import subscribe from './objects/sections/subscribe';
 import teamGrid from './objects/sections/teamGrid';
 import seoTypes from './objects/seo';
@@ -64,6 +68,8 @@ export const schemaTypes = [
   cardGrid,
   contactForm,
   divider,
+  embed,
+  faq,
   gallery,
   listingGrid,
   logoGrid,
@@ -72,6 +78,8 @@ export const schemaTypes = [
   process,
   programList,
   recordList,
+  richText,
+  stats,
   subscribe,
   teamGrid,
 

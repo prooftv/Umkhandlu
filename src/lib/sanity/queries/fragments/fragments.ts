@@ -422,6 +422,39 @@ export const recordListSectionFragment = /* groq */ `
   }
 `;
 
+export const richTextSectionFragment = /* groq */ `
+  _type,
+  heading,
+  ${contentFragment}
+`;
+
+export const faqSectionFragment = /* groq */ `
+  _type,
+  heading,
+  items[] {
+    _key,
+    question,
+    answer[]{ ..., ${markDefsFragment} }
+  }
+`;
+
+export const statsSectionFragment = /* groq */ `
+  _type,
+  heading,
+  items[] {
+    _key,
+    value,
+    label
+  }
+`;
+
+export const embedSectionFragment = /* groq */ `
+  _type,
+  heading,
+  url,
+  aspectRatio
+`;
+
 export const contactFormSectionFragment = /* groq */ `
   _type,
   heading,
@@ -440,6 +473,8 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'contactForm' => {${contactFormSectionFragment}},
     _type == 'cta' => {${ctaSectionFragment}},
     _type == 'divider' => {${dividerSectionFragment}},
+    _type == 'embed' => {${embedSectionFragment}},
+    _type == 'faq' => {${faqSectionFragment}},
     _type == 'gallery' => {${gallerySectionFragment}},
     _type == 'hero' => {${heroSectionFragment}},
     _type == 'listingGrid' => {${listingGridSectionFragment}},
@@ -451,6 +486,8 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'process' => {${processSectionFragment}},
     _type == 'programList' => {${programListSectionFragment}},
     _type == 'recordList' => {${recordListSectionFragment}},
+    _type == 'richText' => {${richTextSectionFragment}},
+    _type == 'stats' => {${statsSectionFragment}},
     _type == 'subscribe' => {${subscribeSectionFragment}},
     _type == 'teamGrid' => {${teamGridSectionFragment}}
   },

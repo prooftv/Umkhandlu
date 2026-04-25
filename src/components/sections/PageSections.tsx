@@ -10,6 +10,8 @@ import CardGrid from './CardGrid';
 import ContactForm from './ContactForm';
 import CTA from './CTA';
 import Divider from './Divider';
+import Embed from './Embed';
+import FAQ from './FAQ';
 import Gallery from './Gallery';
 import Hero from './Hero';
 import ListingGrid from './ListingGrid';
@@ -21,6 +23,8 @@ import PostList from './PostList';
 import Process from './Process';
 import ProgramList from './ProgramList';
 import RecordList from './RecordList';
+import RichText from './RichText';
+import Stats from './Stats';
 import Subscribe from './Subscribe';
 import TeamGrid from './TeamGrid';
 
@@ -34,6 +38,8 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   cardGrid: CardGrid,
   contactForm: ContactForm,
   divider: Divider,
+  embed: Embed,
+  faq: FAQ,
   gallery: Gallery,
   listingGrid: ListingGrid,
   logoGrid: LogoGrid,
@@ -42,6 +48,8 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   process: Process,
   programList: ProgramList,
   recordList: RecordList,
+  richText: RichText,
+  stats: Stats,
   teamGrid: TeamGrid,
 } as const;
 
