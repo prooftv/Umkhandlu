@@ -9,7 +9,7 @@ const queryPaths = data.path.map((p) => {
     .replace(/\*\*\/\*\..*$/, '') // Remove **/*.ts pattern
     .replace(/\*\..*$/, ''); // Remove *.ts pattern
 });
-const schemaPath = 'src/sanity/schema'; // Hardcoded schema path
+const schemaPath = 'src/studio/schema';
 
 console.log('Watching for changes in:');
 console.log('🔍 Query Paths:', queryPaths);

@@ -2,9 +2,9 @@ name: Lint with Biome
 
 on:
   push:
-    branches: [main, develop]
+    branches: [trunk, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [trunk, develop]
 
 jobs:
   lint:
