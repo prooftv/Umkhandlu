@@ -1,11 +1,15 @@
 import { defineQuery } from 'next-sanity';
 import {
   categoryFragment,
+  listingFragment,
   menuFragment,
+  noticeFragment,
+  opportunityFragment,
   pageFragment,
   personFragment,
   postCardFragment,
   postFragment,
+  programFragment,
 } from './fragments/fragments';
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
@@ -44,12 +48,13 @@ export const getPageQuery = defineQuery(`
 `);
 
 export const getSitemapQuery = defineQuery(`
-  *[((_type in ["page", "post", "category", "person"] && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
+  *[((_type in ["page", "post", "category", "person"] && defined(slug.current)) || (_type == "listing" && listingType == "area" && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
     "href": select(
       _type == "page" => "/" + slug.current,
       _type == "post" => "/blog/" + slug.current,
       _type == "category" => "/category/" + slug.current,
       _type == "person" => "/author/" + slug.current,
+      _type == "listing" => "/areas/" + slug.current,
       _type == "blogPage" => "/blog",
       _type == "homePage" => "/",
       slug.current
@@ -86,6 +91,32 @@ export const categorySlugs = defineQuery(`
 
 export const personSlugs = defineQuery(`
   *[_type == "person" && defined(slug.current)][0..$limit].slug.current
+`);
+
+export const areaDetailQuery = defineQuery(`
+  *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{
+    _id,
+    name,
+    "slug": slug.current,
+    description,
+    location,
+    image,
+    "induna": induna->{${personFragment}},
+    "relatedListings": relatedListings[]->{${listingFragment}},
+    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {
+      ${noticeFragment}
+    },
+    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {
+      ${programFragment}
+    },
+    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {
+      ${opportunityFragment}
+    }
+  }
+`);
+
+export const areaSlugs = defineQuery(`
+  *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current
 `);
 
 export const postsArchiveQuery = defineQuery(`

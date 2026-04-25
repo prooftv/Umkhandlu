@@ -320,6 +320,33 @@ export const adBannerSectionFragment = /* groq */ `
   size
 `;
 
+export const opportunityFragment = /* groq */ `
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  opportunityType,
+  description,
+  organization,
+  deadline,
+  link,
+  featured,
+`;
+
+export const opportunityListSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  filterType,
+  limit,
+  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    opportunityType == ^.filterType
+  )] | order(featured desc, deadline asc) [0...^.limit] {
+    ${opportunityFragment}
+  }
+`;
+
 export const programFragment = /* groq */ `
   _id,
   _type,
@@ -406,6 +433,7 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'logoGrid' => {${logoGridSectionFragment}},
     _type == 'mediaText' => {${mediaTextSectionFragment}},
     _type == 'noticeList' => {${noticeListSectionFragment}},
+    _type == 'opportunityList' => {${opportunityListSectionFragment}},
     _type == 'postList' => {${postListSectionFragment}},
     _type == 'process' => {${processSectionFragment}},
     _type == 'programList' => {${programListSectionFragment}},

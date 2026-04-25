@@ -75,6 +75,22 @@ export default defineType({
       initialValue: false,
       description: 'Featured listings appear first.',
     }),
+    defineField({
+      name: 'induna',
+      title: 'Induna (Headman)',
+      type: 'reference',
+      to: [{ type: 'person' }],
+      description: 'The induna responsible for this area.',
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
+      name: 'relatedListings',
+      title: 'Related Listings',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'listing' }] }],
+      description: 'Schools, clinics, businesses within this area.',
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
   ],
   orderings: [
     {
