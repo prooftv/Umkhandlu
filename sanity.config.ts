@@ -36,7 +36,7 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
     case 'category':
       return slug ? `/category/${slug}` : undefined;
     case 'person':
-      return slug ? `/author/${slug}` : undefined;
+      return slug ? `/people/${slug}` : undefined;
     default:
       console.warn('Invalid document type:', documentType);
       return undefined;

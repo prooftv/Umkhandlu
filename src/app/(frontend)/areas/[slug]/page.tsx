@@ -64,7 +64,7 @@ export default async function AreaPage(props: Props) {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Induna</h2>
           <Link
-            href={`/author/${area.induna.slug}`}
+            href={`/people/${area.induna.slug}`}
             className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
           >
             {area.induna.image?.asset?._ref && (

@@ -20,7 +20,7 @@ export const getDocumentLink = (
     case 'category':
       return `${linkBase}/category/${slug}`;
     case 'person':
-      return `${linkBase}/author/${slug}`;
+      return `${linkBase}/people/${slug}`;
     case 'listing':
       return `${linkBase}/areas/${slug}`;
     case 'notice':

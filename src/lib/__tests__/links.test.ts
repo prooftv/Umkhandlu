@@ -14,7 +14,7 @@ describe('getDocumentLink', () => {
       '/'
     );
     expect(getDocumentLink({ _type: 'person', slug: 'john-doe' })).toBe(
-      '/author/john-doe'
+      '/people/john-doe'
     );
   });
 

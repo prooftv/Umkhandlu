@@ -55,7 +55,7 @@ export const getSitemapQuery = defineQuery(`
       _type == "page" => "/" + slug.current,
       _type == "post" => "/blog/" + slug.current,
       _type == "category" => "/category/" + slug.current,
-      _type == "person" => "/author/" + slug.current,
+      _type == "person" => "/people/" + slug.current,
       _type == "listing" => "/areas/" + slug.current,
       _type == "notice" => "/notices/" + slug.current,
       _type == "opportunity" => "/opportunities/" + slug.current,

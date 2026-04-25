@@ -30,6 +30,7 @@ export default defineType({
           { title: 'Schools', value: 'school' },
           { title: 'Clinics / Health', value: 'clinic' },
           { title: 'Businesses', value: 'business' },
+          { title: 'Accommodation', value: 'accommodation' },
           { title: 'Churches', value: 'church' },
           { title: 'Community Facilities', value: 'facility' },
           { title: 'Villages / Areas', value: 'area' },

@@ -7,6 +7,8 @@ type Member = {
   firstName: string;
   lastName: string;
   role?: string;
+  personType?: string;
+  organization?: string;
   slug: string;
   image?: { asset?: { _ref?: string }; alt?: string };
 };
@@ -52,7 +54,7 @@ export default function TeamGrid({ section }: Props) {
           {members.map((member) => (
             <Link
               key={member._id}
-              href={`/author/${member.slug}`}
+              href={`/people/${member.slug}`}
               className="group text-center"
             >
               <div className="relative w-40 h-40 mx-auto mb-4 rounded-full overflow-hidden bg-gray-100">
@@ -85,6 +87,9 @@ export default function TeamGrid({ section }: Props) {
               </h3>
               {member.role && (
                 <p className="text-sm text-gray-500 mt-1">{member.role}</p>
+              )}
+              {member.organization && (
+                <p className="text-xs text-gray-400">{member.organization}</p>
               )}
             </Link>
           ))}

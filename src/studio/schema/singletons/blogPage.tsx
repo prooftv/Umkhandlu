@@ -1,6 +1,7 @@
 import { DocumentIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import { defaultFieldGroups } from '../config/fieldGroups';
+import pageSections from '../fields/pageSections';
 
 export default defineType({
   name: 'blogPage',
@@ -15,6 +16,7 @@ export default defineType({
       initialValue: 'Blog Page',
       group: 'content',
     }),
+    pageSections,
     defineField({
       title: 'SEO & Metadata',
       name: 'seo',

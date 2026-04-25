@@ -66,10 +66,18 @@ export default defineType({
           { title: 'Community Member', value: 'community' },
           { title: 'Author', value: 'author' },
         ],
-        layout: 'radio',
-        direction: 'horizontal',
       },
       initialValue: 'council',
+    }),
+    defineField({
+      name: 'email',
+      title: 'Email',
+      type: 'string',
+    }),
+    defineField({
+      name: 'phone',
+      title: 'Phone',
+      type: 'string',
     }),
     defineField({
       name: 'organization',

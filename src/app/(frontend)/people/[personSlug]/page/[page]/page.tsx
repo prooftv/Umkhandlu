@@ -3,27 +3,27 @@ import { notFound } from 'next/navigation';
 import Page from '@/components/templates/Page';
 import PersonArchiveByline from '@/components/templates/PersonArchiveByline';
 import PostRiver from '@/components/templates/PostRiver';
-import { serverEnv } from '@/env/serverEnv';
 import { POSTS_PER_PAGE } from '@/lib/constants';
 import { getDocumentLink } from '@/lib/links';
 import { paginatedData } from '@/lib/pagination';
-import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import {
-  personQuery,
-  personSlugs,
-  postsArchiveQuery,
-} from '@/lib/sanity/queries/queries';
+import { personQuery, postsArchiveQuery } from '@/lib/sanity/queries/queries';
 
 type Props = {
-  params: Promise<{ personSlug: string }>;
+  params: Promise<{ personSlug: string; page: string }>;
 };
 
 const loadData = async (props: Props) => {
-  const { personSlug } = await props.params;
+  const { page, personSlug } = await props.params;
 
-  const from = 0;
-  const to = POSTS_PER_PAGE - 1;
+  const pageNumber = parseInt(page, 10);
+
+  if (Number.isNaN(pageNumber) || pageNumber < 1) {
+    return null;
+  }
+
+  const from = (pageNumber - 1) * POSTS_PER_PAGE;
+  const to = pageNumber * POSTS_PER_PAGE - 1;
 
   const [{ data: archiveData }, { data: personData }] = await Promise.all([
     sanityFetch({
@@ -38,19 +38,24 @@ const loadData = async (props: Props) => {
 
   return {
     person: personData,
-    posts: paginatedData(archiveData, 0, POSTS_PER_PAGE),
+    posts: paginatedData(archiveData, pageNumber, POSTS_PER_PAGE),
   };
 };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { person } = (await loadData(props)) || {};
+  const { posts, person } = (await loadData(props)) || {};
+
+  const { currentPage = 1 } = posts || {};
 
   if (!person) {
     return notFound();
   }
 
   return {
-    title: `Author ${person.firstName} ${person.lastName}`,
+    title:
+      currentPage === 1
+        ? `Author ${person.firstName} ${person.lastName} `
+        : `Author ${person.firstName} ${person.lastName} - Page ${currentPage}`,
     alternates: {
       canonical: getDocumentLink(person, true),
     },
@@ -59,21 +64,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 // Return a list of `params` to populate the [slug] dynamic segment
 export async function generateStaticParams() {
-  const slugs = await client.fetch(personSlugs, {
-    limit: serverEnv.MAX_STATIC_PARAMS,
-  });
-
-  return slugs
-    ? slugs
-        .filter((slug) => slug !== null)
-        .map((slug) => ({ personSlug: slug, pagination: undefined }))
-    : [];
+  return [];
 }
 
 export default async function PostPage(props: Props) {
   const { posts, person } = (await loadData(props)) || {};
 
-  if (!person) {
+  if (!person || !posts) {
     notFound();
   }
 
@@ -84,7 +81,7 @@ export default async function PostPage(props: Props) {
         listingData={posts.data}
         currentPage={posts.currentPage}
         totalPages={posts.totalPages}
-        paginationBase={`/author/${person.slug}`}
+        paginationBase={`/people/${person.slug}`}
       />
     </Page>
   );

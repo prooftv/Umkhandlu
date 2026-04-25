@@ -155,6 +155,8 @@ export const personFragment = /* groq */ `
   image,
   role,
   personType,
+  email,
+  phone,
   organization,
   skills,
   biography,

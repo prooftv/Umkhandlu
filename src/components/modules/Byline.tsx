@@ -35,7 +35,7 @@ export default function Byline({ post }: { post: PostCardFragmentType }) {
           post.author?.slug ? (
             <Link
               className="font-bold underline hover:text-gray-700 transition-colors"
-              href={`/author/${post.author.slug}`}
+              href={`/people/${post.author.slug}`}
             >
               {post.author.firstName} {post.author.lastName}
             </Link>

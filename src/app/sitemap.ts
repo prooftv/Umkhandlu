@@ -7,7 +7,7 @@ function getPriority(href: string): number {
   if (href === '/') return 1.0;
   if (href === '/blog') return 0.8;
   if (href.startsWith('/blog/')) return 0.6;
-  if (href.startsWith('/category/') || href.startsWith('/author/')) return 0.4;
+  if (href.startsWith('/category/') || href.startsWith('/people/')) return 0.4;
   return 0.7;
 }
 
