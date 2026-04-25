@@ -5,6 +5,7 @@ import cta from '../objects/sections/cta';
 import divider from '../objects/sections/divider';
 import gallery from '../objects/sections/gallery';
 import hero from '../objects/sections/hero';
+import listingGrid from '../objects/sections/listingGrid';
 import logoGrid from '../objects/sections/logoGrid';
 import mediaText from '../objects/sections/mediaText';
 import noticeList from '../objects/sections/noticeList';
@@ -19,6 +20,7 @@ const pageSectionsObjects = [
   divider,
   gallery,
   hero,
+  listingGrid,
   logoGrid,
   mediaText,
   noticeList,

@@ -267,6 +267,33 @@ export const gallerySectionFragment = /* groq */ `
   }
 `;
 
+export const listingFragment = /* groq */ `
+  _id,
+  _type,
+  name,
+  "slug": slug.current,
+  listingType,
+  description,
+  location,
+  contactInfo,
+  featured,
+  image,
+`;
+
+export const listingGridSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  filterType,
+  limit,
+  "listings": *[_type == 'listing' && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    listingType == ^.filterType
+  )] | order(featured desc, name asc) [0...^.limit] {
+    ${listingFragment}
+  }
+`;
+
 export const logoGridSectionFragment = /* groq */ `
   _type,
   heading,
@@ -300,6 +327,7 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'divider' => {${dividerSectionFragment}},
     _type == 'gallery' => {${gallerySectionFragment}},
     _type == 'hero' => {${heroSectionFragment}},
+    _type == 'listingGrid' => {${listingGridSectionFragment}},
     _type == 'logoGrid' => {${logoGridSectionFragment}},
     _type == 'mediaText' => {${mediaTextSectionFragment}},
     _type == 'noticeList' => {${noticeListSectionFragment}},

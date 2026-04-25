@@ -1,4 +1,5 @@
 import category from './documents/category';
+import listing from './documents/listing';
 import notice from './documents/notice';
 import page from './documents/page';
 import person from './documents/person';
@@ -14,6 +15,7 @@ import cta from './objects/sections/cta';
 import divider from './objects/sections/divider';
 import gallery from './objects/sections/gallery';
 import hero from './objects/sections/hero';
+import listingGrid from './objects/sections/listingGrid';
 import logoGrid from './objects/sections/logoGrid';
 import mediaText from './objects/sections/mediaText';
 import noticeList from './objects/sections/noticeList';
@@ -37,6 +39,7 @@ export const schemaTypes = [
   person,
   category,
   notice,
+  listing,
 
   // Sections
   cta,
@@ -48,6 +51,7 @@ export const schemaTypes = [
   contactForm,
   divider,
   gallery,
+  listingGrid,
   logoGrid,
   noticeList,
   subscribe,

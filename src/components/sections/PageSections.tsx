@@ -11,6 +11,7 @@ import CTA from './CTA';
 import Divider from './Divider';
 import Gallery from './Gallery';
 import Hero from './Hero';
+import ListingGrid from './ListingGrid';
 import LogoGrid from './LogoGrid';
 import MediaText from './MediaText';
 import NoticeList from './NoticeList';
@@ -28,6 +29,7 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   contactForm: ContactForm,
   divider: Divider,
   gallery: Gallery,
+  listingGrid: ListingGrid,
   logoGrid: LogoGrid,
   noticeList: NoticeList,
   teamGrid: TeamGrid,

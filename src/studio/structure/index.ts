@@ -3,6 +3,7 @@ import {
   CogIcon,
   DocumentIcon,
   HomeIcon,
+  PinIcon,
   UsersIcon,
 } from '@sanity/icons';
 import type { StructureResolver } from 'sanity/structure';
@@ -37,6 +38,13 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('person')
         .title('Leadership & People')
         .icon(UsersIcon),
+
+      S.divider(),
+
+      // Directory
+      S.documentTypeListItem('listing')
+        .title('Directory Listings')
+        .icon(PinIcon),
 
       S.divider(),
 
