@@ -16,6 +16,8 @@ import {
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   title,
   description,
+  primaryColor,
+  secondaryColor,
   contactEmail,
   contactPhone,
   address,

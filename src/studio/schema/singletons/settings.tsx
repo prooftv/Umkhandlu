@@ -8,6 +8,7 @@ export default defineType({
   icon: CogIcon,
   groups: [
     { name: 'general', title: 'General', default: true },
+    { name: 'branding', title: 'Branding' },
     { name: 'social', title: 'Social & Contact' },
     { name: 'analytics', title: 'Analytics' },
   ],
@@ -66,6 +67,24 @@ export default defineType({
     }),
 
     // Social & Contact
+    defineField({
+      name: 'primaryColor',
+      title: 'Primary Brand Color',
+      type: 'string',
+      group: 'branding',
+      description:
+        'Hex color code (e.g. #ec4899 for pink, #16a34a for green). Used for buttons, links, accents.',
+      initialValue: '#ec4899',
+    }),
+    defineField({
+      name: 'secondaryColor',
+      title: 'Secondary Brand Color',
+      type: 'string',
+      group: 'branding',
+      description:
+        'Hex color code (e.g. #3b82f6 for blue, #f59e0b for amber). Used for gradients and secondary elements.',
+      initialValue: '#3b82f6',
+    }),
     defineField({
       name: 'contactEmail',
       title: 'Contact Email',
