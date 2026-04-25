@@ -21,6 +21,8 @@ export const getDocumentLink = (
       return `${linkBase}/category/${slug}`;
     case 'person':
       return `${linkBase}/author/${slug}`;
+    case 'listing':
+      return `${linkBase}/areas/${slug}`;
     case 'homePage':
       return `${linkBase}/`;
     default:

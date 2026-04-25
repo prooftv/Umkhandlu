@@ -16,6 +16,7 @@ import ListingGrid from './ListingGrid';
 import LogoGrid from './LogoGrid';
 import MediaText from './MediaText';
 import NoticeList from './NoticeList';
+import OpportunityList from './OpportunityList';
 import PostList from './PostList';
 import Process from './Process';
 import ProgramList from './ProgramList';
@@ -37,6 +38,7 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   listingGrid: ListingGrid,
   logoGrid: LogoGrid,
   noticeList: NoticeList,
+  opportunityList: OpportunityList,
   process: Process,
   programList: ProgramList,
   recordList: RecordList,

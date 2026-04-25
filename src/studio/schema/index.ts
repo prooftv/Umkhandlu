@@ -1,6 +1,7 @@
 import category from './documents/category';
 import listing from './documents/listing';
 import notice from './documents/notice';
+import opportunity from './documents/opportunity';
 import page from './documents/page';
 import person from './documents/person';
 import post from './documents/post';
@@ -22,6 +23,7 @@ import listingGrid from './objects/sections/listingGrid';
 import logoGrid from './objects/sections/logoGrid';
 import mediaText from './objects/sections/mediaText';
 import noticeList from './objects/sections/noticeList';
+import opportunityList from './objects/sections/opportunityList';
 import postList from './objects/sections/postList';
 import process from './objects/sections/process';
 import programList from './objects/sections/programList';
@@ -46,6 +48,7 @@ export const schemaTypes = [
   category,
   notice,
   listing,
+  opportunity,
   program,
   record,
 
@@ -63,6 +66,7 @@ export const schemaTypes = [
   listingGrid,
   logoGrid,
   noticeList,
+  opportunityList,
   process,
   programList,
   recordList,

@@ -62,6 +62,16 @@ export default defineType({
       initialValue: false,
       description: 'Pinned notices appear first.',
     }),
+    defineField({
+      name: 'relatedArea',
+      title: 'Related Area',
+      type: 'reference',
+      to: [{ type: 'listing' }],
+      description: 'Link to a specific area/village if applicable.',
+      options: {
+        filter: 'listingType == "area"',
+      },
+    }),
   ],
   orderings: [
     {

@@ -10,6 +10,7 @@ import listingGrid from '../objects/sections/listingGrid';
 import logoGrid from '../objects/sections/logoGrid';
 import mediaText from '../objects/sections/mediaText';
 import noticeList from '../objects/sections/noticeList';
+import opportunityList from '../objects/sections/opportunityList';
 import postList from '../objects/sections/postList';
 import process from '../objects/sections/process';
 import programList from '../objects/sections/programList';
@@ -29,6 +30,7 @@ const pageSectionsObjects = [
   logoGrid,
   mediaText,
   noticeList,
+  opportunityList,
   postList,
   process,
   programList,
