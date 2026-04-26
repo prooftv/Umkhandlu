@@ -97,6 +97,31 @@ export default defineType({
       title: 'Biography',
       type: 'blockContent',
     }),
+    defineField({
+      name: 'gallery',
+      title: 'Portfolio / Gallery',
+      type: 'array',
+      description:
+        'Photos of work, projects, or achievements. Useful for community members showcasing skills.',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alt text',
+            }),
+            defineField({
+              name: 'caption',
+              type: 'string',
+              title: 'Caption',
+            }),
+          ],
+        },
+      ],
+    }),
   ],
   preview: {
     select: {

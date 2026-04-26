@@ -160,6 +160,12 @@ export const personFragment = /* groq */ `
   organization,
   skills,
   biography,
+  gallery[] {
+    _key,
+    alt,
+    caption,
+    asset->{ _id, url }
+  },
   "slug": slug.current,
 `;
 

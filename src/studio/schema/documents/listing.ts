@@ -115,6 +115,31 @@ export default defineType({
       description: 'Featured listings appear first.',
     }),
     defineField({
+      name: 'images',
+      title: 'Additional Photos',
+      type: 'array',
+      description: 'Additional photos of the facility, products, or services.',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alt text',
+            }),
+            defineField({
+              name: 'caption',
+              type: 'string',
+              title: 'Caption',
+            }),
+          ],
+        },
+      ],
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
       name: 'induna',
       title: 'Induna (Headman)',
       type: 'reference',

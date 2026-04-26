@@ -103,6 +103,36 @@ export default function PersonArchiveByline({
           ) : null}
         </div>
       </div>
+
+      {/* Portfolio / Gallery */}
+      {person.gallery && person.gallery.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-6">Portfolio</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {person.gallery.map((item) => (
+              <figure
+                key={item._key}
+                className="group relative overflow-hidden rounded-xl"
+              >
+                {item.asset?.url && (
+                  <Image
+                    src={item.asset.url}
+                    alt={item.alt || ''}
+                    width={400}
+                    height={400}
+                    className="object-cover aspect-square group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
+                {item.caption && (
+                  <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    {item.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

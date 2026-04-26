@@ -415,6 +415,114 @@ const noticesPage = {
 
 // ─── SEED ────────────────────────────────────────────────────
 
+// ─── OPPORTUNITIES PAGE ──────────────────────────────────────
+
+const opportunitiesPage = {
+  _id: 'page-opportunities',
+  _type: 'page',
+  name: 'Opportunities',
+  slug: { _type: 'slug', current: 'opportunities' },
+  pageSections: [
+    {
+      _key: 'opp-hero',
+      _type: 'hero',
+      heading: 'Opportunities',
+      text: [
+        textBlock(
+          'opp-hero-text',
+          'Jobs, training, bursaries, and funding opportunities for the Mndozo community. Updated regularly.'
+        ),
+      ],
+    },
+    {
+      _key: 'opp-list',
+      _type: 'opportunityList',
+      heading: 'Current Opportunities',
+      description:
+        'Browse available opportunities. Expired listings are automatically removed.',
+      filterType: 'all',
+      limit: 20,
+    },
+    {
+      _key: 'opp-cta',
+      _type: 'cta',
+      heading: 'Have an Opportunity to Share?',
+      text: 'If you know of a job, training programme, bursary, or funding opportunity relevant to the Mndozo community, contact the council office.',
+    },
+  ],
+};
+
+// ─── PROGRAMS PAGE ───────────────────────────────────────────
+
+const programsPage = {
+  _id: 'page-programs',
+  _type: 'page',
+  name: 'Programs & Events',
+  slug: { _type: 'slug', current: 'programs' },
+  pageSections: [
+    {
+      _key: 'prog-hero',
+      _type: 'hero',
+      heading: 'Programs & Events',
+      text: [
+        textBlock(
+          'prog-hero-text',
+          'Youth events, skills programs, school collaborations, and community projects in the Mndozo area.'
+        ),
+      ],
+    },
+    {
+      _key: 'prog-list',
+      _type: 'programList',
+      heading: 'Upcoming & Active Programs',
+      description:
+        'Community programs and events organised by the council and partners.',
+      filterStatus: 'all',
+      limit: 20,
+    },
+    {
+      _key: 'prog-subscribe',
+      _type: 'subscribe',
+      heading: 'Stay Updated',
+      content: [
+        textBlock(
+          'prog-sub-text',
+          'Subscribe to receive updates about new programs and events in the Mndozo area.'
+        ),
+      ],
+      buttonText: 'Subscribe',
+    },
+  ],
+};
+
+// ─── MEDIA PAGE ──────────────────────────────────────────────
+
+const mediaPage = {
+  _id: 'page-media',
+  _type: 'page',
+  name: 'Media & Stories',
+  slug: { _type: 'slug', current: 'media' },
+  pageSections: [
+    {
+      _key: 'media-hero',
+      _type: 'hero',
+      heading: 'Media & Stories',
+      text: [
+        textBlock(
+          'media-hero-text',
+          'Community stories, event coverage, and photo galleries from the Mndozo area.'
+        ),
+      ],
+    },
+    {
+      _key: 'media-posts',
+      _type: 'postList',
+      heading: 'Latest Stories',
+      numberOfPosts: 6,
+    },
+  ],
+};
+
 const pages = [
   landPage,
   aboutPage,
@@ -422,6 +530,9 @@ const pages = [
   directoryPage,
   contactPage,
   noticesPage,
+  opportunitiesPage,
+  programsPage,
+  mediaPage,
 ];
 
 async function seed() {
