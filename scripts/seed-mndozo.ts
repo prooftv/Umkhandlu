@@ -45,6 +45,101 @@ const settings = {
   address: 'Mndozo, Amajuba District, KwaZulu-Natal, South Africa',
   primaryColor: '#16a34a',
   secondaryColor: '#f59e0b',
+  menu: [
+    {
+      _key: 'menu-home',
+      _type: 'menuItem',
+      text: 'Home',
+      type: 'link',
+      link: {
+        _type: 'link',
+        type: 'internal',
+        internal: { _type: 'reference', _ref: 'homePage' },
+      },
+    },
+    {
+      _key: 'menu-council',
+      _type: 'menuItem',
+      text: 'Council',
+      type: 'child-menu',
+      childMenu: [
+        {
+          _key: 'menu-about',
+          _type: 'menuItem',
+          text: 'About',
+          type: 'link',
+          link: {
+            _type: 'link',
+            type: 'internal',
+            internal: { _type: 'reference', _ref: 'page-about' },
+          },
+        },
+        {
+          _key: 'menu-leadership',
+          _type: 'menuItem',
+          text: 'Leadership',
+          type: 'link',
+          link: {
+            _type: 'link',
+            type: 'internal',
+            internal: { _type: 'reference', _ref: 'page-leadership' },
+          },
+        },
+        {
+          _key: 'menu-land',
+          _type: 'menuItem',
+          text: 'Land & Governance',
+          type: 'link',
+          link: {
+            _type: 'link',
+            type: 'internal',
+            internal: { _type: 'reference', _ref: 'page-land' },
+          },
+        },
+      ],
+    },
+    {
+      _key: 'menu-community',
+      _type: 'menuItem',
+      text: 'Community',
+      type: 'child-menu',
+      childMenu: [
+        {
+          _key: 'menu-notices',
+          _type: 'menuItem',
+          text: 'Notices',
+          type: 'link',
+          link: {
+            _type: 'link',
+            type: 'internal',
+            internal: { _type: 'reference', _ref: 'page-notices' },
+          },
+        },
+        {
+          _key: 'menu-directory',
+          _type: 'menuItem',
+          text: 'Directory',
+          type: 'link',
+          link: {
+            _type: 'link',
+            type: 'internal',
+            internal: { _type: 'reference', _ref: 'page-directory' },
+          },
+        },
+      ],
+    },
+    {
+      _key: 'menu-contact',
+      _type: 'menuItem',
+      text: 'Contact',
+      type: 'link',
+      link: {
+        _type: 'link',
+        type: 'internal',
+        internal: { _type: 'reference', _ref: 'page-contact' },
+      },
+    },
+  ],
 };
 
 // ─── PEOPLE ──────────────────────────────────────────────────

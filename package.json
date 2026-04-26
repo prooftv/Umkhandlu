@@ -24,6 +24,7 @@
     "seed:mndozo": "tsx scripts/seed-mndozo.ts",
     "seed:trust": "tsx scripts/seed-trust-resources.ts",
     "seed:pages": "tsx scripts/seed-pages.ts",
+    "seed:menu": "tsx scripts/seed-menu.ts",
     "prepare": "husky install"
   },
   "dependencies": {
