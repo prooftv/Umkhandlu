@@ -77,101 +77,110 @@ export default function ListingGrid({ section }: Props) {
           )}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {listings.map((listing) => (
-            <article
-              key={listing._id}
-              className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-            >
-              {listing.image?.asset?._ref && (
-                <div className="relative h-40">
-                  <Image
-                    src={
-                      urlForImage(listing.image)
-                        ?.width(600)
-                        .height(300)
-                        .fit('crop')
-                        .url() as string
-                    }
-                    alt={listing.image?.alt || listing.name}
-                    width={600}
-                    height={300}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              )}
-              <div className="p-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">
-                    {typeIcons[listing.listingType] || '📍'}
-                  </span>
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    {typeLabels[listing.listingType] || listing.listingType}
-                  </span>
-                  {listing.featured && (
-                    <span className="text-xs text-primary font-medium ml-auto">
-                      ⭐ Featured
+          {listings.map((listing) => {
+            const href =
+              listing.listingType === 'area'
+                ? `/areas/${listing.slug}`
+                : `/directory/${listing.slug}`;
+            return (
+              <Link
+                key={listing._id}
+                href={href}
+                className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden block"
+              >
+                {listing.image?.asset?._ref && (
+                  <div className="relative h-40">
+                    <Image
+                      src={
+                        urlForImage(listing.image)
+                          ?.width(600)
+                          .height(300)
+                          .fit('crop')
+                          .url() as string
+                      }
+                      alt={listing.image?.alt || listing.name}
+                      width={600}
+                      height={300}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                )}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">
+                      {typeIcons[listing.listingType] || '📍'}
                     </span>
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {typeLabels[listing.listingType] || listing.listingType}
+                    </span>
+                    {listing.featured && (
+                      <span className="text-xs text-primary font-medium ml-auto">
+                        ⭐ Featured
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-semibold mb-1">
+                    {listing.name}
+                    <VerifiedBadge level={listing.verifiedByInduna} />
+                  </h3>
+                  {listing.description && (
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {listing.description}
+                    </p>
                   )}
+                  {listing.location && (
+                    <p className="text-gray-500 text-xs">
+                      📍 {listing.location}
+                    </p>
+                  )}
+                  {listing.contactInfo && (
+                    <p className="text-gray-500 text-xs mt-1">
+                      📞 {listing.contactInfo}
+                    </p>
+                  )}
+                  {listing.whatsappContact && (
+                    <a
+                      href={`https://wa.me/${listing.whatsappContact.replace(/[^0-9+]/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 text-xs mt-1 inline-block hover:underline"
+                    >
+                      💬 WhatsApp
+                    </a>
+                  )}
+                  {listing.website && (
+                    <a
+                      href={listing.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary text-xs mt-1 inline-block hover:underline"
+                    >
+                      🌐 Website
+                    </a>
+                  )}
+                  {listing.operatingHours && (
+                    <p className="text-gray-500 text-xs mt-1">
+                      🕐 {listing.operatingHours}
+                    </p>
+                  )}
+                  {listing.servicesOffered &&
+                    listing.servicesOffered.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {listing.servicesOffered.map((service) => (
+                          <span
+                            key={service}
+                            className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
+                          >
+                            {service}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                 </div>
-                <h3 className="text-lg font-semibold mb-1">
-                  {listing.name}
-                  <VerifiedBadge level={listing.verifiedByInduna} />
-                </h3>
-                {listing.description && (
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {listing.description}
-                  </p>
-                )}
-                {listing.location && (
-                  <p className="text-gray-500 text-xs">📍 {listing.location}</p>
-                )}
-                {listing.contactInfo && (
-                  <p className="text-gray-500 text-xs mt-1">
-                    📞 {listing.contactInfo}
-                  </p>
-                )}
-                {listing.whatsappContact && (
-                  <a
-                    href={`https://wa.me/${listing.whatsappContact.replace(/[^0-9+]/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-green-600 text-xs mt-1 inline-block hover:underline"
-                  >
-                    💬 WhatsApp
-                  </a>
-                )}
-                {listing.website && (
-                  <a
-                    href={listing.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary text-xs mt-1 inline-block hover:underline"
-                  >
-                    🌐 Website
-                  </a>
-                )}
-                {listing.operatingHours && (
-                  <p className="text-gray-500 text-xs mt-1">
-                    🕐 {listing.operatingHours}
-                  </p>
-                )}
-                {listing.servicesOffered &&
-                  listing.servicesOffered.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {listing.servicesOffered.map((service) => (
-                        <span
-                          key={service}
-                          className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
-                        >
-                          {service}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-              </div>
-            </article>
-          ))}
+              </Link>
+            );
+          })}
         </div>
         <div className="text-center mt-8">
           <Button asChild variant="outline" size="lg">

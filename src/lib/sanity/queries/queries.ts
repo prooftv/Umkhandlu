@@ -52,13 +52,14 @@ export const getPageQuery = defineQuery(`
 `);
 
 export const getSitemapQuery = defineQuery(`
-  *[((_type in ["page", "post", "category", "person", "notice", "opportunity"] && defined(slug.current)) || (_type == "listing" && listingType == "area" && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
+  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing"] && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
     "href": select(
       _type == "page" => "/" + slug.current,
       _type == "post" => "/blog/" + slug.current,
       _type == "category" => "/category/" + slug.current,
       _type == "person" => "/people/" + slug.current,
-      _type == "listing" => "/areas/" + slug.current,
+      _type == "listing" && listingType == "area" => "/areas/" + slug.current,
+      _type == "listing" && listingType != "area" => "/directory/" + slug.current,
       _type == "notice" => "/notices/" + slug.current,
       _type == "opportunity" => "/opportunities/" + slug.current,
       _type == "blogPage" => "/blog",
@@ -123,6 +124,22 @@ export const areaDetailQuery = defineQuery(`
 
 export const areaSlugs = defineQuery(`
   *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current
+`);
+
+export const listingDetailQuery = defineQuery(`
+  *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{
+    ${listingFragment}
+    images[] {
+      _key,
+      alt,
+      caption,
+      asset->{ _id, url }
+    }
+  }
+`);
+
+export const listingSlugs = defineQuery(`
+  *[_type == "listing" && listingType != "area" && defined(slug.current)][0..$limit].slug.current
 `);
 
 export const noticeDetailQuery = defineQuery(`
