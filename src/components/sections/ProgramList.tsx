@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Image } from 'next-sanity/image';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { urlForImage } from '@/lib/sanity/client/utils';
 
 type Program = {
