@@ -23,6 +23,7 @@
     "test": "vitest",
     "seed:mndozo": "tsx scripts/seed-mndozo.ts",
     "seed:trust": "tsx scripts/seed-trust-resources.ts",
+    "seed:pages": "tsx scripts/seed-pages.ts",
     "prepare": "husky install"
   },
   "dependencies": {
