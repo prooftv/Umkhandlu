@@ -211,6 +211,8 @@ const listings = [
     listingType: 'school',
     description: 'Public secondary school serving the Mndozo catchment area.',
     location: 'Mndozo, KwaZulu-Natal',
+    contactInfo: '+27 XX XXX XXXX',
+    operatingHours: 'Mon–Fri 07:30–14:30',
     servicesOffered: ['Grades 8-12', 'NSC Matric', 'Sports & Culture'],
     verifiedByInduna: 'induna',
   },
@@ -222,6 +224,8 @@ const listings = [
     listingType: 'school',
     description: 'Rural secondary school supporting surrounding villages.',
     location: 'Utrecht region, KwaZulu-Natal',
+    contactInfo: '+27 XX XXX XXXX',
+    operatingHours: 'Mon–Fri 07:30–14:30',
     servicesOffered: ['Grades 8-12', 'Matric Rewrite Support'],
     verifiedByInduna: 'induna',
   },
@@ -234,13 +238,14 @@ const listings = [
     description:
       'Primary healthcare facility under provincial Department of Health.',
     location: 'Mndozo, KwaZulu-Natal',
+    contactInfo: '+27 XX XXX XXXX',
+    operatingHours: 'Mon–Fri 07:30–16:00',
     servicesOffered: [
       'Primary healthcare',
       'HIV/TB treatment',
       'Maternal care',
       'Immunisation',
     ],
-    operatingHours: 'Mon–Fri 07:30–16:00',
     verifiedByInduna: 'council',
   },
   {
@@ -252,6 +257,9 @@ const listings = [
     description:
       'Community spaza shop providing daily essentials and groceries.',
     location: 'KwaNdlovu area, Mndozo',
+    contactInfo: '+27 XX XXX XXXX',
+    whatsappContact: '+27XXXXXXXXX',
+    operatingHours: 'Mon–Sat 06:00–19:00, Sun 07:00–13:00',
     verifiedByInduna: 'community',
   },
 ];

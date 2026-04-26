@@ -10,6 +10,7 @@ type Listing = {
   location?: string;
   contactInfo?: string;
   whatsappContact?: string;
+  website?: string;
   servicesOffered?: string[];
   operatingHours?: string;
   verifiedByInduna?: string;
@@ -135,6 +136,16 @@ export default function ListingGrid({ section }: Props) {
                     className="text-green-600 text-xs mt-1 inline-block hover:underline"
                   >
                     💬 WhatsApp
+                  </a>
+                )}
+                {listing.website && (
+                  <a
+                    href={listing.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary text-xs mt-1 inline-block hover:underline"
+                  >
+                    🌐 Website
                   </a>
                 )}
                 {listing.operatingHours && (

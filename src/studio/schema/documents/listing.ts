@@ -64,6 +64,13 @@ export default defineType({
       hidden: ({ parent }) => parent?.listingType === 'area',
     }),
     defineField({
+      name: 'website',
+      title: 'Website / Social Media',
+      type: 'url',
+      description: 'Website, Facebook page, or other online presence.',
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
       name: 'servicesOffered',
       title: 'Services Offered',
       type: 'array',

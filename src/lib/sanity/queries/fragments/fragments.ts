@@ -285,6 +285,7 @@ export const listingFragment = /* groq */ `
   location,
   contactInfo,
   whatsappContact,
+  website,
   servicesOffered,
   operatingHours,
   verifiedByInduna,

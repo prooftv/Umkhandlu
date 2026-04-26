@@ -166,6 +166,16 @@ export default async function AreaPage(props: Props) {
                       💬 WhatsApp
                     </a>
                   )}
+                  {listing.website && (
+                    <a
+                      href={listing.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary text-xs mt-1 inline-block hover:underline"
+                    >
+                      🌐 Website
+                    </a>
+                  )}
                   {listing.operatingHours && (
                     <p className="text-xs text-gray-500 mt-1">
                       🕐 {listing.operatingHours}
