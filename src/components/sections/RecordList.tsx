@@ -9,6 +9,8 @@ type Record = {
   status?: string;
   approvedBy?: { firstName: string; lastName: string; role?: string };
   fileUrl?: string;
+  externalUrl?: string;
+  source?: string;
 };
 
 type Props = {
@@ -24,6 +26,7 @@ const typeLabels: globalThis.Record<string, string> = {
   'land-allocation': 'Land Allocation',
   'dispute-resolution': 'Dispute Resolution',
   'public-notice': 'Public Notice',
+  'external-resource': 'Resource',
   policy: 'Policy',
   report: 'Report',
 };
@@ -98,6 +101,16 @@ export default function RecordList({ section }: Props) {
                     className="text-primary text-sm font-medium hover:text-primary shrink-0"
                   >
                     📄 Download
+                  </a>
+                )}
+                {record.externalUrl && (
+                  <a
+                    href={record.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary text-sm font-medium hover:text-primary shrink-0"
+                  >
+                    🔗 View
                   </a>
                 )}
               </article>

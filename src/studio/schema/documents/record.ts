@@ -33,6 +33,7 @@ export default defineType({
           { title: 'Public Notice', value: 'public-notice' },
           { title: 'Policy', value: 'policy' },
           { title: 'Report', value: 'report' },
+          { title: 'External Resource', value: 'external-resource' },
         ],
         layout: 'radio',
         direction: 'horizontal',
@@ -88,6 +89,22 @@ export default defineType({
       title: 'Attached File (PDF)',
       type: 'file',
       description: 'Upload a PDF or document if available.',
+      hidden: ({ parent }) => parent?.recordType === 'external-resource',
+    }),
+    defineField({
+      name: 'externalUrl',
+      title: 'External URL',
+      type: 'url',
+      description:
+        'Link to an external document (e.g. Ingonyama Trust resource).',
+      hidden: ({ parent }) => parent?.recordType !== 'external-resource',
+    }),
+    defineField({
+      name: 'source',
+      title: 'Source Organization',
+      type: 'string',
+      description: 'e.g. Ingonyama Trust Board, Department of Land Affairs',
+      hidden: ({ parent }) => parent?.recordType !== 'external-resource',
     }),
     defineField({
       name: 'relatedArea',

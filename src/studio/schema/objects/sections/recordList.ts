@@ -28,6 +28,7 @@ export default defineType({
           { title: 'Public Notices', value: 'public-notice' },
           { title: 'Policies', value: 'policy' },
           { title: 'Reports', value: 'report' },
+          { title: 'External Resources', value: 'external-resource' },
         ],
       },
       initialValue: 'all',

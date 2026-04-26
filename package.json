@@ -22,6 +22,7 @@
     "watch-typegen": "tsx watch-typegen.ts",
     "test": "vitest",
     "seed:mndozo": "tsx scripts/seed-mndozo.ts",
+    "seed:trust": "tsx scripts/seed-trust-resources.ts",
     "prepare": "husky install"
   },
   "dependencies": {

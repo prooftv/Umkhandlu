@@ -136,7 +136,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, contact, WhatsApp, services, hours, verification level, image, featured, induna, relatedListings |
 | `opportunity` | Jobs, training, bursaries, funding | Title, type, description, organization, deadline, apply link, relatedArea, featured |
 | `program` | Youth events, skills programs, school collabs | Title, type, status (upcoming/active/completed), date, relatedArea |
-| `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report), date, summary, status, approvedBy, content, PDF file, relatedArea |
+| `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report/external-resource), date, summary, status, approvedBy, content, PDF file, externalUrl, source, relatedArea |
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
 
 #### 3 Singletons

@@ -409,6 +409,8 @@ export const recordFragment = /* groq */ `
   status,
   "approvedBy": approvedBy->{ firstName, lastName, role },
   "fileUrl": file.asset->url,
+  externalUrl,
+  source,
 `;
 
 export const recordListSectionFragment = /* groq */ `
