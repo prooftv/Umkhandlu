@@ -1,3 +1,5 @@
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { Image } from 'next-sanity/image';
 import { Badge } from '@/components/ui/Badge';
 import { urlForImage } from '@/lib/sanity/client/utils';
@@ -90,6 +92,13 @@ export default function ProgramList({ section }: Props) {
               </div>
             </article>
           ))}
+        </div>
+        <div className="text-center mt-8">
+          <Button asChild variant="outline" size="lg">
+            <Link href="/programs">
+              View All Programs <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

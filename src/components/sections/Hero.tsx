@@ -32,8 +32,8 @@ export default function HeroSection({
               </div>
             )}
           </div>
-          <div className="relative">
-            {section.image?.asset && (
+          {section.image?.asset && (
+            <div className="relative">
               <Image
                 src={
                   urlForImage(section.image)
@@ -47,10 +47,10 @@ export default function HeroSection({
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="rounded-4xl shadow-xl"
               />
-            )}
-            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-primary rounded-full opacity-50"></div>
-            <div className="absolute -top-4 -right-4 w-16 h-16 bg-secondary rounded-full opacity-50"></div>
-          </div>
+              <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-primary rounded-full opacity-50" />
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-secondary rounded-full opacity-50" />
+            </div>
+          )}
         </div>
       </div>
     </section>
