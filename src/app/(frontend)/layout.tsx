@@ -19,6 +19,7 @@ const VisualEditing = dynamic(() =>
 const CookieConsent = dynamic(
   () => import('@/components/modules/CookieConsent')
 );
+const BackToTop = dynamic(() => import('@/components/modules/BackToTop'));
 
 export default async function RootLayout({
   children,
@@ -64,6 +65,7 @@ export default async function RootLayout({
         <Main>{children}</Main>
         <Footer />
         <CookieConsent />
+        <BackToTop />
       </section>
     </body>
   );

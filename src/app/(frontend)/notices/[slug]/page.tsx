@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
+import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import CustomPortableText from '@/components/modules/PortableText';
+import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
@@ -47,6 +49,12 @@ export default async function NoticePage(props: Props) {
 
   return (
     <div className="container mx-auto max-w-3xl py-12">
+      <Breadcrumbs
+        items={[
+          { label: 'Notices', href: '/notices' },
+          { label: notice.title || '' },
+        ]}
+      />
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-4">
           <Badge>{notice.noticeType}</Badge>
@@ -80,6 +88,10 @@ export default async function NoticePage(props: Props) {
       {notice.content && (
         <CustomPortableText value={notice.content as PortableTextBlock[]} />
       )}
+
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <ShareWhatsApp title={notice.title || ''} />
+      </div>
     </div>
   );
 }

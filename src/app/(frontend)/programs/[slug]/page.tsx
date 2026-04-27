@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
+import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import CustomPortableText from '@/components/modules/PortableText';
+import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
@@ -56,6 +58,12 @@ export default async function ProgramPage(props: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <Breadcrumbs
+        items={[
+          { label: 'Programs', href: '/programs' },
+          { label: program.title || '' },
+        ]}
+      />
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-4 flex-wrap">
           <Badge>{program.programType}</Badge>
@@ -105,6 +113,10 @@ export default async function ProgramPage(props: Props) {
       {program.content && (
         <CustomPortableText value={program.content as PortableTextBlock[]} />
       )}
+
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <ShareWhatsApp title={program.title || ''} />
+      </div>
     </div>
   );
 }

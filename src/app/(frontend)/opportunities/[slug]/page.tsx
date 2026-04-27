@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { serverEnv } from '@/env/serverEnv';
@@ -51,6 +53,12 @@ export default async function OpportunityPage(props: Props) {
 
   return (
     <div className="container mx-auto max-w-3xl py-12">
+      <Breadcrumbs
+        items={[
+          { label: 'Opportunities', href: '/opportunities' },
+          { label: opp.title || '' },
+        ]}
+      />
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4 flex-wrap">
           <Badge>{opp.opportunityType}</Badge>
@@ -97,6 +105,10 @@ export default async function OpportunityPage(props: Props) {
           </a>
         </Button>
       )}
+
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <ShareWhatsApp title={opp.title || ''} />
+      </div>
     </div>
   );
 }

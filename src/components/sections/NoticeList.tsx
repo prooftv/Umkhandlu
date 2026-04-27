@@ -34,7 +34,17 @@ const typeColors: Record<
 export default function NoticeList({ section }: Props) {
   const { heading, notices } = section;
 
-  if (!notices?.length) return null;
+  if (!notices?.length)
+    return (
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4 text-center">
+          {heading && (
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{heading}</h2>
+          )}
+          <p className="text-gray-500">No notices at this time.</p>
+        </div>
+      </section>
+    );
 
   return (
     <section className="py-12 md:py-16">
