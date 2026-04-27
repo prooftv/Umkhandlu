@@ -52,7 +52,7 @@ export const getPageQuery = defineQuery(`
 `);
 
 export const getSitemapQuery = defineQuery(`
-  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program"] && defined(slug.current)) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
+  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
     "href": select(
       _type == "page" => "/" + slug.current,
       _type == "post" => "/blog/" + slug.current,

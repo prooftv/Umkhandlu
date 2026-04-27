@@ -5,8 +5,25 @@ import { getBaseUrl } from '@/utils/getBaseUrl';
 
 function getPriority(href: string): number {
   if (href === '/') return 1.0;
-  if (href === '/blog') return 0.8;
-  if (href.startsWith('/blog/')) return 0.6;
+  // Core pages (about, land, directory, notices, etc)
+  if (
+    href === '/about' ||
+    href === '/land' ||
+    href === '/leadership' ||
+    href === '/directory' ||
+    href === '/notices' ||
+    href === '/opportunities' ||
+    href === '/programs' ||
+    href === '/contact' ||
+    href === '/media' ||
+    href === '/blog'
+  )
+    return 0.8;
+  // Individual content pages
+  if (href.startsWith('/notices/') || href.startsWith('/opportunities/'))
+    return 0.7;
+  if (href.startsWith('/blog/') || href.startsWith('/directory/')) return 0.6;
+  if (href.startsWith('/areas/') || href.startsWith('/programs/')) return 0.5;
   if (href.startsWith('/category/') || href.startsWith('/people/')) return 0.4;
   return 0.7;
 }
