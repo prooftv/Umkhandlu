@@ -136,6 +136,17 @@ const menu = [
         },
       },
       {
+        _key: 'menu-youth',
+        _type: 'menuItem',
+        text: 'Youth',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-youth' },
+        },
+      },
+      {
         _key: 'menu-media',
         _type: 'menuItem',
         text: 'Media',
@@ -144,6 +155,58 @@ const menu = [
           _type: 'link',
           type: 'internal',
           internal: { _type: 'reference', _ref: 'page-media' },
+        },
+      },
+    ],
+  },
+  {
+    _key: 'menu-services',
+    _type: 'menuItem',
+    text: 'Services',
+    type: 'child-menu',
+    childMenu: [
+      {
+        _key: 'menu-schools',
+        _type: 'menuItem',
+        text: 'Schools',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-schools' },
+        },
+      },
+      {
+        _key: 'menu-health',
+        _type: 'menuItem',
+        text: 'Health',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-health' },
+        },
+      },
+      {
+        _key: 'menu-economy',
+        _type: 'menuItem',
+        text: 'Local Economy',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-economy' },
+        },
+      },
+      {
+        _key: 'menu-projects',
+        _type: 'menuItem',
+        text: 'Projects',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-projects' },
         },
       },
     ],
@@ -163,7 +226,9 @@ const menu = [
 
 async function seed() {
   await client.patch('siteSettings').set({ menu }).commit();
-  console.log('Menu updated: Home | Council ▾ | Community ▾ | Contact');
+  console.log(
+    'Menu updated: Home | Council ▾ | Community ▾ | Services ▾ | Contact'
+  );
 }
 
 seed().catch((err) => {

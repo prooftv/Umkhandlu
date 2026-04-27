@@ -477,6 +477,171 @@ const pages = [
       },
     ],
   },
+  {
+    _id: 'page-youth',
+    _type: 'page',
+    name: 'Youth & Development',
+    slug: { _type: 'slug', current: 'youth' },
+    pageSections: [
+      {
+        _key: 'youth-hero',
+        _type: 'hero',
+        heading: 'Youth & Development',
+        text: [
+          textBlock(
+            'youth-hero-text',
+            'Programs, opportunities, and stories for young people in the community.'
+          ),
+        ],
+      },
+      {
+        _key: 'youth-programs',
+        _type: 'programList',
+        heading: 'Programs & Events',
+        description:
+          'Skills training, youth events, and school collaborations.',
+        filterStatus: 'all',
+        limit: 10,
+      },
+      {
+        _key: 'youth-opportunities',
+        _type: 'opportunityList',
+        heading: 'Opportunities',
+        description: 'Jobs, training, bursaries, and funding for young people.',
+        filterType: 'all',
+        limit: 10,
+      },
+      {
+        _key: 'youth-posts',
+        _type: 'postList',
+        heading: 'Stories & Updates',
+        numberOfPosts: 6,
+      },
+      {
+        _key: 'youth-cta',
+        _type: 'cta',
+        heading: 'Get Involved',
+        text: 'Contact the council office or your local Induna to learn about youth programs, volunteer opportunities, and community projects.',
+      },
+    ],
+  },
+  {
+    _id: 'page-schools',
+    _type: 'page',
+    name: 'Schools',
+    slug: { _type: 'slug', current: 'schools' },
+    pageSections: [
+      {
+        _key: 'schools-hero',
+        _type: 'hero',
+        heading: 'Schools',
+        text: [
+          textBlock(
+            'schools-hero-text',
+            'Primary and secondary schools serving the community.'
+          ),
+        ],
+      },
+      {
+        _key: 'schools-listings',
+        _type: 'listingGrid',
+        heading: 'Our Schools',
+        description: 'Schools in the area, verified by local leadership.',
+        filterType: 'school',
+        limit: 20,
+      },
+      {
+        _key: 'schools-posts',
+        _type: 'postList',
+        heading: 'School Stories',
+        numberOfPosts: 3,
+      },
+    ],
+  },
+  {
+    _id: 'page-health',
+    _type: 'page',
+    name: 'Health',
+    slug: { _type: 'slug', current: 'health' },
+    pageSections: [
+      {
+        _key: 'health-hero',
+        _type: 'hero',
+        heading: 'Health & Clinics',
+        text: [
+          textBlock(
+            'health-hero-text',
+            'Healthcare facilities and services available in the community.'
+          ),
+        ],
+      },
+      {
+        _key: 'health-listings',
+        _type: 'listingGrid',
+        heading: 'Clinics & Health Facilities',
+        filterType: 'clinic',
+        limit: 20,
+      },
+    ],
+  },
+  {
+    _id: 'page-economy',
+    _type: 'page',
+    name: 'Local Economy',
+    slug: { _type: 'slug', current: 'economy' },
+    pageSections: [
+      {
+        _key: 'economy-hero',
+        _type: 'hero',
+        heading: 'Local Economy',
+        text: [
+          textBlock(
+            'economy-hero-text',
+            'Businesses, services, and economic activity in the community.'
+          ),
+        ],
+      },
+      {
+        _key: 'economy-listings',
+        _type: 'listingGrid',
+        heading: 'Local Businesses',
+        description: 'Shops, services, and trades operating in the area.',
+        filterType: 'business',
+        limit: 20,
+      },
+    ],
+  },
+  {
+    _id: 'page-projects',
+    _type: 'page',
+    name: 'Projects',
+    slug: { _type: 'slug', current: 'projects' },
+    pageSections: [
+      {
+        _key: 'projects-hero',
+        _type: 'hero',
+        heading: 'Projects & Partners',
+        text: [
+          textBlock(
+            'projects-hero-text',
+            'Community development projects and the organisations supporting them.'
+          ),
+        ],
+      },
+      {
+        _key: 'projects-programs',
+        _type: 'programList',
+        heading: 'Active Projects',
+        filterStatus: 'all',
+        limit: 10,
+      },
+      {
+        _key: 'projects-logos',
+        _type: 'logoGrid',
+        heading: 'Our Partners',
+      },
+    ],
+  },
 ];
 
 // ─── SEED ────────────────────────────────────────────────────
