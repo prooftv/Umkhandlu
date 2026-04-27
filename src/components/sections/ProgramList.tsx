@@ -8,6 +8,7 @@ import { urlForImage } from '@/lib/sanity/client/utils';
 type Program = {
   _id: string;
   title: string;
+  slug: string;
   programType: string;
   status: string;
   date?: string;
@@ -45,9 +46,10 @@ export default function ProgramList({ section }: Props) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {programs.map((program) => (
-            <article
+            <Link
+              href={`/programs/${program.slug}`}
               key={program._id}
-              className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+              className="bg-white block rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
             >
               {program.image?.asset?._ref && (
                 <div className="relative h-40">
@@ -91,7 +93,7 @@ export default function ProgramList({ section }: Props) {
                   </time>
                 )}
               </div>
-            </article>
+            </Link>
           ))}
         </div>
         <div className="text-center mt-8">

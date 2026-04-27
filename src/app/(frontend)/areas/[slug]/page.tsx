@@ -100,9 +100,10 @@ export default async function AreaPage(props: Props) {
           <h2 className="text-2xl font-bold mb-4">In This Area</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {area.relatedListings.map((listing) => (
-              <article
+              <Link
+                href={`/directory/${listing.slug}`}
                 key={listing._id}
-                className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+                className="bg-white block rounded-xl border border-gray-100 shadow-sm overflow-hidden"
               >
                 {listing.image?.asset?._ref && (
                   <div className="relative h-36">
@@ -195,7 +196,7 @@ export default async function AreaPage(props: Props) {
                       </div>
                     )}
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </section>
