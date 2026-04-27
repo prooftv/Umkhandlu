@@ -16,6 +16,11 @@ function getPriority(href: string): number {
     href === '/programs' ||
     href === '/contact' ||
     href === '/media' ||
+    href === '/youth' ||
+    href === '/schools' ||
+    href === '/health' ||
+    href === '/economy' ||
+    href === '/projects' ||
     href === '/blog'
   )
     return 0.8;
