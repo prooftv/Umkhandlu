@@ -17,7 +17,7 @@ export default function ShareWhatsApp({ title }: { title: string }) {
     <button
       type="button"
       onClick={share}
-      className="inline-flex items-center gap-2 text-sm text-green-600 hover:text-green-700 transition-colors"
+      className="inline-flex items-center gap-2 text-sm text-green-600 hover:text-green-700 transition-colors cursor-pointer"
     >
       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
         <title>Share on WhatsApp</title>
