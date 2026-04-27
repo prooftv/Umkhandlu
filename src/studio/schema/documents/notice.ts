@@ -10,8 +10,9 @@ export default defineType({
     defineField({
       name: 'title',
       title: 'Title',
+      description: 'Clear, descriptive title. 60-80 characters recommended.',
+      validation: (rule) => rule.required().max(120),
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -46,6 +47,9 @@ export default defineType({
     }),
     defineField({
       name: 'excerpt',
+      description:
+        '1-2 sentence summary shown in notice lists. 100-200 characters.',
+      validation: (rule) => rule.max(300),
       title: 'Short Description',
       type: 'text',
       rows: 3,

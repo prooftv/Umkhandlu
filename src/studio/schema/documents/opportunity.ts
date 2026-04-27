@@ -10,8 +10,9 @@ export default defineType({
     defineField({
       name: 'title',
       title: 'Title',
+      description: 'Job title or opportunity name. 60-80 characters.',
+      validation: (rule) => rule.required().max(120),
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -38,6 +39,7 @@ export default defineType({
     }),
     defineField({
       name: 'description',
+      description: 'What the opportunity involves. 200-500 characters.',
       title: 'Description',
       type: 'text',
       rows: 4,

@@ -39,8 +39,9 @@ export default defineType({
       name: 'logo',
       title: 'Logo',
       type: 'image',
+      description:
+        'Organization logo. Recommended: 400×200px, PNG with transparent background.',
       options: { hotspot: true },
-      description: 'Displayed in logo grids and ad banners.',
     }),
     defineField({
       name: 'website',

@@ -33,6 +33,7 @@ export default defineType({
       name: 'image',
       title: 'Picture',
       type: 'image',
+      description: 'Profile photo. Recommended: 800×800px square, JPG or PNG.',
       fields: [
         defineField({
           name: 'alt',

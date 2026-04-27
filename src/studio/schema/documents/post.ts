@@ -40,6 +40,8 @@ export default defineType({
       title: 'Image',
       type: 'image',
       group: 'content',
+      description:
+        'Featured image. Recommended: 1280×720px (16:9), JPG or PNG.',
       options: {
         hotspot: true,
         aiAssist: {

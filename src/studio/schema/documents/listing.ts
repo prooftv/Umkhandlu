@@ -103,8 +103,9 @@ export default defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Image',
+      title: 'Cover Image',
       type: 'image',
+      description: 'Main photo. Recommended: 1200×600px, JPG or PNG.',
       options: { hotspot: true },
       fields: [
         defineField({
