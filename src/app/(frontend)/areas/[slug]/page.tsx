@@ -211,9 +211,10 @@ export default async function AreaPage(props: Props) {
           <h2 className="text-2xl font-bold mb-4">Notices</h2>
           <div className="space-y-3">
             {area.notices.map((notice) => (
-              <div
+              <Link
+                href={`/notices/${notice.slug}`}
                 key={notice._id}
-                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm flex justify-between items-start gap-4"
+                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
               >
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -235,7 +236,7 @@ export default async function AreaPage(props: Props) {
                     {new Date(notice.date).toLocaleDateString()}
                   </time>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         </section>
@@ -247,9 +248,10 @@ export default async function AreaPage(props: Props) {
           <h2 className="text-2xl font-bold mb-4">Programs & Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {area.programs.map((program) => (
-              <div
+              <Link
+                href={`/programs/${program.slug}`}
                 key={program._id}
-                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm"
+                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
               >
                 <div className="flex items-center gap-2 mb-1">
                   <Badge variant="secondary">{program.status}</Badge>
@@ -263,7 +265,7 @@ export default async function AreaPage(props: Props) {
                     {program.description}
                   </p>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         </section>
@@ -275,9 +277,10 @@ export default async function AreaPage(props: Props) {
           <h2 className="text-2xl font-bold mb-4">Opportunities</h2>
           <div className="space-y-3">
             {area.opportunities.map((opp) => (
-              <div
+              <Link
+                href={`/opportunities/${opp.slug}`}
                 key={opp._id}
-                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm flex justify-between items-start gap-4"
+                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
               >
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -313,7 +316,7 @@ export default async function AreaPage(props: Props) {
                     </a>
                   )}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

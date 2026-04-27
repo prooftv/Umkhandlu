@@ -113,6 +113,39 @@ const menu = [
           internal: { _type: 'reference', _ref: 'page-directory' },
         },
       },
+      {
+        _key: 'menu-opportunities',
+        _type: 'menuItem',
+        text: 'Opportunities',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-opportunities' },
+        },
+      },
+      {
+        _key: 'menu-programs',
+        _type: 'menuItem',
+        text: 'Programs',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-programs' },
+        },
+      },
+      {
+        _key: 'menu-media',
+        _type: 'menuItem',
+        text: 'Media',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-media' },
+        },
+      },
     ],
   },
   {
