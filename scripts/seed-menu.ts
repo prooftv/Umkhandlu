@@ -1,8 +1,11 @@
 /**
  * Template Menu Structure
  *
- * Updates the navigation to the standard grouped layout:
+ * Seeds the standard navigation layout:
  * Home | Council ▾ | Community ▾ | Contact
+ *
+ * Generic — no council-specific links. Council scripts can patch
+ * additional menu items (e.g. area links) after this runs.
  *
  * Usage:
  *   SANITY_WRITE_TOKEN=<token> npx tsx scripts/seed-menu.ts
@@ -10,12 +13,14 @@
 
 import { createClient } from '@sanity/client';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '60v9eb0r';
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 const token = process.env.SANITY_WRITE_TOKEN;
 
-if (!token) {
-  console.error('Missing SANITY_WRITE_TOKEN');
+if (!projectId || !token) {
+  console.error(
+    'Missing env vars. Run with:\n  SANITY_WRITE_TOKEN=<token> npx tsx scripts/seed-menu.ts'
+  );
   process.exit(1);
 }
 
@@ -106,17 +111,6 @@ const menu = [
           _type: 'link',
           type: 'internal',
           internal: { _type: 'reference', _ref: 'page-directory' },
-        },
-      },
-      {
-        _key: 'menu-areas',
-        _type: 'menuItem',
-        text: 'Areas',
-        type: 'link',
-        link: {
-          _type: 'link',
-          type: 'external',
-          external: '/areas/mndozo',
         },
       },
     ],

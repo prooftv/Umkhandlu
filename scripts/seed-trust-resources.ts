@@ -2,9 +2,11 @@
  * Ingonyama Trust Resources Seed
  *
  * Seeds external resource links (legislation, forms, annual report)
- * and a land application notice into the Mndozo council CMS.
+ * and a land application notice. These apply to ANY council on
+ * Ingonyama Trust land — no council-specific references.
  *
- * These are LINKS to Trust resources, not council-created documents.
+ * Council-specific scripts can patch relatedArea onto the notice
+ * after this runs.
  *
  * Usage:
  *   SANITY_WRITE_TOKEN=<token> npx tsx scripts/seed-trust-resources.ts
@@ -12,12 +14,14 @@
 
 import { createClient } from '@sanity/client';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '60v9eb0r';
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 const token = process.env.SANITY_WRITE_TOKEN;
 
-if (!token) {
-  console.error('Missing SANITY_WRITE_TOKEN');
+if (!projectId || !token) {
+  console.error(
+    'Missing env vars. Run with:\n  SANITY_WRITE_TOKEN=<token> npx tsx scripts/seed-trust-resources.ts'
+  );
   process.exit(1);
 }
 
@@ -100,7 +104,7 @@ const resources = [
   },
 ];
 
-// Land application notice
+// Generic land application notice — no relatedArea
 const landNotice = {
   _id: 'notice-land-application',
   _type: 'notice',
@@ -111,7 +115,6 @@ const landNotice = {
   excerpt:
     'Information on how to apply for land tenure under the Ingonyama Trust. Start by contacting your local Induna. You will need the Tenure Option Application Form (ITB 1) and Traditional Consent Form (ITB 2), available from the Ingonyama Trust Board Resource Centre.',
   pinned: true,
-  relatedArea: { _type: 'reference', _ref: 'listing-area-mndozo' },
 };
 
 async function seed() {

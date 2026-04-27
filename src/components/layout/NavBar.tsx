@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -121,28 +121,11 @@ export default function NavBar({
             {menuItems.map((item) => (
               <div key={item._key}>
                 {item.childMenu ? (
-                  <>
-                    <div className="py-2 px-4 font-medium">{item.text}</div>
-                    <div className="pl-4">
-                      {item.childMenu.map((child) => (
-                        <Link
-                          key={child._key}
-                          href={
-                            child.link
-                              ? getLinkByLinkObject(child.link) || '#'
-                              : '#'
-                          }
-                          className="block py-2 px-4 hover:bg-gray-100 rounded-md"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          {...(child.link?.openInNewTab
-                            ? { target: '_blank', rel: 'noopener noreferrer' }
-                            : {})}
-                        >
-                          {child.text}
-                        </Link>
-                      ))}
-                    </div>
-                  </>
+                  <MobileDropdown
+                    text={item.text}
+                    childMenu={item.childMenu}
+                    onNavigate={() => setIsMobileMenuOpen(false)}
+                  />
                 ) : (
                   <Link
                     href={
@@ -160,6 +143,65 @@ export default function NavBar({
               </div>
             ))}
           </nav>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileDropdown({
+  text,
+  childMenu,
+  onNavigate,
+}: {
+  text: string | null;
+  childMenu: NonNullable<
+    NonNullable<NonNullable<SettingsQueryResult>['menu']>[number]['childMenu']
+  >;
+  onNavigate: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const toggle = useCallback(() => setOpen((prev) => !prev), []);
+
+  return (
+    <div>
+      <button
+        type="button"
+        className="flex items-center justify-between w-full py-2 px-4 font-medium hover:bg-gray-100 rounded-md"
+        onClick={toggle}
+        aria-expanded={open}
+      >
+        {text}
+        <svg
+          className={cn('w-4 h-4 transition-transform', open && 'rotate-180')}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <title>Toggle</title>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      {open && (
+        <div className="pl-4">
+          {childMenu.map((child) => (
+            <Link
+              key={child._key}
+              href={child.link ? getLinkByLinkObject(child.link) || '#' : '#'}
+              className="block py-2 px-4 hover:bg-gray-100 rounded-md"
+              onClick={onNavigate}
+              {...(child.link?.openInNewTab
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+            >
+              {child.text}
+            </Link>
+          ))}
         </div>
       )}
     </div>

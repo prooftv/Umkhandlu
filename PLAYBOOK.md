@@ -591,7 +591,7 @@ Week-by-week operational plan for the first live deployment.
 |---|---|---|
 | Create 3 area listings (izigodi) | Council Admin | Area pages auto-generate |
 | Link induna to each area | Council Admin | Area pages show headman |
-| Add 5 directory listings (Duck Ponds High, Umlandomusha High, local clinic, 2 businesses) | Induna / Admin | Directory populated |
+| Add directory listings (verified schools, clinic if confirmed, businesses) | Induna / Admin | Directory populated |
 | Link listings to areas | Council Admin | Area pages show local infrastructure |
 | Build Land & Development page with process section | Unami | Land allocation process visible |
 | Upload 1 meeting minutes document | Council Admin | Records section has content |
@@ -649,7 +649,74 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 ---
 
-## 14. Technical Summary
+## 14. Seed Data Architecture
+
+Seed scripts populate a fresh Sanity project with structured content. Data is split into two layers: a generic template (shared across all councils) and council-specific overrides.
+
+Full documentation: [SEEDING.md](./SEEDING.md)
+
+### Two Layers
+
+| Layer | Scripts | What it seeds |
+|---|---|---|
+| **Template** | `seed:pages`, `seed:menu`, `seed:trust` | 9 pages, blogPage, siteSettings, nav menu, Ingonyama Trust resources |
+| **Council** | `seed:<council>` (e.g. `seed:mndozo`) | Identity, people, area, listings, notices, homepage, page overrides |
+
+Run order: template first, then council.
+
+```bash
+# Everything at once
+SANITY_WRITE_TOKEN=<token> npm run seed:mndozo:full
+
+# Or separately
+SANITY_WRITE_TOKEN=<token> npm run seed:template
+SANITY_WRITE_TOKEN=<token> npm run seed:mndozo
+```
+
+### Seed Data Categories
+
+Seed data falls into three categories based on accuracy requirements:
+
+| Category | Description | Examples |
+|---|---|---|
+| **Verified data** | Real-world facts confirmed through research. Must be accurate. | School names, phone numbers, locations, Ingonyama Trust resources, legislation |
+| **Dummy data** | Realistic placeholder content that demonstrates platform functionality. Clearly not real events. | Sample notices (meetings, announcements, resolutions), sample opportunities, sample programs |
+| **Structural data** | Page layouts, section composition, menu structure. No factual claims. | Template pages, homepage sections, nav menu |
+
+### What is NOT seeded
+
+Posts and stories are **never seeded** — not even as dummy data. Blog content is created by the council's Youth Representative after launch. Seeding fake stories would undermine credibility and create content that needs to be deleted before handover.
+
+### Coverage by Document Type
+
+| Document Type | Seeded? | Category | Notes |
+|---|---|---|---|
+| `page` | ✅ Template + Council | Structural | 9 template pages, council overrides about/leadership/land |
+| `homePage` | ✅ Council | Structural + Verified | Council name, stats from verified data |
+| `blogPage` | ✅ Template | Structural | Bare singleton |
+| `settings` | ✅ Template + Council | Verified | Template creates bare doc, council patches identity/colors |
+| `person` | ✅ Council | Verified | Inkosi, Izinduna — must be real names |
+| `listing` | ✅ Council | Verified | Schools, clinics, businesses — must be real places |
+| `notice` | ✅ Council | Dummy | Sample notices to show the platform works |
+| `record` | ✅ Template | Verified | Ingonyama Trust resources — real legislation, real forms |
+| `post` | ❌ | — | Never seeded. Created by Youth Rep post-launch |
+| `category` | ❌ | — | Created alongside first posts |
+| `opportunity` | ❌ | — | Can be seeded as dummy data per council |
+| `program` | ❌ | — | Can be seeded as dummy data per council |
+| `sponsor` | ❌ | — | Added when real sponsors are confirmed |
+
+### Adding a New Council
+
+1. Copy `scripts/seed-mndozo.ts` → `scripts/seed-<council>.ts`
+2. Replace all council-specific data (people, area, listings, identity)
+3. Add npm scripts: `seed:<council>` and `seed:<council>:full`
+4. Run against the council's Sanity project
+
+Template files must never reference a council name, person, or area. Council files own all council-specific content.
+
+---
+
+## 15. Technical Summary
 
 | Metric | Count |
 |---|---|
@@ -666,7 +733,7 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 ---
 
-## 15. Positioning
+## 16. Positioning
 
 ### For Councils
 
@@ -688,7 +755,7 @@ See [ROLES.md](./ROLES.md) for the full content ownership model, including:
 
 ---
 
-## 16. Ingonyama Trust Alignment
+## 17. Ingonyama Trust Alignment
 
 ### The Gap This Platform Fills
 

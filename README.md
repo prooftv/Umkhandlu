@@ -189,6 +189,7 @@ Contact and subscribe forms validate with Valibot and POST to a webhook URL conf
 - [PLAYBOOK.md](./PLAYBOOK.md) — Strategic project playbook for proposals
 - [ROLES.md](./ROLES.md) — Content ownership model and roles
 - [DEPLOYMENT.md](./DEPLOYMENT.md) — Council deployment runbook (step-by-step)
+- [SEEDING.md](./SEEDING.md) — Seed data architecture and how to add a new council
 
 ## License
 

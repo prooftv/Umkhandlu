@@ -21,10 +21,12 @@
     "typecheck": "tsc --noEmit",
     "watch-typegen": "tsx watch-typegen.ts",
     "test": "vitest",
-    "seed:mndozo": "tsx scripts/seed-mndozo.ts",
-    "seed:trust": "tsx scripts/seed-trust-resources.ts",
     "seed:pages": "tsx scripts/seed-pages.ts",
     "seed:menu": "tsx scripts/seed-menu.ts",
+    "seed:trust": "tsx scripts/seed-trust-resources.ts",
+    "seed:template": "npm run seed:pages && npm run seed:menu && npm run seed:trust",
+    "seed:mndozo": "tsx scripts/seed-mndozo.ts",
+    "seed:mndozo:full": "npm run seed:template && npm run seed:mndozo",
     "prepare": "husky install"
   },
   "dependencies": {
