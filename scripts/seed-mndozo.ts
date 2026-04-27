@@ -608,6 +608,17 @@ async function seed() {
     p.set({ relatedArea: { _type: 'reference', _ref: AREA_ID } })
   );
 
+  // Patch projects page logoGrid with Mndozo sponsors
+  transaction.patch('page-projects', (p) =>
+    p.set({
+      'pageSections[_key=="projects-logos"].sponsors': sponsors.map((s) => ({
+        _key: s._id,
+        _type: 'reference',
+        _ref: s._id,
+      })),
+    })
+  );
+
   // Patch menu with Areas link
   await patchMenu(transaction);
 
