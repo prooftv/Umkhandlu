@@ -108,7 +108,7 @@ export default function SearchDialog() {
           </svg>
         </button>
       </SheetTrigger>
-      <SheetContent side="top" className="h-auto max-h-[80vh]">
+      <SheetContent side="top" className="h-auto max-h-[80vh] bg-white">
         <SheetHeader className="pb-0">
           <SheetTitle>{t('search.title')}</SheetTitle>
           <SheetDescription className="sr-only">
