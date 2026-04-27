@@ -4,6 +4,7 @@ import { Image } from 'next-sanity/image';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
+import { generateLocalBusinessJsonLd } from '@/lib/sanity/client/jsonLd';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import { listingDetailQuery, listingSlugs } from '@/lib/sanity/queries/queries';
@@ -36,6 +37,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: data.name,
     description: data.description || undefined,
+    alternates: {
+      canonical: `/directory/${slug}`,
+    },
   };
 }
 
@@ -55,8 +59,14 @@ export default async function ListingPage(props: Props) {
 
   if (!listing) notFound();
 
+  const jsonLd = generateLocalBusinessJsonLd(listing);
+
   return (
     <div className="container mx-auto max-w-4xl py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4 flex-wrap">

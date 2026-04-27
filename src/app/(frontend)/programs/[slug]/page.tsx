@@ -7,6 +7,7 @@ import CustomPortableText from '@/components/modules/PortableText';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
+import { generateEventJsonLd } from '@/lib/sanity/client/jsonLd';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import { programDetailQuery, programSlugs } from '@/lib/sanity/queries/queries';
@@ -25,6 +26,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: data.title,
     description: data.description || undefined,
+    alternates: {
+      canonical: `/programs/${slug}`,
+    },
   };
 }
 
@@ -44,8 +48,14 @@ export default async function ProgramPage(props: Props) {
 
   if (!program) notFound();
 
+  const jsonLd = generateEventJsonLd(program);
+
   return (
     <div className="container mx-auto max-w-3xl py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-4 flex-wrap">
           <Badge>{program.programType}</Badge>
