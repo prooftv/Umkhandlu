@@ -4,6 +4,7 @@ import { settingsQuery } from '@/lib/sanity/queries/queries';
 import { SITE_NAME } from '@/lib/siteConfig';
 import Logo from '../icons/Logo';
 import LanguageToggle from '../modules/LanguageToggle';
+import SearchDialog from '../modules/SearchDialog';
 import NavBar from './NavBar';
 
 export default async function Header() {
@@ -24,6 +25,7 @@ export default async function Header() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
+            <SearchDialog />
             <LanguageToggle />
             {settings?.menu && <NavBar menuItems={settings.menu} />}
           </div>

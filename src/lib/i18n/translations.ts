@@ -36,6 +36,12 @@ const translations: Record<Locale, Record<string, string>> = {
     'notFound.goHome': 'Go Home',
     'language.en': 'English',
     'language.zu': 'isiZulu',
+    'search.label': 'Search',
+    'search.title': 'Search',
+    'search.description': 'Search across all content',
+    'search.placeholder': 'Search notices, directory, opportunities...',
+    'search.loading': 'Searching...',
+    'search.noResults': 'No results found.',
   },
   zu: {
     'nav.getStarted': 'Qala',
@@ -70,6 +76,12 @@ const translations: Record<Locale, Record<string, string>> = {
     'notFound.goHome': 'Iya Ekhaya',
     'language.en': 'English',
     'language.zu': 'isiZulu',
+    'search.label': 'Sesha',
+    'search.title': 'Sesha',
+    'search.description': 'Sesha kuwo wonke okuqukethwe',
+    'search.placeholder': 'Sesha izaziso, uhlu, amathuba...',
+    'search.loading': 'Iyasesha...',
+    'search.noResults': 'Ayikho imiphumela etholakele.',
   },
 };
 
