@@ -112,6 +112,7 @@ export type SeoMetaFields = {
     asset?: SanityImageAssetReference;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   };
   seoKeywords?: Array<string>;
@@ -131,6 +132,7 @@ export type OpenGraph = {
     asset?: SanityImageAssetReference;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   };
   title?: string;
@@ -577,6 +579,7 @@ export type Record = {
     | "external-resource";
   date: string;
   summary?: string;
+  statusNote?: string;
   status?: "approved" | "pending" | "rejected" | "resolved";
   approvedBy?: PersonReference;
   content?: BlockContent;
@@ -622,6 +625,7 @@ export type Opportunity = {
   opportunityType: "job" | "training" | "bursary" | "funding";
   description: string;
   organization?: string;
+  deadlineNote?: string;
   deadline?: string;
   link?: string;
   relatedArea?: ListingReference;
@@ -653,6 +657,7 @@ export type Notice = {
   excerpt?: string;
   content?: BlockContent;
   pinned?: boolean;
+  linkingNote?: string;
   relatedArea?: ListingReference;
   relatedCampaign?: CampaignReference;
 };
@@ -709,6 +714,7 @@ export type Campaign = {
   >;
   relatedProgram?: ProgramReference;
   link?: string;
+  trackingNote?: string;
   budget?: number;
   beneficiaries?: number;
   impactSummary?: string;
@@ -734,6 +740,7 @@ export type Program = {
     alt?: string;
     _type: "image";
   };
+  statusNote?: string;
   status?: "upcoming" | "active" | "completed";
   relatedArea?: ListingReference;
 };
@@ -783,6 +790,7 @@ export type Listing = {
   website?: string;
   servicesOffered?: Array<string>;
   operatingHours?: string;
+  verificationNote?: string;
   verifiedByInduna?: "community" | "induna" | "council";
   image?: {
     asset?: SanityImageAssetReference;
@@ -864,7 +872,6 @@ export type Person = {
     alt?: string;
     _type: "image";
   };
-  role?: string;
   personType?:
     | "inkosi"
     | "induna"
@@ -872,6 +879,9 @@ export type Person = {
     | "youth"
     | "community"
     | "author";
+  leadershipNote?: string;
+  communityNote?: string;
+  role?: string;
   email?: string;
   phone?: string;
   organization?: string;
@@ -5997,13 +6007,14 @@ export type PersonSlugsResult = Array<string>;
 
 // Source: src/lib/sanity/queries/queries.ts
 // Variable: areaDetailQuery
-// Query: *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{    _id,    name,    "slug": slug.current,    description,    location,    image,    "induna": induna->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},    "relatedListings": relatedListings[]->{  _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,},    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },    },    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,    },    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,    },    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,    },    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  startDate,  endDate,  image,  link,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    }  }
+// Query: *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{    _id,    name,    "slug": slug.current,    description,    location,    geopoint,    image,    "induna": induna->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},    "relatedListings": relatedListings[]->{  _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,},    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },    },    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,    },    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,    },    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,    },    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  startDate,  endDate,  image,  link,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    }  }
 export type AreaDetailQueryResult = {
   _id: string;
   name: string;
   slug: string;
   description: string | null;
   location: string | null;
+  geopoint: Geopoint | null;
   image: {
     asset?: SanityImageAssetReference;
     hotspot?: SanityImageHotspot;
@@ -6725,7 +6736,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && defined(slug.current)][0..$limit].slug.current\n': PostPagesSlugsResult;
     '\n  *[_type == "category" && defined(slug.current)][0..$limit].slug.current\n': CategorySlugsResult;
     '\n  *[_type == "person" && defined(slug.current)][0..$limit].slug.current\n': PersonSlugsResult;
-    '\n  *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{\n    _id,\n    name,\n    "slug": slug.current,\n    description,\n    location,\n    image,\n    "induna": induna->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n    "relatedListings": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n},\n    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n    },\n    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    },\n    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n    },\n    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n    },\n    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  startDate,\n  endDate,\n  image,\n  link,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    }\n  }\n': AreaDetailQueryResult;
+    '\n  *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{\n    _id,\n    name,\n    "slug": slug.current,\n    description,\n    location,\n    geopoint,\n    image,\n    "induna": induna->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n    "relatedListings": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n},\n    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n    },\n    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    },\n    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n    },\n    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n    },\n    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  startDate,\n  endDate,\n  image,\n  link,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    }\n  }\n': AreaDetailQueryResult;
     '\n  *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current\n': AreaSlugsResult;
     '\n  *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n    images[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    }\n  }\n': ListingDetailQueryResult;
     '\n  *[_type == "listing" && listingType != "area" && defined(slug.current)][0..$limit].slug.current\n': ListingSlugsResult;

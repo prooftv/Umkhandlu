@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Image } from 'next-sanity/image';
+import LocationPin from '@/components/modules/LocationPin';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
@@ -94,6 +95,19 @@ export default async function AreaPage(props: Props) {
               )}
             </div>
           </Link>
+        </section>
+      )}
+
+      {/* Map */}
+      {area.relatedListings && area.relatedListings.length > 0 && (
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">Area Map</h2>
+          <LocationPin
+            lat={area.geopoint?.lat ?? -27.82}
+            lng={area.geopoint?.lng ?? 30.05}
+            name={area.name}
+            listingType="area"
+          />
         </section>
       )}
 

@@ -111,6 +111,7 @@ export const areaDetailQuery = defineQuery(`
     "slug": slug.current,
     description,
     location,
+    geopoint,
     image,
     "induna": induna->{${personFragment}},
     "relatedListings": relatedListings[]->{${listingFragment}},

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Image } from 'next-sanity/image';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import LocationPin from '@/components/modules/LocationPin';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
@@ -136,6 +137,30 @@ function ListingGallery({ images }: { images: ListingImage[] }) {
   );
 }
 
+function ListingHeader({ listing }: { listing: ListingData }) {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <Badge>{typeLabels[listing.listingType] || listing.listingType}</Badge>
+        {listing.verifiedByInduna &&
+          listing.verifiedByInduna !== 'community' && (
+            <Badge variant="secondary">
+              {verifyLabels[listing.verifiedByInduna] ||
+                listing.verifiedByInduna}
+            </Badge>
+          )}
+        {listing.featured && (
+          <span className="text-sm text-primary">⭐ Featured</span>
+        )}
+      </div>
+      <h1 className="text-3xl md:text-5xl font-bold mb-4">{listing.name}</h1>
+      {listing.description && (
+        <p className="text-xl text-gray-600">{listing.description}</p>
+      )}
+    </div>
+  );
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const { data } = await sanityFetch({
@@ -190,28 +215,7 @@ export default async function ListingPage(props: Props) {
           { label: listing.name || '' },
         ]}
       />
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          <Badge>
-            {typeLabels[listing.listingType] || listing.listingType}
-          </Badge>
-          {listing.verifiedByInduna &&
-            listing.verifiedByInduna !== 'community' && (
-              <Badge variant="secondary">
-                {verifyLabels[listing.verifiedByInduna] ||
-                  listing.verifiedByInduna}
-              </Badge>
-            )}
-          {listing.featured && (
-            <span className="text-sm text-primary">⭐ Featured</span>
-          )}
-        </div>
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">{listing.name}</h1>
-        {listing.description && (
-          <p className="text-xl text-gray-600">{listing.description}</p>
-        )}
-      </div>
+      <ListingHeader listing={listing} />
 
       {/* Cover image */}
       {listing.image?.asset?._ref && (
@@ -234,6 +238,19 @@ export default async function ListingPage(props: Props) {
 
       {/* Details grid */}
       <ListingDetails listing={listing} />
+
+      {/* Map */}
+      {listing.geopoint?.lat && listing.geopoint?.lng && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">Location</h2>
+          <LocationPin
+            lat={listing.geopoint.lat}
+            lng={listing.geopoint.lng}
+            name={listing.name}
+            listingType={listing.listingType}
+          />
+        </div>
+      )}
 
       {/* Gallery */}
       {listing.images && listing.images.length > 0 && (
