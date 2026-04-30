@@ -13,6 +13,8 @@ type Listing = {
   geopoint?: { lat: number; lng: number } | null;
   contactInfo?: string;
   featured?: boolean;
+  verifiedByInduna?: string;
+  areaName?: string;
 };
 
 type Props = {

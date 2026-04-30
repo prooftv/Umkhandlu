@@ -13,6 +13,8 @@ type Listing = {
   geopoint?: { lat: number; lng: number } | null;
   contactInfo?: string;
   featured?: boolean;
+  verifiedByInduna?: string;
+  areaName?: string;
 };
 
 type Props = {
@@ -30,13 +32,22 @@ function buildPopup(
   color: string,
   href: string
 ) {
+  const area = listing.areaName
+    ? `<br/><small style="color:#666">${listing.areaName}</small>`
+    : '';
+  const verify =
+    listing.verifiedByInduna === 'council'
+      ? '<br/><small style="color:#16a34a">✓✓ Council Verified</small>'
+      : listing.verifiedByInduna === 'induna'
+        ? '<br/><small style="color:#16a34a">✓ Verified by Induna</small>'
+        : '';
   const loc = listing.location
     ? `<br/><small>📍 ${listing.location}</small>`
     : '';
   const phone = listing.contactInfo
     ? `<br/><small>📞 ${listing.contactInfo}</small>`
     : '';
-  return `<div style="min-width:160px"><strong>${icon} ${listing.name}</strong>${loc}${phone}<br/><a href="${href}" style="color:${color};font-weight:600;font-size:13px">View details →</a></div>`;
+  return `<div style="min-width:160px"><strong>${icon} ${listing.name}</strong>${area}${verify}${loc}${phone}<br/><a href="${href}" style="color:${color};font-weight:600;font-size:13px">View details →</a></div>`;
 }
 
 function addMarkers(

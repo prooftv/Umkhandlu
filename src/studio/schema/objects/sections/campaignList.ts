@@ -27,9 +27,9 @@ export default defineType({
       options: {
         list: [
           { title: 'All', value: 'all' },
-          { title: 'Ad / Sponsorship', value: 'ad' },
-          { title: 'Brand Activations', value: 'activation' },
-          { title: 'CSR Initiatives', value: 'csr' },
+          { title: 'Sponsorships', value: 'ad' },
+          { title: 'Activations', value: 'activation' },
+          { title: 'Initiatives', value: 'csr' },
         ],
       },
       initialValue: 'all',

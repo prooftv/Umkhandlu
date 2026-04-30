@@ -76,6 +76,13 @@ export default defineType({
         filter: 'listingType == "area"',
       },
     }),
+    defineField({
+      name: 'relatedCampaign',
+      title: 'Related Campaign',
+      type: 'reference',
+      to: [{ type: 'campaign' }],
+      description: 'Link to a campaign if this notice supports one.',
+    }),
   ],
   orderings: [
     {

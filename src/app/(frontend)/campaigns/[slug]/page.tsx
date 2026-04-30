@@ -19,9 +19,9 @@ type Props = {
 };
 
 const typeConfig: Record<string, { icon: string; label: string }> = {
-  ad: { icon: '📢', label: 'Ad / Sponsorship' },
-  activation: { icon: '🎯', label: 'Brand Activation' },
-  csr: { icon: '💚', label: 'CSR Initiative' },
+  ad: { icon: '📢', label: 'Sponsorship' },
+  activation: { icon: '🎯', label: 'Activation' },
+  csr: { icon: '💚', label: 'Initiative' },
 };
 
 type CampaignData = NonNullable<
@@ -262,6 +262,34 @@ export default async function CampaignPage(props: Props) {
       )}
 
       <CampaignGallery gallery={campaign.gallery} />
+
+      {campaign.relatedNotices && campaign.relatedNotices.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">Community Notices</h2>
+          <div className="space-y-2">
+            {campaign.relatedNotices.map((notice) => (
+              <Link
+                key={notice._id}
+                href={`/notices/${notice.slug}`}
+                className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-shadow"
+              >
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">{notice.noticeType}</Badge>
+                  <span className="font-medium text-sm">{notice.title}</span>
+                </div>
+                {notice.date && (
+                  <time
+                    dateTime={notice.date}
+                    className="text-xs text-gray-400"
+                  >
+                    {new Date(notice.date).toLocaleDateString()}
+                  </time>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {campaign.link && (
         <div className="mb-8">

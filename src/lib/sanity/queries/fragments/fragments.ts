@@ -248,6 +248,7 @@ export const noticeFragment = /* groq */ `
   date,
   excerpt,
   pinned,
+  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },
 `;
 
 export const noticeListSectionFragment = /* groq */ `
@@ -292,6 +293,7 @@ export const listingFragment = /* groq */ `
   verifiedByInduna,
   featured,
   image,
+  "areaName": relatedArea->name,
 `;
 
 export const listingGridSectionFragment = /* groq */ `
@@ -360,6 +362,9 @@ export const campaignFragment = /* groq */ `
   "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current },
   "relatedProgram": relatedProgram->{ title, "slug": slug.current },
+  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {
+    ${noticeFragment}
+  },
 `;
 
 export const campaignListSectionFragment = /* groq */ `

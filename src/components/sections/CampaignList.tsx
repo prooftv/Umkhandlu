@@ -40,7 +40,7 @@ type Props = {
 const typeConfig: Record<string, { icon: string; label: string }> = {
   ad: { icon: '📢', label: 'Sponsorship' },
   activation: { icon: '🎯', label: 'Activation' },
-  csr: { icon: '💚', label: 'CSR Initiative' },
+  csr: { icon: '💚', label: 'Initiative' },
 };
 
 const statusColors: Record<string, string> = {

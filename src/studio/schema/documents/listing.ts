@@ -154,6 +154,17 @@ export default defineType({
       hidden: ({ parent }) => parent?.listingType === 'area',
     }),
     defineField({
+      name: 'relatedArea',
+      title: 'Related Area',
+      type: 'reference',
+      to: [{ type: 'listing' }],
+      description: 'The area/isigodi this listing belongs to.',
+      options: {
+        filter: 'listingType == "area"',
+      },
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
       name: 'induna',
       title: 'Induna (Headman)',
       type: 'reference',

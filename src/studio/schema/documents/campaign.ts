@@ -34,9 +34,9 @@ export default defineType({
       group: 'details',
       options: {
         list: [
-          { title: 'Ad / Sponsorship', value: 'ad' },
-          { title: 'Brand Activation', value: 'activation' },
-          { title: 'CSR Initiative', value: 'csr' },
+          { title: 'Sponsorship', value: 'ad' },
+          { title: 'Activation', value: 'activation' },
+          { title: 'Initiative', value: 'csr' },
         ],
         layout: 'radio',
         direction: 'horizontal',
