@@ -1,5 +1,6 @@
 import { BulbOutlineIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import StudioNote from '../../components/StudioNote';
 
 export default defineType({
   name: 'campaign',
@@ -73,12 +74,22 @@ export default defineType({
       type: 'text',
       rows: 4,
       group: 'details',
+      options: {
+        aiAssist: {
+          translateAction: true,
+        },
+      },
     }),
     defineField({
       name: 'content',
       title: 'Full Content',
       type: 'blockContent',
       group: 'details',
+      options: {
+        aiAssist: {
+          translateAction: true,
+        },
+      },
     }),
     defineField({
       name: 'startDate',
@@ -170,18 +181,33 @@ export default defineType({
 
     // Tracking & Impact
     defineField({
+      name: 'trackingNote',
+      title: 'Tracking Guide',
+      type: 'string',
+      group: 'tracking',
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'When to fill these fields',
+            description:
+              'Budget: when confirmed. Beneficiaries + Deliverables: when campaign is completed. Impact Summary: when reporting to sponsors. Leave empty until then.',
+          }),
+      },
+    }),
+    defineField({
       name: 'budget',
       title: 'Budget (ZAR)',
       type: 'number',
       group: 'tracking',
-      description: 'Campaign budget in Rands.',
+      description: 'Campaign budget in Rands. Fill when confirmed.',
     }),
     defineField({
       name: 'beneficiaries',
       title: 'Beneficiaries Reached',
       type: 'number',
       group: 'tracking',
-      description: 'Number of community members impacted.',
+      description:
+        'Fill when campaign is completed. Number of community members impacted.',
     }),
     defineField({
       name: 'impactSummary',
@@ -190,7 +216,12 @@ export default defineType({
       rows: 4,
       group: 'tracking',
       description:
-        'Summary of outcomes — for CSR reports and sponsor feedback.',
+        'Fill when reporting. Summary of outcomes for CSR reports and sponsor feedback.',
+      options: {
+        aiAssist: {
+          translateAction: true,
+        },
+      },
     }),
     defineField({
       name: 'deliverables',
@@ -199,7 +230,7 @@ export default defineType({
       group: 'tracking',
       of: [{ type: 'string' }],
       description:
-        'e.g. 500 school bags delivered, 3 community clean-ups, 2 banner placements',
+        'Add as you complete them. e.g. Platform deployed, 5 listings created, Community map live',
     }),
   ],
   orderings: [
