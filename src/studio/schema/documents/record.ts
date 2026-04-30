@@ -52,6 +52,7 @@ export default defineType({
       title: 'Summary',
       type: 'text',
       rows: 3,
+      validation: (rule) => rule.max(300),
       options: { aiAssist: { translateAction: true } },
     }),
     defineField({

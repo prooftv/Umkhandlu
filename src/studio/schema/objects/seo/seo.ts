@@ -22,6 +22,7 @@ export default defineType({
       name: 'metaTitle',
       title: 'Title',
       type: 'string',
+      validation: (rule) => rule.max(60).warning(),
       components: {
         input: SEOTitle,
       },
@@ -31,14 +32,24 @@ export default defineType({
       title: 'Description',
       type: 'text',
       rows: 3,
+      validation: (rule) => rule.max(160).warning(),
       components: {
         input: SEODescription,
       },
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'metaImage',
       title: 'Meta Image',
       type: 'image',
+      options: { aiAssist: { imageDescriptionField: 'alt' } },
+      fields: [
+        defineField({
+          name: 'alt',
+          type: 'string',
+          title: 'Alt text',
+        }),
+      ],
     }),
     defineField({
       name: 'seoKeywords',

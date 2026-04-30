@@ -25,6 +25,7 @@ export default defineType({
       name: 'description',
       title: 'Description',
       type: 'text',
+      validation: (rule) => rule.max(300),
       options: { aiAssist: { translateAction: true } },
     }),
   ],

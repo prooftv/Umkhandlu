@@ -81,6 +81,7 @@ export default defineType({
       title: 'Excerpt',
       type: 'text',
       group: 'content',
+      validation: (rule) => rule.max(300),
       options: { aiAssist: { translateAction: true } },
     }),
     defineField({

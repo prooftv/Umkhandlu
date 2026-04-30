@@ -74,6 +74,7 @@ export default defineType({
       type: 'text',
       rows: 4,
       group: 'details',
+      validation: (rule) => rule.max(300),
       options: {
         aiAssist: {
           translateAction: true,

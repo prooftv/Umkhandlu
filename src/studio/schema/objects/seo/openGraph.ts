@@ -18,11 +18,20 @@ export default defineField({
       name: 'image',
       title: 'Image',
       type: 'image',
+      options: { aiAssist: { imageDescriptionField: 'alt' } },
+      fields: [
+        defineField({
+          name: 'alt',
+          type: 'string',
+          title: 'Alt text',
+        }),
+      ],
     }),
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
+      validation: (rule) => rule.max(60).warning(),
       components: {
         input: SEOTitle,
       },
@@ -31,6 +40,7 @@ export default defineField({
       name: 'description',
       title: 'Description',
       type: 'string',
+      validation: (rule) => rule.max(160).warning(),
       components: {
         input: SEODescription,
       },
