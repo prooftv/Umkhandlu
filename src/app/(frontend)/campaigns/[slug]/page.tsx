@@ -74,11 +74,6 @@ function CampaignStats({ campaign }: { campaign: CampaignData }) {
       label: 'Beneficiaries',
       value: campaign.beneficiaries.toLocaleString(),
     });
-  if (campaign.budget)
-    items.push({
-      label: 'Budget',
-      value: `R${campaign.budget.toLocaleString()}`,
-    });
 
   if (items.length === 0) return null;
 
