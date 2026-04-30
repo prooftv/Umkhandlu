@@ -85,11 +85,6 @@ export default defineType({
       title: 'Full Content',
       type: 'blockContent',
       group: 'details',
-      options: {
-        aiAssist: {
-          translateAction: true,
-        },
-      },
     }),
     defineField({
       name: 'startDate',
@@ -111,7 +106,10 @@ export default defineType({
       title: 'Cover Image',
       type: 'image',
       group: 'media',
-      options: { hotspot: true },
+      options: {
+        hotspot: true,
+        aiAssist: { imageDescriptionField: 'alt' },
+      },
       fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
     }),
     defineField({

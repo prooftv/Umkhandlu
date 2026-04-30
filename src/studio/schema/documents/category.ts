@@ -25,6 +25,7 @@ export default defineType({
       name: 'description',
       title: 'Description',
       type: 'text',
+      options: { aiAssist: { translateAction: true } },
     }),
   ],
 });

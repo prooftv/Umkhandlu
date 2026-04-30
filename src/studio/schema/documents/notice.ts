@@ -1,5 +1,6 @@
 import { BellIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import StudioNote from '../../components/StudioNote';
 
 export default defineType({
   name: 'notice',
@@ -53,6 +54,7 @@ export default defineType({
       title: 'Short Description',
       type: 'text',
       rows: 3,
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'content',
@@ -65,6 +67,19 @@ export default defineType({
       type: 'boolean',
       initialValue: false,
       description: 'Pinned notices appear first.',
+    }),
+    defineField({
+      name: 'linkingNote',
+      title: 'Linking Guide',
+      type: 'string',
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Link this notice',
+            description:
+              'Select a Related Area so this notice appears on the area page. If this notice is part of a campaign, link it below.',
+          }),
+      },
     }),
     defineField({
       name: 'relatedArea',

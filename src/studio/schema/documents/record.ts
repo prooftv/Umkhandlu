@@ -1,5 +1,6 @@
 import { DocumentIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import StudioNote from '../../components/StudioNote';
 
 export default defineType({
   name: 'record',
@@ -51,6 +52,23 @@ export default defineType({
       title: 'Summary',
       type: 'text',
       rows: 3,
+      options: { aiAssist: { translateAction: true } },
+    }),
+    defineField({
+      name: 'statusNote',
+      title: 'Status Guide',
+      type: 'string',
+      hidden: ({ parent }) =>
+        parent?.recordType !== 'land-allocation' &&
+        parent?.recordType !== 'dispute-resolution',
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Land & dispute records',
+            description:
+              'Set the status and who approved it. This creates a public record of the decision — do not include personal details of applicants.',
+          }),
+      },
     }),
     defineField({
       name: 'status',

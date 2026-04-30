@@ -53,6 +53,7 @@ export default defineType({
       title: 'Description',
       type: 'text',
       rows: 3,
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'contactEmail',

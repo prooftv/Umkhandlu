@@ -1,5 +1,9 @@
 import { UserIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import StudioNote from '../../components/StudioNote';
+
+const leadershipTypes = ['inkosi', 'induna', 'council'];
+const communityTypes = ['youth', 'community'];
 
 export default defineType({
   name: 'person',
@@ -48,12 +52,6 @@ export default defineType({
       },
     }),
     defineField({
-      name: 'role',
-      title: 'Role / Title',
-      type: 'string',
-      description: 'e.g. Inkosi, Council Member, Youth Coordinator, Sponsor',
-    }),
-    defineField({
       name: 'personType',
       title: 'Type',
       type: 'string',
@@ -70,6 +68,42 @@ export default defineType({
       initialValue: 'council',
     }),
     defineField({
+      name: 'leadershipNote',
+      title: 'Leadership Guide',
+      type: 'string',
+      hidden: ({ parent }) =>
+        !leadershipTypes.includes(parent?.personType ?? ''),
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Leadership profile',
+            description:
+              'This person appears on the Leadership page and Team Grid sections. Izinduna are also linked to Area pages via Directory Listings. Set the Role field to their governance title.',
+          }),
+      },
+    }),
+    defineField({
+      name: 'communityNote',
+      title: 'Community Guide',
+      type: 'string',
+      hidden: ({ parent }) =>
+        !communityTypes.includes(parent?.personType ?? ''),
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Community profile',
+            description:
+              'Add skills and portfolio photos to showcase this person\u2019s trades or work. Useful for connecting community members with opportunities.',
+          }),
+      },
+    }),
+    defineField({
+      name: 'role',
+      title: 'Role / Title',
+      type: 'string',
+      description: 'e.g. Inkosi, Council Member, Youth Coordinator, Sponsor',
+    }),
+    defineField({
       name: 'email',
       title: 'Email',
       type: 'string',
@@ -84,6 +118,7 @@ export default defineType({
       title: 'Organization',
       type: 'string',
       description: 'e.g. Unami Foundation, Ingonyama Trust, School name',
+      hidden: ({ parent }) => parent?.personType === 'author',
     }),
     defineField({
       name: 'skills',
@@ -92,6 +127,9 @@ export default defineType({
       of: [{ type: 'string' }],
       description:
         'Skills or trades (e.g. Builder, Mechanic, Farmer, Designer)',
+      hidden: ({ parent }) =>
+        leadershipTypes.includes(parent?.personType ?? '') ||
+        parent?.personType === 'author',
     }),
     defineField({
       name: 'biography',
@@ -107,7 +145,10 @@ export default defineType({
       of: [
         {
           type: 'image',
-          options: { hotspot: true },
+          options: {
+            hotspot: true,
+            aiAssist: { imageDescriptionField: 'alt' },
+          },
           fields: [
             defineField({
               name: 'alt',
@@ -122,6 +163,9 @@ export default defineType({
           ],
         },
       ],
+      hidden: ({ parent }) =>
+        leadershipTypes.includes(parent?.personType ?? '') ||
+        parent?.personType === 'author',
     }),
   ],
   preview: {

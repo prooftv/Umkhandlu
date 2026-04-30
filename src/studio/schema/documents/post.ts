@@ -81,6 +81,7 @@ export default defineType({
       title: 'Excerpt',
       type: 'text',
       group: 'content',
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'categories',

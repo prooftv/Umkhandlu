@@ -1,5 +1,6 @@
 import { StarIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import StudioNote from '../../components/StudioNote';
 
 export default defineType({
   name: 'opportunity',
@@ -44,12 +45,26 @@ export default defineType({
       type: 'text',
       rows: 4,
       validation: (rule) => rule.required(),
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'organization',
       title: 'Organization',
       type: 'string',
       description: 'Who is offering this opportunity.',
+    }),
+    defineField({
+      name: 'deadlineNote',
+      title: 'Deadline Guide',
+      type: 'string',
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Deadline matters',
+            description:
+              'Opportunities with a past deadline are automatically hidden from the site. Leave deadline empty if the opportunity is ongoing.',
+          }),
+      },
     }),
     defineField({
       name: 'deadline',

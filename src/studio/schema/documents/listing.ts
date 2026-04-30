@@ -1,5 +1,6 @@
 import { PinIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import StudioNote from '../../components/StudioNote';
 
 export default defineType({
   name: 'listing',
@@ -44,6 +45,7 @@ export default defineType({
       title: 'Description',
       type: 'text',
       rows: 3,
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'location',
@@ -93,6 +95,20 @@ export default defineType({
       hidden: ({ parent }) => parent?.listingType === 'area',
     }),
     defineField({
+      name: 'verificationNote',
+      title: 'Verification Guide',
+      type: 'string',
+      hidden: ({ parent }) => parent?.listingType === 'area',
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Verification levels',
+            description:
+              'Community Submitted = unverified. Verified by Induna = local headman confirms it exists. Council Approved = full council verification. Set the correct level below.',
+          }),
+      },
+    }),
+    defineField({
       name: 'verifiedByInduna',
       title: 'Verification Status',
       type: 'string',
@@ -112,7 +128,10 @@ export default defineType({
       title: 'Cover Image',
       type: 'image',
       description: 'Main photo. Recommended: 1200×600px, JPG or PNG.',
-      options: { hotspot: true },
+      options: {
+        hotspot: true,
+        aiAssist: { imageDescriptionField: 'alt' },
+      },
       fields: [
         defineField({
           name: 'alt',

@@ -1,5 +1,6 @@
 import { RocketIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import StudioNote from '../../components/StudioNote';
 
 export default defineType({
   name: 'program',
@@ -50,6 +51,7 @@ export default defineType({
       title: 'Short Description',
       type: 'text',
       rows: 3,
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'content',
@@ -61,7 +63,10 @@ export default defineType({
       title: 'Image',
       type: 'image',
       description: 'Event/program image. Recommended: 1200×600px, JPG or PNG.',
-      options: { hotspot: true },
+      options: {
+        hotspot: true,
+        aiAssist: { imageDescriptionField: 'alt' },
+      },
       fields: [
         defineField({
           name: 'alt',
@@ -69,6 +74,19 @@ export default defineType({
           title: 'Alt text',
         }),
       ],
+    }),
+    defineField({
+      name: 'statusNote',
+      title: 'Status Guide',
+      type: 'string',
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Keep status updated',
+            description:
+              'Set to Upcoming before the event, Active while running, Completed when done. This controls how the program appears on the site.',
+          }),
+      },
     }),
     defineField({
       name: 'status',
