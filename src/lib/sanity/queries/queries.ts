@@ -1,5 +1,6 @@
 import { defineQuery } from 'next-sanity';
 import {
+  campaignFragment,
   categoryFragment,
   linkFragment,
   listingFragment,
@@ -46,13 +47,13 @@ export const getPageQuery = defineQuery(`
     _id,
     _type,
     name,
-    slug,
+    "slug": slug.current,
     ${pageFragment}
   }
 `);
 
 export const getSitemapQuery = defineQuery(`
-  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
+  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program", "campaign"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
     "href": select(
       _type == "page" => "/" + slug.current,
       _type == "post" => "/blog/" + slug.current,
@@ -63,6 +64,7 @@ export const getSitemapQuery = defineQuery(`
       _type == "notice" => "/notices/" + slug.current,
       _type == "opportunity" => "/opportunities/" + slug.current,
       _type == "program" => "/programs/" + slug.current,
+      _type == "campaign" => "/campaigns/" + slug.current,
       _type == "blogPage" => "/blog",
       _type == "homePage" => "/",
       slug.current
@@ -190,6 +192,23 @@ export const opportunityDetailQuery = defineQuery(`
 
 export const opportunitySlugs = defineQuery(`
   *[_type == "opportunity" && defined(slug.current)][0..$limit].slug.current
+`);
+
+export const campaignDetailQuery = defineQuery(`
+  *[_type == "campaign" && slug.current == $slug][0]{
+    ${campaignFragment}
+    content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
+    gallery[] {
+      _key,
+      alt,
+      caption,
+      asset->{ _id, url }
+    }
+  }
+`);
+
+export const campaignSlugs = defineQuery(`
+  *[_type == "campaign" && defined(slug.current)][0..$limit].slug.current
 `);
 
 export const postsArchiveQuery = defineQuery(`

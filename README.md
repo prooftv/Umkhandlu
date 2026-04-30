@@ -4,7 +4,7 @@ Community digital platform for traditional councils, youth programs, and local g
 
 ## What This Is
 
-A modular, CMS-driven platform that gives traditional councils a structured digital presence. Editors compose pages from 23 section types without touching code. The same codebase serves multiple councils — each with its own content, brand colors, and domain.
+A modular, CMS-driven platform that gives traditional councils a structured digital presence. Editors compose pages from 25 section types without touching code. The same codebase serves multiple councils — each with its own content, brand colors, and domain.
 
 ## Tech Stack
 
@@ -43,7 +43,7 @@ npm run dev
 
 ## Content Architecture
 
-### 10 Document Types
+### 11 Document Types
 
 | Type | Purpose |
 |---|---|
@@ -52,13 +52,14 @@ npm run dev
 | `person` | Leadership, council members, community profiles |
 | `category` | Content categories |
 | `notice` | Community notices (meeting, announcement, resolution, alert, opportunity) |
-| `listing` | Directory (school, clinic, business, accommodation, church, facility, area) |
+| `listing` | Directory (school, clinic, business, accommodation, church, facility, area) with map coordinates |
 | `opportunity` | Jobs, training, bursaries, funding |
 | `program` | Youth events, skills programs, school collaborations |
 | `record` | Governance documents (minutes, resolutions, land allocations, dispute resolutions, policies, reports, external resources) |
 | `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
+| `campaign` | Campaigns & activations (ad/sponsorship, brand activation, CSR initiative) |
 
-### 23 Page Builder Sections
+### 25 Page Builder Sections
 
 | Section | Purpose |
 |---|---|
@@ -84,6 +85,8 @@ npm run dev
 | `subscribe` | Newsletter signup with server action |
 | `logoGrid` | Sponsors/partners logos |
 | `adBanner` | Sponsor banners with date scheduling |
+| `communityMap` | Interactive map of listings (Leaflet/OpenStreetMap, filterable by type) |
+| `campaignList` | Campaigns & activations (filterable by type and status) |
 | `divider` | Visual separator |
 
 ### 3 Singletons
@@ -114,6 +117,7 @@ npm run dev
 ├── ─────────
 ├── Directory Listings
 ├── Sponsors & Partners
+├── Campaigns & Activations
 ├── ─────────
 └── Site Settings
     ├── General (title, description, menu, OG image)

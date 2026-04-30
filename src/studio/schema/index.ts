@@ -1,3 +1,4 @@
+import campaign from './documents/campaign';
 import category from './documents/category';
 import listing from './documents/listing';
 import notice from './documents/notice';
@@ -13,8 +14,10 @@ import button from './objects/button';
 import link from './objects/link';
 import menuItem from './objects/menuItem';
 import adBanner from './objects/sections/adBanner';
+import campaignList from './objects/sections/campaignList';
 import card from './objects/sections/card';
 import cardGrid from './objects/sections/cardGrid';
+import communityMap from './objects/sections/communityMap';
 import contactForm from './objects/sections/contactForm';
 import cta from './objects/sections/cta';
 import divider from './objects/sections/divider';
@@ -58,9 +61,12 @@ export const schemaTypes = [
   program,
   record,
   sponsor,
+  campaign,
 
   // Sections
   adBanner,
+  campaignList,
+  communityMap,
   cta,
   hero,
   mediaText,

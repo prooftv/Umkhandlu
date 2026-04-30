@@ -1,0 +1,284 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Image } from 'next-sanity/image';
+import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
+import { Badge } from '@/components/ui/Badge';
+import { serverEnv } from '@/env/serverEnv';
+import { client } from '@/lib/sanity/client/client';
+import { sanityFetch } from '@/lib/sanity/client/live';
+import { urlForImage } from '@/lib/sanity/client/utils';
+import {
+  campaignDetailQuery,
+  campaignSlugs,
+} from '@/lib/sanity/queries/queries';
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+const typeConfig: Record<string, { icon: string; label: string }> = {
+  ad: { icon: '📢', label: 'Ad / Sponsorship' },
+  activation: { icon: '🎯', label: 'Brand Activation' },
+  csr: { icon: '💚', label: 'CSR Initiative' },
+};
+
+type CampaignData = NonNullable<
+  Awaited<ReturnType<typeof sanityFetch<typeof campaignDetailQuery>>>['data']
+>;
+
+function CampaignSponsor({ sponsor }: { sponsor: CampaignData['sponsor'] }) {
+  if (!sponsor) return null;
+  return (
+    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl mb-8">
+      {sponsor.logo?.asset?._ref && (
+        <Image
+          src={
+            urlForImage(sponsor.logo)
+              ?.width(80)
+              .height(40)
+              .fit('max')
+              .url() as string
+          }
+          alt={sponsor.name}
+          width={80}
+          height={40}
+          className="object-contain"
+        />
+      )}
+      <div>
+        <p className="font-semibold">{sponsor.name}</p>
+        {sponsor.sponsorType && (
+          <p className="text-sm text-gray-500">{sponsor.sponsorType}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CampaignStats({ campaign }: { campaign: CampaignData }) {
+  const items: { label: string; value: string }[] = [];
+  if (campaign.startDate)
+    items.push({
+      label: 'Start',
+      value: new Date(campaign.startDate).toLocaleDateString(),
+    });
+  if (campaign.endDate)
+    items.push({
+      label: 'End',
+      value: new Date(campaign.endDate).toLocaleDateString(),
+    });
+  if (campaign.beneficiaries)
+    items.push({
+      label: 'Beneficiaries',
+      value: campaign.beneficiaries.toLocaleString(),
+    });
+  if (campaign.budget)
+    items.push({
+      label: 'Budget',
+      value: `R${campaign.budget.toLocaleString()}`,
+    });
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      {items.map((item) => (
+        <div key={item.label} className="bg-gray-50 rounded-xl p-4 text-center">
+          <p className="text-xs text-gray-500 mb-1">{item.label}</p>
+          <p className="font-semibold">{item.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CampaignGallery({ gallery }: { gallery: CampaignData['gallery'] }) {
+  if (!gallery?.length) return null;
+  return (
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-4">Photos</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {gallery.map((img) => (
+          <figure
+            key={img._key}
+            className="group relative overflow-hidden rounded-xl"
+          >
+            {img.asset?.url && (
+              <Image
+                src={img.asset.url}
+                alt={img.alt || ''}
+                width={400}
+                height={400}
+                className="object-cover aspect-square group-hover:scale-105 transition-transform duration-300"
+              />
+            )}
+            {img.caption && (
+              <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                {img.caption}
+              </figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { slug } = await props.params;
+  const { data } = await sanityFetch({
+    query: campaignDetailQuery,
+    params: { slug },
+  });
+  if (!data) return {};
+  return {
+    title: data.title,
+    description: data.description || undefined,
+    alternates: { canonical: `/campaigns/${slug}` },
+  };
+}
+
+export async function generateStaticParams() {
+  const slugs = await client.fetch(campaignSlugs, {
+    limit: serverEnv.MAX_STATIC_PARAMS,
+  });
+  return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
+}
+
+export default async function CampaignPage(props: Props) {
+  const { slug } = await props.params;
+  const { data: campaign } = await sanityFetch({
+    query: campaignDetailQuery,
+    params: { slug },
+  });
+
+  if (!campaign) notFound();
+
+  const config = typeConfig[campaign.campaignType ?? ''] || {
+    icon: '📋',
+    label: campaign.campaignType,
+  };
+
+  return (
+    <div className="container mx-auto max-w-4xl py-12">
+      <Breadcrumbs
+        items={[
+          { label: 'Campaigns', href: '/' },
+          { label: campaign.title || '' },
+        ]}
+      />
+
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
+          <Badge>
+            {config.icon} {config.label}
+          </Badge>
+          <Badge variant="secondary">{campaign.status}</Badge>
+        </div>
+        <h1 className="text-3xl md:text-5xl font-bold mb-4">
+          {campaign.title}
+        </h1>
+        {campaign.description && (
+          <p className="text-xl text-gray-600">{campaign.description}</p>
+        )}
+      </div>
+
+      <CampaignSponsor sponsor={campaign.sponsor} />
+
+      {campaign.image?.asset?._ref && (
+        <div className="mb-8 rounded-2xl overflow-hidden">
+          <Image
+            src={
+              urlForImage(campaign.image)
+                ?.width(1200)
+                .height(600)
+                .fit('crop')
+                .url() as string
+            }
+            alt={campaign.image?.alt || campaign.title}
+            width={1200}
+            height={600}
+            className="w-full object-cover"
+          />
+        </div>
+      )}
+
+      <CampaignStats campaign={campaign} />
+
+      {campaign.deliverables && campaign.deliverables.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">Deliverables</h2>
+          <div className="flex flex-wrap gap-2">
+            {campaign.deliverables.map((d) => (
+              <span
+                key={d}
+                className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
+              >
+                ✓ {d}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {campaign.impactSummary && (
+        <div className="mb-8 p-6 bg-green-50 rounded-xl border border-green-100">
+          <h2 className="text-xl font-bold mb-2 text-green-800">
+            💚 Impact Summary
+          </h2>
+          <p className="text-green-700">{campaign.impactSummary}</p>
+        </div>
+      )}
+
+      {campaign.relatedAreas && campaign.relatedAreas.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">Target Areas</h2>
+          <div className="flex flex-wrap gap-2">
+            {campaign.relatedAreas.map((area) => (
+              <Link
+                key={area.slug}
+                href={`/areas/${area.slug}`}
+                className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors"
+              >
+                🏘️ {area.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {campaign.relatedProgram && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">Related Program</h2>
+          <Link
+            href={`/programs/${campaign.relatedProgram.slug}`}
+            className="inline-block text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors"
+          >
+            🚀 {campaign.relatedProgram.title}
+          </Link>
+        </div>
+      )}
+
+      <CampaignGallery gallery={campaign.gallery} />
+
+      {campaign.link && (
+        <div className="mb-8">
+          <a
+            href={campaign.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+          >
+            Visit Campaign Page →
+          </a>
+        </div>
+      )}
+
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <ShareWhatsApp title={campaign.title || ''} />
+      </div>
+    </div>
+  );
+}

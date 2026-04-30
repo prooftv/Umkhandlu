@@ -51,6 +51,12 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'geopoint',
+      title: 'Map Location',
+      type: 'geopoint',
+      description: 'Pin this listing on the map. Click to set coordinates.',
+    }),
+    defineField({
       name: 'contactInfo',
       title: 'Contact Info',
       type: 'string',

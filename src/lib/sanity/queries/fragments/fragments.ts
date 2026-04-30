@@ -283,6 +283,7 @@ export const listingFragment = /* groq */ `
   listingType,
   description,
   location,
+  geopoint,
   contactInfo,
   whatsappContact,
   website,
@@ -338,6 +339,61 @@ export const adBannerSectionFragment = /* groq */ `
   startDate,
   endDate,
   size
+`;
+
+export const campaignFragment = /* groq */ `
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  campaignType,
+  status,
+  description,
+  startDate,
+  endDate,
+  image,
+  link,
+  budget,
+  beneficiaries,
+  impactSummary,
+  deliverables,
+  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },
+  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current },
+  "relatedProgram": relatedProgram->{ title, "slug": slug.current },
+`;
+
+export const campaignListSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  filterType,
+  filterStatus,
+  limit,
+  "campaigns": *[_type == 'campaign' && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    campaignType == ^.filterType
+  ) && select(
+    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,
+    status == ^.filterStatus
+  )] | order(startDate desc) [0...20] {
+    ${campaignFragment}
+  }
+`;
+
+export const communityMapSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  centerLat,
+  centerLng,
+  zoom,
+  filterType,
+  "listings": *[_type == 'listing' && defined(geopoint) && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    listingType == ^.filterType
+  )] | order(featured desc, name asc) {
+    ${listingFragment}
+  }
 `;
 
 export const opportunityFragment = /* groq */ `
@@ -494,7 +550,9 @@ export const pageBuilderFragment = /* groq */ `
     _key,
     _type,
     _type == 'adBanner' => {${adBannerSectionFragment}},
+    _type == 'campaignList' => {${campaignListSectionFragment}},
     _type == 'cardGrid' => {${cardGridsSectionFragment}},
+    _type == 'communityMap' => {${communityMapSectionFragment}},
     _type == 'contactForm' => {${contactFormSectionFragment}},
     _type == 'cta' => {${ctaSectionFragment}},
     _type == 'divider' => {${dividerSectionFragment}},

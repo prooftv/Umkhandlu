@@ -50,7 +50,13 @@ export default async function ProgramPage(props: Props) {
 
   if (!program) notFound();
 
-  const jsonLd = generateEventJsonLd(program);
+  const jsonLd = generateEventJsonLd({
+    title: program.title,
+    slug: program.slug,
+    description: program.description ?? undefined,
+    date: program.date ?? undefined,
+    status: program.status ?? undefined,
+  });
 
   return (
     <div className="container mx-auto max-w-3xl py-12">

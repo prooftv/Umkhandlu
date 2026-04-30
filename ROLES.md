@@ -19,6 +19,7 @@ When Sanity Teams (paid tier) is available, these roles can be enforced with cus
 |---|---|---|---|
 | Notices | ✅ | ✅ | ✅ |
 | Records (minutes, resolutions, policies) | ✅ | ✅ | ✅ |
+| Campaigns (ad, activation, CSR) | ✅ | ✅ | ✅ |
 | Leadership profiles | ✅ | ✅ | ❌ (Inkosi approval) |
 | Pages | ✅ | ✅ | ❌ |
 | Site Settings | ✅ | ✅ | — |
@@ -27,6 +28,7 @@ When Sanity Teams (paid tier) is available, these roles can be enforced with cus
 - Publish meeting notices at least 7 days before meetings
 - Upload meeting minutes within 48 hours of meetings
 - Keep leadership profiles current
+- Manage campaigns (create, update status, track deliverables)
 - Approve content from other roles before publishing
 
 ---
@@ -131,6 +133,7 @@ Council Admin publishes
 | Wednesday | 1 community story / blog post | Youth Rep |
 | Friday | Opportunity updates (new + expired removed) | Youth Rep |
 | As needed | Meeting minutes (within 48h of meeting) | Council Admin |
+| As needed | Campaign updates (status, impact, deliverables) | Council Admin |
 | As needed | Area updates (new listings, changes) | Induna |
 | Monthly | Leadership profile review | Council Admin |
 

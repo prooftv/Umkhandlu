@@ -102,7 +102,7 @@ type ListingImage = {
   _key: string;
   alt?: string | null;
   caption?: string | null;
-  asset?: { _id: string; url: string } | null;
+  asset?: { _id: string; url: string | null } | null;
 };
 
 function ListingGallery({ images }: { images: ListingImage[] }) {
@@ -168,7 +168,15 @@ export default async function ListingPage(props: Props) {
 
   if (!listing) notFound();
 
-  const jsonLd = generateLocalBusinessJsonLd(listing);
+  const jsonLd = generateLocalBusinessJsonLd({
+    name: listing.name,
+    slug: listing.slug,
+    listingType: listing.listingType,
+    description: listing.description ?? undefined,
+    location: listing.location ?? undefined,
+    contactInfo: listing.contactInfo ?? undefined,
+    operatingHours: listing.operatingHours ?? undefined,
+  });
 
   return (
     <div className="container mx-auto max-w-4xl py-12">

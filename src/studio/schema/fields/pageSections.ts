@@ -1,6 +1,8 @@
 import { defineArrayMember, defineField } from 'sanity';
 import adBanner from '../objects/sections/adBanner';
+import campaignList from '../objects/sections/campaignList';
 import cardGrid from '../objects/sections/cardGrid';
+import communityMap from '../objects/sections/communityMap';
 import contactForm from '../objects/sections/contactForm';
 import cta from '../objects/sections/cta';
 import divider from '../objects/sections/divider';
@@ -25,7 +27,9 @@ import teamGrid from '../objects/sections/teamGrid';
 
 const pageSectionsObjects = [
   adBanner,
+  campaignList,
   cardGrid,
+  communityMap,
   contactForm,
   cta,
   divider,

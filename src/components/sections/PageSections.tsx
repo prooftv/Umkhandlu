@@ -6,7 +6,9 @@ import type { ElementType } from 'react';
 import { dataAttr } from '@/lib/sanity/client/utils';
 import type { SectionsType } from '@/lib/sanity/queries/fragments/fragment.types';
 import AdBanner from './AdBanner';
+import CampaignList from './CampaignList';
 import CardGrid from './CardGrid';
+import CommunityMap from './CommunityMap';
 import ContactForm from './ContactForm';
 import CTA from './CTA';
 import Divider from './Divider';
@@ -31,6 +33,8 @@ import TeamGrid from './TeamGrid';
 
 const SECTION_COMPONENTS: Record<string, ElementType> = {
   adBanner: AdBanner,
+  campaignList: CampaignList,
+  communityMap: CommunityMap,
   hero: Hero,
   mediaText: MediaText,
   cta: CTA,

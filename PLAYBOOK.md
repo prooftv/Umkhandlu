@@ -124,7 +124,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 
 ### Content Architecture
 
-#### 10 Document Types
+#### 11 Document Types
 
 | Type | Purpose | Key Fields |
 |---|---|---|
@@ -133,11 +133,12 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `person` | Leadership, council, community profiles | Name, role, type (inkosi/induna/council/youth/community/author), skills, organization |
 | `category` | Content categories | Title, slug, description |
 | `notice` | Community notices | Title, type (meeting/announcement/resolution/alert/opportunity), date, pinned, relatedArea |
-| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, contact, WhatsApp, services, hours, verification level, image, featured, induna, relatedListings |
+| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, geopoint (map coordinates), contact, WhatsApp, services, hours, verification level, image, featured, induna, relatedListings |
 | `opportunity` | Jobs, training, bursaries, funding | Title, type, description, organization, deadline, apply link, relatedArea, featured |
 | `program` | Youth events, skills programs, school collabs | Title, type, status (upcoming/active/completed), date, relatedArea |
 | `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report/external-resource), date, summary, status, approvedBy, content, PDF file, externalUrl, source, relatedArea |
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
+| `campaign` | Campaigns & activations | Title, type (ad/activation/csr), status (draft/approved/active/completed/reported), sponsor, dates, budget, beneficiaries, impact summary, deliverables, target areas, related program, gallery |
 
 #### 3 Singletons
 
@@ -147,7 +148,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `blogPage` | Blog listing page SEO |
 | `settings` | Site title, description, menu, branding (primary/secondary colors), social links (Facebook, Twitter, Instagram, YouTube, WhatsApp), contact info (email, phone, address), GTM ID, webhook URL, default OG image |
 
-#### 23 Page Builder Sections
+#### 25 Page Builder Sections
 
 Any page can be composed from these sections in any order:
 
@@ -175,6 +176,8 @@ Any page can be composed from these sections in any order:
 | `subscribe` | Newsletter signup with server action |
 | `logoGrid` | Sponsors/partners logo display (grayscale → color on hover) |
 | `adBanner` | Sponsor banners with date scheduling, size options, sponsor reference |
+| `communityMap` | Interactive map of all listings (Leaflet/OpenStreetMap, color-coded by type, filterable) |
+| `campaignList` | Campaigns & activations grid (filterable by type and status) |
 | `divider` | Visual separator |
 
 ### Area Pages (Community Digital Twins)
@@ -236,6 +239,7 @@ All content is linked via `relatedArea` references — when editors create a not
 ├── ─────────
 ├── Directory Listings 📍
 ├── Sponsors & Partners ⭐
+├── Campaigns & Activations 💡
 ├── ─────────
 └── Site Settings ⚙️
     ├── General (title, description, menu, OG image)
@@ -290,6 +294,27 @@ All content is linked via `relatedArea` references — when editors create a not
 - Auto-hides outside scheduled date range
 - `rel="sponsored"` on links
 - Sponsors/partners logo grid (grayscale → color on hover)
+
+### Campaign Management
+
+- Full `campaign` document type with three campaign types:
+  - **Ad / Sponsorship** — banner creatives, sponsor links, date scheduling
+  - **Brand Activation** — on-ground events, product launches, community activations with photo gallery
+  - **CSR Initiative** — corporate social responsibility with impact tracking, beneficiary counts, deliverables
+- 5-stage status workflow: Draft → Approved → Active → Completed → Reported
+- Budget tracking (ZAR), beneficiary counts, impact summaries, deliverables list
+- Links to sponsors, target areas, related programs
+- `campaignList` page builder section (filterable by type and status)
+- Campaign detail pages at `/campaigns/[slug]`
+
+### Community Map
+
+- Interactive map powered by Leaflet/OpenStreetMap (free, no API key)
+- Listings with `geopoint` coordinates appear as color-coded circle markers
+- Filter by listing type (schools, clinics, businesses, etc.)
+- Popups with name, location, contact info, and link to detail page
+- Auto-fit bounds to show all markers
+- `communityMap` page builder section with configurable center, zoom, and type filter
 
 ### Advertising Packages (Council Revenue Model)
 
@@ -371,8 +396,8 @@ Zero council-specific strings exist in component or route code. Every "Umkhandlu
 
 ### What Stays the Same
 
-- All 23 page builder sections
-- All 10 document types
+- All 25 page builder sections
+- All 11 document types
 - All routes and components
 - SEO infrastructure
 - Analytics integration
@@ -395,7 +420,8 @@ The platform is built with an integration-ready architecture — webhook endpoin
 |---|---|---|
 | **n8n / Make** | Workflow automation (WhatsApp notifications, opportunity scraping) | Webhook URL in Settings |
 | **Supabase** | Database for form submissions, user accounts | Server actions |
-| **Interactive Map** | Mapbox/Google Maps with pins for schools, clinics, businesses | Listing coordinates (Phase 2 field) |
+| **Interactive Map** | Leaflet/OpenStreetMap with pins for schools, clinics, businesses | Listing geopoint field (live) |
+| **Campaign Management** | Ad campaigns, brand activations, CSR initiatives with impact tracking | Campaign document type (live) |
 | **UNCIP** | Child safety alerts integration | Notice type extension |
 | **Unami Schools** | Linked school platforms | Listing references |
 | **Unami Drones** | Skills program content pipeline | Program type extension |
@@ -703,6 +729,7 @@ Posts and stories are **never seeded** — not even as dummy data. Blog content 
 | `category` | ❌ | — | Created alongside first posts |
 | `opportunity` | ❌ | — | Can be seeded as dummy data per council |
 | `program` | ❌ | — | Can be seeded as dummy data per council |
+| `campaign` | ❓ | — | Can be seeded as dummy data per council (sample CSR/activation) |
 | `sponsor` | ❌ | — | Added when real sponsors are confirmed |
 
 ### Adding a New Council
@@ -720,13 +747,13 @@ Template files must never reference a council name, person, or area. Council fil
 
 | Metric | Count |
 |---|---|
-| Document types | 10 |
-| Page builder sections | 23 |
+| Document types | 11 |
+| Page builder sections | 25 |
 | Singletons | 3 |
-| Frontend routes | 13 |
+| Frontend routes | 14 |
 | Server actions | 3 (with webhook delivery) |
 | UI components | 7 |
-| Total components | 55 |
+| Total components | 59 |
 | i18n translation keys | 50+ |
 | Tests | 13 (all passing) |
 | Biome lint errors | 0 |

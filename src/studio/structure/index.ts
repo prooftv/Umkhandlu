@@ -1,5 +1,6 @@
 import {
   BellIcon,
+  BulbOutlineIcon,
   CogIcon,
   DocumentIcon,
   FolderIcon,
@@ -65,6 +66,9 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('sponsor')
         .title('Sponsors & Partners')
         .icon(StarIcon),
+      S.documentTypeListItem('campaign')
+        .title('Campaigns & Activations')
+        .icon(BulbOutlineIcon),
 
       S.divider(),
 
