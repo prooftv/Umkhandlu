@@ -2,7 +2,7 @@
  * Template Menu Structure
  *
  * Seeds the standard navigation layout:
- * Home | Council ▾ | Community ▾ | Contact
+ * Home | About ▾ | Community ▾ | Directory ▾ | Contact
  *
  * Generic — no council-specific links. Council scripts can patch
  * additional menu items (e.g. area links) after this runs.
@@ -45,15 +45,15 @@ const menu = [
     },
   },
   {
-    _key: 'menu-council',
+    _key: 'menu-about',
     _type: 'menuItem',
-    text: 'Council',
+    text: 'About',
     type: 'child-menu',
     childMenu: [
       {
-        _key: 'menu-about',
+        _key: 'menu-about-council',
         _type: 'menuItem',
-        text: 'About',
+        text: 'The Council',
         type: 'link',
         link: {
           _type: 'link',
@@ -62,7 +62,7 @@ const menu = [
         },
       },
       {
-        _key: 'menu-leadership',
+        _key: 'menu-about-leadership',
         _type: 'menuItem',
         text: 'Leadership',
         type: 'link',
@@ -73,7 +73,7 @@ const menu = [
         },
       },
       {
-        _key: 'menu-land',
+        _key: 'menu-about-land',
         _type: 'menuItem',
         text: 'Land & Governance',
         type: 'link',
@@ -92,7 +92,7 @@ const menu = [
     type: 'child-menu',
     childMenu: [
       {
-        _key: 'menu-notices',
+        _key: 'menu-community-notices',
         _type: 'menuItem',
         text: 'Notices',
         type: 'link',
@@ -103,18 +103,7 @@ const menu = [
         },
       },
       {
-        _key: 'menu-directory',
-        _type: 'menuItem',
-        text: 'Directory',
-        type: 'link',
-        link: {
-          _type: 'link',
-          type: 'internal',
-          internal: { _type: 'reference', _ref: 'page-directory' },
-        },
-      },
-      {
-        _key: 'menu-opportunities',
+        _key: 'menu-community-opportunities',
         _type: 'menuItem',
         text: 'Opportunities',
         type: 'link',
@@ -125,7 +114,7 @@ const menu = [
         },
       },
       {
-        _key: 'menu-programs',
+        _key: 'menu-community-programs',
         _type: 'menuItem',
         text: 'Programs',
         type: 'link',
@@ -136,37 +125,37 @@ const menu = [
         },
       },
       {
-        _key: 'menu-youth',
+        _key: 'menu-community-projects',
         _type: 'menuItem',
-        text: 'Youth',
+        text: 'Projects',
         type: 'link',
         link: {
           _type: 'link',
           type: 'internal',
-          internal: { _type: 'reference', _ref: 'page-youth' },
-        },
-      },
-      {
-        _key: 'menu-media',
-        _type: 'menuItem',
-        text: 'Media',
-        type: 'link',
-        link: {
-          _type: 'link',
-          type: 'internal',
-          internal: { _type: 'reference', _ref: 'page-media' },
+          internal: { _type: 'reference', _ref: 'page-projects' },
         },
       },
     ],
   },
   {
-    _key: 'menu-services',
+    _key: 'menu-directory',
     _type: 'menuItem',
-    text: 'Services',
+    text: 'Directory',
     type: 'child-menu',
     childMenu: [
       {
-        _key: 'menu-schools',
+        _key: 'menu-directory-all',
+        _type: 'menuItem',
+        text: 'All Listings',
+        type: 'link',
+        link: {
+          _type: 'link',
+          type: 'internal',
+          internal: { _type: 'reference', _ref: 'page-directory' },
+        },
+      },
+      {
+        _key: 'menu-directory-schools',
         _type: 'menuItem',
         text: 'Schools',
         type: 'link',
@@ -177,7 +166,7 @@ const menu = [
         },
       },
       {
-        _key: 'menu-health',
+        _key: 'menu-directory-health',
         _type: 'menuItem',
         text: 'Health',
         type: 'link',
@@ -188,7 +177,7 @@ const menu = [
         },
       },
       {
-        _key: 'menu-economy',
+        _key: 'menu-directory-economy',
         _type: 'menuItem',
         text: 'Local Economy',
         type: 'link',
@@ -196,17 +185,6 @@ const menu = [
           _type: 'link',
           type: 'internal',
           internal: { _type: 'reference', _ref: 'page-economy' },
-        },
-      },
-      {
-        _key: 'menu-projects',
-        _type: 'menuItem',
-        text: 'Projects',
-        type: 'link',
-        link: {
-          _type: 'link',
-          type: 'internal',
-          internal: { _type: 'reference', _ref: 'page-projects' },
         },
       },
     ],
@@ -227,7 +205,7 @@ const menu = [
 async function seed() {
   await client.patch('siteSettings').set({ menu }).commit();
   console.log(
-    'Menu updated: Home | Council ▾ | Community ▾ | Services ▾ | Contact'
+    'Menu updated: Home | About ▾ | Community ▾ | Directory ▾ | Contact'
   );
 }
 

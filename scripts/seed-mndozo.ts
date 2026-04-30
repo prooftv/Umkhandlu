@@ -652,18 +652,16 @@ async function patchMenu(tx: ReturnType<typeof client.transaction>) {
 
   if (!current?.menu) return;
 
-  const communityItem = current.menu.find(
-    (item) => item._key === 'menu-community'
-  );
-  if (!communityItem?.childMenu) return;
+  const aboutItem = current.menu.find((item) => item._key === 'menu-about');
+  if (!aboutItem?.childMenu) return;
 
-  const hasAreas = communityItem.childMenu.some(
+  const hasAreas = aboutItem.childMenu.some(
     (child) => child._key === 'menu-areas'
   );
   if (hasAreas) return;
 
   tx.patch('siteSettings', (p) =>
-    p.append('menu[_key=="menu-community"].childMenu', [
+    p.append('menu[_key=="menu-about"].childMenu', [
       {
         _key: 'menu-areas',
         _type: 'menuItem',
