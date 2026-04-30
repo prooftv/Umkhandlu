@@ -235,14 +235,19 @@ export default async function CampaignPage(props: Props) {
       {campaign.relatedAreas && campaign.relatedAreas.length > 0 && (
         <div className="mb-8">
           <h2 className="text-xl font-bold mb-3">Target Areas</h2>
-          <div className="flex flex-wrap gap-2">
+          <div className="space-y-2">
             {campaign.relatedAreas.map((area) => (
               <Link
                 key={area.slug}
                 href={`/areas/${area.slug}`}
-                className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors"
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               >
-                🏘️ {area.name}
+                <span className="text-sm font-medium">🏘️ {area.name}</span>
+                {area.induna && (
+                  <span className="text-xs text-gray-500">
+                    Induna: {area.induna.firstName} {area.induna.lastName}
+                  </span>
+                )}
               </Link>
             ))}
           </div>

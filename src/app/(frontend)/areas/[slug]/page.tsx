@@ -321,6 +321,96 @@ export default async function AreaPage(props: Props) {
           </div>
         </section>
       )}
+
+      {/* Records */}
+      {area.records && area.records.length > 0 && (
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">Documents & Records</h2>
+          <div className="space-y-3">
+            {area.records.map((record) => (
+              <div
+                key={record._id}
+                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm flex justify-between items-start gap-4"
+              >
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="outline">{record.recordType}</Badge>
+                    {record.status && (
+                      <Badge variant="secondary">{record.status}</Badge>
+                    )}
+                  </div>
+                  <h3 className="font-semibold">{record.title}</h3>
+                  {record.summary && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      {record.summary}
+                    </p>
+                  )}
+                  {record.approvedBy && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Approved by {record.approvedBy.firstName}{' '}
+                      {record.approvedBy.lastName}
+                    </p>
+                  )}
+                </div>
+                <div className="text-right shrink-0">
+                  {record.date && (
+                    <time
+                      dateTime={record.date}
+                      className="text-xs text-gray-400 block"
+                    >
+                      {new Date(record.date).toLocaleDateString()}
+                    </time>
+                  )}
+                  {record.fileUrl && (
+                    <a
+                      href={record.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary text-sm font-medium"
+                    >
+                      Download →
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Campaigns */}
+      {area.campaigns && area.campaigns.length > 0 && (
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">Campaigns & Initiatives</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {area.campaigns.map((campaign) => (
+              <Link
+                href={`/campaigns/${campaign.slug}`}
+                key={campaign._id}
+                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <Badge variant="secondary">{campaign.status}</Badge>
+                  <span className="text-xs text-gray-500">
+                    {campaign.campaignType}
+                  </span>
+                </div>
+                <h3 className="font-semibold">{campaign.title}</h3>
+                {campaign.sponsor && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    by {campaign.sponsor.name}
+                  </p>
+                )}
+                {campaign.description && (
+                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                    {campaign.description}
+                  </p>
+                )}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

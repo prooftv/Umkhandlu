@@ -12,6 +12,7 @@ import {
   postCardFragment,
   postFragment,
   programFragment,
+  recordFragment,
 } from './fragments/fragments';
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
@@ -121,6 +122,12 @@ export const areaDetailQuery = defineQuery(`
     },
     "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {
       ${opportunityFragment}
+    },
+    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {
+      ${recordFragment}
+    },
+    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {
+      ${campaignFragment}
     }
   }
 `);

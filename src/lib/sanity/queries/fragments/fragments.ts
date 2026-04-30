@@ -360,7 +360,7 @@ export const campaignFragment = /* groq */ `
   impactSummary,
   deliverables,
   "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },
-  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current },
+  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },
   "relatedProgram": relatedProgram->{ title, "slug": slug.current },
   "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {
     ${noticeFragment}
