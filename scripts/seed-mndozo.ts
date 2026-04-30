@@ -114,6 +114,7 @@ const area = {
   description:
     'A rural traditional authority area under the Mndozo Traditional Council, comprising multiple isigodi, schools, clinics, and community infrastructure.',
   location: 'Amajuba District, KwaZulu-Natal',
+  geopoint: { _type: 'geopoint', lat: -27.82, lng: 30.05 },
   featured: true,
   induna: { _type: 'reference', _ref: 'person-induna-1' },
 };
@@ -129,9 +130,11 @@ const listings = [
     listingType: 'school',
     description: 'Primary school serving the Mndozo rural community.',
     location: 'Mndozo, KwaZulu-Natal',
+    geopoint: { _type: 'geopoint', lat: -27.818, lng: 30.047 },
     contactInfo: '036 004 0015',
     servicesOffered: ['Primary Education'],
-    verifiedByInduna: 'community',
+    verifiedByInduna: 'induna',
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
   },
   {
     _id: 'listing-school-izazi',
@@ -141,9 +144,11 @@ const listings = [
     listingType: 'school',
     description: 'Secondary school serving learners in the Mndozo area.',
     location: 'Mndozo, KwaZulu-Natal',
+    geopoint: { _type: 'geopoint', lat: -27.825, lng: 30.055 },
     contactInfo: '034 183 9920',
     servicesOffered: ['Secondary Education'],
-    verifiedByInduna: 'community',
+    verifiedByInduna: 'induna',
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
   },
   {
     _id: 'listing-school-buhle',
@@ -153,9 +158,11 @@ const listings = [
     listingType: 'school',
     description: 'Secondary school located near Dicks Holt Farm.',
     location: 'Dicks Holt Farm, KwaZulu-Natal',
+    geopoint: { _type: 'geopoint', lat: -27.835, lng: 30.062 },
     contactInfo: '034 366 7485',
     servicesOffered: ['Secondary Education'],
-    verifiedByInduna: 'community',
+    verifiedByInduna: 'council',
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
   },
   {
     _id: 'listing-school-sgodiphola',
@@ -165,10 +172,123 @@ const listings = [
     listingType: 'school',
     description: 'Primary school serving the surrounding rural community.',
     location: 'Mndozo, KwaZulu-Natal',
+    geopoint: { _type: 'geopoint', lat: -27.812, lng: 30.04 },
     servicesOffered: ['Primary Education'],
+    verifiedByInduna: 'induna',
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
+  },
+  {
+    _id: 'listing-clinic-mndozo',
+    _type: 'listing',
+    name: 'Mndozo Community Clinic',
+    slug: { _type: 'slug', current: 'mndozo-community-clinic' },
+    listingType: 'clinic',
+    description:
+      'Primary healthcare clinic serving the Mndozo community. Walk-in and referral services.',
+    location: 'Mndozo, KwaZulu-Natal',
+    geopoint: { _type: 'geopoint', lat: -27.822, lng: 30.052 },
+    contactInfo: '034 212 1100',
+    servicesOffered: [
+      'Primary Care',
+      'Maternity',
+      'HIV/TB Testing',
+      'Immunisation',
+    ],
+    operatingHours: 'Mon-Fri 07:30-16:00',
+    verifiedByInduna: 'council',
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
+  },
+  {
+    _id: 'listing-business-mzinyathi-sand',
+    _type: 'listing',
+    name: 'Mzinyathi River Sand Supply',
+    slug: { _type: 'slug', current: 'mzinyathi-river-sand-supply' },
+    listingType: 'business',
+    description:
+      'River sand excavation and supply for building and construction. Delivery available within Amajuba District.',
+    location: 'Mzinyathi River, Mndozo',
+    geopoint: { _type: 'geopoint', lat: -27.83, lng: 30.035 },
+    contactInfo: '072 555 1234',
+    whatsappContact: '+27725551234',
+    servicesOffered: ['River Sand', 'Building Sand', 'Delivery'],
+    operatingHours: 'Mon-Sat 06:00-17:00',
+    verifiedByInduna: 'induna',
+    featured: true,
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
+  },
+  {
+    _id: 'listing-business-spaza',
+    _type: 'listing',
+    name: 'KwaNtuli General Store',
+    slug: { _type: 'slug', current: 'kwantuli-general-store' },
+    listingType: 'business',
+    description:
+      'Community spaza shop and general store. Groceries, airtime, and basic supplies.',
+    location: 'KwaNtuli, Mndozo',
+    geopoint: { _type: 'geopoint', lat: -27.815, lng: 30.048 },
+    contactInfo: '073 888 5678',
+    whatsappContact: '+27738885678',
+    servicesOffered: ['Groceries', 'Airtime', 'Basic Supplies'],
+    operatingHours: 'Mon-Sun 06:00-20:00',
     verifiedByInduna: 'community',
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
+  },
+  {
+    _id: 'listing-church-mndozo',
+    _type: 'listing',
+    name: 'Mndozo Zion Church',
+    slug: { _type: 'slug', current: 'mndozo-zion-church' },
+    listingType: 'church',
+    description: 'Community church serving the Mndozo area.',
+    location: 'Mndozo, KwaZulu-Natal',
+    geopoint: { _type: 'geopoint', lat: -27.819, lng: 30.044 },
+    verifiedByInduna: 'community',
+    relatedArea: { _type: 'reference', _ref: AREA_ID },
   },
 ];
+
+// ─── CAMPAIGN ────────────────────────────────────────────────
+
+const SPONSOR_ID = 'sponsor-unami-foundation';
+const CAMPAIGN_ID = 'campaign-mndozo-activation';
+
+const campaign = {
+  _id: CAMPAIGN_ID,
+  _type: 'campaign',
+  title: 'Mndozo Digital Governance Activation',
+  slug: { _type: 'slug', current: 'mndozo-digital-governance-activation' },
+  campaignType: 'activation',
+  status: 'active',
+  sponsor: { _type: 'reference', _ref: SPONSOR_ID },
+  description:
+    'Pilot deployment of the Umkhandlu digital governance platform for the Mndozo Traditional Council. Mapping community infrastructure, establishing digital presence, and connecting residents with opportunities.',
+  startDate: new Date().toISOString().split('T')[0],
+  relatedAreas: [{ _key: 'area-1', _type: 'reference', _ref: AREA_ID }],
+  budget: 7500,
+  deliverables: [
+    'Platform deployment',
+    'Community map with 8+ listings',
+    'Leadership profiles',
+    'Governance records digitised',
+    'Community directory live',
+  ],
+};
+
+// ─── CAMPAIGN NOTICE ─────────────────────────────────────────
+
+const campaignNotice = {
+  _id: 'notice-campaign-activation',
+  _type: 'notice',
+  title: 'Digital Platform Launch — Mndozo Traditional Council',
+  slug: { _type: 'slug', current: 'digital-platform-launch-mndozo' },
+  noticeType: 'announcement',
+  date: new Date().toISOString(),
+  excerpt:
+    'The Mndozo Traditional Council digital platform is now live. Community members can access notices, directory listings, opportunities, and governance information online.',
+  pinned: true,
+  relatedArea: { _type: 'reference', _ref: AREA_ID },
+  relatedCampaign: { _type: 'reference', _ref: CAMPAIGN_ID },
+};
 
 // ─── NOTICES ─────────────────────────────────────────────────
 
@@ -298,7 +418,7 @@ const programs = [
 
 const sponsors = [
   {
-    _id: 'sponsor-unami-foundation',
+    _id: SPONSOR_ID,
     _type: 'sponsor',
     name: 'Unami Foundation',
     slug: { _type: 'slug', current: 'unami-foundation' },
@@ -336,6 +456,8 @@ const homePage = {
       items: [
         { _key: 'stat-1', value: '3', label: 'Izigodi' },
         { _key: 'stat-2', value: '4', label: 'Schools' },
+        { _key: 'stat-3', value: '1', label: 'Clinic' },
+        { _key: 'stat-4', value: '8', label: 'Directory Listings' },
       ],
     },
     {
@@ -364,6 +486,27 @@ const homePage = {
       heading: 'Community Directory',
       description: 'Schools and community facilities in the Mndozo area.',
       filterType: 'all',
+      limit: 6,
+    },
+    {
+      _key: 'map-1',
+      _type: 'communityMap',
+      heading: 'Community Map',
+      description:
+        'Schools, clinics, businesses, and facilities in the Mndozo area.',
+      centerLat: -27.822,
+      centerLng: 30.05,
+      zoom: 13,
+      filterType: 'all',
+    },
+    {
+      _key: 'campaigns-1',
+      _type: 'campaignList',
+      heading: 'Campaigns & Initiatives',
+      description:
+        'Development programmes and community activations in the Mndozo area.',
+      filterType: 'all',
+      filterStatus: 'active',
       limit: 6,
     },
     {
@@ -580,6 +723,7 @@ async function seed() {
   for (const notice of notices) {
     transaction.createOrReplace(notice);
   }
+  transaction.createOrReplace(campaignNotice);
 
   // Opportunities (dummy)
   for (const opportunity of opportunities) {
@@ -595,6 +739,9 @@ async function seed() {
   for (const sponsor of sponsors) {
     transaction.createOrReplace(sponsor);
   }
+
+  // Campaign
+  transaction.createOrReplace(campaign);
 
   // Homepage
   transaction.createOrReplace(homePage);

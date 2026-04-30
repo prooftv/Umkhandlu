@@ -308,6 +308,16 @@ const pages = [
         filterType: 'all',
         limit: 20,
       },
+      {
+        _key: 'dir-map',
+        _type: 'communityMap',
+        heading: 'Community Map',
+        description: 'Find facilities and services on the map.',
+        centerLat: -27.822,
+        centerLng: 30.05,
+        zoom: 13,
+        filterType: 'all',
+      },
     ],
   },
   {
@@ -632,6 +642,16 @@ const pages = [
         _key: 'projects-programs',
         _type: 'programList',
         heading: 'Active Projects',
+        filterStatus: 'all',
+        limit: 10,
+      },
+      {
+        _key: 'projects-campaigns',
+        _type: 'campaignList',
+        heading: 'Campaigns & Initiatives',
+        description:
+          'Sponsorships, activations, and development initiatives in the community.',
+        filterType: 'all',
         filterStatus: 'all',
         limit: 10,
       },
