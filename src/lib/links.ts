@@ -29,6 +29,8 @@ export const getDocumentLink = (
       return `${linkBase}/opportunities/${slug}`;
     case 'program':
       return `${linkBase}/programs/${slug}`;
+    case 'campaign':
+      return `${linkBase}/campaigns/${slug}`;
     case 'homePage':
       return `${linkBase}/`;
     default:
