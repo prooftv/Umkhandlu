@@ -149,5 +149,5 @@ export default function CommunityMapLeaflet({
     };
   }, [listings, centerLat, centerLng, zoom, typeColors, typeIcons]);
 
-  return <div ref={mapRef} className="h-[500px] w-full" />;
+  return <div ref={mapRef} className="h-[500px] md:h-[600px] w-full" />;
 }

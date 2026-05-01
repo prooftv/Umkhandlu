@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
@@ -64,11 +64,38 @@ const typeColors: Record<string, string> = {
 const LeafletMap = dynamic(() => import('./CommunityMapLeaflet'), {
   ssr: false,
   loading: () => (
-    <div className="h-[500px] bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
-      Loading map…
+    <div className="h-[500px] md:h-[600px] bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">
+      <MapPin className="w-8 h-8 animate-pulse" />
     </div>
   ),
 });
+
+function MapStats({
+  total,
+  verified,
+  types,
+}: {
+  total: number;
+  verified: number;
+  types: number;
+}) {
+  return (
+    <div className="grid grid-cols-3 gap-4 mb-6 max-w-md mx-auto">
+      <div className="text-center">
+        <p className="text-2xl font-bold text-primary">{total}</p>
+        <p className="text-xs text-gray-500">Listings</p>
+      </div>
+      <div className="text-center">
+        <p className="text-2xl font-bold text-green-600">{verified}</p>
+        <p className="text-xs text-gray-500">Verified</p>
+      </div>
+      <div className="text-center">
+        <p className="text-2xl font-bold text-secondary">{types}</p>
+        <p className="text-xs text-gray-500">Categories</p>
+      </div>
+    </div>
+  );
+}
 
 function FilterBar({
   types,
@@ -84,14 +111,14 @@ function FilterBar({
   onFilter: (type: string | null) => void;
 }) {
   return (
-    <div className="flex flex-wrap justify-center gap-2 mb-6 max-w-4xl mx-auto">
+    <div className="flex flex-wrap justify-center gap-2 mb-6">
       <button
         type="button"
         onClick={() => onFilter(null)}
-        className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
           !active
-            ? 'bg-gray-900 text-white'
-            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            ? 'bg-gray-900 text-white shadow-md'
+            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
         }`}
       >
         All ({total})
@@ -101,10 +128,10 @@ function FilterBar({
           key={type}
           type="button"
           onClick={() => onFilter(active === type ? null : type)}
-          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
             active === type
-              ? 'text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'text-white shadow-md'
+              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
           }`}
           style={
             active === type
@@ -122,14 +149,14 @@ function FilterBar({
 function MapLegend({ types }: { types: string[] }) {
   if (types.length <= 1) return null;
   return (
-    <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-4">
+    <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 mt-4">
       {types.map((type) => (
-        <div key={type} className="flex items-center gap-1.5">
+        <div key={type} className="flex items-center gap-2">
           <span
-            className="w-2.5 h-2.5 rounded-full inline-block"
+            className="w-3 h-3 rounded-full inline-block shadow-sm"
             style={{ backgroundColor: typeColors[type] || '#6b7280' }}
           />
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-600 font-medium">
             {typeIcons[type]} {typeLabels[type] || type}
           </span>
         </div>
@@ -160,6 +187,15 @@ export default function CommunityMap({ section }: Props) {
     return map;
   }, [geoListings]);
 
+  const verifiedCount = useMemo(
+    () =>
+      geoListings.filter(
+        (l) =>
+          l.verifiedByInduna === 'induna' || l.verifiedByInduna === 'council'
+      ).length,
+    [geoListings]
+  );
+
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const filtered = activeFilter
@@ -181,52 +217,66 @@ export default function CommunityMap({ section }: Props) {
   return (
     <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
-        <div className="max-w-2xl mx-auto text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{heading}</h2>
-          {description && (
-            <p className="text-xl text-gray-600">{description}</p>
-          )}
-        </div>
-
-        {types.length > 1 && (
-          <FilterBar
-            types={types}
-            counts={counts}
-            total={geoListings.length}
-            active={activeFilter}
-            onFilter={setActiveFilter}
-          />
-        )}
-
         <div className="max-w-6xl mx-auto">
-          <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-            <LeafletMap
-              listings={filtered}
-              centerLat={centerLat ?? -28.7}
-              centerLng={centerLng ?? 30.5}
-              zoom={zoom ?? 12}
-              typeColors={typeColors}
-              typeIcons={typeIcons}
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
+                <MapPin className="w-4 h-4" />
+                Interactive Map
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">{heading}</h2>
+              {description && (
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  {description}
+                </p>
+              )}
+            </div>
+
+            <MapStats
+              total={geoListings.length}
+              verified={verifiedCount}
+              types={types.length}
             />
+
+            {types.length > 1 && (
+              <FilterBar
+                types={types}
+                counts={counts}
+                total={geoListings.length}
+                active={activeFilter}
+                onFilter={setActiveFilter}
+              />
+            )}
+
+            <div className="rounded-xl overflow-hidden shadow-md">
+              <LeafletMap
+                listings={filtered}
+                centerLat={centerLat ?? -28.7}
+                centerLng={centerLng ?? 30.5}
+                zoom={zoom ?? 12}
+                typeColors={typeColors}
+                typeIcons={typeIcons}
+              />
+            </div>
+
+            <MapLegend types={types} />
+
+            <p className="text-center text-sm text-gray-400 mt-3">
+              {filtered.length} {filtered.length === 1 ? 'listing' : 'listings'}{' '}
+              shown
+              {activeFilter
+                ? ` · Filtered by ${typeLabels[activeFilter] || activeFilter}`
+                : ''}
+            </p>
           </div>
 
-          <MapLegend types={types} />
-
-          <p className="text-center text-sm text-gray-400 mt-3">
-            {filtered.length} {filtered.length === 1 ? 'listing' : 'listings'}{' '}
-            shown
-            {activeFilter
-              ? ` · Filtered by ${typeLabels[activeFilter] || activeFilter}`
-              : ''}
-          </p>
-        </div>
-
-        <div className="text-center mt-8">
-          <Button asChild variant="outline" size="lg">
-            <Link href="/directory">
-              View Full Directory <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
+          <div className="text-center mt-8">
+            <Button asChild variant="outline" size="lg">
+              <Link href="/directory">
+                View Full Directory <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>
