@@ -78,9 +78,11 @@ cp scripts/seed-mndozo.ts scripts/seed-<council>.ts
 | Settings patch | title, description, email, phone, address, colors |
 | People | Inkosi name, induna names, roles, izigodi names |
 | Area | name, slug, location, description |
-| Listings | schools, clinics, businesses with real data |
+| Listings | schools, clinics, businesses with real data + geopoints |
 | Notices | sample notices with `relatedArea` pointing to new area |
-| Homepage | heading, hero text, stats, teamGrid refs, quote |
+| Campaign | activation campaign with sponsor, target areas, deliverables |
+| Sponsor | sponsor/partner with contact details and website |
+| Homepage | heading, hero text, stats, teamGrid refs, quote, map, campaigns |
 | Page overrides | about, leadership, land — council name in copy |
 | Menu patch | area link slug |
 
@@ -112,5 +114,6 @@ SANITY_WRITE_TOKEN=<token> npm run seed:<council>
 3. **Council files use `patch` on siteSettings** — never `createOrReplace` (preserves menu)
 4. **Council files use `createOrReplace` on pages** — idempotent, safe to re-run
 5. **Stats are editorial** — update them manually when verified data changes
-6. **IDs follow the pattern**: `person-<role>`, `listing-<type>-<name>`, `notice-<type>-<n>`
+6. **IDs follow the pattern**: `person-<role>`, `listing-<type>-<name>`, `notice-<type>-<n>`, `campaign-<name>`, `sponsor-<name>`
 7. **All scripts require `NEXT_PUBLIC_SANITY_PROJECT_ID` and `SANITY_WRITE_TOKEN`** from env
+8. **Campaigns and sponsors are seeded per council** — the Mndozo script creates the activation campaign and Unami Foundation sponsor

@@ -4,7 +4,7 @@ Community digital platform for traditional councils, youth programs, and local g
 
 ## What This Is
 
-A modular, CMS-driven platform that gives traditional councils a structured digital presence. Editors compose pages from 25 section types without touching code. The same codebase serves multiple councils — each with its own content, brand colors, and domain.
+A modular, CMS-driven platform that gives traditional councils a structured digital presence. Editors compose pages from 27 section types without touching code. The same codebase serves multiple councils — each with its own content, brand colors, and domain.
 
 ## Tech Stack
 
@@ -52,14 +52,14 @@ npm run dev
 | `person` | Leadership, council members, community profiles |
 | `category` | Content categories |
 | `notice` | Community notices (meeting, announcement, resolution, alert, opportunity) |
-| `listing` | Directory (school, clinic, business, accommodation, church, facility, area) with map coordinates |
+| `listing` | Directory (school, clinic, business, accommodation, church, facility, area) with map coordinates and rich content |
 | `opportunity` | Jobs, training, bursaries, funding |
 | `program` | Youth events, skills programs, school collaborations |
 | `record` | Governance documents (minutes, resolutions, land allocations, dispute resolutions, policies, reports, external resources) |
 | `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
-| `campaign` | Campaigns & activations (ad/sponsorship, brand activation, CSR initiative) |
+| `campaign` | Campaigns & activations (sponsorship, activation, initiative) with video, audio, documents, SEO, impact tracking |
 
-### 25 Page Builder Sections
+### 27 Page Builder Sections
 
 | Section | Purpose |
 |---|---|
@@ -73,7 +73,8 @@ npm run dev
 | `embed` | YouTube videos, iframes, embedded content |
 | `cardGrid` | Grid of content cards |
 | `postList` | Latest blog posts |
-| `teamGrid` | Leadership/council member profiles |
+| `teamGrid` | Leadership/council member profiles (manual pick) |
+| `peopleGrid` | Community people grid (auto-query, filterable by type) |
 | `noticeList` | Community notices (filterable, pinnable) |
 | `opportunityList` | Jobs, training, bursaries (deadline-aware) |
 | `programList` | Programs & events (filterable by status) |
@@ -83,7 +84,8 @@ npm run dev
 | `gallery` | Photo gallery with captions |
 | `contactForm` | Contact form with server action + optional map |
 | `subscribe` | Newsletter signup with server action |
-| `logoGrid` | Sponsors/partners logos |
+| `logoGrid` | Sponsors/partners logos (manual pick) |
+| `sponsorGrid` | Sponsors/partners cards (auto-query, filterable by type) |
 | `adBanner` | Sponsor banners with date scheduling |
 | `communityMap` | Interactive map of listings (Leaflet/OpenStreetMap, filterable by type) |
 | `campaignList` | Campaigns & activations (filterable by type and status) |

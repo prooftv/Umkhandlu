@@ -137,11 +137,10 @@ function CampaignMedia({ campaign }: { campaign: CampaignData }) {
           <h2 className="text-2xl font-bold mb-4">Video</h2>
           <div className="rounded-xl overflow-hidden aspect-video">
             <iframe
-              src={campaign.videoUrl
-                ?.replace('watch?v=', 'embed/')
-                .replace('youtu.be/', 'www.youtube.com/embed/')}
+              src={campaign.videoUrl ?? undefined}
               width="100%"
               height="100%"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               loading="lazy"
               title={campaign.title || 'Campaign video'}

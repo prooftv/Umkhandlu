@@ -199,11 +199,11 @@ export default defineType({
     }),
     defineField({
       name: 'videoUrl',
-      title: 'Video URL',
+      title: 'Video Embed URL',
       type: 'url',
       group: 'media',
       description:
-        'YouTube or Vimeo link. e.g. https://www.youtube.com/watch?v=...',
+        'Paste the embed URL. YouTube: click Share → Embed → copy the src URL. e.g. https://www.youtube.com/embed/xxxxx',
     }),
     defineField({
       name: 'audioFile',

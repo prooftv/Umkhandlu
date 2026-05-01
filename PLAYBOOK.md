@@ -133,12 +133,12 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `person` | Leadership, council, community profiles | Name, role, type (inkosi/induna/council/youth/community/author), skills, organization |
 | `category` | Content categories | Title, slug, description |
 | `notice` | Community notices | Title, type (meeting/announcement/resolution/alert/opportunity), date, pinned, relatedArea |
-| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, geopoint (map coordinates), contact, WhatsApp, services, hours, verification level, image, featured, induna, relatedListings |
+| `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, geopoint (map coordinates), contact, WhatsApp, services, hours, verification level, image, rich content, featured, induna, relatedListings |
 | `opportunity` | Jobs, training, bursaries, funding | Title, type, description, organization, deadline, apply link, relatedArea, featured |
 | `program` | Youth events, skills programs, school collabs | Title, type, status (upcoming/active/completed), date, relatedArea |
 | `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report/external-resource), date, summary, status, approvedBy, content, PDF file, externalUrl, source, relatedArea |
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
-| `campaign` | Campaigns & activations | Title, type (ad/activation/csr), status (draft/approved/active/completed/reported), sponsor, dates, budget, beneficiaries, impact summary, deliverables, target areas, related program, gallery |
+| `campaign` | Campaigns & activations | Title, type (sponsorship/activation/initiative), status (draft/approved/active/completed/reported), sponsor, contactPerson, dates, targetAudience, tags, budget, beneficiaries, impact summary, deliverables, video, audio, documents, gallery, SEO |
 
 #### 3 Singletons
 
@@ -148,7 +148,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `blogPage` | Blog listing page SEO |
 | `settings` | Site title, description, menu, branding (primary/secondary colors), social links (Facebook, Twitter, Instagram, YouTube, WhatsApp), contact info (email, phone, address), GTM ID, webhook URL, default OG image |
 
-#### 25 Page Builder Sections
+#### 27 Page Builder Sections
 
 Any page can be composed from these sections in any order:
 
@@ -164,7 +164,8 @@ Any page can be composed from these sections in any order:
 | `embed` | YouTube videos, iframes, embedded content (configurable aspect ratio) |
 | `cardGrid` | Grid of content cards with headings and rich text |
 | `postList` | Latest blog posts from CMS |
-| `teamGrid` | Leadership/council member profiles with photos and roles |
+| `teamGrid` | Leadership/council member profiles with photos and roles (manual pick) |
+| `peopleGrid` | Community people grid (auto-query, filterable by person type, shows skills) |
 | `noticeList` | Community notices (filterable by type, pinnable) |
 | `opportunityList` | Jobs, training, bursaries (deadline-aware, auto-hides expired) |
 | `programList` | Programs & events (filterable by status) |
@@ -174,7 +175,8 @@ Any page can be composed from these sections in any order:
 | `gallery` | Photo gallery with captions and hover reveal |
 | `contactForm` | Contact form with server action + optional Google Maps embed |
 | `subscribe` | Newsletter signup with server action |
-| `logoGrid` | Sponsors/partners logo display (grayscale → color on hover) |
+| `logoGrid` | Sponsors/partners logo display (grayscale → color on hover, manual pick) |
+| `sponsorGrid` | Sponsors/partners card grid (auto-query, filterable by type, shows description) |
 | `adBanner` | Sponsor banners with date scheduling, size options, sponsor reference |
 | `communityMap` | Interactive map of all listings (Leaflet/OpenStreetMap, color-coded by type, filterable) |
 | `campaignList` | Campaigns & activations grid (filterable by type and status) |
@@ -396,7 +398,7 @@ Zero council-specific strings exist in component or route code. Every "Umkhandlu
 
 ### What Stays the Same
 
-- All 25 page builder sections
+- All 27 page builder sections
 - All 11 document types
 - All routes and components
 - SEO infrastructure
@@ -748,12 +750,12 @@ Template files must never reference a council name, person, or area. Council fil
 | Metric | Count |
 |---|---|
 | Document types | 11 |
-| Page builder sections | 25 |
+| Page builder sections | 27 |
 | Singletons | 3 |
-| Frontend routes | 14 |
+| Frontend routes | 15 |
 | Server actions | 3 (with webhook delivery) |
 | UI components | 7 |
-| Total components | 59 |
+| Total components | 66 |
 | i18n translation keys | 50+ |
 | Tests | 13 (all passing) |
 | Biome lint errors | 0 |
