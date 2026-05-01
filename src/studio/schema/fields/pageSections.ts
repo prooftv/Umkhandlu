@@ -15,12 +15,14 @@ import logoGrid from '../objects/sections/logoGrid';
 import mediaText from '../objects/sections/mediaText';
 import noticeList from '../objects/sections/noticeList';
 import opportunityList from '../objects/sections/opportunityList';
+import peopleGrid from '../objects/sections/peopleGrid';
 import postList from '../objects/sections/postList';
 import process from '../objects/sections/process';
 import programList from '../objects/sections/programList';
 import quote from '../objects/sections/quote';
 import recordList from '../objects/sections/recordList';
 import richText from '../objects/sections/richText';
+import sponsorGrid from '../objects/sections/sponsorGrid';
 import stats from '../objects/sections/stats';
 import subscribe from '../objects/sections/subscribe';
 import teamGrid from '../objects/sections/teamGrid';
@@ -45,9 +47,11 @@ const pageSectionsObjects = [
   postList,
   process,
   programList,
+  peopleGrid,
   quote,
   recordList,
   richText,
+  sponsorGrid,
   stats,
   subscribe,
   teamGrid,

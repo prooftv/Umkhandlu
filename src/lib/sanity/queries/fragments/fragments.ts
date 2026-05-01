@@ -195,7 +195,7 @@ export const postListSectionFragment = /* groq */ `
     _type,
     heading,
     numberOfPosts,
-    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...20] {
+    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...coalesce(^.numberOfPosts, 10)] {
       ${postFragment}
     }
 `;
@@ -239,6 +239,20 @@ export const teamGridSectionFragment = /* groq */ `
   "members": members[]->{${personFragment}}
 `;
 
+export const peopleGridSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  filterType,
+  limit,
+  "people": *[_type == 'person' && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    personType == ^.filterType
+  )] | order(firstName asc) [0...coalesce(^.limit, 12)] {
+    ${personFragment}
+  }
+`;
+
 export const noticeFragment = /* groq */ `
   _id,
   _type,
@@ -259,7 +273,7 @@ export const noticeListSectionFragment = /* groq */ `
   "notices": *[_type == 'notice' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     noticeType == ^.filterType
-  )] | order(pinned desc, date desc) [0...20] {
+  )] | order(pinned desc, date desc) [0...coalesce(^.numberOfNotices, 10)] {
     ${noticeFragment}
   }
 `;
@@ -305,7 +319,7 @@ export const listingGridSectionFragment = /* groq */ `
   "listings": *[_type == 'listing' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     listingType == ^.filterType
-  )] | order(featured desc, name asc) [0...20] {
+  )] | order(featured desc, name asc) [0...coalesce(^.limit, 12)] {
     ${listingFragment}
   }
 `;
@@ -326,6 +340,20 @@ export const logoGridSectionFragment = /* groq */ `
   heading,
   description,
   "sponsors": sponsors[]->{${sponsorFragment}}
+`;
+
+export const sponsorGridSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  filterType,
+  limit,
+  "sponsors": *[_type == 'sponsor' && select(
+    ^.filterType == 'all' || !defined(^.filterType) => true,
+    sponsorType == ^.filterType
+  )] | order(name asc) [0...coalesce(^.limit, 12)] {
+    ${sponsorFragment}
+  }
 `;
 
 export const adBannerSectionFragment = /* groq */ `
@@ -380,7 +408,7 @@ export const campaignListSectionFragment = /* groq */ `
   ) && select(
     ^.filterStatus == 'all' || !defined(^.filterStatus) => true,
     status == ^.filterStatus
-  )] | order(startDate desc) [0...20] {
+  )] | order(startDate desc) [0...coalesce(^.limit, 12)] {
     ${campaignFragment}
   }
 `;
@@ -423,7 +451,7 @@ export const opportunityListSectionFragment = /* groq */ `
   "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     opportunityType == ^.filterType
-  )] | order(featured desc, deadline asc) [0...20] {
+  )] | order(featured desc, deadline asc) [0...coalesce(^.limit, 12)] {
     ${opportunityFragment}
   }
 `;
@@ -449,7 +477,7 @@ export const programListSectionFragment = /* groq */ `
   "programs": *[_type == 'program' && select(
     ^.filterStatus == 'all' || !defined(^.filterStatus) => true,
     status == ^.filterStatus
-  )] | order(date desc) [0...20] {
+  )] | order(date desc) [0...coalesce(^.limit, 12)] {
     ${programFragment}
   }
 `;
@@ -489,7 +517,7 @@ export const recordListSectionFragment = /* groq */ `
   "records": *[_type == 'record' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     recordType == ^.filterType
-  )] | order(date desc) [0...20] {
+  )] | order(date desc) [0...coalesce(^.limit, 10)] {
     ${recordFragment}
   }
 `;
@@ -573,9 +601,11 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'postList' => {${postListSectionFragment}},
     _type == 'process' => {${processSectionFragment}},
     _type == 'programList' => {${programListSectionFragment}},
+    _type == 'peopleGrid' => {${peopleGridSectionFragment}},
     _type == 'quote' => {${quoteSectionFragment}},
     _type == 'recordList' => {${recordListSectionFragment}},
     _type == 'richText' => {${richTextSectionFragment}},
+    _type == 'sponsorGrid' => {${sponsorGridSectionFragment}},
     _type == 'stats' => {${statsSectionFragment}},
     _type == 'subscribe' => {${subscribeSectionFragment}},
     _type == 'teamGrid' => {${teamGridSectionFragment}}

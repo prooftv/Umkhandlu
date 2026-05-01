@@ -21,12 +21,14 @@ import LogoGrid from './LogoGrid';
 import MediaText from './MediaText';
 import NoticeList from './NoticeList';
 import OpportunityList from './OpportunityList';
+import PeopleGrid from './PeopleGrid';
 import PostList from './PostList';
 import Process from './Process';
 import ProgramList from './ProgramList';
 import Quote from './Quote';
 import RecordList from './RecordList';
 import RichText from './RichText';
+import SponsorGrid from './SponsorGrid';
 import Stats from './Stats';
 import Subscribe from './Subscribe';
 import TeamGrid from './TeamGrid';
@@ -50,11 +52,13 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   logoGrid: LogoGrid,
   noticeList: NoticeList,
   opportunityList: OpportunityList,
+  peopleGrid: PeopleGrid,
   process: Process,
   programList: ProgramList,
   quote: Quote,
   recordList: RecordList,
   richText: RichText,
+  sponsorGrid: SponsorGrid,
   stats: Stats,
   teamGrid: TeamGrid,
 } as const;
