@@ -257,6 +257,7 @@ export default async function ListingPage(props: Props) {
             lng={listing.geopoint.lng}
             name={listing.name}
             listingType={listing.listingType}
+            verifiedByInduna={listing.verifiedByInduna ?? undefined}
           />
         </div>
       )}

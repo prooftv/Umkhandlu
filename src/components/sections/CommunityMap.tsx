@@ -130,7 +130,7 @@ function MapLegend({ types }: { types: string[] }) {
             style={{ backgroundColor: typeColors[type] || '#6b7280' }}
           />
           <span className="text-xs text-gray-500">
-            {typeLabels[type] || type}
+            {typeIcons[type]} {typeLabels[type] || type}
           </span>
         </div>
       ))}

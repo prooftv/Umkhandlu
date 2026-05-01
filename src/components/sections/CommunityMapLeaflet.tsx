@@ -47,7 +47,8 @@ function buildPopup(
   const phone = listing.contactInfo
     ? `<br/><small>📞 ${listing.contactInfo}</small>`
     : '';
-  return `<div style="min-width:160px"><strong>${icon} ${listing.name}</strong>${area}${verify}${loc}${phone}<br/><a href="${href}" style="color:${color};font-weight:600;font-size:13px">View details →</a></div>`;
+  const gmaps = `https://www.google.com/maps?q=${listing.geopoint?.lat},${listing.geopoint?.lng}`;
+  return `<div style="min-width:180px"><strong>${icon} ${listing.name}</strong>${area}${verify}${loc}${phone}<br/><div style="display:flex;gap:8px;margin-top:6px"><a href="${href}" style="color:${color};font-weight:600;font-size:13px">➡ Details</a><a href="${gmaps}" target="_blank" rel="noopener" style="color:#6b7280;font-size:13px">🗺️ Directions</a></div></div>`;
 }
 
 function addMarkers(

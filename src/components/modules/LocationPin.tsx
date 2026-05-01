@@ -7,6 +7,7 @@ type Props = {
   lng: number;
   name: string;
   listingType?: string;
+  verifiedByInduna?: string;
 };
 
 const typeColors: Record<string, string> = {
@@ -19,6 +20,16 @@ const typeColors: Record<string, string> = {
   area: '#22c55e',
 };
 
+const typeIcons: Record<string, string> = {
+  school: '🏫',
+  clinic: '🏥',
+  business: '💼',
+  accommodation: '🏠',
+  church: '⛪',
+  facility: '🏛️',
+  area: '🏘️',
+};
+
 const LeafletPin = dynamic(() => import('./LocationPinLeaflet'), {
   ssr: false,
   loading: () => (
@@ -28,11 +39,25 @@ const LeafletPin = dynamic(() => import('./LocationPinLeaflet'), {
   ),
 });
 
-export default function LocationPin({ lat, lng, name, listingType }: Props) {
+export default function LocationPin({
+  lat,
+  lng,
+  name,
+  listingType,
+  verifiedByInduna,
+}: Props) {
   const color = typeColors[listingType ?? ''] || '#6b7280';
+  const icon = typeIcons[listingType ?? ''] || '📍';
   return (
     <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
-      <LeafletPin lat={lat} lng={lng} name={name} color={color} />
+      <LeafletPin
+        lat={lat}
+        lng={lng}
+        name={name}
+        color={color}
+        icon={icon}
+        verifiedByInduna={verifiedByInduna}
+      />
     </div>
   );
 }

@@ -8,6 +8,8 @@ type Props = {
   lng: number;
   name: string;
   color: string;
+  icon?: string;
+  verifiedByInduna?: string;
 };
 
 function loadLeafletCss() {
@@ -18,7 +20,31 @@ function loadLeafletCss() {
   document.head.appendChild(link);
 }
 
-export default function LocationPinLeaflet({ lat, lng, name, color }: Props) {
+function buildPopup(
+  name: string,
+  icon: string,
+  lat: number,
+  lng: number,
+  verifiedByInduna?: string
+) {
+  const verify =
+    verifiedByInduna === 'council'
+      ? '<br/><small style="color:#16a34a">✓✓ Council Verified</small>'
+      : verifiedByInduna === 'induna'
+        ? '<br/><small style="color:#16a34a">✓ Verified by Induna</small>'
+        : '';
+  const gmaps = `https://www.google.com/maps?q=${lat},${lng}`;
+  return `<div style="min-width:160px"><strong>${icon} ${name}</strong>${verify}<br/><a href="${gmaps}" target="_blank" rel="noopener" style="color:#6b7280;font-size:13px">🗺️ Get Directions</a></div>`;
+}
+
+export default function LocationPinLeaflet({
+  lat,
+  lng,
+  name,
+  color,
+  icon = '📍',
+  verifiedByInduna,
+}: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
 
@@ -57,7 +83,7 @@ export default function LocationPinLeaflet({ lat, lng, name, color }: Props) {
         fillOpacity: 0.85,
       })
         .addTo(map)
-        .bindPopup(`<strong>${name}</strong>`)
+        .bindPopup(buildPopup(name, icon, lat, lng, verifiedByInduna))
         .openPopup();
     });
 
@@ -68,7 +94,7 @@ export default function LocationPinLeaflet({ lat, lng, name, color }: Props) {
         mapInstanceRef.current = null;
       }
     };
-  }, [lat, lng, name, color]);
+  }, [lat, lng, name, color, icon, verifiedByInduna]);
 
   return <div ref={mapRef} className="h-[250px] w-full" />;
 }
