@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import LocationPin from '@/components/modules/LocationPin';
+import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
@@ -238,6 +240,13 @@ export default async function ListingPage(props: Props) {
 
       {/* Details grid */}
       <ListingDetails listing={listing} />
+
+      {/* Content */}
+      {listing.content && (
+        <div className="mb-8 prose max-w-none">
+          <CustomPortableText value={listing.content as PortableTextBlock[]} />
+        </div>
+      )}
 
       {/* Map */}
       {listing.geopoint?.lat && listing.geopoint?.lng && (

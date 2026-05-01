@@ -18,21 +18,31 @@ export async function searchAction(query: string): Promise<SearchResult[]> {
   const results = await client.fetch<SearchResult[]>(
     `*[
       !(_id in path("drafts.**")) &&
-      _type in ["page", "post", "person", "listing", "notice", "opportunity", "program"] &&
+      _type in [
+        "page", "post", "person", "listing", "notice",
+        "opportunity", "program", "record", "campaign",
+        "sponsor", "category"
+      ] &&
       (
         title match $q ||
         name match $q ||
         firstName match $q ||
         lastName match $q ||
         excerpt match $q ||
-        description match $q
+        description match $q ||
+        summary match $q ||
+        impactSummary match $q ||
+        organization match $q ||
+        role match $q ||
+        location match $q ||
+        source match $q
       )
     ] | order(_type asc) [0...20] {
       _id,
       _type,
       "title": coalesce(title, name, firstName + " " + lastName),
       "slug": slug.current,
-      "excerpt": coalesce(excerpt, description),
+      "excerpt": coalesce(excerpt, description, summary),
       "listingType": listingType
     }`,
     { q: `${q}*` }

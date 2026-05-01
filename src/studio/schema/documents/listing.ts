@@ -49,6 +49,14 @@ export default defineType({
       options: { aiAssist: { translateAction: true } },
     }),
     defineField({
+      name: 'content',
+      title: 'Full Details',
+      type: 'blockContent',
+      description:
+        'Detailed write-up about this listing. History, services, facilities, etc.',
+      hidden: ({ parent }) => parent?.listingType === 'area',
+    }),
+    defineField({
       name: 'location',
       title: 'Location / Address',
       type: 'string',

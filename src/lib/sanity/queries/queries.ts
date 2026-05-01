@@ -140,6 +140,7 @@ export const areaSlugs = defineQuery(`
 export const listingDetailQuery = defineQuery(`
   *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{
     ${listingFragment}
+    content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
     images[] {
       _key,
       alt,

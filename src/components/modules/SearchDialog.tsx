@@ -23,6 +23,10 @@ const TYPE_LABELS: Record<string, string> = {
   notice: 'Notice',
   opportunity: 'Opportunity',
   program: 'Program',
+  record: 'Record',
+  campaign: 'Campaign',
+  sponsor: 'Partner',
+  category: 'Category',
 };
 
 function getResultHref(result: SearchResult): string {
@@ -43,6 +47,12 @@ function getResultHref(result: SearchResult): string {
       return `/opportunities/${slug}`;
     case 'program':
       return `/programs/${slug}`;
+    case 'campaign':
+      return `/campaigns/${slug}`;
+    case 'record':
+    case 'sponsor':
+    case 'category':
+      return '/';
     default:
       return '/';
   }
