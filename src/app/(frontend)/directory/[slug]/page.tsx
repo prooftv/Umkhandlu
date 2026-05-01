@@ -128,7 +128,7 @@ function ListingGallery({ images }: { images: ListingImage[] }) {
               />
             )}
             {img.caption && (
-              <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+              <figcaption className="bg-black/60 px-3 py-2 text-white text-sm">
                 {img.caption}
               </figcaption>
             )}

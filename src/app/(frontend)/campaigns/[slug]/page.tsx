@@ -113,7 +113,7 @@ function CampaignGallery({ gallery }: { gallery: CampaignData['gallery'] }) {
               />
             )}
             {img.caption && (
-              <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+              <figcaption className="bg-black/60 px-3 py-2 text-white text-sm">
                 {img.caption}
               </figcaption>
             )}
@@ -190,6 +190,39 @@ function CampaignMedia({ campaign }: { campaign: CampaignData }) {
   );
 }
 
+function buildCampaignJsonLd(campaign: CampaignData) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: campaign.title,
+    ...(campaign.description && { description: campaign.description }),
+    ...(campaign.startDate && { startDate: campaign.startDate }),
+    ...(campaign.endDate && { endDate: campaign.endDate }),
+    ...(campaign.status && {
+      eventStatus:
+        campaign.status === 'active'
+          ? 'https://schema.org/EventScheduled'
+          : campaign.status === 'completed'
+            ? 'https://schema.org/EventPostponed'
+            : undefined,
+    }),
+    ...(campaign.sponsor && {
+      organizer: {
+        '@type': 'Organization',
+        name: campaign.sponsor.name,
+        ...(campaign.sponsor.website && { url: campaign.sponsor.website }),
+      },
+    }),
+    ...(campaign.relatedAreas &&
+      campaign.relatedAreas.length > 0 && {
+        location: campaign.relatedAreas.map((a) => ({
+          '@type': 'Place',
+          name: a.name,
+        })),
+      }),
+  };
+}
+
 function CampaignHeader({
   campaign,
   config,
@@ -261,8 +294,14 @@ export default async function CampaignPage(props: Props) {
     label: campaign.campaignType,
   };
 
+  const jsonLd = buildCampaignJsonLd(campaign);
+
   return (
     <div className="container mx-auto max-w-4xl py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Breadcrumbs
         items={[
           { label: 'Campaigns', href: '/' },
