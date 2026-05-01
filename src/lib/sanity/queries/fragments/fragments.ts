@@ -195,7 +195,7 @@ export const postListSectionFragment = /* groq */ `
     _type,
     heading,
     numberOfPosts,
-    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...coalesce(^.numberOfPosts, 10)] {
+    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {
       ${postFragment}
     }
 `;
@@ -248,7 +248,7 @@ export const peopleGridSectionFragment = /* groq */ `
   "people": *[_type == 'person' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     personType == ^.filterType
-  )] | order(firstName asc) [0...coalesce(^.limit, 12)] {
+  )] | order(firstName asc) [0...12] {
     ${personFragment}
   }
 `;
@@ -273,7 +273,7 @@ export const noticeListSectionFragment = /* groq */ `
   "notices": *[_type == 'notice' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     noticeType == ^.filterType
-  )] | order(pinned desc, date desc) [0...coalesce(^.numberOfNotices, 10)] {
+  )] | order(pinned desc, date desc) [0...10] {
     ${noticeFragment}
   }
 `;
@@ -319,7 +319,7 @@ export const listingGridSectionFragment = /* groq */ `
   "listings": *[_type == 'listing' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     listingType == ^.filterType
-  )] | order(featured desc, name asc) [0...coalesce(^.limit, 12)] {
+  )] | order(featured desc, name asc) [0...12] {
     ${listingFragment}
   }
 `;
@@ -351,7 +351,7 @@ export const sponsorGridSectionFragment = /* groq */ `
   "sponsors": *[_type == 'sponsor' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     sponsorType == ^.filterType
-  )] | order(name asc) [0...coalesce(^.limit, 12)] {
+  )] | order(name asc) [0...12] {
     ${sponsorFragment}
   }
 `;
@@ -379,15 +379,20 @@ export const campaignFragment = /* groq */ `
   campaignType,
   status,
   description,
+  targetAudience,
+  tags,
   startDate,
   endDate,
   image,
   link,
+  videoUrl,
+  "audioFileUrl": audioFile.asset->url,
   budget,
   beneficiaries,
   impactSummary,
   deliverables,
   "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },
+  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },
   "relatedProgram": relatedProgram->{ title, "slug": slug.current },
   "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {
@@ -408,7 +413,7 @@ export const campaignListSectionFragment = /* groq */ `
   ) && select(
     ^.filterStatus == 'all' || !defined(^.filterStatus) => true,
     status == ^.filterStatus
-  )] | order(startDate desc) [0...coalesce(^.limit, 12)] {
+  )] | order(startDate desc) [0...12] {
     ${campaignFragment}
   }
 `;
@@ -451,7 +456,7 @@ export const opportunityListSectionFragment = /* groq */ `
   "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     opportunityType == ^.filterType
-  )] | order(featured desc, deadline asc) [0...coalesce(^.limit, 12)] {
+  )] | order(featured desc, deadline asc) [0...12] {
     ${opportunityFragment}
   }
 `;
@@ -477,7 +482,7 @@ export const programListSectionFragment = /* groq */ `
   "programs": *[_type == 'program' && select(
     ^.filterStatus == 'all' || !defined(^.filterStatus) => true,
     status == ^.filterStatus
-  )] | order(date desc) [0...coalesce(^.limit, 12)] {
+  )] | order(date desc) [0...12] {
     ${programFragment}
   }
 `;
@@ -517,7 +522,7 @@ export const recordListSectionFragment = /* groq */ `
   "records": *[_type == 'record' && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     recordType == ^.filterType
-  )] | order(date desc) [0...coalesce(^.limit, 10)] {
+  )] | order(date desc) [0...10] {
     ${recordFragment}
   }
 `;

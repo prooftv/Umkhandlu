@@ -11,8 +11,10 @@ export default defineType({
     { name: 'details', title: 'Details', default: true },
     { name: 'media', title: 'Media & Assets' },
     { name: 'tracking', title: 'Tracking & Impact' },
+    { name: 'seo', title: 'SEO' },
   ],
   fields: [
+    // ─── Details ───────────────────────────────────────────
     defineField({
       name: 'title',
       title: 'Campaign Title',
@@ -69,23 +71,43 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'contactPerson',
+      title: 'Contact Person',
+      type: 'reference',
+      to: [{ type: 'person' }],
+      group: 'details',
+      description: 'Person managing this campaign.',
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 4,
       group: 'details',
       validation: (rule) => rule.max(300),
-      options: {
-        aiAssist: {
-          translateAction: true,
-        },
-      },
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'content',
       title: 'Full Content',
       type: 'blockContent',
       group: 'details',
+    }),
+    defineField({
+      name: 'targetAudience',
+      title: 'Target Audience',
+      type: 'string',
+      group: 'details',
+      description: 'e.g. Youth 18-35, Women, Farmers, Learners',
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      group: 'details',
+      description: 'Freeform tags for categorisation.',
+      options: { layout: 'tags' },
     }),
     defineField({
       name: 'startDate',
@@ -101,7 +123,38 @@ export default defineType({
       group: 'details',
     }),
 
-    // Media
+    // ─── Relationships ─────────────────────────────────────
+    defineField({
+      name: 'relatedAreas',
+      title: 'Target Areas',
+      type: 'array',
+      group: 'details',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'listing' }],
+          options: { filter: 'listingType == "area"' },
+        },
+      ],
+      description: 'Areas/villages this campaign targets.',
+    }),
+    defineField({
+      name: 'relatedProgram',
+      title: 'Related Program',
+      type: 'reference',
+      to: [{ type: 'program' }],
+      group: 'details',
+      description: 'Link to a program if this campaign supports one.',
+    }),
+    defineField({
+      name: 'link',
+      title: 'External Link',
+      type: 'url',
+      group: 'details',
+      description: 'Sponsor website, application form, or landing page.',
+    }),
+
+    // ─── Media & Assets ────────────────────────────────────
     defineField({
       name: 'image',
       title: 'Cover Image',
@@ -118,7 +171,7 @@ export default defineType({
       title: 'Banner Image',
       type: 'image',
       group: 'media',
-      description: 'For ad campaigns — the banner creative.',
+      description: 'For sponsorship campaigns — the banner creative.',
       options: { hotspot: true },
       fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
       hidden: ({ parent }) => parent?.campaignType !== 'ad',
@@ -144,41 +197,45 @@ export default defineType({
       ],
       hidden: ({ parent }) => parent?.campaignType === 'ad',
     }),
-
-    // Relationships
     defineField({
-      name: 'relatedAreas',
-      title: 'Target Areas',
+      name: 'videoUrl',
+      title: 'Video URL',
+      type: 'url',
+      group: 'media',
+      description:
+        'YouTube or Vimeo link. e.g. https://www.youtube.com/watch?v=...',
+    }),
+    defineField({
+      name: 'audioFile',
+      title: 'Audio File',
+      type: 'file',
+      group: 'media',
+      description: 'Audio recording, podcast, or voice note (MP3, WAV).',
+      options: { accept: 'audio/*' },
+    }),
+    defineField({
+      name: 'documents',
+      title: 'Documents & Reports',
       type: 'array',
-      group: 'details',
+      group: 'media',
+      description: 'PDFs, proposals, reports, or other documents.',
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'listing' }],
-          options: {
-            filter: 'listingType == "area"',
-          },
+          type: 'file',
+          options: { accept: '.pdf,.doc,.docx,.xls,.xlsx' },
+          fields: [
+            defineField({
+              name: 'title',
+              type: 'string',
+              title: 'Document Title',
+              validation: (rule) => rule.required(),
+            }),
+          ],
         },
       ],
-      description: 'Areas/villages this campaign targets.',
-    }),
-    defineField({
-      name: 'relatedProgram',
-      title: 'Related Program',
-      type: 'reference',
-      to: [{ type: 'program' }],
-      group: 'details',
-      description: 'Link to a program if this campaign supports one.',
-    }),
-    defineField({
-      name: 'link',
-      title: 'External Link',
-      type: 'url',
-      group: 'details',
-      description: 'Sponsor website, application form, or landing page.',
     }),
 
-    // Tracking & Impact
+    // ─── Tracking & Impact ─────────────────────────────────
     defineField({
       name: 'trackingNote',
       title: 'Tracking Guide',
@@ -216,11 +273,7 @@ export default defineType({
       group: 'tracking',
       description:
         'Fill when reporting. Summary of outcomes for CSR reports and sponsor feedback.',
-      options: {
-        aiAssist: {
-          translateAction: true,
-        },
-      },
+      options: { aiAssist: { translateAction: true } },
     }),
     defineField({
       name: 'deliverables',
@@ -230,6 +283,14 @@ export default defineType({
       of: [{ type: 'string' }],
       description:
         'Add as you complete them. e.g. Platform deployed, 5 listings created, Community map live',
+    }),
+
+    // ─── SEO ───────────────────────────────────────────────
+    defineField({
+      title: 'SEO & Metadata',
+      name: 'seo',
+      type: 'seoMetaFields',
+      group: 'seo',
     }),
   ],
   orderings: [

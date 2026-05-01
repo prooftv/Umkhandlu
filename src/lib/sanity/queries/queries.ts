@@ -13,6 +13,7 @@ import {
   postFragment,
   programFragment,
   recordFragment,
+  seoFragment,
 } from './fragments/fragments';
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
@@ -212,6 +213,14 @@ export const campaignDetailQuery = defineQuery(`
       alt,
       caption,
       asset->{ _id, url }
+    },
+    documents[] {
+      _key,
+      title,
+      "url": asset->url
+    },
+    seo {
+      ${seoFragment}
     }
   }
 `);

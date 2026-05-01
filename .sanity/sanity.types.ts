@@ -279,6 +279,14 @@ export type Stats = {
   }>;
 };
 
+export type SponsorGrid = {
+  _type: "sponsorGrid";
+  heading: string;
+  description?: string;
+  filterType?: "all" | "ngo" | "business" | "government" | "community";
+  limit?: number;
+};
+
 export type RichText = {
   _type: "richText";
   heading?: string;
@@ -313,6 +321,21 @@ export type Quote = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+};
+
+export type PeopleGrid = {
+  _type: "peopleGrid";
+  heading: string;
+  description?: string;
+  filterType?:
+    | "all"
+    | "inkosi"
+    | "induna"
+    | "council"
+    | "youth"
+    | "community"
+    | "author";
+  limit?: number;
 };
 
 export type ProgramList = {
@@ -592,28 +615,6 @@ export type Record = {
   relatedArea?: ListingReference;
 };
 
-export type SanityFileAsset = {
-  _id: string;
-  _type: "sanity.fileAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  source?: SanityAssetSourceData;
-};
-
 export type Opportunity = {
   _id: string;
   _type: "opportunity";
@@ -680,10 +681,20 @@ export type Campaign = {
   campaignType: "ad" | "activation" | "csr";
   status?: "draft" | "approved" | "active" | "completed" | "reported";
   sponsor: SponsorReference;
+  contactPerson?: PersonReference;
   description?: string;
   content?: BlockContent;
+  targetAudience?: string;
+  tags?: Array<string>;
   startDate: string;
   endDate?: string;
+  relatedAreas?: Array<
+    {
+      _key: string;
+    } & ListingReference
+  >;
+  relatedProgram?: ProgramReference;
+  link?: string;
   image?: {
     asset?: SanityImageAssetReference;
     hotspot?: SanityImageHotspot;
@@ -707,18 +718,45 @@ export type Campaign = {
     _type: "image";
     _key: string;
   }>;
-  relatedAreas?: Array<
-    {
-      _key: string;
-    } & ListingReference
-  >;
-  relatedProgram?: ProgramReference;
-  link?: string;
+  videoUrl?: string;
+  audioFile?: {
+    asset?: SanityFileAssetReference;
+    _type: "file";
+  };
+  documents?: Array<{
+    asset?: SanityFileAssetReference;
+    title: string;
+    _type: "file";
+    _key: string;
+  }>;
   trackingNote?: string;
   budget?: number;
   beneficiaries?: number;
   impactSummary?: string;
   deliverables?: Array<string>;
+  seo?: SeoMetaFields;
+};
+
+export type SanityFileAsset = {
+  _id: string;
+  _type: "sanity.fileAsset";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  originalFilename?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  altText?: string;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
+  uploadId?: string;
+  path?: string;
+  url?: string;
+  source?: SanityAssetSourceData;
 };
 
 export type Program = {
@@ -783,6 +821,7 @@ export type Listing = {
     | "facility"
     | "area";
   description?: string;
+  content?: BlockContent;
   location?: string;
   geopoint?: Geopoint;
   contactInfo?: string;
@@ -966,6 +1005,9 @@ export type Page = {
       } & ProgramList)
     | ({
         _key: string;
+      } & PeopleGrid)
+    | ({
+        _key: string;
       } & Quote)
     | ({
         _key: string;
@@ -973,6 +1015,9 @@ export type Page = {
     | ({
         _key: string;
       } & RichText)
+    | ({
+        _key: string;
+      } & SponsorGrid)
     | ({
         _key: string;
       } & Stats)
@@ -1053,6 +1098,9 @@ export type BlogPage = {
       } & ProgramList)
     | ({
         _key: string;
+      } & PeopleGrid)
+    | ({
+        _key: string;
       } & Quote)
     | ({
         _key: string;
@@ -1060,6 +1108,9 @@ export type BlogPage = {
     | ({
         _key: string;
       } & RichText)
+    | ({
+        _key: string;
+      } & SponsorGrid)
     | ({
         _key: string;
       } & Stats)
@@ -1140,6 +1191,9 @@ export type HomePage = {
       } & ProgramList)
     | ({
         _key: string;
+      } & PeopleGrid)
+    | ({
+        _key: string;
       } & Quote)
     | ({
         _key: string;
@@ -1147,6 +1201,9 @@ export type HomePage = {
     | ({
         _key: string;
       } & RichText)
+    | ({
+        _key: string;
+      } & SponsorGrid)
     | ({
         _key: string;
       } & Stats)
@@ -1383,9 +1440,11 @@ export type AllSanitySchemaTypes =
   | TeamGrid
   | Subscribe
   | Stats
+  | SponsorGrid
   | RichText
   | RecordList
   | Quote
+  | PeopleGrid
   | ProgramList
   | Process
   | OpportunityList
@@ -1410,12 +1469,12 @@ export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | ListingReference
   | Record
-  | SanityFileAsset
   | Opportunity
   | CampaignReference
   | Notice
   | ProgramReference
   | Campaign
+  | SanityFileAsset
   | Program
   | Sponsor
   | Listing
@@ -1535,7 +1594,7 @@ export type SettingsQueryResult = {
 
 // Source: src/lib/sanity/queries/queries.ts
 // Variable: homePageQuery
-// Query: *[_type == "homePage"][0]{  _id,  _type,  ...,      pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  startDate,  endDate,  image,  link,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...20] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  }},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...20] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },}
+// Query: *[_type == "homePage"][0]{  _id,  _type,  ...,      pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  targetAudience,  tags,  startDate,  endDate,  image,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  }},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'peopleGrid' => {  _type,  heading,  description,  filterType,  limit,  "people": *[_type == 'person' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    personType == ^.filterType  )] | order(firstName asc) [0...12] {      _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'sponsorGrid' => {  _type,  heading,  description,  filterType,  limit,  "sponsors": *[_type == 'sponsor' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    sponsorType == ^.filterType  )] | order(name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,  }},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },}
 export type HomePageQueryResult = {
   _id: string;
   _type: "homePage";
@@ -1587,6 +1646,8 @@ export type HomePageQueryResult = {
             | "reported"
             | null;
           description: string | null;
+          targetAudience: string | null;
+          tags: Array<string> | null;
           startDate: string;
           endDate: string | null;
           image: {
@@ -1597,6 +1658,8 @@ export type HomePageQueryResult = {
             _type: "image";
           } | null;
           link: string | null;
+          videoUrl: string | null;
+          audioFileUrl: string | null;
           budget: number | null;
           beneficiaries: number | null;
           impactSummary: string | null;
@@ -1619,6 +1682,12 @@ export type HomePageQueryResult = {
               | "ngo"
               | null;
           };
+          contactPerson: {
+            firstName: string;
+            lastName: string;
+            role: string | null;
+            slug: string;
+          } | null;
           relatedAreas: Array<{
             name: string;
             slug: string;
@@ -2245,6 +2314,59 @@ export type HomePageQueryResult = {
       }
     | {
         _key: string;
+        _type: "peopleGrid";
+        heading: string;
+        description: string | null;
+        filterType:
+          | "all"
+          | "author"
+          | "community"
+          | "council"
+          | "induna"
+          | "inkosi"
+          | "youth"
+          | null;
+        limit: number | null;
+        people: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string;
+          lastName: string;
+          image: {
+            asset?: SanityImageAssetReference;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string;
+        }>;
+      }
+    | {
+        _key: string;
         _type: "postList";
         heading: string;
         numberOfPosts: number;
@@ -2691,6 +2813,41 @@ export type HomePageQueryResult = {
               markDefs: null;
             }
         >;
+      }
+    | {
+        _key: string;
+        _type: "sponsorGrid";
+        heading: string;
+        description: string | null;
+        filterType:
+          | "all"
+          | "business"
+          | "community"
+          | "government"
+          | "ngo"
+          | null;
+        limit: number | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string;
+          slug: string;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: SanityImageAssetReference;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }>;
       }
     | {
         _key: string;
@@ -2905,7 +3062,7 @@ export type HomePageQueryResult = {
 
 // Source: src/lib/sanity/queries/queries.ts
 // Variable: blogPageQuery
-// Query: *[_type == "blogPage"][0]{  _id,  _type,  ...,      pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  startDate,  endDate,  image,  link,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...20] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  }},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...20] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },}
+// Query: *[_type == "blogPage"][0]{  _id,  _type,  ...,      pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  targetAudience,  tags,  startDate,  endDate,  image,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  }},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'peopleGrid' => {  _type,  heading,  description,  filterType,  limit,  "people": *[_type == 'person' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    personType == ^.filterType  )] | order(firstName asc) [0...12] {      _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'sponsorGrid' => {  _type,  heading,  description,  filterType,  limit,  "sponsors": *[_type == 'sponsor' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    sponsorType == ^.filterType  )] | order(name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,  }},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },}
 export type BlogPageQueryResult = {
   _id: string;
   _type: "blogPage";
@@ -2957,6 +3114,8 @@ export type BlogPageQueryResult = {
             | "reported"
             | null;
           description: string | null;
+          targetAudience: string | null;
+          tags: Array<string> | null;
           startDate: string;
           endDate: string | null;
           image: {
@@ -2967,6 +3126,8 @@ export type BlogPageQueryResult = {
             _type: "image";
           } | null;
           link: string | null;
+          videoUrl: string | null;
+          audioFileUrl: string | null;
           budget: number | null;
           beneficiaries: number | null;
           impactSummary: string | null;
@@ -2989,6 +3150,12 @@ export type BlogPageQueryResult = {
               | "ngo"
               | null;
           };
+          contactPerson: {
+            firstName: string;
+            lastName: string;
+            role: string | null;
+            slug: string;
+          } | null;
           relatedAreas: Array<{
             name: string;
             slug: string;
@@ -3615,6 +3782,59 @@ export type BlogPageQueryResult = {
       }
     | {
         _key: string;
+        _type: "peopleGrid";
+        heading: string;
+        description: string | null;
+        filterType:
+          | "all"
+          | "author"
+          | "community"
+          | "council"
+          | "induna"
+          | "inkosi"
+          | "youth"
+          | null;
+        limit: number | null;
+        people: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string;
+          lastName: string;
+          image: {
+            asset?: SanityImageAssetReference;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string;
+        }>;
+      }
+    | {
+        _key: string;
         _type: "postList";
         heading: string;
         numberOfPosts: number;
@@ -4061,6 +4281,41 @@ export type BlogPageQueryResult = {
               markDefs: null;
             }
         >;
+      }
+    | {
+        _key: string;
+        _type: "sponsorGrid";
+        heading: string;
+        description: string | null;
+        filterType:
+          | "all"
+          | "business"
+          | "community"
+          | "government"
+          | "ngo"
+          | null;
+        limit: number | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string;
+          slug: string;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: SanityImageAssetReference;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }>;
       }
     | {
         _key: string;
@@ -4275,7 +4530,7 @@ export type BlogPageQueryResult = {
 
 // Source: src/lib/sanity/queries/queries.ts
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    name,    "slug": slug.current,        pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  startDate,  endDate,  image,  link,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...20] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  }},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...20] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...20] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    name,    "slug": slug.current,        pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  targetAudience,  tags,  startDate,  endDate,  image,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  }},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'peopleGrid' => {  _type,  heading,  description,  filterType,  limit,  "people": *[_type == 'person' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    personType == ^.filterType  )] | order(firstName asc) [0...12] {      _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'sponsorGrid' => {  _type,  heading,  description,  filterType,  limit,  "sponsors": *[_type == 'sponsor' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    sponsorType == ^.filterType  )] | order(name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,  }},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },  }
 export type GetPageQueryResult = {
   _id: string;
   _type: "page";
@@ -4325,6 +4580,8 @@ export type GetPageQueryResult = {
             | "reported"
             | null;
           description: string | null;
+          targetAudience: string | null;
+          tags: Array<string> | null;
           startDate: string;
           endDate: string | null;
           image: {
@@ -4335,6 +4592,8 @@ export type GetPageQueryResult = {
             _type: "image";
           } | null;
           link: string | null;
+          videoUrl: string | null;
+          audioFileUrl: string | null;
           budget: number | null;
           beneficiaries: number | null;
           impactSummary: string | null;
@@ -4357,6 +4616,12 @@ export type GetPageQueryResult = {
               | "ngo"
               | null;
           };
+          contactPerson: {
+            firstName: string;
+            lastName: string;
+            role: string | null;
+            slug: string;
+          } | null;
           relatedAreas: Array<{
             name: string;
             slug: string;
@@ -4983,6 +5248,59 @@ export type GetPageQueryResult = {
       }
     | {
         _key: string;
+        _type: "peopleGrid";
+        heading: string;
+        description: string | null;
+        filterType:
+          | "all"
+          | "author"
+          | "community"
+          | "council"
+          | "induna"
+          | "inkosi"
+          | "youth"
+          | null;
+        limit: number | null;
+        people: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string;
+          lastName: string;
+          image: {
+            asset?: SanityImageAssetReference;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string;
+        }>;
+      }
+    | {
+        _key: string;
         _type: "postList";
         heading: string;
         numberOfPosts: number;
@@ -5429,6 +5747,41 @@ export type GetPageQueryResult = {
               markDefs: null;
             }
         >;
+      }
+    | {
+        _key: string;
+        _type: "sponsorGrid";
+        heading: string;
+        description: string | null;
+        filterType:
+          | "all"
+          | "business"
+          | "community"
+          | "government"
+          | "ngo"
+          | null;
+        limit: number | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string;
+          slug: string;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: SanityImageAssetReference;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }>;
       }
     | {
         _key: string;
@@ -6007,7 +6360,7 @@ export type PersonSlugsResult = Array<string>;
 
 // Source: src/lib/sanity/queries/queries.ts
 // Variable: areaDetailQuery
-// Query: *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{    _id,    name,    "slug": slug.current,    description,    location,    geopoint,    image,    "induna": induna->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},    "relatedListings": relatedListings[]->{  _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,},    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },    },    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,    },    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,    },    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,    },    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  startDate,  endDate,  image,  link,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    }  }
+// Query: *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{    _id,    name,    "slug": slug.current,    description,    location,    geopoint,    image,    "induna": induna->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},    "relatedListings": relatedListings[]->{  _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,},    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },    },    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,    },    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,    },    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  "fileUrl": file.asset->url,  externalUrl,  source,    },    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  targetAudience,  tags,  startDate,  endDate,  image,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    }  }
 export type AreaDetailQueryResult = {
   _id: string;
   name: string;
@@ -6173,6 +6526,8 @@ export type AreaDetailQueryResult = {
     campaignType: "activation" | "ad" | "csr";
     status: "active" | "approved" | "completed" | "draft" | "reported" | null;
     description: string | null;
+    targetAudience: string | null;
+    tags: Array<string> | null;
     startDate: string;
     endDate: string | null;
     image: {
@@ -6183,6 +6538,8 @@ export type AreaDetailQueryResult = {
       _type: "image";
     } | null;
     link: string | null;
+    videoUrl: string | null;
+    audioFileUrl: string | null;
     budget: number | null;
     beneficiaries: number | null;
     impactSummary: string | null;
@@ -6205,6 +6562,12 @@ export type AreaDetailQueryResult = {
         | "ngo"
         | null;
     };
+    contactPerson: {
+      firstName: string;
+      lastName: string;
+      role: string | null;
+      slug: string;
+    } | null;
     relatedAreas: Array<{
       name: string;
       slug: string;
@@ -6247,7 +6610,7 @@ export type AreaSlugsResult = Array<string>;
 
 // Source: src/lib/sanity/queries/queries.ts
 // Variable: listingDetailQuery
-// Query: *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,    images[] {      _key,      alt,      caption,      asset->{ _id, url }    }  }
+// Query: *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "areaName": relatedArea->name,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    images[] {      _key,      alt,      caption,      asset->{ _id, url }    }  }
 export type ListingDetailQueryResult = {
   _id: string;
   _type: "listing";
@@ -6279,6 +6642,68 @@ export type ListingDetailQueryResult = {
     _type: "image";
   } | null;
   areaName: string | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<
+          | {
+              customLink?: Link;
+              _type: "customLink";
+              _key: string;
+            }
+          | {
+              customLink?: Link;
+              _type: "link";
+              _key: string;
+              type: "external" | "internal";
+              openInNewTab: boolean | null;
+              external: string | null;
+              href: string | null;
+              internal:
+                | {
+                    _type: "category";
+                    _id: string;
+                    slug: string;
+                  }
+                | {
+                    _type: "page";
+                    _id: string;
+                    slug: string;
+                  }
+                | {
+                    _type: "person";
+                    _id: string;
+                    slug: string;
+                  }
+                | {
+                    _type: "post";
+                    _id: string;
+                    slug: string;
+                  }
+                | null;
+            }
+        > | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
   images: Array<{
     _key: string;
     alt: string | null;
@@ -6502,7 +6927,7 @@ export type OpportunitySlugsResult = Array<string>;
 
 // Source: src/lib/sanity/queries/queries.ts
 // Variable: campaignDetailQuery
-// Query: *[_type == "campaign" && slug.current == $slug][0]{      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  startDate,  endDate,  image,  link,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    }  }
+// Query: *[_type == "campaign" && slug.current == $slug][0]{      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  description,  targetAudience,  tags,  startDate,  endDate,  image,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  budget,  beneficiaries,  impactSummary,  deliverables,  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    },    documents[] {      _key,      title,      "url": asset->url    },    seo {        _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }    }  }
 export type CampaignDetailQueryResult = {
   _id: string;
   _type: "campaign";
@@ -6511,6 +6936,8 @@ export type CampaignDetailQueryResult = {
   campaignType: "activation" | "ad" | "csr";
   status: "active" | "approved" | "completed" | "draft" | "reported" | null;
   description: string | null;
+  targetAudience: string | null;
+  tags: Array<string> | null;
   startDate: string;
   endDate: string | null;
   image: {
@@ -6521,6 +6948,8 @@ export type CampaignDetailQueryResult = {
     _type: "image";
   } | null;
   link: string | null;
+  videoUrl: string | null;
+  audioFileUrl: string | null;
   budget: number | null;
   beneficiaries: number | null;
   impactSummary: string | null;
@@ -6543,6 +6972,12 @@ export type CampaignDetailQueryResult = {
       | "ngo"
       | null;
   };
+  contactPerson: {
+    firstName: string;
+    lastName: string;
+    role: string | null;
+    slug: string;
+  } | null;
   relatedAreas: Array<{
     name: string;
     slug: string;
@@ -6646,6 +7081,159 @@ export type CampaignDetailQueryResult = {
       url: string | null;
     } | null;
   }> | null;
+  documents: Array<{
+    _key: string;
+    title: string;
+    url: string | null;
+  }> | null;
+  seo: {
+    _type: "seoMetaFields";
+    metaTitle: string | null;
+    noIndex: boolean | null;
+    seoKeywords: Array<string> | null;
+    metaDescription: string | null;
+    metaImage: {
+      _type: "image";
+      crop: {
+        _type: "sanity.imageCrop";
+        right: number | null;
+        top: number | null;
+        left: number | null;
+        bottom: number | null;
+      } | null;
+      hotspot: {
+        _type: "sanity.imageHotspot";
+        x: number | null;
+        y: number | null;
+        height: number | null;
+        width: number | null;
+      } | null;
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata?: SanityImageMetadata;
+        source?: SanityAssetSourceData;
+      } | null;
+    } | null;
+    additionalMetaTags: Array<{
+      _key: string;
+      _type: "metaTag";
+      metaAttributes: Array<{
+        _type: "metaAttribute";
+        attributeValueString: string | null;
+        attributeType: "image" | "string" | null;
+        attributeKey: string | null;
+        attributeValueImage: {
+          _type: "image";
+          crop: {
+            _type: "sanity.imageCrop";
+            right: number | null;
+            top: number | null;
+            left: number | null;
+            bottom: number | null;
+          } | null;
+          hotspot: {
+            _type: "sanity.imageHotspot";
+            x: number | null;
+            y: number | null;
+            height: number | null;
+            width: number | null;
+          } | null;
+          asset: {
+            _id: string;
+            _type: "sanity.imageAsset";
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash?: string;
+            extension?: string;
+            mimeType?: string;
+            size?: number;
+            assetId?: string;
+            uploadId?: string;
+            path?: string;
+            url?: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+        } | null;
+      }> | null;
+    }> | null;
+    openGraph: {
+      _type: "openGraph";
+      siteName: string | null;
+      url: string | null;
+      description: string | null;
+      title: string | null;
+      image: {
+        _type: "image";
+        crop: {
+          _type: "sanity.imageCrop";
+          right: number | null;
+          top: number | null;
+          left: number | null;
+          bottom: number | null;
+        } | null;
+        hotspot: {
+          _type: "sanity.imageHotspot";
+          x: number | null;
+          y: number | null;
+          height: number | null;
+          width: number | null;
+        } | null;
+        asset: {
+          _id: string;
+          _type: "sanity.imageAsset";
+          _createdAt: string;
+          _updatedAt: string;
+          _rev: string;
+          originalFilename?: string;
+          label?: string;
+          title?: string;
+          description?: string;
+          altText?: string;
+          sha1hash?: string;
+          extension?: string;
+          mimeType?: string;
+          size?: number;
+          assetId?: string;
+          uploadId?: string;
+          path?: string;
+          url?: string;
+          metadata?: SanityImageMetadata;
+          source?: SanityAssetSourceData;
+        } | null;
+      } | null;
+    } | null;
+    twitter: {
+      _type: "twitter";
+      site: string | null;
+      creator: string | null;
+      cardType: string | null;
+      handle: string | null;
+    } | null;
+  } | null;
 } | null;
 
 // Source: src/lib/sanity/queries/queries.ts
@@ -6726,9 +7314,9 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "settings"][0]{\n  title,\n  description,\n  primaryColor,\n  secondaryColor,\n  contactEmail,\n  contactPhone,\n  address,\n  socialLinks,\n  gtmId,\n  webhookUrl,\n  \n  menu[]{\n    \n  _type,\n  _key,\n  text,\n  type,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n    childMenu[]{\n      \n  _type,\n  _key,\n  text,\n  type,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n    }\n  }\n\n}': SettingsQueryResult;
-    '*[_type == "homePage"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  startDate,\n  endDate,\n  image,\n  link,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...20] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n  }\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...20] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}': HomePageQueryResult;
-    '*[_type == "blogPage"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  startDate,\n  endDate,\n  image,\n  link,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...20] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n  }\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...20] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}': BlogPageQueryResult;
-    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    "slug": slug.current,\n    \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  startDate,\n  endDate,\n  image,\n  link,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...20] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n  }\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...20] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...20] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n  }\n': GetPageQueryResult;
+    '*[_type == "homePage"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n  }\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'peopleGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "people": *[_type == \'person\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'sponsorGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "sponsors": *[_type == \'sponsor\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}': HomePageQueryResult;
+    '*[_type == "blogPage"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n  }\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'peopleGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "people": *[_type == \'person\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'sponsorGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "sponsors": *[_type == \'sponsor\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}': BlogPageQueryResult;
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    "slug": slug.current,\n    \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n  }\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'peopleGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "people": *[_type == \'person\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'sponsorGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "sponsors": *[_type == \'sponsor\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n  }\n': GetPageQueryResult;
     '\n  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program", "campaign"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{\n    "href": select(\n      _type == "page" => "/" + slug.current,\n      _type == "post" => "/blog/" + slug.current,\n      _type == "category" => "/category/" + slug.current,\n      _type == "person" => "/people/" + slug.current,\n      _type == "listing" && listingType == "area" => "/areas/" + slug.current,\n      _type == "listing" && listingType != "area" => "/directory/" + slug.current,\n      _type == "notice" => "/notices/" + slug.current,\n      _type == "opportunity" => "/opportunities/" + slug.current,\n      _type == "program" => "/programs/" + slug.current,\n      _type == "campaign" => "/campaigns/" + slug.current,\n      _type == "blogPage" => "/blog",\n      _type == "homePage" => "/",\n      slug.current\n    ),\n    _updatedAt\n  }\n': GetSitemapQueryResult;
     '\n  *[_type == "post" && slug.current == $slug] [0] {\n    \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n  }\n': PostQueryResult;
     '\n  *[_type == "category" && slug.current == $slug] [0] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n\n  }\n': CategoryQueryResult;
@@ -6736,9 +7324,9 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && defined(slug.current)][0..$limit].slug.current\n': PostPagesSlugsResult;
     '\n  *[_type == "category" && defined(slug.current)][0..$limit].slug.current\n': CategorySlugsResult;
     '\n  *[_type == "person" && defined(slug.current)][0..$limit].slug.current\n': PersonSlugsResult;
-    '\n  *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{\n    _id,\n    name,\n    "slug": slug.current,\n    description,\n    location,\n    geopoint,\n    image,\n    "induna": induna->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n    "relatedListings": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n},\n    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n    },\n    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    },\n    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n    },\n    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n    },\n    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  startDate,\n  endDate,\n  image,\n  link,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    }\n  }\n': AreaDetailQueryResult;
+    '\n  *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{\n    _id,\n    name,\n    "slug": slug.current,\n    description,\n    location,\n    geopoint,\n    image,\n    "induna": induna->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n    "relatedListings": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n},\n    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n    },\n    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    },\n    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n\n    },\n    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  "fileUrl": file.asset->url,\n  externalUrl,\n  source,\n\n    },\n    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    }\n  }\n': AreaDetailQueryResult;
     '\n  *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current\n': AreaSlugsResult;
-    '\n  *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n    images[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    }\n  }\n': ListingDetailQueryResult;
+    '\n  *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "areaName": relatedArea->name,\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    images[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    }\n  }\n': ListingDetailQueryResult;
     '\n  *[_type == "listing" && listingType != "area" && defined(slug.current)][0..$limit].slug.current\n': ListingSlugsResult;
     '\n  *[_type == "program" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    "relatedArea": relatedArea->{ name, "slug": slug.current }\n  }\n': ProgramDetailQueryResult;
     '\n  *[_type == "program" && defined(slug.current)][0..$limit].slug.current\n': ProgramSlugsResult;
@@ -6746,7 +7334,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "notice" && defined(slug.current)][0..$limit].slug.current\n': NoticeSlugsResult;
     '\n  *[_type == "opportunity" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    opportunityType,\n    description,\n    organization,\n    deadline,\n    link,\n    featured,\n    "relatedArea": relatedArea->{ name, "slug": slug.current }\n  }\n': OpportunityDetailQueryResult;
     '\n  *[_type == "opportunity" && defined(slug.current)][0..$limit].slug.current\n': OpportunitySlugsResult;
-    '\n  *[_type == "campaign" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  startDate,\n  endDate,\n  image,\n  link,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    }\n  }\n': CampaignDetailQueryResult;
+    '\n  *[_type == "campaign" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  budget,\n  beneficiaries,\n  impactSummary,\n  deliverables,\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    documents[] {\n      _key,\n      title,\n      "url": asset->url\n    },\n    seo {\n      \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n    }\n  }\n': CampaignDetailQueryResult;
     '\n  *[_type == "campaign" && defined(slug.current)][0..$limit].slug.current\n': CampaignSlugsResult;
     '\n  {\n    "allResults": *[\n      _type == "post"\n      &&\n      (\n        !defined( $filters.categorySlug ) || references(*[_type == "category" && slug.current == $filters.categorySlug]._id)\n      )\n      &&\n      (\n        !defined( $filters.personSlug ) || references(*[_type == "person" && slug.current == $filters.personSlug]._id)\n      )\n      //\n      // Add more filter here if needed\n      //\n      // The filter value should be passed as a property of the $filter parameter\n      //\n      // (\n      //   !defined( $filters.anotherFilter ) || fieldname == $filters.anotherFilter)\n      // )\n    ] | order(_createdAt desc, _id desc)\n  }\n  {\n    "total": count(allResults),\n    "results": allResults[$from..$to] {\n      \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n    }\n  }\n': PostsArchiveQueryResult;
   }

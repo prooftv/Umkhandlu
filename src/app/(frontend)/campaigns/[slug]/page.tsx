@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
+import { formatMetaData } from '@/lib/sanity/client/seo';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import {
   campaignDetailQuery,
@@ -74,6 +75,8 @@ function CampaignStats({ campaign }: { campaign: CampaignData }) {
       label: 'Beneficiaries',
       value: campaign.beneficiaries.toLocaleString(),
     });
+  if (campaign.targetAudience)
+    items.push({ label: 'Audience', value: campaign.targetAudience });
 
   if (items.length === 0) return null;
 
@@ -121,6 +124,101 @@ function CampaignGallery({ gallery }: { gallery: CampaignData['gallery'] }) {
   );
 }
 
+function CampaignMedia({ campaign }: { campaign: CampaignData }) {
+  const hasVideo = campaign.videoUrl;
+  const hasAudio = campaign.audioFileUrl;
+  const hasDocs = campaign.documents && campaign.documents.length > 0;
+  if (!hasVideo && !hasAudio && !hasDocs) return null;
+
+  return (
+    <>
+      {hasVideo && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">Video</h2>
+          <div className="rounded-xl overflow-hidden aspect-video">
+            <iframe
+              src={campaign.videoUrl
+                ?.replace('watch?v=', 'embed/')
+                .replace('youtu.be/', 'www.youtube.com/embed/')}
+              width="100%"
+              height="100%"
+              allowFullScreen
+              loading="lazy"
+              title={campaign.title || 'Campaign video'}
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+      )}
+
+      {hasAudio && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">Audio</h2>
+          <audio
+            controls
+            preload="metadata"
+            className="w-full rounded-lg"
+            src={campaign.audioFileUrl ?? undefined}
+          >
+            <track kind="captions" />
+          </audio>
+        </div>
+      )}
+
+      {hasDocs && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">Documents</h2>
+          <div className="space-y-2">
+            {campaign.documents?.map((doc) => (
+              <a
+                key={doc._key}
+                href={doc.url ?? '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <span className="text-lg">📄</span>
+                <span className="text-sm font-medium">
+                  {doc.title || 'Document'}
+                </span>
+                <span className="text-xs text-primary ml-auto">Download →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function CampaignHeader({
+  campaign,
+  config,
+}: {
+  campaign: CampaignData;
+  config: { icon: string; label: string };
+}) {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <Badge>
+          {config.icon} {config.label}
+        </Badge>
+        <Badge variant="secondary">{campaign.status}</Badge>
+        {campaign.tags?.map((tag) => (
+          <Badge key={tag} variant="outline">
+            {tag}
+          </Badge>
+        ))}
+      </div>
+      <h1 className="text-3xl md:text-5xl font-bold mb-4">{campaign.title}</h1>
+      {campaign.description && (
+        <p className="text-xl text-gray-600">{campaign.description}</p>
+      )}
+    </div>
+  );
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const { data } = await sanityFetch({
@@ -128,6 +226,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     params: { slug },
   });
   if (!data) return {};
+
+  if (data.seo) {
+    return {
+      ...formatMetaData(data.seo, data.title),
+      alternates: { canonical: `/campaigns/${slug}` },
+    };
+  }
+
   return {
     title: data.title,
     description: data.description || undefined,
@@ -165,22 +271,26 @@ export default async function CampaignPage(props: Props) {
         ]}
       />
 
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          <Badge>
-            {config.icon} {config.label}
-          </Badge>
-          <Badge variant="secondary">{campaign.status}</Badge>
-        </div>
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">
-          {campaign.title}
-        </h1>
-        {campaign.description && (
-          <p className="text-xl text-gray-600">{campaign.description}</p>
-        )}
-      </div>
+      <CampaignHeader campaign={campaign} config={config} />
 
       <CampaignSponsor sponsor={campaign.sponsor} />
+
+      {campaign.contactPerson && (
+        <div className="mb-8">
+          <Link
+            href={`/people/${campaign.contactPerson.slug}`}
+            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+          >
+            👤 Contact: {campaign.contactPerson.firstName}{' '}
+            {campaign.contactPerson.lastName}
+            {campaign.contactPerson.role && (
+              <span className="text-gray-400">
+                — {campaign.contactPerson.role}
+              </span>
+            )}
+          </Link>
+        </div>
+      )}
 
       {campaign.image?.asset?._ref && (
         <div className="mb-8 rounded-2xl overflow-hidden">
@@ -262,6 +372,7 @@ export default async function CampaignPage(props: Props) {
       )}
 
       <CampaignGallery gallery={campaign.gallery} />
+      <CampaignMedia campaign={campaign} />
 
       {campaign.relatedNotices && campaign.relatedNotices.length > 0 && (
         <div className="mb-8">
