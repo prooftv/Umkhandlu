@@ -15,6 +15,7 @@ type Listing = {
   featured?: boolean;
   verifiedByInduna?: string;
   areaName?: string;
+  imageUrl?: string;
 };
 
 type Props = {
@@ -36,8 +37,9 @@ function injectMapStyles() {
     .map-marker-featured{animation:pulse 2s infinite}
     @keyframes pulse{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.3)}50%{box-shadow:0 0 0 8px rgba(0,0,0,.08)}}
     .map-popup .leaflet-popup-content-wrapper{border-radius:12px;padding:0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-    .map-popup .leaflet-popup-content{margin:0;min-width:200px}
+    .map-popup .leaflet-popup-content{margin:0;min-width:220px}
     .map-popup .leaflet-popup-tip{display:none}
+    .popup-img{width:100%;height:120px;object-fit:cover;display:block}
     .popup-inner{padding:12px 14px}
     .popup-name{font-weight:700;font-size:14px;margin-bottom:2px}
     .popup-meta{font-size:12px;color:#666;line-height:1.6}
@@ -78,6 +80,9 @@ function buildPopup(
   color: string,
   href: string
 ) {
+  const img = listing.imageUrl
+    ? `<img src="${listing.imageUrl}?w=400&h=240&fit=crop" alt="${listing.name}" class="popup-img" loading="lazy" />`
+    : '';
   const area = listing.areaName
     ? `<div class="popup-meta">${listing.areaName}</div>`
     : '';
@@ -94,7 +99,7 @@ function buildPopup(
     ? `<div class="popup-meta">📞 ${listing.contactInfo}</div>`
     : '';
   const gmaps = `https://www.google.com/maps?q=${listing.geopoint?.lat},${listing.geopoint?.lng}`;
-  return `<div class="popup-inner"><div class="popup-name">${icon} ${listing.name}</div>${area}${verify}${loc}${phone}<div class="popup-actions"><a href="${href}" style="color:${color}">View details →</a><a href="${gmaps}" target="_blank" rel="noopener" style="color:#6b7280">🗺️ Directions</a></div></div>`;
+  return `${img}<div class="popup-inner"><div class="popup-name">${icon} ${listing.name}</div>${area}${verify}${loc}${phone}<div class="popup-actions"><a href="${href}" style="color:${color}">View details →</a><a href="${gmaps}" target="_blank" rel="noopener" style="color:#6b7280">🗺️ Directions</a></div></div>`;
 }
 
 function addMarkers(

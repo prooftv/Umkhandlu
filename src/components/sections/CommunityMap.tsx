@@ -18,6 +18,7 @@ type Listing = {
   featured?: boolean;
   verifiedByInduna?: string;
   areaName?: string;
+  imageUrl?: string;
 };
 
 type Props = {

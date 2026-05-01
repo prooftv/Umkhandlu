@@ -307,6 +307,7 @@ export const listingFragment = /* groq */ `
   verifiedByInduna,
   featured,
   image,
+  "imageUrl": image.asset->url,
   "areaName": relatedArea->name,
 `;
 
