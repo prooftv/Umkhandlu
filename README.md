@@ -190,6 +190,14 @@ Contact and subscribe forms validate with Valibot and POST to a webhook URL conf
 | `npm run test` | Run tests with Vitest |
 | `npm run typecheck` | TypeScript type check |
 
+## API Endpoints
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/campaigns/export?token=<READ_TOKEN>` | Campaign data export (JSON) |
+| `GET /api/campaigns/export?token=<READ_TOKEN>&status=active` | Filter by status |
+| `GET /api/campaigns/export?token=<READ_TOKEN>&type=csr` | Filter by type |
+
 ## Documentation
 
 - [PLAYBOOK.md](./PLAYBOOK.md) — Strategic project playbook for proposals

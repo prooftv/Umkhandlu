@@ -11,11 +11,10 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   tags,
   startDate,
   endDate,
-  budget,
   beneficiaries,
   impactSummary,
   deliverables,
-  "sponsor": sponsor->{ name, sponsorType, website, contactEmail },
+  "sponsor": sponsor->{ name, sponsorType, website },
   "contactPerson": contactPerson->{ firstName, lastName, role },
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current },
   "relatedProgram": relatedProgram->{ title, "slug": slug.current },
@@ -25,6 +24,16 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
+  const token = searchParams.get('token');
+  const expectedToken = process.env.SANITY_API_READ_TOKEN;
+
+  if (!token || token !== expectedToken) {
+    return NextResponse.json(
+      { error: 'Unauthorized. Pass ?token=<SANITY_API_READ_TOKEN>' },
+      { status: 401 }
+    );
+  }
+
   const status = searchParams.get('status');
   const type = searchParams.get('type');
 
@@ -42,19 +51,10 @@ export async function GET(request: NextRequest) {
 
   const summary = {
     total: filtered.length,
-    totalBudget: filtered.reduce(
-      (sum: number, c: { budget?: number }) => sum + (c.budget || 0),
-      0
-    ),
     totalBeneficiaries: filtered.reduce(
       (sum: number, c: { beneficiaries?: number }) =>
         sum + (c.beneficiaries || 0),
       0
-    ),
-    byStatus: Object.groupBy(filtered, (c: { status: string }) => c.status),
-    byType: Object.groupBy(
-      filtered,
-      (c: { campaignType: string }) => c.campaignType
     ),
   };
 

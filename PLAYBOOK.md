@@ -300,23 +300,31 @@ All content is linked via `relatedArea` references — when editors create a not
 ### Campaign Management
 
 - Full `campaign` document type with three campaign types:
-  - **Ad / Sponsorship** — banner creatives, sponsor links, date scheduling
-  - **Brand Activation** — on-ground events, product launches, community activations with photo gallery
-  - **CSR Initiative** — corporate social responsibility with impact tracking, beneficiary counts, deliverables
+  - **Sponsorship** — banner creatives, sponsor links, date scheduling
+  - **Activation** — on-ground events, community activations with photo gallery, video, audio
+  - **Initiative** — development programmes with impact tracking, beneficiary counts, deliverables
 - 5-stage status workflow: Draft → Approved → Active → Completed → Reported
-- Budget tracking (ZAR), beneficiary counts, impact summaries, deliverables list
-- Links to sponsors, target areas, related programs
+- Contact person, target audience, freeform tags
+- Video embed (YouTube/Vimeo), audio file upload, document attachments (PDF/DOC)
+- Budget tracking (ZAR, internal only — not shown on frontend), beneficiary counts, impact summaries, deliverables list
+- Links to sponsors, target areas, related programs, contact person
 - `campaignList` page builder section (filterable by type and status)
-- Campaign detail pages at `/campaigns/[slug]`
+- Campaign detail pages at `/campaigns/[slug]` with JSON-LD structured data
+- Full SEO fields (metaTitle, metaDescription, OG, Twitter)
+- Data export API: `GET /api/campaigns/export?token=<READ_TOKEN>`
 
 ### Community Map
 
 - Interactive map powered by Leaflet/OpenStreetMap (free, no API key)
-- Listings with `geopoint` coordinates appear as color-coded circle markers
-- Filter by listing type (schools, clinics, businesses, etc.)
-- Popups with name, location, contact info, and link to detail page
+- Emoji icon markers (🏫 🏥 💼) with colored backgrounds per listing type
+- Featured listings: larger markers with pulse animation
+- Hover: tooltip shows listing name, marker scales up
+- Click: styled popup card with cover image, area name, verification badge, contact info
+- Popup actions: View details → and 🗺️ Directions (Google Maps link)
+- Filter bar with type counts, stat summary (total, verified, categories)
 - Auto-fit bounds to show all markers
 - `communityMap` page builder section with configurable center, zoom, and type filter
+- Single-pin maps on listing and area detail pages
 
 ### Advertising Packages (Council Revenue Model)
 
