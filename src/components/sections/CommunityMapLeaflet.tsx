@@ -39,6 +39,8 @@ function injectMapStyles() {
     .map-popup .leaflet-popup-content-wrapper{border-radius:12px;padding:0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.15)}
     .map-popup .leaflet-popup-content{margin:0;min-width:220px}
     .map-popup .leaflet-popup-tip{display:none}
+    .map-label{background:none;border:none;box-shadow:none;font-size:11px;font-weight:600;color:#1f2937;white-space:nowrap;padding:0;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+    .map-label::before{display:none}
     .popup-img{width:100%;height:120px;object-fit:cover;display:block}
     .popup-inner{padding:12px 14px}
     .popup-name{font-weight:700;font-size:14px;margin-bottom:2px}
@@ -128,9 +130,10 @@ function addMarkers(
     })
       .addTo(map)
       .bindTooltip(listing.name, {
-        direction: 'top',
-        offset: [0, -(size / 2 + 2)],
-        className: 'map-tooltip',
+        permanent: true,
+        direction: 'right',
+        offset: [size / 2 + 4, 0],
+        className: 'map-label',
       })
       .bindPopup(buildPopup(listing, icon, color, href), {
         className: 'map-popup',
