@@ -12,13 +12,23 @@
 
 ## 1. Executive Summary
 
-Umkhandlu is lightweight digital governance infrastructure for traditional authorities. It structures and publishes governance information, community infrastructure, economic activity, and youth development digitally — creating a structured, council-owned digital record of rural communities under traditional authority.
+Umkhandlu is a governance state engine for traditional councils. It structures how decisions, communication, and opportunities flow within a traditional authority — without altering authority structures.
 
-This is not a website. It is a **community intelligence layer** that sits on top of existing traditional authority structures without replacing them. In practice, this means a structured system for publishing notices, records, directories, and opportunities.
+This is not a website. It is not a CMS. It is the missing operating system between traditional authority and modern coordination.
 
-Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems. All content and data is controlled and published by the council. The platform does not store personal applicant data or replace official council records.
+Three layers:
 
-The platform is designed for low-frequency, practical use — even a small number of updates (notices, records, listings) maintains its value.
+| Layer | What it does | Components |
+|---|---|---|
+| **Authority** | Mirrors real governance hierarchy | Inkosi → Izinduna → Council → Community |
+| **System** | Structures how information moves | Notices (awareness), Records (memory), Listings (visibility), Opportunities (flow), Programs (activity), Campaigns (development) |
+| **Output** | Interfaces people actually use | Website, Maps, WhatsApp, Reports, Data Export |
+
+The system layer is the core. Document types are not content — they are state containers. The page builder is not a layout tool — it is a view renderer. The CMS is not a publishing platform — it is a control panel for governance operations.
+
+Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems. All data is controlled and published by the council. The platform does not store personal applicant data or replace official council records.
+
+The system is designed for low-frequency, practical use — even a small number of updates (notices, records, listings) maintains its value.
 
 ### Why Now
 
@@ -753,7 +763,87 @@ Template files must never reference a council name, person, or area. Council fil
 
 ---
 
-## 15. Technical Summary
+## 15. System Dynamics
+
+Umkhandlu is not static content. It is a system with defined flows — information enters, moves through authority structures, and produces outcomes. These flows mirror how traditional governance actually works.
+
+### Governance Flow
+
+```
+Notice (Meeting announced)
+    → Community attends
+        → Record (Minutes captured)
+            → Decision made
+                → Record (Resolution / Land Allocation)
+                    → Visible on Area page + Map
+```
+
+The system creates traceability: every decision has a notice that announced it, a record that documents it, and an area that locates it. The Inkosi's approval is recorded with `approvedBy` reference. The community can see the outcome without accessing the council's internal records.
+
+### Economic Flow
+
+```
+Listing created (business, service, trade)
+    → Verified by Induna (✓)
+        → Appears on Map + Directory
+            → Can be promoted (Featured / Ad Banner)
+                → Generates council revenue
+```
+
+Listings are not just directory entries. They are economic nodes — each one represents a real business operating on council land. Verification creates a trust layer. Promotion creates a revenue layer. The map makes the entire local economy visible.
+
+### Campaign Flow
+
+```
+Sponsor identified
+    → Campaign created (Draft)
+        → Approved by council
+            → Active — notices published, photos added
+                → Completed — beneficiaries counted, deliverables logged
+                    → Reported — impact summary written
+                        → Data export for sponsor CSR report
+```
+
+This is not an advertising system. It is an accountability system. Every campaign has a sponsor, a target area, linked notices (distribution), photos (evidence), and impact metrics (outcomes). The export API produces structured data for CSR reporting.
+
+### Opportunity Flow
+
+```
+Opportunity created (job, training, bursary)
+    → Visible to community (deadline-aware)
+        → Action taken offline (apply, attend)
+            → Outcome becomes Blog post / Program record
+```
+
+Opportunities are time-bound state containers. They auto-hide when deadlines pass. They link to areas so residents see what's available locally. The Youth Representative keeps them current.
+
+### Spatial Flow
+
+```
+Listing gets geopoint (pinned on map)
+    → Linked to Area (isigodi)
+        → Area linked to Induna (authority)
+            → Map shows: what exists, where, verified by whom
+```
+
+The map is not a feature. It is a community infrastructure register with a governance trust layer. Every pin has an authority chain: listing → area → induna → inkosi.
+
+### What This Means
+
+| Traditional term | System equivalent |
+|---|---|
+| Council meeting | Notice → Record flow |
+| Land decision | Record with status + approvedBy |
+| Community infrastructure | Listings with geopoints + verification |
+| Development project | Campaign with lifecycle + impact tracking |
+| Youth engagement | Opportunities + Programs + Blog |
+| Sponsor accountability | Campaign export API |
+
+The system doesn't change how the council governs. It structures the information that governance produces — making it visible, traceable, and exportable.
+
+---
+
+## 16. Technical Summary
 
 | Metric | Count |
 |---|---|
@@ -770,29 +860,33 @@ Template files must never reference a council name, person, or area. Council fil
 
 ---
 
-## 16. Positioning
+## 17. Positioning
 
 ### For Councils
 
-> "Umkhandlu gives your traditional council a digital presence that reflects your authority, communicates with your community, and creates visibility for development and opportunities."
+> "Umkhandlu is your digital council office. It structures how your decisions, notices, and community information are recorded and shared — without changing how you govern."
 
 ### For Ingonyama Trust
 
-> "Umkhandlu is a digital infrastructure platform that enables traditional councils to communicate, document governance, and unlock local economic and youth development opportunities — creating structured community data that currently does not exist in digital form."
+> "Umkhandlu is a governance state engine that structures how decisions, communication, and land-related information flow within traditional councils — creating the pre-Trust data layer that currently does not exist in digital form."
 
 > "We prepare councils for structured engagement with the Ingonyama Trust Board by digitising governance processes, land allocation decisions, and community infrastructure at council level."
 
 ### For NGOs & Donors
 
-> "Umkhandlu provides structured, real-time data on community infrastructure, governance activity, and youth engagement across traditional authority areas — enabling targeted intervention and measurable impact."
+> "Umkhandlu provides structured, traceable data on governance decisions, community infrastructure, and development activity across traditional authority areas — enabling targeted intervention and measurable impact through campaign tracking and data export."
 
 ### For Government
 
-> "Umkhandlu digitises the local governance layer, creating a transparent communication channel between traditional councils and the communities they serve — aligned with existing authority structures."
+> "Umkhandlu digitises the local governance layer — structuring how notices, records, and decisions flow within traditional councils, creating transparency without disrupting authority structures."
+
+### Internal (The Truth)
+
+> "We didn't build a website. We built the missing operating system between traditional authority and modern coordination."
 
 ---
 
-## 17. Ingonyama Trust Alignment
+## 18. Ingonyama Trust Alignment
 
 ### The Gap This Platform Fills
 
