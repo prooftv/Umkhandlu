@@ -21,6 +21,7 @@ import LogoGrid from './LogoGrid';
 import MediaText from './MediaText';
 import NoticeList from './NoticeList';
 import OpportunityList from './OpportunityList';
+import Organogram from './Organogram';
 import PeopleGrid from './PeopleGrid';
 import PostList from './PostList';
 import Process from './Process';
@@ -52,6 +53,7 @@ const SECTION_COMPONENTS: Record<string, ElementType> = {
   logoGrid: LogoGrid,
   noticeList: NoticeList,
   opportunityList: OpportunityList,
+  organogram: Organogram,
   peopleGrid: PeopleGrid,
   process: Process,
   programList: ProgramList,

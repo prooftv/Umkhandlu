@@ -239,6 +239,15 @@ export const teamGridSectionFragment = /* groq */ `
   "members": members[]->{${personFragment}}
 `;
 
+export const organogramSectionFragment = /* groq */ `
+  _type,
+  heading,
+  description,
+  "inkosi": inkosi->{${personFragment}},
+  "izinduna": izinduna[]->{${personFragment}},
+  "council": council[]->{${personFragment}}
+`;
+
 export const peopleGridSectionFragment = /* groq */ `
   _type,
   heading,
@@ -604,6 +613,7 @@ export const pageBuilderFragment = /* groq */ `
     _type == 'mediaText' => {${mediaTextSectionFragment}},
     _type == 'noticeList' => {${noticeListSectionFragment}},
     _type == 'opportunityList' => {${opportunityListSectionFragment}},
+    _type == 'organogram' => {${organogramSectionFragment}},
     _type == 'postList' => {${postListSectionFragment}},
     _type == 'process' => {${processSectionFragment}},
     _type == 'programList' => {${programListSectionFragment}},

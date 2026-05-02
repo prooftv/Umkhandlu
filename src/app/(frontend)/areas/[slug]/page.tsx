@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Image } from 'next-sanity/image';
+import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import LocationPin from '@/components/modules/LocationPin';
+import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
@@ -13,6 +15,47 @@ import { areaDetailQuery, areaSlugs } from '@/lib/sanity/queries/queries';
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+type AreaData = NonNullable<
+  Awaited<ReturnType<typeof sanityFetch<typeof areaDetailQuery>>>['data']
+>;
+
+function AreaInduna({ induna }: { induna: AreaData['induna'] }) {
+  if (!induna) return null;
+  return (
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold mb-4">Induna</h2>
+      <Link
+        href={`/people/${induna.slug}`}
+        className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+      >
+        {induna.image?.asset?._ref && (
+          <Image
+            src={
+              urlForImage(induna.image)
+                ?.width(96)
+                .height(96)
+                .fit('crop')
+                .url() as string
+            }
+            alt={`${induna.firstName} ${induna.lastName}`}
+            width={96}
+            height={96}
+            className="w-12 h-12 rounded-full object-cover"
+          />
+        )}
+        <div>
+          <p className="font-semibold">
+            {induna.firstName} {induna.lastName}
+          </p>
+          {induna.role && (
+            <p className="text-sm text-gray-500">{induna.role}</p>
+          )}
+        </div>
+      </Link>
+    </section>
+  );
+}
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
@@ -52,6 +95,10 @@ export default async function AreaPage(props: Props) {
 
   return (
     <div className="container mx-auto py-12">
+      <Breadcrumbs
+        items={[{ label: 'Areas', href: '/' }, { label: area.name || '' }]}
+      />
+
       {/* Hero */}
       <div className="mb-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">{area.name}</h1>
@@ -63,40 +110,7 @@ export default async function AreaPage(props: Props) {
         )}
       </div>
 
-      {/* Induna */}
-      {area.induna && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Induna</h2>
-          <Link
-            href={`/people/${area.induna.slug}`}
-            className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-          >
-            {area.induna.image?.asset?._ref && (
-              <Image
-                src={
-                  urlForImage(area.induna.image)
-                    ?.width(96)
-                    .height(96)
-                    .fit('crop')
-                    .url() as string
-                }
-                alt={`${area.induna.firstName} ${area.induna.lastName}`}
-                width={96}
-                height={96}
-                className="w-12 h-12 rounded-full object-cover"
-              />
-            )}
-            <div>
-              <p className="font-semibold">
-                {area.induna.firstName} {area.induna.lastName}
-              </p>
-              {area.induna.role && (
-                <p className="text-sm text-gray-500">{area.induna.role}</p>
-              )}
-            </div>
-          </Link>
-        </section>
-      )}
+      <AreaInduna induna={area.induna} />
 
       {/* Map */}
       {area.relatedListings && area.relatedListings.length > 0 && (
@@ -425,6 +439,10 @@ export default async function AreaPage(props: Props) {
           </div>
         </section>
       )}
+
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <ShareWhatsApp title={area.name || ''} />
+      </div>
     </div>
   );
 }

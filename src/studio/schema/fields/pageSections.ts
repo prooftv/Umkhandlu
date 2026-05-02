@@ -15,6 +15,7 @@ import logoGrid from '../objects/sections/logoGrid';
 import mediaText from '../objects/sections/mediaText';
 import noticeList from '../objects/sections/noticeList';
 import opportunityList from '../objects/sections/opportunityList';
+import organogram from '../objects/sections/organogram';
 import peopleGrid from '../objects/sections/peopleGrid';
 import postList from '../objects/sections/postList';
 import process from '../objects/sections/process';
@@ -44,6 +45,7 @@ const pageSectionsObjects = [
   mediaText,
   noticeList,
   opportunityList,
+  organogram,
   postList,
   process,
   programList,
