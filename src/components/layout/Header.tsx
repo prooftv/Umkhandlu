@@ -14,7 +14,7 @@ export default async function Header() {
     });
 
     return (
-      <header className="bg-white text-gray-800 py-4 relative">
+      <header className="bg-white text-gray-800 py-4 relative z-50">
         <div className="container max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Link className="flex items-center space-x-4" href="/">
@@ -34,7 +34,7 @@ export default async function Header() {
     );
   } catch {
     return (
-      <header className="bg-white text-gray-800 py-4 relative">
+      <header className="bg-white text-gray-800 py-4 relative z-50">
         <div className="container max-w-7xl mx-auto px-4 flex justify-between items-center">
           <Link className="flex items-center space-x-4" href="/">
             <Logo />

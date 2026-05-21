@@ -10,19 +10,35 @@ export default function HeroSection({
 }: {
   section: HeroSectionFragmentType;
 }) {
-  return (
-    <section className="py-10 md:py-14 bg-white">
-      <div className="container mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+  const hasImage = section.image?.asset;
+
+  if (hasImage) {
+    return (
+      <section className="relative min-h-[400px] md:min-h-[500px] flex items-center">
+        <Image
+          src={
+            urlForImage(section.image!)
+              ?.width(1920)
+              .height(800)
+              .fit('crop')
+              .url() as string
+          }
+          alt={section?.image?.alt || ''}
+          width={1920}
+          height={800}
+          sizes="100vw"
+          priority
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+        <div className="container mx-auto relative z-10 py-16 md:py-24">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
               {section?.heading}
             </h1>
-            <PortableText
-              className="text-xl"
-              value={section.text as PortableTextBlock[]}
-            />
-
+            <div className="text-lg md:text-xl text-white/90">
+              <PortableText value={section.text as PortableTextBlock[]} />
+            </div>
             {section?.buttons && section?.buttons.length > 0 && (
               <div className="mt-8">
                 <ButtonsGroup
@@ -32,23 +48,27 @@ export default function HeroSection({
               </div>
             )}
           </div>
-          {section.image?.asset && (
-            <div className="relative">
-              <Image
-                src={
-                  urlForImage(section.image)
-                    ?.width(1000)
-                    .height(667)
-                    .url() as string
-                }
-                alt={section?.image?.alt || ''}
-                width={600}
-                height={400}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="rounded-4xl shadow-xl"
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="py-16 md:py-24 bg-gradient-to-br from-gray-900 to-gray-800">
+      <div className="container mx-auto">
+        <div className="max-w-3xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+            {section?.heading}
+          </h1>
+          <div className="text-lg md:text-xl text-white/80">
+            <PortableText value={section.text as PortableTextBlock[]} />
+          </div>
+          {section?.buttons && section?.buttons.length > 0 && (
+            <div className="mt-8">
+              <ButtonsGroup
+                className="w-full md:w-auto"
+                buttons={section.buttons}
               />
-              <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-primary rounded-full opacity-50" />
-              <div className="absolute -top-4 -right-4 w-16 h-16 bg-secondary rounded-full opacity-50" />
             </div>
           )}
         </div>
