@@ -89,6 +89,26 @@ export default async function NoticePage(props: Props) {
         <CustomPortableText value={notice.content as PortableTextBlock[]} />
       )}
 
+      {notice.relatedCampaign && (
+        <div className="mt-8 p-4 bg-gray-50 rounded-xl">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
+            Related Campaign
+          </p>
+          <Link
+            href={`/campaigns/${notice.relatedCampaign.slug}`}
+            className="text-lg font-semibold hover:text-primary transition-colors"
+          >
+            {notice.relatedCampaign.title} →
+          </Link>
+          <div className="flex items-center gap-2 mt-1">
+            <Badge variant="outline">
+              {notice.relatedCampaign.campaignType}
+            </Badge>
+            <Badge variant="secondary">{notice.relatedCampaign.status}</Badge>
+          </div>
+        </div>
+      )}
+
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={notice.title || ''} />
       </div>

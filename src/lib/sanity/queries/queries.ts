@@ -175,9 +175,11 @@ export const noticeDetailQuery = defineQuery(`
     noticeType,
     date,
     excerpt,
+    image,
     content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
     pinned,
-    "relatedArea": relatedArea->{ name, "slug": slug.current }
+    "relatedArea": relatedArea->{ name, "slug": slug.current },
+    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }
   }
 `);
 
