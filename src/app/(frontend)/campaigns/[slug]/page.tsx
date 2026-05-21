@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
@@ -190,6 +192,22 @@ function CampaignMedia({ campaign }: { campaign: CampaignData }) {
   );
 }
 
+function CampaignCover({ campaign }: { campaign: CampaignData }) {
+  if (!campaign.image?.asset?._ref) return null;
+  return (
+    <div className="mb-8 rounded-2xl overflow-hidden">
+      <Image
+        src={urlForImage(campaign.image)?.width(1200).url() as string}
+        alt={campaign.image?.alt || campaign.title}
+        width={1200}
+        height={675}
+        sizes="(max-width: 896px) 100vw, 896px"
+        className="w-full h-auto"
+      />
+    </div>
+  );
+}
+
 function buildCampaignJsonLd(campaign: CampaignData) {
   return {
     '@context': 'https://schema.org',
@@ -330,25 +348,15 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
-      {campaign.image?.asset?._ref && (
-        <div className="mb-8 rounded-2xl overflow-hidden">
-          <Image
-            src={
-              urlForImage(campaign.image)
-                ?.width(1200)
-                .height(600)
-                .fit('crop')
-                .url() as string
-            }
-            alt={campaign.image?.alt || campaign.title}
-            width={1200}
-            height={600}
-            className="w-full object-cover"
-          />
-        </div>
-      )}
+      <CampaignCover campaign={campaign} />
 
       <CampaignStats campaign={campaign} />
+
+      {campaign.content && (
+        <div className="mb-8 prose max-w-none">
+          <CustomPortableText value={campaign.content as PortableTextBlock[]} />
+        </div>
+      )}
 
       {campaign.deliverables && campaign.deliverables.length > 0 && (
         <div className="mb-8">
