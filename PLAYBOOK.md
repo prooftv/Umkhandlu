@@ -806,6 +806,22 @@ Sponsor identified
 
 This is not an advertising system. It is an accountability system. Every campaign has a sponsor, a target area, linked notices (distribution), photos (evidence), and impact metrics (outcomes). The export API produces structured data for CSR reporting.
 
+**Live Example: Buffalo River Abstraction Works**
+
+```
+Newcastle Municipality (Sponsor — Government)
+    → Buffalo River Works (Campaign — Initiative, Active)
+        → Launch Notice (Announcement, Pinned, linked to campaign + area)
+            → Visible on: homepage, /areas/mndozo, /campaigns/buffalo-river-...
+```
+
+As the project progresses:
+- Photos added to gallery (construction milestones)
+- Beneficiaries updated (100 employed → community served)
+- Deliverables checked off (weir, boreholes, treatment works)
+- Status: Active → Completed → Reported
+- Impact summary written for municipal reporting
+
 ### Opportunity Flow
 
 ```
