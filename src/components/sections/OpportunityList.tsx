@@ -1,7 +1,9 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { Image } from 'next-sanity/image';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { urlForImage } from '@/lib/sanity/client/utils';
 
 type Opportunity = {
   _id: string;
@@ -13,6 +15,7 @@ type Opportunity = {
   deadline?: string;
   link?: string;
   featured?: boolean;
+  image?: { asset?: { _ref?: string }; alt?: string };
 };
 
 type Props = {
@@ -84,65 +87,89 @@ export default function OpportunityList({ section }: Props) {
               return (
                 <article
                   key={opp._id}
-                  className="p-5 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <Badge
-                          variant={typeColors[opp.opportunityType] || 'outline'}
-                        >
-                          {typeLabels[opp.opportunityType] ||
-                            opp.opportunityType}
-                        </Badge>
-                        {opp.featured && (
-                          <span className="text-xs text-primary font-medium">
-                            ⭐ Featured
-                          </span>
-                        )}
-                        {opp.organization && (
-                          <span className="text-xs text-gray-500">
-                            {opp.organization}
-                          </span>
-                        )}
+                  <div className="flex">
+                    {opp.image?.asset?._ref && (
+                      <div className="hidden sm:block w-36 shrink-0">
+                        <Image
+                          src={
+                            urlForImage(opp.image)
+                              ?.width(288)
+                              .height(200)
+                              .fit('crop')
+                              .url() as string
+                          }
+                          alt={opp.image?.alt || opp.title}
+                          width={288}
+                          height={200}
+                          className="object-cover w-full h-full"
+                        />
                       </div>
-                      <Link
-                        href={`/opportunities/${opp.slug}`}
-                        className="text-lg font-semibold mb-1 hover:text-primary transition-colors"
-                      >
-                        {opp.title}
-                      </Link>
-                      <p className="text-gray-600 text-sm line-clamp-2">
-                        {opp.description}
-                      </p>
-                    </div>
-                    <div className="text-right shrink-0 flex flex-col items-end gap-2">
-                      {opp.deadline && (
-                        <div>
-                          <time
-                            dateTime={opp.deadline}
-                            className="text-xs text-gray-400 block"
+                    )}
+                    <div className="flex-1 p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            <Badge
+                              variant={
+                                typeColors[opp.opportunityType] || 'outline'
+                              }
+                            >
+                              {typeLabels[opp.opportunityType] ||
+                                opp.opportunityType}
+                            </Badge>
+                            {opp.featured && (
+                              <span className="text-xs text-primary font-medium">
+                                ⭐ Featured
+                              </span>
+                            )}
+                            {opp.organization && (
+                              <span className="text-xs text-gray-500">
+                                {opp.organization}
+                              </span>
+                            )}
+                          </div>
+                          <Link
+                            href={`/opportunities/${opp.slug}`}
+                            className="text-lg font-semibold mb-1 hover:text-primary transition-colors"
                           >
-                            Closes {new Date(opp.deadline).toLocaleDateString()}
-                          </time>
-                          {days !== null && days <= 7 && days > 0 && (
-                            <span className="text-xs text-red-500 font-medium">
-                              {days} day{days !== 1 ? 's' : ''} left
-                            </span>
+                            {opp.title}
+                          </Link>
+                          <p className="text-gray-600 text-sm line-clamp-2">
+                            {opp.description}
+                          </p>
+                        </div>
+                        <div className="text-right shrink-0 flex flex-col items-end gap-2">
+                          {opp.deadline && (
+                            <div>
+                              <time
+                                dateTime={opp.deadline}
+                                className="text-xs text-gray-400 block"
+                              >
+                                Closes{' '}
+                                {new Date(opp.deadline).toLocaleDateString()}
+                              </time>
+                              {days !== null && days <= 7 && days > 0 && (
+                                <span className="text-xs text-red-500 font-medium">
+                                  {days} day{days !== 1 ? 's' : ''} left
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          {opp.link && (
+                            <Button asChild variant="default" size="sm">
+                              <a
+                                href={opp.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Apply
+                              </a>
+                            </Button>
                           )}
                         </div>
-                      )}
-                      {opp.link && (
-                        <Button asChild variant="default" size="sm">
-                          <a
-                            href={opp.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Apply
-                          </a>
-                        </Button>
-                      )}
+                      </div>
                     </div>
                   </div>
                 </article>

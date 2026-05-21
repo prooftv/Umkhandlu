@@ -62,6 +62,17 @@ export default defineType({
       type: 'blockContent',
     }),
     defineField({
+      name: 'image',
+      title: 'Cover Image',
+      type: 'image',
+      description: 'Optional image for notice cards. Recommended: 1200×600px.',
+      options: {
+        hotspot: true,
+        aiAssist: { imageDescriptionField: 'alt' },
+      },
+      fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
+    }),
+    defineField({
       name: 'pinned',
       title: 'Pin to Top',
       type: 'boolean',

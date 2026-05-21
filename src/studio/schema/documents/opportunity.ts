@@ -77,6 +77,18 @@ export default defineType({
       type: 'url',
     }),
     defineField({
+      name: 'image',
+      title: 'Cover Image',
+      type: 'image',
+      description:
+        'Optional image for opportunity cards. Recommended: 1200×600px.',
+      options: {
+        hotspot: true,
+        aiAssist: { imageDescriptionField: 'alt' },
+      },
+      fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
+    }),
+    defineField({
       name: 'relatedArea',
       title: 'Related Area',
       type: 'reference',

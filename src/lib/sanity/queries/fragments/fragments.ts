@@ -271,6 +271,7 @@ export const noticeFragment = /* groq */ `
   date,
   excerpt,
   pinned,
+  image,
   "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },
 `;
 
@@ -455,6 +456,7 @@ export const opportunityFragment = /* groq */ `
   deadline,
   link,
   featured,
+  image,
 `;
 
 export const opportunityListSectionFragment = /* groq */ `

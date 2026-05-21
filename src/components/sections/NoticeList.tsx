@@ -1,7 +1,9 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { Image } from 'next-sanity/image';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { urlForImage } from '@/lib/sanity/client/utils';
 
 type Notice = {
   _id: string;
@@ -11,6 +13,7 @@ type Notice = {
   date: string;
   excerpt?: string;
   pinned?: boolean;
+  image?: { asset?: { _ref?: string }; alt?: string };
 };
 
 type Props = {
@@ -58,37 +61,60 @@ export default function NoticeList({ section }: Props) {
               <Link
                 href={`/notices/${notice.slug}`}
                 key={notice._id}
-                className="block p-5 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                className="block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge
-                        variant={typeColors[notice.noticeType] || 'outline'}
-                      >
-                        {notice.noticeType}
-                      </Badge>
-                      {notice.pinned && (
-                        <span className="text-xs text-primary font-medium">
-                          📌 Pinned
-                        </span>
+                <div className="flex">
+                  {notice.image?.asset?._ref && (
+                    <div className="hidden sm:block w-40 shrink-0">
+                      <Image
+                        src={
+                          urlForImage(notice.image)
+                            ?.width(320)
+                            .height(200)
+                            .fit('crop')
+                            .url() as string
+                        }
+                        alt={notice.image?.alt || notice.title}
+                        width={320}
+                        height={200}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1 p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge
+                            variant={typeColors[notice.noticeType] || 'outline'}
+                          >
+                            {notice.noticeType}
+                          </Badge>
+                          {notice.pinned && (
+                            <span className="text-xs text-primary font-medium">
+                              📌 Pinned
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-lg font-semibold mb-1">
+                          {notice.title}
+                        </h3>
+                        {notice.excerpt && (
+                          <p className="text-gray-600 text-sm">
+                            {notice.excerpt}
+                          </p>
+                        )}
+                      </div>
+                      {notice.date && (
+                        <time
+                          dateTime={notice.date}
+                          className="text-sm text-gray-400 whitespace-nowrap"
+                        >
+                          {new Date(notice.date).toLocaleDateString()}
+                        </time>
                       )}
                     </div>
-                    <h3 className="text-lg font-semibold mb-1">
-                      {notice.title}
-                    </h3>
-                    {notice.excerpt && (
-                      <p className="text-gray-600 text-sm">{notice.excerpt}</p>
-                    )}
                   </div>
-                  {notice.date && (
-                    <time
-                      dateTime={notice.date}
-                      className="text-sm text-gray-400 whitespace-nowrap"
-                    >
-                      {new Date(notice.date).toLocaleDateString()}
-                    </time>
-                  )}
                 </div>
               </Link>
             ))}
