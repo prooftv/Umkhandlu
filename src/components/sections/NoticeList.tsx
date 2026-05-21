@@ -65,19 +65,19 @@ export default function NoticeList({ section }: Props) {
               >
                 <div className="flex">
                   {notice.image?.asset?._ref && (
-                    <div className="hidden sm:block w-40 shrink-0">
+                    <div className="hidden sm:block w-32 shrink-0">
                       <Image
                         src={
                           urlForImage(notice.image)
-                            ?.width(320)
-                            .height(200)
+                            ?.width(256)
+                            .height(256)
                             .fit('crop')
                             .url() as string
                         }
                         alt={notice.image?.alt || notice.title}
-                        width={320}
-                        height={200}
-                        className="object-cover w-full h-full"
+                        width={256}
+                        height={256}
+                        className="object-cover w-full h-full aspect-square"
                       />
                     </div>
                   )}

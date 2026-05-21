@@ -91,19 +91,19 @@ export default function OpportunityList({ section }: Props) {
                 >
                   <div className="flex">
                     {opp.image?.asset?._ref && (
-                      <div className="hidden sm:block w-36 shrink-0">
+                      <div className="hidden sm:block w-32 shrink-0">
                         <Image
                           src={
                             urlForImage(opp.image)
-                              ?.width(288)
-                              .height(200)
+                              ?.width(256)
+                              .height(256)
                               .fit('crop')
                               .url() as string
                           }
                           alt={opp.image?.alt || opp.title}
-                          width={288}
-                          height={200}
-                          className="object-cover w-full h-full"
+                          width={256}
+                          height={256}
+                          className="object-cover w-full h-full aspect-square"
                         />
                       </div>
                     )}
