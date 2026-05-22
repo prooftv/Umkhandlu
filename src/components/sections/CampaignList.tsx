@@ -87,20 +87,20 @@ export default function CampaignList({ section }: Props) {
                 className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden block"
               >
                 {campaign.image?.asset?._ref && (
-                  <div className="relative h-44">
+                  <div className="relative">
                     <Image
                       src={
                         urlForImage(campaign.image)
                           ?.width(600)
-                          .height(300)
+                          .height(340)
                           .fit('crop')
                           .url() as string
                       }
                       alt={campaign.image?.alt || campaign.title}
                       width={600}
-                      height={300}
+                      height={340}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover w-full h-full"
+                      className="object-cover w-full aspect-video"
                     />
                   </div>
                 )}
