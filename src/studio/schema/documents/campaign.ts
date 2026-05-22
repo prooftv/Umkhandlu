@@ -125,6 +125,88 @@ export default defineType({
 
     // ─── Relationships ─────────────────────────────────────
     defineField({
+      name: 'fundingSource',
+      title: 'Funding Source',
+      type: 'string',
+      group: 'details',
+      description: 'e.g. WSIG, MIG, RBIG, EPWP, Own Revenue',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'contractor',
+      title: 'Contractor / Implementing Agent',
+      type: 'string',
+      group: 'details',
+      description: 'Company or agency doing the construction/implementation.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'localSMMEs',
+      title: 'Local SMMEs Involved',
+      type: 'number',
+      group: 'tracking',
+      description: 'Number of local small businesses benefiting.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'projectPhase',
+      title: 'Project Phase',
+      type: 'string',
+      group: 'details',
+      options: {
+        list: [
+          { title: 'Planning', value: 'planning' },
+          { title: 'Procurement', value: 'procurement' },
+          { title: 'Construction', value: 'construction' },
+          { title: 'Commissioning', value: 'commissioning' },
+          { title: 'Operational', value: 'operational' },
+        ],
+      },
+      description: 'Current construction/implementation phase.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'progressLog',
+      title: 'Progress Updates',
+      type: 'array',
+      group: 'tracking',
+      description: 'Timestamped progress entries.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'date',
+              type: 'date',
+              title: 'Date',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'update',
+              type: 'text',
+              title: 'Update',
+              rows: 2,
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: { title: 'update', subtitle: 'date' },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'relatedListings',
+      title: 'Related Infrastructure',
+      type: 'array',
+      group: 'details',
+      of: [{ type: 'reference', to: [{ type: 'listing' }] }],
+      description:
+        'Schools, clinics, facilities this project serves or connects to.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
       name: 'relatedAreas',
       title: 'Target Areas',
       type: 'array',
