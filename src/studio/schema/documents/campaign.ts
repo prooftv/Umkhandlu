@@ -134,10 +134,26 @@ export default defineType({
     }),
     defineField({
       name: 'contractor',
-      title: 'Contractor / Implementing Agent',
+      title: 'Main Contractor',
       type: 'string',
       group: 'details',
       description: 'Company or agency doing the construction/implementation.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'contractNumber',
+      title: 'Contract / Tender Number',
+      type: 'string',
+      group: 'details',
+      description: 'e.g. BMT 04/2025/26',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'consultingEngineer',
+      title: 'Consulting Engineer',
+      type: 'string',
+      group: 'details',
+      description: 'Engineering firm or health & safety agent.',
       hidden: ({ parent }) => parent?.campaignType !== 'csr',
     }),
     defineField({

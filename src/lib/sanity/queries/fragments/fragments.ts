@@ -400,6 +400,8 @@ export const campaignFragment = /* groq */ `
   "audioFileUrl": audioFile.asset->url,
   fundingSource,
   contractor,
+  contractNumber,
+  consultingEngineer,
   projectPhase,
   localSMMEs,
   budget,

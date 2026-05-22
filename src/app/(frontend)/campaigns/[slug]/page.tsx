@@ -358,6 +358,8 @@ export default async function CampaignPage(props: Props) {
         sponsor={campaign.sponsor?.name}
         fundingSource={campaign.fundingSource}
         contractor={campaign.contractor}
+        contractNumber={campaign.contractNumber}
+        consultingEngineer={campaign.consultingEngineer}
         projectPhase={campaign.projectPhase}
         startDate={campaign.startDate}
         endDate={campaign.endDate}

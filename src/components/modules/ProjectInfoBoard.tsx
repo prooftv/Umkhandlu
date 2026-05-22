@@ -4,6 +4,8 @@ type Props = {
   sponsor?: string;
   fundingSource?: string | null;
   contractor?: string | null;
+  contractNumber?: string | null;
+  consultingEngineer?: string | null;
   projectPhase?: string | null;
   startDate?: string | null;
   endDate?: string | null;
@@ -13,79 +15,145 @@ type Props = {
 };
 
 const phaseLabels: Record<string, string> = {
-  planning: 'Planning',
-  procurement: 'Procurement',
-  construction: 'Construction',
-  commissioning: 'Commissioning',
-  operational: 'Operational',
+  planning: 'PLANNING PHASE',
+  procurement: 'PROCUREMENT PHASE',
+  construction: 'CONSTRUCTION PHASE',
+  commissioning: 'COMMISSIONING PHASE',
+  operational: 'OPERATIONAL',
 };
 
-export default function ProjectInfoBoard({
-  title,
-  campaignType,
-  sponsor,
-  fundingSource,
-  contractor,
-  projectPhase,
-  startDate,
-  endDate,
-  beneficiaries,
-  localSMMEs,
-  ward,
-}: Props) {
-  if (campaignType !== 'csr') return null;
-  const rows = [
-    sponsor && { label: 'Implementing Agency', value: sponsor },
-    fundingSource && { label: 'Funding Source', value: fundingSource },
-    contractor && { label: 'Contractor', value: contractor },
-    projectPhase && {
-      label: 'Project Phase',
-      value: phaseLabels[projectPhase] || projectPhase,
+function BoardRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between items-baseline px-5 py-2.5 gap-4">
+      <span className="text-xs font-bold text-gray-600 uppercase tracking-wide shrink-0">
+        {label}:
+      </span>
+      <span className="text-sm font-bold text-gray-900 uppercase text-right">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function BoardDivider() {
+  return <div className="border-t-2 border-gray-300" />;
+}
+
+function BoardHeader({ text }: { text: string }) {
+  return (
+    <div className="bg-gray-900 px-5 py-2.5 text-center">
+      <p className="text-xs font-bold text-white uppercase tracking-widest">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function formatDate(date: string): string {
+  return new Date(date)
+    .toLocaleDateString('en-ZA', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+    .toUpperCase();
+}
+
+function ProjectSection({
+  rows,
+}: {
+  rows: { label: string; value: string }[];
+}) {
+  if (rows.length === 0) return null;
+  return (
+    <div className="bg-white">
+      {rows.map((row) => (
+        <BoardRow key={row.label} label={row.label} value={row.value} />
+      ))}
+    </div>
+  );
+}
+
+function buildSections(props: Props) {
+  const section1 = [
+    props.sponsor && { label: 'Employer', value: props.sponsor },
+    props.fundingSource && {
+      label: 'Funding Programme',
+      value: props.fundingSource,
     },
-    startDate && {
-      label: 'Commencement',
-      value: new Date(startDate).toLocaleDateString(),
-    },
-    endDate && {
-      label: 'Target Completion',
-      value: new Date(endDate).toLocaleDateString(),
-    },
-    beneficiaries && {
-      label: 'Employment Created',
-      value: `${beneficiaries} local residents`,
-    },
-    localSMMEs && {
-      label: 'Local SMMEs',
-      value: `${localSMMEs} businesses`,
-    },
-    ward && { label: 'Ward / Area', value: ward },
   ].filter(Boolean) as { label: string; value: string }[];
 
-  if (rows.length === 0) return null;
+  const section2 = [
+    props.contractNumber && {
+      label: 'Contract No',
+      value: props.contractNumber,
+    },
+    props.contractor && { label: 'Main Contractor', value: props.contractor },
+    props.consultingEngineer && {
+      label: 'Consulting Engineer',
+      value: props.consultingEngineer,
+    },
+    props.projectPhase && {
+      label: 'Project Phase',
+      value:
+        phaseLabels[props.projectPhase] || props.projectPhase.toUpperCase(),
+    },
+  ].filter(Boolean) as { label: string; value: string }[];
+
+  const section3 = [
+    props.startDate && {
+      label: 'Commencement Date',
+      value: formatDate(props.startDate),
+    },
+    props.endDate && {
+      label: 'Target Completion',
+      value: formatDate(props.endDate),
+    },
+    props.ward && { label: 'Location', value: props.ward.toUpperCase() },
+  ].filter(Boolean) as { label: string; value: string }[];
+
+  const section4 = [
+    props.beneficiaries && {
+      label: 'Local Labour',
+      value: `${props.beneficiaries} LOCAL RESIDENTS EMPLOYED`,
+    },
+    props.localSMMEs && {
+      label: 'SMME Allocation',
+      value: `${props.localSMMEs} LOCAL SMMES APPOINTED`,
+    },
+  ].filter(Boolean) as { label: string; value: string }[];
+
+  return { section1, section2, section3, section4 };
+}
+
+export default function ProjectInfoBoard(props: Props) {
+  if (props.campaignType !== 'csr') return null;
+
+  const { section1, section2, section3, section4 } = buildSections(props);
+
+  if ([...section1, ...section2, ...section3, ...section4].length === 0)
+    return null;
 
   return (
-    <div className="mb-8 border-2 border-primary/20 rounded-xl overflow-hidden">
-      <div className="bg-primary px-5 py-3">
-        <p className="text-xs text-white/80 uppercase tracking-wide font-medium">
-          Project Information
+    <div className="mb-8 border-2 border-gray-800 rounded-lg overflow-hidden">
+      <div className="bg-primary px-5 py-4 text-center">
+        <p className="text-[10px] font-bold text-white/80 uppercase tracking-[0.2em] mb-1">
+          Project Information Board
         </p>
-        <h3 className="text-lg font-bold text-white">{title}</h3>
+        <h3 className="text-lg font-black text-white uppercase tracking-wide">
+          {props.title}
+        </h3>
       </div>
-      <div className="divide-y divide-gray-100">
-        {rows.map((row) => (
-          <div
-            key={row.label}
-            className="flex justify-between items-center px-5 py-3"
-          >
-            <span className="text-sm text-gray-500 font-medium">
-              {row.label}
-            </span>
-            <span className="text-sm font-semibold text-gray-900 text-right">
-              {row.value}
-            </span>
-          </div>
-        ))}
-      </div>
+
+      <ProjectSection rows={section1} />
+      {section1.length > 0 && section2.length > 0 && <BoardDivider />}
+      <ProjectSection rows={section2} />
+      {section2.length > 0 && section3.length > 0 && <BoardDivider />}
+      <ProjectSection rows={section3} />
+      {section4.length > 0 && (
+        <BoardHeader text="Socio-Economic Targets (EPWP)" />
+      )}
+      <ProjectSection rows={section4} />
     </div>
   );
 }
