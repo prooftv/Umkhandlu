@@ -6,6 +6,7 @@ import { Image } from 'next-sanity/image';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import ClientGallery from '@/components/modules/ClientGallery';
 import CustomPortableText from '@/components/modules/PortableText';
+import ProjectInfoBoard from '@/components/modules/ProjectInfoBoard';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
@@ -174,6 +175,25 @@ function CampaignMedia({ campaign }: { campaign: CampaignData }) {
   );
 }
 
+function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
+  if (!log?.length) return null;
+  return (
+    <div className="mb-8">
+      <h2 className="text-xl font-bold mb-3">Progress Updates</h2>
+      <div className="border-l-2 border-primary/30 pl-4 space-y-4">
+        {log.map((entry) => (
+          <div key={entry._key}>
+            <time className="text-xs text-gray-400 font-medium">
+              {new Date(entry.date).toLocaleDateString()}
+            </time>
+            <p className="text-sm text-gray-700 mt-0.5">{entry.update}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function CampaignCover({ campaign }: { campaign: CampaignData }) {
   if (!campaign.image?.asset?._ref) return null;
   return (
@@ -332,6 +352,20 @@ export default async function CampaignPage(props: Props) {
 
       <CampaignCover campaign={campaign} />
 
+      <ProjectInfoBoard
+        title={campaign.title}
+        campaignType={campaign.campaignType}
+        sponsor={campaign.sponsor?.name}
+        fundingSource={campaign.fundingSource}
+        contractor={campaign.contractor}
+        projectPhase={campaign.projectPhase}
+        startDate={campaign.startDate}
+        endDate={campaign.endDate}
+        beneficiaries={campaign.beneficiaries}
+        localSMMEs={campaign.localSMMEs}
+        ward={campaign.relatedAreas?.map((a) => a.name).join(', ') ?? undefined}
+      />
+
       <CampaignStats campaign={campaign} />
 
       {campaign.content && (
@@ -356,6 +390,7 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
+      <ProgressLog log={campaign.progressLog} />
       {campaign.impactSummary && (
         <div className="mb-8 p-6 bg-green-50 rounded-xl border border-green-100">
           <h2 className="text-xl font-bold mb-2 text-green-800">

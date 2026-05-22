@@ -216,11 +216,17 @@ export const campaignDetailQuery = defineQuery(`
       caption,
       asset->{ _id, url }
     },
+    progressLog[] {
+      _key,
+      date,
+      update
+    },
     documents[] {
       _key,
       title,
       "url": asset->url
     },
+    "relatedListings": relatedListings[]->{${listingFragment}},
     seo {
       ${seoFragment}
     }

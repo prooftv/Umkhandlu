@@ -312,16 +312,53 @@ All content is linked via `relatedArea` references — when editors create a not
 - Full `campaign` document type with three campaign types:
   - **Sponsorship** — banner creatives, sponsor links, date scheduling
   - **Activation** — on-ground events, community activations with photo gallery, video, audio
-  - **Initiative** — development programmes with impact tracking, beneficiary counts, deliverables
+  - **Initiative (Infrastructure Projects)** — full municipal/government project tracking with construction phases, funding sources, contractors, progress logs, SMME tracking, and compliance reporting
 - 5-stage status workflow: Draft → Approved → Active → Completed → Reported
 - Contact person, target audience, freeform tags
 - Video embed (YouTube/Vimeo), audio file upload, document attachments (PDF/DOC)
 - Budget tracking (ZAR, internal only — not shown on frontend), beneficiary counts, impact summaries, deliverables list
 - Links to sponsors, target areas, related programs, contact person
 - `campaignList` page builder section (filterable by type and status)
-- Campaign detail pages at `/campaigns/[slug]` with JSON-LD structured data
+- Campaign detail pages at `/campaigns/[slug]` with JSON-LD structured data and project info board
 - Full SEO fields (metaTitle, metaDescription, OG, Twitter)
 - Data export API: `GET /api/campaigns/export?token=<READ_TOKEN>`
+
+#### Infrastructure Project Fields (Initiative type only)
+
+| Field | Purpose | Example |
+|---|---|---|
+| Funding Source | Grant/budget source | WSIG, MIG, RBIG, EPWP |
+| Contractor | Implementing company | ABC Construction (Pty) Ltd |
+| Project Phase | Current stage | Planning → Procurement → Construction → Commissioning → Operational |
+| Progress Log | Timestamped updates | "Month 3: Foundation complete, 45 employed" |
+| Local SMMEs | Businesses benefiting | 12 local SMMEs appointed |
+| Related Listings | Infrastructure served | Links to schools, clinics, facilities |
+
+#### Project Submission Checklist
+
+Information needed to document a municipal infrastructure project:
+
+| Required | Field | Example |
+|---|---|---|
+| ✅ | Project name | Buffalo River Abstraction Works |
+| ✅ | Implementing municipality/agency | Newcastle Municipality |
+| ✅ | Funding source | WSIG (Water Services Infrastructure Grant) |
+| ✅ | Project value (budget) | R multi-million |
+| ✅ | Ward / traditional authority area | Ward 7 — Mndozo, Manzana, Dicks |
+| ✅ | Start date | May 2025 |
+| ✅ | Duration / end date | 12 months |
+| ✅ | Jobs created | 100 local residents |
+| ✅ | Deliverables / scope of work | Weir, boreholes, treatment works |
+| Optional | Contractor name | TBD |
+| Optional | Local SMMEs involved | Number of local businesses |
+| Optional | Project phase | Construction |
+| Optional | Cover photo | Launch event / site photo |
+| Optional | Council resolution | Reference to endorsement |
+| Optional | Media statement / source URL | Municipality Facebook/website |
+
+#### Project Info Board (Frontend)
+
+The campaign detail page renders a structured project information board — similar to the physical boards displayed at construction sites. Shows: project name, sponsor, funding source, contractor, phase, dates, employment, and deliverables in a formal card layout.
 
 ### Community Map
 
