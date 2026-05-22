@@ -30,13 +30,13 @@ export default function HeroSection({
           priority
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
         <div className="container mx-auto relative z-10 py-16 md:py-24">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
               {section?.heading}
             </h1>
-            <div className="text-lg md:text-xl text-white/90">
+            <div className="text-lg md:text-xl text-white">
               <PortableText value={section.text as PortableTextBlock[]} />
             </div>
             {section?.buttons && section?.buttons.length > 0 && (
