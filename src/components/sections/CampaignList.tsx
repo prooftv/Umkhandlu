@@ -92,15 +92,15 @@ export default function CampaignList({ section }: Props) {
                       src={
                         urlForImage(campaign.image)
                           ?.width(600)
-                          .height(340)
-                          .fit('crop')
+                          .height(400)
+                          .fit('max')
                           .url() as string
                       }
                       alt={campaign.image?.alt || campaign.title}
                       width={600}
-                      height={340}
+                      height={400}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover w-full aspect-video"
+                      className="w-full h-auto"
                     />
                   </div>
                 )}
