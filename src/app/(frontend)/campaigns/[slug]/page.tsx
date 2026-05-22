@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import Lightbox from '@/components/modules/Lightbox';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
@@ -96,32 +97,47 @@ function CampaignStats({ campaign }: { campaign: CampaignData }) {
 
 function CampaignGallery({ gallery }: { gallery: CampaignData['gallery'] }) {
   if (!gallery?.length) return null;
+
+  const lightboxImages = gallery
+    .filter((img) => img.asset?.url)
+    .map((img) => ({
+      src: img.asset?.url ?? '',
+      alt: img.alt || '',
+      caption: img.caption ?? undefined,
+    }));
+
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4">Photos</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {gallery.map((img) => (
-          <figure
-            key={img._key}
-            className="group relative overflow-hidden rounded-xl"
-          >
-            {img.asset?.url && (
-              <Image
-                src={img.asset.url}
-                alt={img.alt || ''}
-                width={400}
-                height={400}
-                className="object-cover aspect-square group-hover:scale-105 transition-transform duration-300"
-              />
-            )}
-            {img.caption && (
-              <figcaption className="bg-black/60 px-3 py-2 text-white text-sm">
-                {img.caption}
-              </figcaption>
-            )}
-          </figure>
-        ))}
-      </div>
+      <Lightbox images={lightboxImages}>
+        {(openAt) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {gallery.map((img, i) => (
+              <figure
+                onKeyDown={() => {}}
+                key={img._key}
+                className="group relative overflow-hidden rounded-xl cursor-pointer"
+                onClick={() => openAt(i)}
+              >
+                {img.asset?.url && (
+                  <Image
+                    src={img.asset.url}
+                    alt={img.alt || ''}
+                    width={400}
+                    height={400}
+                    className="object-cover aspect-square group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
+                {img.caption && (
+                  <figcaption className="bg-black/60 px-3 py-2 text-white text-sm">
+                    {img.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        )}
+      </Lightbox>
     </div>
   );
 }
