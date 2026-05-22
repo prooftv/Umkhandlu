@@ -1,6 +1,5 @@
 import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
-import Lightbox from '@/components/modules/Lightbox';
 import CustomPortableText from '@/components/modules/PortableText';
 import { Badge } from '@/components/ui/Badge';
 import { urlForImage } from '@/lib/sanity/client/utils';
@@ -109,43 +108,29 @@ export default function PersonArchiveByline({
       {person.gallery && person.gallery.length > 0 && (
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6">Portfolio</h2>
-          <Lightbox
-            images={person.gallery
-              .filter((item) => item.asset?.url)
-              .map((item) => ({
-                src: item.asset?.url ?? '',
-                alt: item.alt || '',
-                caption: item.caption ?? undefined,
-              }))}
-          >
-            {(openAt) => (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {person.gallery?.map((item, i) => (
-                  <figure
-                    onKeyDown={() => {}}
-                    key={item._key}
-                    className="group relative overflow-hidden rounded-xl cursor-pointer"
-                    onClick={() => openAt(i)}
-                  >
-                    {item.asset?.url && (
-                      <Image
-                        src={item.asset.url}
-                        alt={item.alt || ''}
-                        width={400}
-                        height={400}
-                        className="object-cover aspect-square group-hover:scale-105 transition-transform duration-300"
-                      />
-                    )}
-                    {item.caption && (
-                      <figcaption className="bg-black/60 px-3 py-2 text-white text-sm">
-                        {item.caption}
-                      </figcaption>
-                    )}
-                  </figure>
-                ))}
-              </div>
-            )}
-          </Lightbox>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {person.gallery?.map((item) => (
+              <figure
+                key={item._key}
+                className="group relative overflow-hidden rounded-xl"
+              >
+                {item.asset?.url && (
+                  <Image
+                    src={item.asset.url}
+                    alt={item.alt || ''}
+                    width={400}
+                    height={400}
+                    className="object-cover aspect-square group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
+                {item.caption && (
+                  <figcaption className="bg-black/60 px-3 py-2 text-white text-sm">
+                    {item.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
         </div>
       )}
     </div>
