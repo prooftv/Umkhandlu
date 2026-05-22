@@ -1,5 +1,6 @@
 import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
+import ClientGallery from '@/components/modules/ClientGallery';
 import CustomPortableText from '@/components/modules/PortableText';
 import { Badge } from '@/components/ui/Badge';
 import { urlForImage } from '@/lib/sanity/client/utils';
@@ -107,30 +108,17 @@ export default function PersonArchiveByline({
       {/* Portfolio / Gallery */}
       {person.gallery && person.gallery.length > 0 && (
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Portfolio</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {person.gallery?.map((item) => (
-              <figure
-                key={item._key}
-                className="group relative overflow-hidden rounded-xl"
-              >
-                {item.asset?.url && (
-                  <Image
-                    src={item.asset.url}
-                    alt={item.alt || ''}
-                    width={400}
-                    height={400}
-                    className="object-cover aspect-square group-hover:scale-105 transition-transform duration-300"
-                  />
-                )}
-                {item.caption && (
-                  <figcaption className="bg-black/60 px-3 py-2 text-white text-sm">
-                    {item.caption}
-                  </figcaption>
-                )}
-              </figure>
-            ))}
-          </div>
+          <ClientGallery
+            heading="Portfolio"
+            images={person.gallery
+              .filter((item) => item.asset?.url)
+              .map((item) => ({
+                _key: item._key,
+                alt: item.alt,
+                caption: item.caption,
+                url: item.asset?.url ?? '',
+              }))}
+          />
         </div>
       )}
     </div>
