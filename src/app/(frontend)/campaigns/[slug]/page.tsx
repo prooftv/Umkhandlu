@@ -36,20 +36,14 @@ type CampaignData = NonNullable<
 function CampaignSponsor({ sponsor }: { sponsor: CampaignData['sponsor'] }) {
   if (!sponsor) return null;
   return (
-    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl mb-8">
+    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl mb-8">
       {sponsor.logo?.asset?._ref && (
         <Image
-          src={
-            urlForImage(sponsor.logo)
-              ?.width(80)
-              .height(40)
-              .fit('max')
-              .url() as string
-          }
+          src={urlForImage(sponsor.logo)?.width(160).fit('max').url() as string}
           alt={sponsor.name}
-          width={80}
-          height={40}
-          className="object-contain"
+          width={160}
+          height={64}
+          className="h-12 w-auto object-contain"
         />
       )}
       <div>
@@ -302,9 +296,13 @@ export async function generateStaticParams() {
 }
 
 function getStakeholderLogos(campaign: CampaignData) {
-  const logos: { url: string; name: string }[] = [];
+  const logos: { url: string; name: string; website?: string }[] = [];
   if (campaign.sponsor?.logoUrl) {
-    logos.push({ url: campaign.sponsor.logoUrl, name: campaign.sponsor.name });
+    logos.push({
+      url: campaign.sponsor.logoUrl,
+      name: campaign.sponsor.name,
+      website: campaign.sponsor.website ?? undefined,
+    });
   }
   if (campaign.stakeholderLogos) {
     for (const l of campaign.stakeholderLogos) {

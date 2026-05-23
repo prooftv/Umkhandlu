@@ -4,7 +4,7 @@ type Props = {
   title: string;
   campaignType?: string;
   sponsor?: string;
-  sponsorLogos?: { url: string; name: string }[];
+  sponsorLogos?: { url: string; name: string; website?: string }[];
   fundingSource?: string | null;
   contractor?: string | null;
   contractNumber?: string | null;
@@ -159,17 +159,35 @@ export default function ProjectInfoBoard(props: Props) {
       <ProjectSection rows={section4} />
 
       {props.sponsorLogos && props.sponsorLogos.length > 0 && (
-        <div className="bg-gray-50 px-5 py-3 flex items-center justify-center gap-6 border-t-2 border-gray-300">
-          {props.sponsorLogos.map((logo) => (
-            <Image
-              key={logo.name}
-              src={logo.url}
-              alt={logo.name}
-              width={120}
-              height={48}
-              className="h-10 w-auto object-contain"
-            />
-          ))}
+        <div className="bg-gray-50 px-5 py-4 flex items-center justify-center gap-8 border-t-2 border-gray-300">
+          {props.sponsorLogos.map((logo) =>
+            logo.website ? (
+              <a
+                key={logo.name}
+                href={logo.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={logo.name}
+              >
+                <Image
+                  src={logo.url}
+                  alt={logo.name}
+                  width={120}
+                  height={48}
+                  className="h-12 w-auto object-contain"
+                />
+              </a>
+            ) : (
+              <Image
+                key={logo.name}
+                src={logo.url}
+                alt={logo.name}
+                width={120}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
+            )
+          )}
         </div>
       )}
     </div>
