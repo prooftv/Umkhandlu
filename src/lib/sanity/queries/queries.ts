@@ -221,6 +221,11 @@ export const campaignDetailQuery = defineQuery(`
       date,
       update
     },
+    "stakeholderLogos": stakeholderLogos[] {
+      _key,
+      name,
+      "url": asset->url
+    },
     documents[] {
       _key,
       title,

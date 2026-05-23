@@ -1,8 +1,10 @@
+import Image from 'next/image';
+
 type Props = {
   title: string;
   campaignType?: string;
   sponsor?: string;
-  sponsorLogo?: string | null;
+  sponsorLogos?: { url: string; name: string }[];
   fundingSource?: string | null;
   contractor?: string | null;
   contractNumber?: string | null;
@@ -156,13 +158,18 @@ export default function ProjectInfoBoard(props: Props) {
       )}
       <ProjectSection rows={section4} />
 
-      {props.sponsorLogo && (
-        <div className="bg-gray-50 px-5 py-3 flex items-center justify-center border-t-2 border-gray-300">
-          <img
-            src={props.sponsorLogo}
-            alt={props.sponsor || 'Sponsor'}
-            className="h-10 object-contain"
-          />
+      {props.sponsorLogos && props.sponsorLogos.length > 0 && (
+        <div className="bg-gray-50 px-5 py-3 flex items-center justify-center gap-6 border-t-2 border-gray-300">
+          {props.sponsorLogos.map((logo) => (
+            <Image
+              key={logo.name}
+              src={logo.url}
+              alt={logo.name}
+              width={120}
+              height={48}
+              className="h-10 w-auto object-contain"
+            />
+          ))}
         </div>
       )}
     </div>

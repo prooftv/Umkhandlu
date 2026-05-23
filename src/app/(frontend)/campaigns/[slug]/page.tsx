@@ -301,6 +301,19 @@ export async function generateStaticParams() {
   return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
 }
 
+function getStakeholderLogos(campaign: CampaignData) {
+  const logos: { url: string; name: string }[] = [];
+  if (campaign.sponsor?.logoUrl) {
+    logos.push({ url: campaign.sponsor.logoUrl, name: campaign.sponsor.name });
+  }
+  if (campaign.stakeholderLogos) {
+    for (const l of campaign.stakeholderLogos) {
+      if (l.url) logos.push({ url: l.url, name: l.name ?? '' });
+    }
+  }
+  return logos;
+}
+
 export default async function CampaignPage(props: Props) {
   const { slug } = await props.params;
   const { data: campaign } = await sanityFetch({
@@ -357,7 +370,7 @@ export default async function CampaignPage(props: Props) {
         title={campaign.title}
         campaignType={campaign.campaignType}
         sponsor={campaign.sponsor?.name}
-        sponsorLogo={campaign.sponsor?.logoUrl}
+        sponsorLogos={getStakeholderLogos(campaign)}
         fundingSource={campaign.fundingSource}
         contractor={campaign.contractor}
         contractNumber={campaign.contractNumber}

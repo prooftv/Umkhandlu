@@ -274,6 +274,29 @@ export default defineType({
         'Enable to hide the large cover image on the campaign page. Useful for poster/flyer images that are too tall.',
     }),
     defineField({
+      name: 'stakeholderLogos',
+      title: 'Stakeholder Logos (Info Board)',
+      type: 'array',
+      group: 'media',
+      description:
+        'Logos displayed on the Project Info Board footer. Add municipality, funder, contractor logos.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: false },
+          fields: [
+            defineField({
+              name: 'name',
+              type: 'string',
+              title: 'Organization Name',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+        },
+      ],
+    }),
+    defineField({
       name: 'bannerImage',
       title: 'Banner Image',
       type: 'image',
