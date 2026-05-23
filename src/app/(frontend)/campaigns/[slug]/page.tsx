@@ -57,6 +57,7 @@ function CampaignSponsor({ sponsor }: { sponsor: CampaignData['sponsor'] }) {
 }
 
 function CampaignStats({ campaign }: { campaign: CampaignData }) {
+  if (campaign.campaignType === 'csr') return null;
   const items: { label: string; value: string }[] = [];
   if (campaign.startDate)
     items.push({
