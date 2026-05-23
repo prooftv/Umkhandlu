@@ -415,25 +415,44 @@ export default async function AreaPage(props: Props) {
               <Link
                 href={`/campaigns/${campaign.slug}`}
                 key={campaign._id}
-                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
+                className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block overflow-hidden"
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <Badge variant="secondary">{campaign.status}</Badge>
-                  <span className="text-xs text-gray-500">
-                    {campaign.campaignType}
-                  </span>
+                {campaign.image?.asset?._ref && (
+                  <div className="h-40">
+                    <Image
+                      src={
+                        urlForImage(campaign.image)
+                          ?.width(600)
+                          .height(300)
+                          .fit('crop')
+                          .url() as string
+                      }
+                      alt={campaign.image?.alt || campaign.title}
+                      width={600}
+                      height={300}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="secondary">{campaign.status}</Badge>
+                    <span className="text-xs text-gray-500">
+                      {campaign.campaignType}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold">{campaign.title}</h3>
+                  {campaign.sponsor && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      by {campaign.sponsor.name}
+                    </p>
+                  )}
+                  {campaign.description && (
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                      {campaign.description}
+                    </p>
+                  )}
                 </div>
-                <h3 className="font-semibold">{campaign.title}</h3>
-                {campaign.sponsor && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    by {campaign.sponsor.name}
-                  </p>
-                )}
-                {campaign.description && (
-                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                    {campaign.description}
-                  </p>
-                )}
               </Link>
             ))}
           </div>
