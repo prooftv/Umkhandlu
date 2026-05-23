@@ -385,8 +385,12 @@ export default async function CampaignPage(props: Props) {
       <CampaignStats campaign={campaign} />
 
       {campaign.content && (
-        <div className="mb-8 prose max-w-none">
-          <CustomPortableText value={campaign.content as PortableTextBlock[]} />
+        <div className="mb-8 mt-8 pt-8 border-t border-gray-200">
+          <div className="prose max-w-none">
+            <CustomPortableText
+              value={campaign.content as PortableTextBlock[]}
+            />
+          </div>
         </div>
       )}
 
