@@ -358,7 +358,23 @@ Information needed to document a municipal infrastructure project:
 
 #### Project Info Board (Frontend)
 
-The campaign detail page renders a structured project information board — similar to the physical boards displayed at construction sites. Shows: project name, sponsor, funding source, contractor, phase, dates, employment, and deliverables in a formal card layout.
+The campaign detail page renders a digital version of the official DPWI/CIDB construction site information board. This is the same format used by the Department of Public Works and Infrastructure and required by the Construction Industry Development Board for all government-funded projects.
+
+The board displays:
+- **Employer** (municipality) — CIDB standard term
+- **Funding Programme** (WSIG, MIG, RBIG, EPWP)
+- **Contract/Tender Number** — for transparency
+- **Main Contractor**
+- **Consulting Engineer**
+- **Project Phase** (Planning → Procurement → Construction → Commissioning → Operational)
+- **Commencement and Target Completion dates**
+- **Location** (ward/traditional authority area)
+- **Socio-Economic Targets (EPWP)** sub-section: local labour count + SMME allocation
+- **Stakeholder logos** in footer (municipality, funder, contractor — clickable with website links)
+
+The board only renders for Initiative type campaigns. All text is uppercase matching the physical board format. The cover image can be hidden via a toggle when poster/flyer images are too tall and obstruct the board.
+
+This positions Umkhandlu as a compliance-ready documentation platform that municipalities can reference for WSIG/MIG reporting.
 
 ### Community Map
 
