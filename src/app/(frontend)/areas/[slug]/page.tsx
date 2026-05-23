@@ -242,28 +242,51 @@ export default async function AreaPage(props: Props) {
               <Link
                 href={`/notices/${notice.slug}`}
                 key={notice._id}
-                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
+                className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden block"
               >
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline">{notice.noticeType}</Badge>
-                    {notice.pinned && (
-                      <span className="text-xs text-primary">📌</span>
+                <div className="flex">
+                  {notice.image?.asset?._ref && (
+                    <div className="hidden sm:block w-32 shrink-0">
+                      <Image
+                        src={
+                          urlForImage(notice.image)
+                            ?.width(256)
+                            .height(256)
+                            .fit('crop')
+                            .url() as string
+                        }
+                        alt={notice.image?.alt || notice.title}
+                        width={256}
+                        height={256}
+                        className="object-cover w-full h-full aspect-square"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1 p-4 flex justify-between items-start gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="outline">{notice.noticeType}</Badge>
+                        {notice.pinned && (
+                          <span className="text-xs text-primary">📌</span>
+                        )}
+                      </div>
+                      <h3 className="font-semibold">{notice.title}</h3>
+                      {notice.excerpt && (
+                        <p className="text-sm text-gray-600">
+                          {notice.excerpt}
+                        </p>
+                      )}
+                    </div>
+                    {notice.date && (
+                      <time
+                        dateTime={notice.date}
+                        className="text-xs text-gray-400 shrink-0"
+                      >
+                        {new Date(notice.date).toLocaleDateString()}
+                      </time>
                     )}
                   </div>
-                  <h3 className="font-semibold">{notice.title}</h3>
-                  {notice.excerpt && (
-                    <p className="text-sm text-gray-600">{notice.excerpt}</p>
-                  )}
                 </div>
-                {notice.date && (
-                  <time
-                    dateTime={notice.date}
-                    className="text-xs text-gray-400 shrink-0"
-                  >
-                    {new Date(notice.date).toLocaleDateString()}
-                  </time>
-                )}
               </Link>
             ))}
           </div>
@@ -279,20 +302,39 @@ export default async function AreaPage(props: Props) {
               <Link
                 href={`/programs/${program.slug}`}
                 key={program._id}
-                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
+                className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block overflow-hidden"
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <Badge variant="secondary">{program.status}</Badge>
-                  <span className="text-xs text-gray-500">
-                    {program.programType}
-                  </span>
-                </div>
-                <h3 className="font-semibold">{program.title}</h3>
-                {program.description && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    {program.description}
-                  </p>
+                {program.image?.asset?._ref && (
+                  <div className="h-36">
+                    <Image
+                      src={
+                        urlForImage(program.image)
+                          ?.width(600)
+                          .height(280)
+                          .fit('crop')
+                          .url() as string
+                      }
+                      alt={program.image?.alt || program.title}
+                      width={600}
+                      height={280}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
                 )}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="secondary">{program.status}</Badge>
+                    <span className="text-xs text-gray-500">
+                      {program.programType}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold">{program.title}</h3>
+                  {program.description && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      {program.description}
+                    </p>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
