@@ -195,6 +195,7 @@ function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
 }
 
 function CampaignCover({ campaign }: { campaign: CampaignData }) {
+  if (campaign.hideCoverImage) return null;
   if (!campaign.image?.asset?._ref) return null;
   return (
     <div className="mb-8 rounded-2xl overflow-hidden">
@@ -356,6 +357,7 @@ export default async function CampaignPage(props: Props) {
         title={campaign.title}
         campaignType={campaign.campaignType}
         sponsor={campaign.sponsor?.name}
+        sponsorLogo={campaign.sponsor?.logoUrl}
         fundingSource={campaign.fundingSource}
         contractor={campaign.contractor}
         contractNumber={campaign.contractNumber}

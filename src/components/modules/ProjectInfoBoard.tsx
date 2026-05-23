@@ -2,6 +2,7 @@ type Props = {
   title: string;
   campaignType?: string;
   sponsor?: string;
+  sponsorLogo?: string | null;
   fundingSource?: string | null;
   contractor?: string | null;
   contractNumber?: string | null;
@@ -154,6 +155,16 @@ export default function ProjectInfoBoard(props: Props) {
         <BoardHeader text="Socio-Economic Targets (EPWP)" />
       )}
       <ProjectSection rows={section4} />
+
+      {props.sponsorLogo && (
+        <div className="bg-gray-50 px-5 py-3 flex items-center justify-center border-t-2 border-gray-300">
+          <img
+            src={props.sponsorLogo}
+            alt={props.sponsor || 'Sponsor'}
+            className="h-10 object-contain"
+          />
+        </div>
+      )}
     </div>
   );
 }

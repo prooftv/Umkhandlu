@@ -265,6 +265,15 @@ export default defineType({
       fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
     }),
     defineField({
+      name: 'hideCoverImage',
+      title: 'Hide Cover Image on Detail Page',
+      type: 'boolean',
+      group: 'media',
+      initialValue: false,
+      description:
+        'Enable to hide the large cover image on the campaign page. Useful for poster/flyer images that are too tall.',
+    }),
+    defineField({
       name: 'bannerImage',
       title: 'Banner Image',
       type: 'image',
