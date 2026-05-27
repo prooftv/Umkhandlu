@@ -16,19 +16,13 @@ export default function HeroSection({
     return (
       <section className="relative min-h-[400px] md:min-h-[500px] flex items-center">
         <Image
-          src={
-            urlForImage(section.image!)
-              ?.width(1920)
-              .height(800)
-              .fit('crop')
-              .url() as string
-          }
+          src={urlForImage(section.image!)?.width(1920).url() as string}
           alt={section?.image?.alt || ''}
           width={1920}
-          height={800}
+          height={1080}
           sizes="100vw"
           priority
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/60" />
         <div className="container mx-auto relative z-10 py-16 md:py-24">
