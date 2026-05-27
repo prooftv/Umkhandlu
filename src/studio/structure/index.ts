@@ -34,6 +34,9 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('notice')
         .title('Community Notices')
         .icon(BellIcon),
+      S.documentTypeListItem('developmentNotice')
+        .title('Development Notices')
+        .icon(BellIcon),
       S.documentTypeListItem('record')
         .title('Documents & Records')
         .icon(FolderIcon),

@@ -1,5 +1,6 @@
 import campaign from './documents/campaign';
 import category from './documents/category';
+import developmentNotice from './documents/developmentNotice';
 import listing from './documents/listing';
 import notice from './documents/notice';
 import opportunity from './documents/opportunity';
@@ -58,6 +59,7 @@ export const schemaTypes = [
   post,
   person,
   category,
+  developmentNotice,
   notice,
   listing,
   opportunity,
