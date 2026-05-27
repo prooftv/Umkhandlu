@@ -43,7 +43,7 @@ npm run dev
 
 ## Content Architecture
 
-### 11 Document Types
+### 12 Document Types
 
 | Type | Purpose |
 |---|---|
@@ -58,6 +58,7 @@ npm run dev
 | `record` | Governance documents (minutes, resolutions, land allocations, dispute resolutions, policies, reports, external resources) |
 | `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
 | `campaign` | Campaigns & activations (sponsorship, activation, initiative) with video, audio, documents, SEO, impact tracking |
+| `developmentNotice` | Public participation notices (EIA, rezoning, mining, cell towers) with comment deadline, applicant, map pin |
 
 ### 27 Page Builder Sections
 

@@ -134,7 +134,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 
 ### Content Architecture
 
-#### 11 Document Types
+#### 12 Document Types
 
 | Type | Purpose | Key Fields |
 |---|---|---|
@@ -149,6 +149,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report/external-resource), date, summary, status, approvedBy, content, PDF file, externalUrl, source, relatedArea |
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
 | `campaign` | Campaigns & activations | Title, type (sponsorship/activation/initiative), status (draft/approved/active/completed/reported), sponsor, contactPerson, dates, targetAudience, tags, budget, beneficiaries, impact summary, deliverables, video, audio, documents, gallery, SEO |
+| `developmentNotice` | Public participation notices | Title, type (EIA/rezoning/land-use/building/mining/liquor/telecom), status (open/closed/approved/rejected), applicant, reference number, description, location, geopoint, comment deadline, comment contact, documents, related area |
 
 #### 3 Singletons
 
@@ -401,6 +402,43 @@ This positions Umkhandlu as a compliance-ready documentation platform that munic
 Positioning: *"Supporting local businesses and community development"* — not commercialisation.
 
 Revenue flows to the council, not Unami. This creates council buy-in and sustainability.
+
+### Development Notices (Public Participation Revenue)
+
+A dedicated document type for legally-required public participation notices — EIA, rezoning, land use change, building plans, mining permits, liquor licenses, cell towers.
+
+Every development on Trust land, municipal land, or private land requires public notification. The platform becomes the official digital notice channel for the area.
+
+| Notice Type | Example | Price |
+|---|---|---|
+| Environmental Impact Assessment | Proposed fuel station | R3,000–R5,000 |
+| Rezoning Application | Residential to commercial | R2,000–R3,000 |
+| Mining / Excavation Permit | Sand mining at river | R2,000–R3,000 |
+| Cell Tower / Mast | Vodacom tower installation | R3,000–R5,000 |
+| Liquor License | New tavern application | R1,500–R2,000 |
+| Building Plan Approval | Multi-unit housing | R2,000–R3,000 |
+
+Fields: applicant, reference number, description, site location + map pin, comment deadline, contact for objections, supporting documents (EIA reports, site plans), status (open → closed → approved/rejected).
+
+### Full Development Lifecycle Revenue
+
+The platform captures value at every stage of a development:
+
+```
+PRE-DEVELOPMENT:
+  Development Notice (public participation)
+    → Developer pays R2,000–R5,000 for 30–60 day notice
+
+DURING CONSTRUCTION:
+  Campaign (Initiative) + Project Info Board
+    → Municipality pays R5,000–R15,000 for documentation
+
+POST-CONSTRUCTION:
+  Listing (business/facility on map + directory)
+    → Business pays R50–R300/month for visibility
+```
+
+Three revenue events from a single development. This is the commercial engine.
 
 ---
 
@@ -916,7 +954,7 @@ The system doesn't change how the council governs. It structures the information
 
 | Metric | Count |
 |---|---|
-| Document types | 11 |
+| Document types | 12 |
 | Page builder sections | 27 |
 | Singletons | 3 |
 | Frontend routes | 15 |
