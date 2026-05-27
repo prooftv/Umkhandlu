@@ -1,12 +1,102 @@
 # Umkhandlu — Project Playbook
 
-> **Umkhandlu turns traditional councils into digitally structured governance nodes — without changing how they govern.**
+> **Umkhandlu is participation infrastructure for underrepresented communities — enabling them to represent, coordinate, and develop themselves on their own terms.**
 
-## Digital Governance Infrastructure for Traditional Authorities
+## Community Self-Determination Architecture
 
-**Version:** 2.1
+**Version:** 3.0
 **Status:** Production-Ready
 **Repository:** github.com/prooftv/Umkhandlu
+
+---
+
+## 0. Philosophical Framework
+
+Umkhandlu is not a website, a CMS, or a digital transformation project.
+
+It is **participation infrastructure for community self-determination**.
+
+Digital invisibility is a form of dependency. If communities cannot publish themselves, document themselves, coordinate themselves, or represent themselves digitally — then outsiders become the primary narrators of their governance, their economy, their development, and their identity.
+
+Umkhandlu reverses that.
+
+### What Self-Determination Means Here
+
+Not separatism. Not anti-state. Not anti-development.
+
+> Communities gaining structured capacity to represent, coordinate, and develop themselves on their own terms.
+
+This explains why the system emphasises:
+- **Ownership** — council controls all content and data
+- **Governance alignment** — mirrors existing authority structures
+- **Council legitimacy** — the platform operates under council authority
+- **Youth participation** — next generation as active contributors
+- **Local operational control** — Council Operating Partner model
+
+### The Ecosystem
+
+| Initiative | Self-determination function |
+|---|---|
+| **Umkhandlu** | Governance & participation self-determination |
+| **Unami Schools** | Educational self-determination |
+| **Unami Drones** | Skills & technological self-determination |
+| **Unami Timber** | Economic self-determination |
+| **UNCIP** | Community safety self-determination |
+| **Media/Documentation** | Narrative self-determination |
+| **CSR Coordination** | Development self-determination |
+| **Market Access** | Economic participation |
+
+### The Participation Shift
+
+Most development models fail because communities are treated as beneficiaries, not participants.
+
+This model changes that. The community becomes:
+- Contributor
+- Coordinator
+- Participant
+- Knowledge holder
+- Development stakeholder
+
+**Before:** "How do we bring solutions into communities?"
+**Now:** "How do communities organise participation around their own development?"
+
+### What Umkhandlu Actually Builds
+
+Not content. Not media. Not apps.
+
+- **Memory** — governance records, decisions, resolutions
+- **Visibility** — infrastructure mapping, directory, map
+- **Coordination** — notices, campaigns, programs
+- **Opportunity** — jobs, training, bursaries, development
+- **Accountability** — project tracking, impact reporting, public participation
+
+Philosophy becomes systems. Systems survive.
+
+### The Operating Model
+
+```
+Traditional Council = governs
+Community = participates
+Unami = builds enabling infrastructure around self-determined development
+```
+
+Unami does not claim authority over the council. The council governs. The community participates. Unami provides the coordination infrastructure that makes both visible and effective.
+
+This is fundamentally different from the NGO model where external actors define priorities and communities become beneficiaries.
+
+### What to Protect
+
+Do not let Umkhandlu drift into:
+- ❌ Media branding
+- ❌ Generic NGO language
+- ❌ Startup terminology
+- ❌ "Community content platform" framing
+
+Always frame as:
+- ✅ Participation infrastructure
+- ✅ Governance-support systems
+- ✅ Community coordination architecture
+- ✅ Self-determination enablement
 
 ---
 
