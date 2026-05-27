@@ -36,7 +36,7 @@ export default function HeroSection({
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg">
               {section?.heading}
             </h1>
-            <div className="text-lg md:text-xl text-white drop-shadow-md">
+            <div className="text-lg md:text-xl text-white drop-shadow-md [&_p]:text-white [&_p]:drop-shadow-md">
               <PortableText value={section.text as PortableTextBlock[]} />
             </div>
             {section?.buttons && section?.buttons.length > 0 && (
@@ -60,7 +60,7 @@ export default function HeroSection({
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
             {section?.heading}
           </h1>
-          <div className="text-lg md:text-xl text-white/80">
+          <div className="text-lg md:text-xl text-white/90 [&_p]:text-white/90">
             <PortableText value={section.text as PortableTextBlock[]} />
           </div>
           {section?.buttons && section?.buttons.length > 0 && (
