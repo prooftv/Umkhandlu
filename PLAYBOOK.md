@@ -491,7 +491,7 @@ This positions Umkhandlu as a compliance-ready documentation platform that munic
 
 Positioning: *"Supporting local businesses and community development"* — not commercialisation.
 
-Revenue flows to the council, not Unami. This creates council buy-in and sustainability.
+All platform revenue flows to Unami Foundation as the system operator. The council receives the platform and its benefits at zero cost. This is the Council Operating Partner (COP) model — Unami operates, the council governs.
 
 ### Development Notices (Public Participation Revenue)
 
@@ -632,9 +632,9 @@ The platform is built with an integration-ready architecture — webhook endpoin
 
 ## 8. Commercial Model
 
-### Council Revenue (Advertising Packages)
+### Unami Foundation Revenue (Platform Operator)
 
-Revenue flows to the council, creating sustainability and buy-in:
+All system revenue flows to Unami Foundation. The council receives the platform free. Unami operates the commercial layer:
 
 | Tier | What They Get | Suggested Price |
 |---|---|---|
@@ -649,11 +649,17 @@ Revenue flows to the council, creating sustainability and buy-in:
 |---|---|---|
 | **Setup fee** | Deployment, Sanity project, initial content, training | Once-off per council |
 | **Monthly support** | Hosting, CMS maintenance, content support | Monthly retainer |
+| **Directory listings** | Featured/premium business listings | R50–R300/month per listing |
+| **Campaign management** | Sponsor activations, CSR documentation | R3,000–R15,000 per campaign |
+| **Infrastructure documentation** | Municipal project tracking + compliance reporting | R5,000–R15,000 per project |
+| **Development notices** | Public participation notices (EIA, rezoning, etc.) | R2,000–R5,000 per notice |
 | **Integration upgrades** | WhatsApp, n8n, map, advanced features | Phase-based |
 | **Template licensing** | Additional council deployments from same codebase | Per deployment |
 | **Data partnerships** | Council-approved data insights for planning and development partners | Future phase |
 
-This positions Unami as **infrastructure provider**, not a dev shop.
+This positions Unami Foundation as **participation infrastructure provider** — not a dev shop, not an NGO, not a media company.
+
+The council gets the platform free. Businesses, sponsors, municipalities, and developers pay Unami for visibility, documentation, and compliance services delivered through the platform.
 
 ---
 
@@ -1040,7 +1046,39 @@ The system doesn't change how the council governs. It structures the information
 
 ---
 
-## 16. Technical Summary
+## 16. Operator SOP (Infrastructure Documentation)
+
+The platform operator follows a Standard Operating Procedure for infrastructure project documentation. Full SOP: [SOP.md](./SOP.md)
+
+### Pipeline
+
+```
+Raw input (contractor/engineer/PMU)
+    → Validate (SOP rules — engineer overrides contractor)
+        → Structure (progressLog entry + evidence)
+            → Update (Sanity fields — append, never overwrite)
+                → Publish (ISR — page live in seconds)
+                    → Export (monthly PMU report via API)
+```
+
+### Decision Rules
+
+| Rule | Logic |
+|---|---|
+| No unverified data | Engineer confirms → valid. Contractor alone → not enough. |
+| Engineer overrides contractor | If conflict, engineer certification wins. |
+| Municipality controls status | Only municipality can mark COMPLETED. |
+| Weekly minimum | At least 1 progress log entry per week per active project. |
+
+### Key Principle
+
+> "Nothing enters the system unless it can survive engineer or PMU verification logic."
+
+This turns the operator role into a contractable, auditable, scalable governance documentation function.
+
+---
+
+## 17. Technical Summary
 
 | Metric | Count |
 |---|---|
@@ -1057,7 +1095,7 @@ The system doesn't change how the council governs. It structures the information
 
 ---
 
-## 17. Positioning
+## 18. Positioning
 
 ### For Councils
 
@@ -1083,7 +1121,7 @@ The system doesn't change how the council governs. It structures the information
 
 ---
 
-## 18. Ingonyama Trust Alignment
+## 19. Ingonyama Trust Alignment
 
 ### The Gap This Platform Fills
 
