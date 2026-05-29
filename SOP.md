@@ -167,10 +167,10 @@ EXPORT (monthly PMU report via API)
 
 | Situation | Action |
 |---|---|
-| Missing data | Mark as "pending update" internally. Do NOT fabricate. |
-| Conflicting reports | Flag internally. Escalate to PMU contact. |
+| Missing data | Mark as "pending update" internally. Do NOT fabricate. Follow Unreachable Data Protocol (TCRS §9). |
+| Conflicting reports | Create `conflictLog` entry. Apply TCRS resolution engine (see §12 below). |
 | Delayed updates | Continue timeline logically. Add note: "No update received for reporting period." |
-| Unresponsive contractor | Document gap in progress log. Notify PMU. |
+| Unresponsive contractor | Document gap in progress log. Notify PMU. If 2 cycles: escalate per TCRS §9. |
 
 ---
 
@@ -192,3 +192,97 @@ Each week MUST produce:
 ## 11. One-Line Summary
 
 Collect raw infrastructure updates, verify against authority sources, structure into lifecycle records, and publish as a continuously updated PMU-ready project intelligence layer.
+
+---
+
+## 12. Truth Conflict Resolution (TCRS Integration)
+
+Full protocol: [TCRS.md](./TCRS.md)
+
+### When to trigger
+
+Any time two sources provide different values for the same field on the same project.
+
+### Operator workflow
+
+```
+1. DETECT — Two sources disagree on a field value
+2. STORE  — Create conflictLog in Studio (link to campaign, add both claims)
+3. WEIGHT — Identify highest-authority validated source
+4. RESOLVE — Set displayTruth to highest-weight value
+5. FLAG   — Set resolutionState (pending / partial / resolved / escalated)
+6. ESCALATE — If unresolvable, move up: Engineer → PMU → Site Meeting → Municipality
+```
+
+### Authority weights (memorise these)
+
+| Source | Weight |
+|---|---|
+| Engineer | 100 |
+| Municipality | 90 |
+| PMU | 85 |
+| Contractor | 60 |
+| CLO / Councillor | 40 |
+| Observation | 30 |
+
+### Key rules
+
+- **Never delete a claim** — store all versions
+- **Engineer overrides contractor** on technical data
+- **Municipality has final authority** on status/phase closure
+- **Political narrative does NOT override technical data** — but is recorded
+- **No data = no assumption** — publish "No verified data available"
+
+### Cadence for conflict checks
+
+| Phase | Frequency |
+|---|---|
+| Construction | Weekly |
+| Planning / Procurement | Monthly |
+| Commissioning | Bi-weekly |
+| Operational | Quarterly |
+
+---
+
+## 13. Field Capture Protocol
+
+For operators without laptop access on-site:
+
+### WhatsApp Template (send to project channel)
+
+```
+📍 SITE UPDATE — [Project Name]
+📅 Date: [YYYY-MM-DD]
+👷 Workers on site: [number]
+📊 Estimated progress: [%]
+🔧 Activity: [what's happening]
+📸 [attach photo]
+⚠️ Issues: [any problems observed]
+Source: [your name / role]
+```
+
+### Offline protocol
+
+1. Capture using WhatsApp template (works on low signal)
+2. Photos auto-upload when signal returns
+3. Operator structures into progressLog within 24 hours
+4. If data conflicts with existing records: trigger TCRS
+
+---
+
+## 14. Dispute / Takedown Protocol
+
+If any party formally requests removal of published project data:
+
+1. Do NOT delete content
+2. Set campaign status to `draft` (unpublishes immediately)
+3. Create conflictLog documenting the dispute
+4. Escalate to PMU within 24 hours
+5. Only republish after written resolution confirmation
+6. Full dispute timeline recorded in resolution note
+
+---
+
+## 15. One-Line System Definition
+
+> Collect, verify, structure, resolve conflicts, and publish infrastructure data as a continuously updated, audit-ready, governance-accountable project intelligence layer.

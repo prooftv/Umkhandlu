@@ -9,6 +9,7 @@ import {
   RocketIcon,
   StarIcon,
   UsersIcon,
+  WarningOutlineIcon,
 } from '@sanity/icons';
 import type { StructureResolver } from 'sanity/structure';
 import { SITE_NAME } from '@/lib/siteConfig';
@@ -40,6 +41,9 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('record')
         .title('Documents & Records')
         .icon(FolderIcon),
+      S.documentTypeListItem('conflictLog')
+        .title('Conflict Log')
+        .icon(WarningOutlineIcon),
 
       S.divider(),
 

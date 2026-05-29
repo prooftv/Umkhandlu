@@ -43,7 +43,7 @@ npm run dev
 
 ## Content Architecture
 
-### 12 Document Types
+### 13 Document Types
 
 | Type | Purpose |
 |---|---|
@@ -59,6 +59,7 @@ npm run dev
 | `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
 | `campaign` | Campaigns & activations (sponsorship, activation, initiative) with video, audio, documents, SEO, impact tracking |
 | `developmentNotice` | Public participation notices (EIA, rezoning, mining, cell towers) with comment deadline, applicant, map pin |
+| `conflictLog` | Truth conflict records — competing claims, authority weights, resolution state, escalation tracking |
 
 ### 27 Page Builder Sections
 
@@ -206,6 +207,7 @@ Contact and subscribe forms validate with Valibot and POST to a webhook URL conf
 - [DEPLOYMENT.md](./DEPLOYMENT.md) — Council deployment runbook (step-by-step)
 - [SEEDING.md](./SEEDING.md) — Seed data architecture and how to add a new council
 - [SOP.md](./SOP.md) — Infrastructure documentation operator SOP (project tracking workflow)
+- [TCRS.md](./TCRS.md) — Truth Conflict Resolution System (governance of competing claims)
 
 ## License
 

@@ -1,5 +1,6 @@
 import campaign from './documents/campaign';
 import category from './documents/category';
+import conflictLog from './documents/conflictLog';
 import developmentNotice from './documents/developmentNotice';
 import listing from './documents/listing';
 import notice from './documents/notice';
@@ -67,6 +68,7 @@ export const schemaTypes = [
   record,
   sponsor,
   campaign,
+  conflictLog,
 
   // Sections
   adBanner,
