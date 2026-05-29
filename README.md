@@ -205,6 +205,7 @@ Contact and subscribe forms validate with Valibot and POST to a webhook URL conf
 - [ROLES.md](./ROLES.md) — Content ownership model and roles
 - [DEPLOYMENT.md](./DEPLOYMENT.md) — Council deployment runbook (step-by-step)
 - [SEEDING.md](./SEEDING.md) — Seed data architecture and how to add a new council
+- [SOP.md](./SOP.md) — Infrastructure documentation operator SOP (project tracking workflow)
 
 ## License
 
