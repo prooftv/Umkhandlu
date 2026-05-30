@@ -84,6 +84,25 @@ Unami does not claim authority over the council. The council governs. The commun
 
 This is fundamentally different from the NGO model where external actors define priorities and communities become beneficiaries.
 
+### The System Pattern
+
+Look at everything the system does:
+
+| Existing Function | Umkhandlu Does |
+|---|---|
+| Community meetings | Records them |
+| Infrastructure projects | Documents them |
+| Public participation | Structures it |
+| PMS evidence | Preserves it |
+| Council notices | Publishes them |
+| Development initiatives | Tracks them |
+| Opportunities | Distributes them |
+| Local businesses | Maps them |
+
+The system never governs. Never decides. Never adjudicates.
+
+The system: **records, preserves, organises, publishes, coordinates.**
+
 ### What to Protect
 
 Do not let Umkhandlu drift into:
@@ -91,12 +110,14 @@ Do not let Umkhandlu drift into:
 - ❌ Generic NGO language
 - ❌ Startup terminology
 - ❌ "Community content platform" framing
+- ❌ "AI decides" or "system resolves" language
 
 Always frame as:
 - ✅ Participation infrastructure
 - ✅ Governance-support systems
 - ✅ Community coordination architecture
 - ✅ Self-determination enablement
+- ✅ Records, preserves, organises, presents — never decides
 
 ---
 
@@ -106,12 +127,13 @@ Umkhandlu is a governance state engine for traditional councils. It structures h
 
 This is not a website. It is not a CMS. It is the missing operating system between traditional authority and modern coordination.
 
-Three layers:
+Four layers:
 
 | Layer | What it does | Components |
 |---|---|---|
 | **Authority** | Mirrors real governance hierarchy | Inkosi → Izinduna → Council → Community |
 | **System** | Structures how information moves | Notices (awareness), Records (memory), Listings (visibility), Opportunities (flow), Programs (activity), Campaigns (development) |
+| **Evidence** | Preserves governance accountability | Verification records, source traceability, audit history, reporting support |
 | **Output** | Interfaces people actually use | Website, Maps, WhatsApp, Reports, Data Export |
 
 The system layer is the core. Document types are not content — they are state containers. The page builder is not a layout tool — it is a view renderer. The CMS is not a publishing platform — it is a control panel for governance operations.
@@ -224,7 +246,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 
 ### Content Architecture
 
-#### 12 Document Types
+#### 13 Document Types
 
 | Type | Purpose | Key Fields |
 |---|---|---|
@@ -240,6 +262,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
 | `campaign` | Campaigns & activations | Title, type (sponsorship/activation/initiative), status (draft/approved/active/completed/reported), sponsor, contactPerson, dates, targetAudience, tags, budget, beneficiaries, impact summary, deliverables, video, audio, documents, gallery, SEO |
 | `developmentNotice` | Public participation notices | Title, type (EIA/rezoning/land-use/building/mining/liquor/telecom), status (open/closed/approved/rejected), applicant, reference number, description, location, geopoint, comment deadline, comment contact, documents, related area |
+| `conflictLog` | Verification records | Project reference, reported field, variance type, source records (authority + value + date + evidence), verified reporting value, verification status, escalation level, verification note |
 
 #### 3 Singletons
 
@@ -343,6 +366,8 @@ All content is linked via `relatedArea` references — when editors create a not
 ├── Directory Listings 📍
 ├── Sponsors & Partners ⭐
 ├── Campaigns & Activations 💡
+├── ─────────
+├── Verification Records ⚠️
 ├── ─────────
 └── Site Settings ⚙️
     ├── General (title, description, menu, OG image)
@@ -466,6 +491,45 @@ The board displays:
 The board only renders for Initiative type campaigns. All text is uppercase matching the physical board format. The cover image can be hidden via a toggle when poster/flyer images are too tall and obstruct the board.
 
 This positions Umkhandlu as a compliance-ready documentation platform that municipalities can reference for WSIG/MIG reporting.
+
+### Governance Audit & Evidence Preservation
+
+Infrastructure delivery produces multiple reports from multiple sources. These reports do not always agree. The platform preserves all source reports without deleting competing claims.
+
+Full protocol: [TCRS.md](./TCRS.md)
+
+**What the system does:**
+- Records all source reports (engineer, PMU, contractor, CLO, observation)
+- Preserves evidence references (IPC, site diary, meeting minutes)
+- Classifies sources by governance authority level
+- Maintains a verified reporting value for public display
+- Tracks verification status (pending → under review → verified / escalated)
+- Preserves full disagreement history for audit accountability
+
+**What the system does NOT do:**
+- Does not decide which source is correct
+- Does not override management review
+- Does not replace audit processes
+- Does not adjudicate disputes
+
+The final reporting value is determined by the applicable governance authority in accordance with municipal verification processes. The system supports that process by organising evidence.
+
+**Source Authority Classification:**
+
+| Source | Classification |
+|---|---|
+| Engineer certification | Highest technical authority |
+| Municipality | Institutional authority |
+| PMU verification | Programme management authority |
+| Contractor report | Implementation report |
+| CLO / Ward Councillor | Community governance input |
+| Field observation | Operational observation |
+
+**Variance Types:** Numerical, Status, Timeline, Workforce, Contextual
+
+**Verification States:** Pending Review → Under Review → Verified / Escalated
+
+This aligns with municipal PMS requirements for transparency, accountability, evidence-based reporting, and auditability. It provides the structured mechanism for handling situations where evidence sources disagree — which is the normal state of infrastructure delivery in South Africa.
 
 ### Community Map
 
@@ -598,7 +662,7 @@ Zero council-specific strings exist in component or route code. Every "Umkhandlu
 ### What Stays the Same
 
 - All 27 page builder sections
-- All 11 document types
+- All 13 document types
 - All routes and components
 - SEO infrastructure
 - Analytics integration
@@ -1031,6 +1095,38 @@ Listing gets geopoint (pinned on map)
 
 The map is not a feature. It is a community infrastructure register with a governance trust layer. Every pin has an authority chain: listing → area → induna → inkosi.
 
+### Evidence & Verification Flow
+
+```
+Multiple sources report on same project field
+    → Operator identifies variance
+        → Verification record created (all source reports preserved)
+            → Authority classification applied
+                → Verified reporting value set
+                    → Public page shows single value
+                        → Full evidence trail preserved for audit
+```
+
+This flow connects:
+
+```
+Community Inputs
+Contractor Records
+Engineer Certifications
+PMU Reports
+Municipal Records
+        ↓
+Governance Audit & Evidence Layer
+        ↓
+Performance Verification
+        ↓
+PMS / SDBIP Reporting
+        ↓
+Council Oversight
+```
+
+The system fills the gap between community participation, project monitoring, PMS reporting, and council oversight. Most municipalities struggle to operationalise that connection. Umkhandlu provides the structured evidence layer.
+
 ### What This Means
 
 | Traditional term | System equivalent |
@@ -1041,6 +1137,8 @@ The map is not a feature. It is a community infrastructure register with a gover
 | Development project | Campaign with lifecycle + impact tracking |
 | Youth engagement | Opportunities + Programs + Blog |
 | Sponsor accountability | Campaign export API |
+| Performance evidence | Verification records + source traceability |
+| Audit trail | Evidence preservation layer |
 
 The system doesn't change how the council governs. It structures the information that governance produces — making it visible, traceable, and exportable.
 
@@ -1050,15 +1148,18 @@ The system doesn't change how the council governs. It structures the information
 
 The platform operator follows a Standard Operating Procedure for infrastructure project documentation. Full SOP: [SOP.md](./SOP.md)
 
+Governance audit & evidence preservation protocol: [TCRS.md](./TCRS.md)
+
 ### Pipeline
 
 ```
 Raw input (contractor/engineer/PMU)
     → Validate (SOP rules — engineer overrides contractor)
         → Structure (progressLog entry + evidence)
-            → Update (Sanity fields — append, never overwrite)
-                → Publish (ISR — page live in seconds)
-                    → Export (monthly PMU report via API)
+            → Verify (if sources disagree → create verification record)
+                → Update (Sanity fields — append, never overwrite)
+                    → Publish (ISR — page live in seconds)
+                        → Export (monthly PMU report via API)
 ```
 
 ### Decision Rules
@@ -1066,13 +1167,14 @@ Raw input (contractor/engineer/PMU)
 | Rule | Logic |
 |---|---|
 | No unverified data | Engineer confirms → valid. Contractor alone → not enough. |
-| Engineer overrides contractor | If conflict, engineer certification wins. |
+| Engineer overrides contractor | If variance, engineer certification takes precedence. |
 | Municipality controls status | Only municipality can mark COMPLETED. |
 | Weekly minimum | At least 1 progress log entry per week per active project. |
+| Variance detected | Create verification record. Preserve all source reports. Never delete. |
 
 ### Key Principle
 
-> "Nothing enters the system unless it can survive engineer or PMU verification logic."
+> "Nothing enters the system unless it can survive engineer or PMU verification logic. The system records, preserves, organises, and presents — it never decides."
 
 This turns the operator role into a contractable, auditable, scalable governance documentation function.
 
@@ -1082,7 +1184,7 @@ This turns the operator role into a contractable, auditable, scalable governance
 
 | Metric | Count |
 |---|---|
-| Document types | 12 |
+| Document types | 13 |
 | Page builder sections | 27 |
 | Singletons | 3 |
 | Frontend routes | 15 |
@@ -1101,6 +1203,14 @@ This turns the operator role into a contractable, auditable, scalable governance
 
 > "Umkhandlu is your digital council office. It structures how your decisions, notices, and community information are recorded and shared — without changing how you govern."
 
+### For Municipalities / PMUs
+
+> "Umkhandlu provides infrastructure visibility and participation support — structured evidence records supporting project monitoring, stakeholder visibility, and performance reporting throughout the project lifecycle."
+
+### For Audit / PMS
+
+> "A governance audit and evidence preservation layer for municipal performance management and infrastructure reporting. Records, preserves, organises, and presents performance information from multiple sources in accordance with municipal verification processes."
+
 ### For Ingonyama Trust
 
 > "Umkhandlu is a governance state engine that structures how decisions, communication, and land-related information flow within traditional councils — creating the pre-Trust data layer that currently does not exist in digital form."
@@ -1114,6 +1224,18 @@ This turns the operator role into a contractable, auditable, scalable governance
 ### For Government
 
 > "Umkhandlu digitises the local governance layer — structuring how notices, records, and decisions flow within traditional councils, creating transparency without disrupting authority structures."
+
+### For CSR Partners
+
+> "Community development coordination — structured project documentation, impact tracking, evidence preservation, and compliance-ready reporting for sponsor accountability."
+
+### For Youth
+
+> "Opportunities and participation — jobs, training, bursaries, programs, and a platform to tell community stories."
+
+### For Investors / Donors
+
+> "Structured community intelligence and development visibility — traceable governance data, infrastructure mapping, and participation metrics across traditional authority areas."
 
 ### Internal (The Truth)
 
