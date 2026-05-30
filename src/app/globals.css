@@ -235,6 +235,11 @@
     display: none !important;
   }
 
+  /* ─── Rich text / content sections: start new page ─── */
+  .prose {
+    break-before: page !important;
+  }
+
   /* ─── Page breaks ───────────────────────────────────── */
   h1, h2, h3 {
     break-after: avoid;
