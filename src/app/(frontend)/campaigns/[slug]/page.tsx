@@ -344,6 +344,13 @@ function getStakeholderLogos(campaign: CampaignData) {
       if (l.url) logos.push({ url: l.url, name: l.name ?? '' });
     }
   }
+  if (logos.length === 0 && campaign.sponsor?.logoUrl) {
+    logos.push({
+      url: campaign.sponsor.logoUrl,
+      name: campaign.sponsor.name,
+      website: campaign.sponsor.website ?? undefined,
+    });
+  }
   return logos;
 }
 
