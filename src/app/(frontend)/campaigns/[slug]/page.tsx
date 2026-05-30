@@ -339,18 +339,9 @@ export async function generateStaticParams() {
 
 function getStakeholderLogos(campaign: CampaignData) {
   const logos: { url: string; name: string; website?: string }[] = [];
-  if (campaign.sponsor?.logoUrl) {
-    logos.push({
-      url: campaign.sponsor.logoUrl,
-      name: campaign.sponsor.name,
-      website: campaign.sponsor.website ?? undefined,
-    });
-  }
   if (campaign.stakeholderLogos) {
     for (const l of campaign.stakeholderLogos) {
-      if (l.url && l.name !== campaign.sponsor?.name) {
-        logos.push({ url: l.url, name: l.name ?? '' });
-      }
+      if (l.url) logos.push({ url: l.url, name: l.name ?? '' });
     }
   }
   return logos;
