@@ -3,7 +3,7 @@ import { defineField, defineType } from 'sanity';
 
 export default defineType({
   name: 'conflictLog',
-  title: 'Conflict Log',
+  title: 'Verification Records',
   icon: WarningOutlineIcon,
   type: 'document',
   fields: [
@@ -13,11 +13,11 @@ export default defineType({
       type: 'reference',
       to: [{ type: 'campaign' }],
       validation: (rule) => rule.required(),
-      description: 'The infrastructure project this conflict relates to.',
+      description: 'The infrastructure project this record relates to.',
     }),
     defineField({
       name: 'field',
-      title: 'Contested Field',
+      title: 'Reported Field',
       type: 'string',
       validation: (rule) => rule.required(),
       options: {
@@ -34,15 +34,15 @@ export default defineType({
     }),
     defineField({
       name: 'conflictType',
-      title: 'Conflict Type',
+      title: 'Variance Type',
       type: 'string',
       options: {
         list: [
-          { title: '🟥 Numerical', value: 'numerical' },
-          { title: '🟧 Status', value: 'status' },
-          { title: '🟨 Time', value: 'time' },
-          { title: '🟦 Workforce / EPWP', value: 'workforce' },
-          { title: '🟪 Political / Context', value: 'political' },
+          { title: 'Numerical Variance', value: 'numerical' },
+          { title: 'Status Variance', value: 'status' },
+          { title: 'Timeline Variance', value: 'time' },
+          { title: 'Workforce Variance', value: 'workforce' },
+          { title: 'Contextual Variance', value: 'political' },
         ],
         layout: 'radio',
       },
@@ -50,26 +50,28 @@ export default defineType({
     }),
     defineField({
       name: 'claims',
-      title: 'Competing Claims',
+      title: 'Source Records',
       type: 'array',
       validation: (rule) => rule.required().min(2),
+      description:
+        'Each source that reported a value for this field. Minimum 2 sources required.',
       of: [
         {
           type: 'object',
           fields: [
             defineField({
               name: 'source',
-              title: 'Source',
+              title: 'Source Authority',
               type: 'string',
               options: {
                 list: [
-                  { title: 'Engineer (weight: 100)', value: 'engineer' },
-                  { title: 'Municipality (weight: 90)', value: 'municipality' },
-                  { title: 'PMU (weight: 85)', value: 'pmu' },
-                  { title: 'Contractor (weight: 60)', value: 'contractor' },
-                  { title: 'CLO / Councillor (weight: 40)', value: 'clo' },
+                  { title: 'Engineer Certification', value: 'engineer' },
+                  { title: 'Municipal Record', value: 'municipality' },
+                  { title: 'PMU Verification', value: 'pmu' },
+                  { title: 'Contractor Report', value: 'contractor' },
+                  { title: 'CLO / Ward Councillor', value: 'clo' },
                   {
-                    title: 'Operator Observation (weight: 30)',
+                    title: 'Field Observation',
                     value: 'observation',
                   },
                 ],
@@ -78,42 +80,33 @@ export default defineType({
             }),
             defineField({
               name: 'value',
-              title: 'Claimed Value',
+              title: 'Reported Value',
               type: 'string',
               validation: (rule) => rule.required(),
               description:
-                'What this source claims. e.g. "70%" or "Construction phase"',
+                'The value reported by this source. e.g. "55%" or "Construction phase"',
             }),
             defineField({
               name: 'date',
-              title: 'Date of Claim',
+              title: 'Date Reported',
               type: 'date',
               validation: (rule) => rule.required(),
             }),
             defineField({
               name: 'evidence',
-              title: 'Evidence',
+              title: 'Supporting Evidence',
               type: 'text',
               rows: 2,
               description:
-                'Reference to IPC, site diary, meeting minutes, etc.',
+                'Reference to IPC, site diary, meeting minutes, certificate, etc.',
             }),
           ],
           preview: {
             select: { source: 'source', value: 'value', date: 'date' },
             prepare({ source, value, date }) {
-              const weights: Record<string, number> = {
-                engineer: 100,
-                municipality: 90,
-                pmu: 85,
-                contractor: 60,
-                clo: 40,
-                observation: 30,
-              };
-              const w = weights[source as string] || 0;
               return {
                 title: `${source} → ${value}`,
-                subtitle: `Weight: ${w} | ${date || ''}`,
+                subtitle: date || '',
               };
             },
           },
@@ -122,20 +115,20 @@ export default defineType({
     }),
     defineField({
       name: 'displayTruth',
-      title: 'Resolved Display Value',
+      title: 'Verified Reporting Value',
       type: 'string',
       description:
-        'The value shown publicly. Determined by highest-weight validated source.',
+        'The value used for public reporting. Determined by the applicable governance authority.',
     }),
     defineField({
       name: 'resolutionState',
-      title: 'Resolution State',
+      title: 'Verification Status',
       type: 'string',
       options: {
         list: [
-          { title: '🟡 Pending', value: 'pending' },
-          { title: '🟠 Partially Resolved', value: 'partial' },
-          { title: '🟢 Resolved', value: 'resolved' },
+          { title: '🟡 Pending Review', value: 'pending' },
+          { title: '🟠 Under Review', value: 'partial' },
+          { title: '🟢 Verified', value: 'resolved' },
           { title: '🔴 Escalated', value: 'escalated' },
         ],
       },
@@ -159,21 +152,21 @@ export default defineType({
     }),
     defineField({
       name: 'resolutionNote',
-      title: 'Resolution Note',
+      title: 'Verification Note',
       type: 'text',
       rows: 3,
       description:
-        'How this conflict was resolved. Who confirmed, what meeting, what date.',
+        'How this variance was resolved. Authority, meeting reference, date confirmed.',
     }),
     defineField({
       name: 'detectedAt',
-      title: 'Date Detected',
+      title: 'Date Identified',
       type: 'date',
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'resolvedAt',
-      title: 'Date Resolved',
+      title: 'Date Verified',
       type: 'date',
       hidden: ({ parent }) => parent?.resolutionState !== 'resolved',
     }),
@@ -201,8 +194,8 @@ export default defineType({
       };
       const icon = stateIcons[state as string] || '⚪';
       return {
-        title: `${icon} ${field} conflict`,
-        subtitle: `${campaign || 'Unknown project'} — ${type || ''}`,
+        title: `${icon} ${field} — ${type || 'variance'}`,
+        subtitle: campaign || 'Unknown project',
       };
     },
   },

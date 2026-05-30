@@ -201,37 +201,38 @@ Full protocol: [TCRS.md](./TCRS.md)
 
 ### When to trigger
 
-Any time two sources provide different values for the same field on the same project.
+Any time two sources report different values for the same field on the same project.
 
 ### Operator workflow
 
 ```
-1. DETECT — Two sources disagree on a field value
-2. STORE  — Create conflictLog in Studio (link to campaign, add both claims)
-3. WEIGHT — Identify highest-authority validated source
-4. RESOLVE — Set displayTruth to highest-weight value
-5. FLAG   — Set resolutionState (pending / partial / resolved / escalated)
-6. ESCALATE — If unresolvable, move up: Engineer → PMU → Site Meeting → Municipality
+1. IDENTIFY  — Two sources report different values for the same field
+2. RECORD    — Create verification record in Studio (link to project, add all source reports)
+3. CLASSIFY  — Identify highest-authority source with validated evidence
+4. REPORT    — Set verified reporting value
+5. STATUS    — Set verification status (pending / under review / verified / escalated)
+6. ESCALATE  — If unresolvable: Engineer → PMU → Site Meeting → Municipality
 ```
 
-### Authority weights (memorise these)
+### Authority classification (memorise these)
 
-| Source | Weight |
+| Source | Authority Level |
 |---|---|
-| Engineer | 100 |
-| Municipality | 90 |
-| PMU | 85 |
-| Contractor | 60 |
-| CLO / Councillor | 40 |
-| Observation | 30 |
+| Engineer certification | Highest technical |
+| Municipality | Institutional |
+| PMU | Programme management |
+| Contractor | Implementation report |
+| CLO / Councillor | Community governance |
+| Field observation | Operational |
 
 ### Key rules
 
-- **Never delete a claim** — store all versions
-- **Engineer overrides contractor** on technical data
-- **Municipality has final authority** on status/phase closure
-- **Political narrative does NOT override technical data** — but is recorded
-- **No data = no assumption** — publish "No verified data available"
+- **Never delete a source record** — preserve all reported values
+- **Engineer certification takes precedence** on technical data
+- **Municipality has final governance authority** on status/phase closure
+- **Contextual reports do NOT override technical certification** — but are preserved
+- **No data = no assumption** — record "No verified data available"
+- **The system records, preserves, organises, presents** — it does not decide
 
 ### Cadence for conflict checks
 

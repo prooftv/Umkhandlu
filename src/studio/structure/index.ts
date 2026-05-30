@@ -42,7 +42,7 @@ export const structure: StructureResolver = (S) =>
         .title('Documents & Records')
         .icon(FolderIcon),
       S.documentTypeListItem('conflictLog')
-        .title('Conflict Log')
+        .title('Verification Records')
         .icon(WarningOutlineIcon),
 
       S.divider(),
