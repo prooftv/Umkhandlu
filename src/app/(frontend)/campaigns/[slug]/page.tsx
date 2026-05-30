@@ -348,7 +348,9 @@ function getStakeholderLogos(campaign: CampaignData) {
   }
   if (campaign.stakeholderLogos) {
     for (const l of campaign.stakeholderLogos) {
-      if (l.url) logos.push({ url: l.url, name: l.name ?? '' });
+      if (l.url && l.name !== campaign.sponsor?.name) {
+        logos.push({ url: l.url, name: l.name ?? '' });
+      }
     }
   }
   return logos;
