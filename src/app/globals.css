@@ -91,6 +91,11 @@
 }
 
 @media print {
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+
   /* ─── Hide non-content elements ─────────────────────── */
   header,
   footer,
@@ -185,6 +190,24 @@
 
   /* ─── Filter bars: hide interactive controls ─────────── */
   [class*="flex"][class*="gap"][class*="flex-wrap"]:has(button) {
+    display: none !important;
+  }
+
+  /* ─── Maps: hide Leaflet wrappers (empty in print) ─── */
+  .leaflet-container,
+  div:has(> .leaflet-container) {
+    display: none !important;
+  }
+
+  /* ─── Media embeds: hide video/audio (can't render) ── */
+  iframe,
+  audio,
+  video {
+    display: none !important;
+  }
+
+  /* ─── Share buttons: hide social sharing ───────────── */
+  [class*="border-t"][class*="border-gray"]:has(svg) {
     display: none !important;
   }
 
