@@ -111,6 +111,7 @@ Do not let Umkhandlu drift into:
 - ❌ Startup terminology
 - ❌ "Community content platform" framing
 - ❌ "AI decides" or "system resolves" language
+- ❌ Accepting unverified data as progress
 
 Always frame as:
 - ✅ Participation infrastructure
@@ -118,6 +119,7 @@ Always frame as:
 - ✅ Community coordination architecture
 - ✅ Self-determination enablement
 - ✅ Records, preserves, organises, presents — never decides
+- ✅ Progress measured by certification, not claims
 
 ---
 
@@ -133,7 +135,7 @@ Four layers:
 |---|---|---|
 | **Authority** | Mirrors real governance hierarchy | Inkosi → Izinduna → Council → Community |
 | **System** | Structures how information moves | Notices (awareness), Records (memory), Listings (visibility), Opportunities (flow), Programs (activity), Campaigns (development) |
-| **Evidence** | Preserves governance accountability | Verification records, source traceability, audit history, reporting support |
+| **Evidence** | Preserves governance accountability | Verification records, source traceability, milestone-based progress, audit history |
 | **Output** | Interfaces people actually use | Website, Maps, WhatsApp, Reports, Data Export |
 
 The system layer is the core. Document types are not content — they are state containers. The page builder is not a layout tool — it is a view renderer. The CMS is not a publishing platform — it is a control panel for governance operations.
@@ -569,7 +571,7 @@ This aligns with municipal PMS requirements for transparency, accountability, ev
 - `communityMap` page builder section with configurable center, zoom, and type filter
 - Single-pin maps on listing and area detail pages
 
-### Advertising Packages (Council Revenue Model)
+### Advertising Packages (Platform Revenue Model)
 
 | Tier | What They Get | Suggested Price |
 |---|---|---|
@@ -1063,7 +1065,7 @@ Listing created (business, service, trade)
     → Verified by Induna (✓)
         → Appears on Map + Directory
             → Can be promoted (Featured / Ad Banner)
-                → Generates council revenue
+                → Generates platform revenue (flows to Unami)
 ```
 
 Listings are not just directory entries. They are economic nodes — each one represents a real business operating on council land. Verification creates a trust layer. Promotion creates a revenue layer. The map makes the entire local economy visible.
