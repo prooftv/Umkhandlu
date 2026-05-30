@@ -231,7 +231,7 @@
   }
 
   /* ─── Share buttons: hide social sharing ───────────── */
-  [class*="border-t"][class*="border-gray"]:has(svg) {
+  [class*="border-t"][class*="border-gray-100"]:last-child:has(svg) {
     display: none !important;
   }
 

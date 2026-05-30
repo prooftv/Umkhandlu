@@ -407,12 +407,21 @@ export default defineType({
     }),
     defineField({
       name: 'deliverables',
-      title: 'Deliverables',
+      title: 'Deliverables (Completed)',
       type: 'array',
       group: 'tracking',
       of: [{ type: 'string' }],
       description:
-        'Add as you complete them. e.g. Platform deployed, 5 listings created, Community map live',
+        'Add as you complete them. e.g. Weir construction, Borehole drilling, Rising main installation',
+    }),
+    defineField({
+      name: 'totalDeliverables',
+      title: 'Total Planned Deliverables',
+      type: 'number',
+      group: 'tracking',
+      description:
+        'Total number of deliverables in scope. Progress bar shows completed / total.',
+      validation: (rule) => rule.min(1),
     }),
 
     // ─── SEO ───────────────────────────────────────────────

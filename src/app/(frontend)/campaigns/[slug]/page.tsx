@@ -189,6 +189,47 @@ function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
   );
 }
 
+function Deliverables({ campaign }: { campaign: CampaignData }) {
+  if (!campaign.deliverables?.length) return null;
+  const total = (campaign as unknown as { totalDeliverables?: number })
+    .totalDeliverables;
+  const completed = campaign.deliverables.length;
+  const pct = total && total > 0 ? Math.round((completed / total) * 100) : null;
+
+  return (
+    <div className="mb-8">
+      <h2 className="text-xl font-bold mb-3">Deliverables</h2>
+      {pct !== null && (
+        <div className="mb-4">
+          <div className="flex justify-between text-sm mb-1">
+            <span className="text-gray-600">
+              {completed} of {total} completed
+            </span>
+            <span className="font-bold text-primary">{pct}%</span>
+          </div>
+          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all"
+              style={{ width: `${Math.min(100, pct)}%` }}
+            />
+          </div>
+        </div>
+      )}
+      <div className="space-y-1.5">
+        {campaign.deliverables.map((d) => (
+          <div
+            key={d}
+            className="flex items-center gap-2 text-sm text-gray-700"
+          >
+            <span className="text-green-600">✓</span>
+            <span>{d}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function CampaignCover({ campaign }: { campaign: CampaignData }) {
   if (campaign.hideCoverImage) return null;
   if (!campaign.image?.asset?._ref) return null;
@@ -394,21 +435,7 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
-      {campaign.deliverables && campaign.deliverables.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-3">Deliverables</h2>
-          <div className="flex flex-wrap gap-2">
-            {campaign.deliverables.map((d) => (
-              <span
-                key={d}
-                className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
-              >
-                ✓ {d}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      <Deliverables campaign={campaign} />
 
       <ProgressLog log={campaign.progressLog} />
       {campaign.impactSummary && (
