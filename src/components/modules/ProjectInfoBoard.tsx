@@ -159,35 +159,39 @@ export default function ProjectInfoBoard(props: Props) {
       <ProjectSection rows={section4} />
 
       {props.sponsorLogos && props.sponsorLogos.length > 0 && (
-        <div className="bg-gray-50 px-5 py-4 flex items-center justify-center gap-8 border-t-2 border-gray-300">
-          {props.sponsorLogos.map((logo) =>
-            logo.website ? (
-              <a
-                key={logo.name}
-                href={logo.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={logo.name}
-              >
-                <Image
-                  src={logo.url}
-                  alt={logo.name}
-                  width={120}
-                  height={48}
-                  className="h-12 w-auto object-contain"
-                />
-              </a>
-            ) : (
-              <Image
-                key={logo.name}
-                src={logo.url}
-                alt={logo.name}
-                width={120}
-                height={48}
-                className="h-12 w-auto object-contain"
-              />
-            )
-          )}
+        <div className="bg-gray-50 px-5 py-4 border-t-2 border-gray-300">
+          <div className="flex items-start justify-center gap-8 flex-wrap">
+            {props.sponsorLogos.map((logo) => (
+              <div key={logo.name} className="flex flex-col items-center gap-1">
+                {logo.website ? (
+                  <a
+                    href={logo.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image
+                      src={logo.url}
+                      alt={logo.name}
+                      width={120}
+                      height={48}
+                      className="h-12 w-auto object-contain"
+                    />
+                  </a>
+                ) : (
+                  <Image
+                    src={logo.url}
+                    alt={logo.name}
+                    width={120}
+                    height={48}
+                    className="h-12 w-auto object-contain"
+                  />
+                )}
+                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wide text-center">
+                  {logo.name}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
