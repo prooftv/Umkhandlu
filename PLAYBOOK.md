@@ -4,7 +4,7 @@
 
 ## Community Self-Determination Architecture
 
-**Version:** 3.0
+**Version:** 3.2
 **Status:** Production-Ready
 **Repository:** github.com/prooftv/Umkhandlu
 
@@ -1297,6 +1297,351 @@ This creates a trust layer in community data that NGOs, government, and the Trus
 ✅ "We support traditional councils with digital governance tools"
 ✅ "We prepare councils for structured engagement with the Trust"
 ✅ "We create community-level data that can feed into provincial systems"
+
+---
+
+## 20. COP Node Architecture (Scaling Model)
+
+Scaling Umkhandlu is not expansion of geography. It is replication of governance operating nodes while preserving a single structured evidence and coordination system across traditional and municipal authority layers.
+
+### First Principle
+
+The core definition does not change per deployment:
+
+> "The missing operating system between traditional authority and modern coordination."
+
+Everything else is deployment topology.
+
+### The COP Unit
+
+COP = Council – Operator – Platform
+
+This is the atomic scaling unit. Every deployment is one COP node:
+
+```
+┌─────────────────────────────────────────────┐
+│  COP NODE                                   │
+│                                             │
+│  🟤 Council Layer (governs)                 │
+│     Traditional Authority + Municipality    │
+│     Inkosi, Izinduna, Ward Councillor, PMU  │
+│                                             │
+│  🟡 Operator Layer (documents)              │
+│     Unami team member                       │
+│     SOP enforcement, evidence capture       │
+│     TCRS discipline, reporting              │
+│                                             │
+│  🔵 Platform Layer (structures)             │
+│     Sanity CMS, Umkhandlu frontend          │
+│     TCRS, export API, map, sections         │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+### Scaling Levels
+
+| Level | Description | Example |
+|---|---|---|
+| **1 — Single Node** | 1 council + 1 municipality + 1 operator | Buffalo River / Mndozo (current) |
+| **2 — Dual Authority** | 1 council + 2 municipal interfaces | Traditional council spanning 2 wards |
+| **3 — District Cluster** | Multiple councils + shared PMU | Amajuba District: multiple wards, shared reporting |
+| **4 — Provincial Network** | Multiple districts + standardised COP nodes | KZN-wide governance visibility layer |
+
+### What Must Remain Fixed Across All Levels
+
+| Fixed | Reason |
+|---|---|
+| SOP structure | Operator discipline must be consistent |
+| TCRS logic | Evidence preservation rules cannot vary |
+| Source authority hierarchy | Engineer > PMU > Contractor — always |
+| "No adjudication" rule | System never decides |
+| Single timeline per project | One campaign = one evolving record |
+| COP governance model | Council governs, operator documents, platform structures |
+
+### What Scales
+
+| Scalable | How |
+|---|---|
+| Number of projects | More campaigns per node |
+| Number of councils | More COP nodes (separate Sanity projects) |
+| Number of operators | More certified operators per node |
+| Reporting interfaces | PMU dashboards, export endpoints |
+| Evidence volume | More verification records per project |
+
+### Node Replication Checklist
+
+Minimal steps to stand up a new COP node:
+
+| Step | Action | Owner | Duration |
+|---|---|---|---|
+| 1 | Identify traditional council + municipal interface | Unami | 1 week |
+| 2 | Council endorsement (Inkosi approval) | Council | 1–2 weeks |
+| 3 | Create Sanity project + dataset | Unami | 1 day |
+| 4 | Deploy Vercel instance + domain | Unami | 1 day |
+| 5 | Run seed scripts (template + council) | Unami | 1 day |
+| 6 | COP Onboarding Protocol (§21) | Unami + Council | 2 weeks |
+| 7 | Operator assigned + certified (§22) | Unami | 1 week |
+| 8 | Content population (§9 priority order) | Council + Operator | 4 weeks |
+| 9 | First infrastructure project documented | Operator | When available |
+| 10 | Node operational | All | Ongoing |
+
+### Architecture Diagram
+
+```
+UMKHANDLU OS (single codebase)
+│
+├── COP NODE: Mndozo (Ward 7, Newcastle)
+│      ├── Buffalo River Abstraction Works
+│      ├── Community notices + records
+│      └── Directory + map
+│
+├── COP NODE: [Next Council]
+│      ├── Project A
+│      ├── Project B
+│      └── Community content
+│
+└── COP NODE: [District Layer — future]
+       ├── Aggregated visibility
+       ├── PMU reporting export
+       └── Audit evidence trails
+```
+
+### Why This Is Not Drift
+
+Scaling does not change the model because:
+
+- Traditional authority remains the source of legitimacy
+- Municipal authority remains the technical execution authority
+- Umkhandlu only adds: structured memory, visibility, evidence, coordination
+- The operator never governs — only documents
+- Revenue still flows to Unami Foundation (COP model)
+
+The correct description of scaling:
+
+> "Replicating COP governance nodes across infrastructure environments while maintaining a unified audit and visibility layer."
+
+---
+
+## 21. COP Onboarding Protocol
+
+How to introduce the system to a new traditional council without resistance.
+
+### Political Entry Sequence
+
+The order matters. Getting this wrong creates resistance that is very difficult to reverse.
+
+#### Phase 1 — Relationship (Week 1–2)
+
+| Action | Purpose |
+|---|---|
+| Meet Inkosi through existing relationship | Legitimacy — cannot cold-approach |
+| Explain in governance language, not tech language | "Digital council office" not "platform" |
+| Show live example (Mndozo site) | Tangible proof, not abstract pitch |
+| Ask: "Would this be useful for your council?" | Council must request, not be sold to |
+| Leave — do not push | Respect the decision cycle |
+
+**Key rule:** The council must feel they are choosing this, not being sold to.
+
+#### Phase 2 — Endorsement (Week 2–4)
+
+| Action | Purpose |
+|---|---|
+| Inkosi discusses with Izinduna | Internal governance alignment |
+| Council meeting agenda item | Formal consideration |
+| Resolution to proceed (even informal) | Authority to act |
+| Identify Council Admin (who will manage content) | Operational ownership |
+| Identify Youth Representative | Engagement layer ownership |
+
+**Key rule:** Do not start building until the council has formally endorsed.
+
+#### Phase 3 — Setup (Week 4–6)
+
+| Action | Purpose |
+|---|---|
+| Deploy platform (Node Replication Checklist §20) | Technical foundation |
+| Populate leadership profiles (with council) | First visible output |
+| Train Council Admin (2 hours) | Operational handover begins |
+| Publish first notice | Council sees it working |
+| Share link on WhatsApp | Community awareness |
+
+**Key rule:** The council must see their own content live within the first session.
+
+#### Phase 4 — Operational (Week 6+)
+
+| Action | Purpose |
+|---|---|
+| Weekly content cadence begins | Sustainability |
+| First infrastructure project documented (if available) | Evidence layer activated |
+| Monthly check-in with Council Admin | Support without dependency |
+| Quarterly review with Inkosi | Governance alignment maintained |
+
+### What NOT to Do During Onboarding
+
+| ❌ Don't | Why |
+|---|---|
+| Lead with technology | Creates distance |
+| Promise revenue to the council | Revenue flows to Unami — council gets platform free |
+| Bypass Inkosi and go to Izinduna directly | Breaks authority chain |
+| Use English-only materials | isiZulu is the governance language |
+| Demonstrate features before relationship | Features don't create trust |
+| Rush the endorsement phase | Forced adoption creates resentment |
+| Promise things the platform doesn't do | Credibility is everything |
+
+### What TO Say (Tested Language)
+
+| Context | Language |
+|---|---|
+| First meeting | "We've built a digital council office that helps traditional councils publish their notices, show their leadership, and make their community visible online." |
+| When asked about cost | "The council pays nothing. We operate the platform. Businesses and sponsors pay us for visibility services." |
+| When asked about control | "Everything on the site is controlled by the council. Nothing publishes without your approval." |
+| When asked about data | "All data belongs to the council. We don't sell it, share it, or use it without permission." |
+| When asked about other councils | "We're starting with councils who want to be first. The same system works for any traditional council." |
+
+### Onboarding Success Criteria
+
+A COP node is considered successfully onboarded when:
+
+- [ ] Inkosi has endorsed (formally or informally)
+- [ ] Council Admin can log in and create content independently
+- [ ] At least 3 leadership profiles are published
+- [ ] At least 1 notice has been published
+- [ ] At least 1 area page exists with linked listings
+- [ ] WhatsApp link has been shared with community
+- [ ] Weekly content cadence has been maintained for 2 consecutive weeks
+
+---
+
+## 22. Operator Certification
+
+What an operator must demonstrate before they are trusted with the evidence layer.
+
+### Why Certification Matters
+
+The system only works if:
+- Engineers remain authoritative on technical data
+- PMUs remain reporting anchors
+- Operators remain neutral recorders
+- Councils remain decision authorities
+
+If operator discipline breaks, the system collapses regardless of software quality. Certification ensures consistency.
+
+### Operator Role Definition
+
+An operator is NOT:
+- A project manager
+- A technical engineer
+- A contractor representative
+- A municipal decision-maker
+- A journalist or content creator
+
+An operator IS:
+- A structured documentation specialist
+- A neutral evidence recorder
+- A governance process supporter
+- An SOP-disciplined data steward
+
+### Certification Levels
+
+#### Level 1 — Content Operator
+
+Can manage community content (notices, listings, programs, opportunities, posts).
+
+| Requirement | Assessment |
+|---|---|
+| Sanity Studio proficiency | Can create, edit, publish all document types |
+| Content accuracy standards | Understands verified vs. dummy data distinction |
+| ROLES.md understanding | Knows who owns what content |
+| Weekly cadence discipline | Maintains minimum output for 4 consecutive weeks |
+
+**Grants access to:** All CMS content operations.
+
+#### Level 2 — Infrastructure Operator
+
+Can document infrastructure projects and manage the evidence layer.
+
+| Requirement | Assessment |
+|---|---|
+| Level 1 certification | Prerequisite |
+| SOP memorised | Can recite the 6-step pipeline without reference |
+| Source hierarchy memorised | Knows authority classification by heart |
+| TCRS protocol understood | Can explain when to create a verification record |
+| Progress log writing | Can structure a compliant progress entry from raw input |
+| Evidence linking | Can attach photos, documents, and certificates correctly |
+| Conflict detection | Can identify when two sources disagree on the same field |
+| Escalation protocol | Knows when and how to escalate |
+
+**Assessment method:** Simulate a real scenario:
+- Given: contractor WhatsApp message + engineer IPC + PMU monthly report (with conflicting data)
+- Operator must: structure progress log, identify variance, create verification record, set correct status
+
+**Grants access to:** Campaign (Initiative) management, verification records, progress logs.
+
+#### Level 3 — Node Lead
+
+Can onboard a new council and manage a full COP node.
+
+| Requirement | Assessment |
+|---|---|
+| Level 2 certification | Prerequisite |
+| COP Onboarding Protocol memorised | Can execute political entry sequence |
+| Council relationship management | Has successfully onboarded at least 1 council |
+| Reporting discipline | Produces monthly PMU-ready export without errors |
+| Dispute handling | Has handled at least 1 takedown/dispute scenario |
+| Training capability | Can train a Council Admin in 2 hours |
+
+**Grants access to:** Full node management, new council onboarding, operator training.
+
+### Certification Process
+
+```
+Candidate applies
+    ↓
+Level 1 training (2 days)
+    ↓
+Level 1 assessment (practical)
+    ↓
+4-week supervised operation
+    ↓
+Level 2 training (3 days)
+    ↓
+Level 2 assessment (scenario simulation)
+    ↓
+8-week supervised infrastructure documentation
+    ↓
+Level 3 training (onboarding protocol + relationship management)
+    ↓
+Level 3 assessment (live council onboarding under supervision)
+```
+
+### Operator Discipline Rules
+
+These are non-negotiable. Violation results in certification review:
+
+| Rule | Consequence of Violation |
+|---|---|
+| Never publish unverified data | Immediate review |
+| Never delete source records | Immediate review |
+| Never override authority hierarchy | Immediate review |
+| Never make governance decisions | Immediate review |
+| Maintain weekly minimum output | Warning → review after 2 consecutive misses |
+| Follow escalation protocol | Warning → review |
+| Maintain political neutrality | Immediate review |
+| Respect council authority chain | Immediate review |
+
+### Operator Oath (Simple Version)
+
+> "I record. I preserve. I organise. I present. I never decide. The council governs. The engineer certifies. The municipality authorises. I document."
+
+### Scaling Operators
+
+| Nodes | Operators Needed |
+|---|---|
+| 1 node (pilot) | 1 Level 2 operator |
+| 2–3 nodes | 1 Level 3 lead + 1–2 Level 2 operators |
+| 4–6 nodes (district) | 1 Level 3 lead + 3–4 Level 2 operators |
+| 7+ nodes (provincial) | Multiple Level 3 leads + operator pool |
+
+The operator layer is the only human function that scales. The platform is fully reusable. The council layer is fixed per deployment. Operators are the variable.
 
 ---
 
