@@ -91,18 +91,23 @@
 }
 
 @media print {
+  /* ─── Hide non-content elements ─────────────────────── */
   header,
   footer,
   nav,
   [data-slot="sheet-overlay"],
   [data-slot="sheet-content"],
   button[aria-label="Back to top"],
+  [data-cookie-consent],
+  .leaflet-container,
   .no-print {
     display: none !important;
   }
 
+  /* ─── Base typography ────────────────────────────────── */
   body {
     font-size: 12pt;
+    line-height: 1.5;
     color: #000;
     background: #fff;
   }
@@ -112,8 +117,107 @@
     text-decoration: underline;
   }
 
+  /* ─── Layout ────────────────────────────────────────── */
   .container {
     max-width: 100% !important;
     padding: 0 !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  section {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    break-inside: avoid;
+  }
+
+  /* ─── Images ────────────────────────────────────────── */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    break-inside: avoid;
+  }
+
+  /* ─── Hero: remove dark overlay, show text as black ── */
+  section:has(h1) {
+    background: #fff !important;
+    color: #000 !important;
+    padding: 1rem 0 !important;
+  }
+
+  section:has(h1) * {
+    color: #000 !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  section:has(h1) [class*="bg-black"],
+  section:has(h1) [class*="bg-gradient"] {
+    background: transparent !important;
+  }
+
+  /* ─── Project Info Board: print-friendly ─────────────── */
+  [class*="border-primary"] {
+    border-color: #000 !important;
+  }
+
+  [class*="bg-primary"] {
+    background: #f3f4f6 !important;
+    color: #000 !important;
+  }
+
+  [class*="bg-primary"] * {
+    color: #000 !important;
+  }
+
+  /* ─── Cards and grids ───────────────────────────────── */
+  [class*="grid"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  [class*="shadow"] {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* ─── Filter bars: hide interactive controls ─────────── */
+  [class*="flex"][class*="gap"][class*="flex-wrap"]:has(button) {
+    display: none !important;
+  }
+
+  /* ─── Page breaks ───────────────────────────────────── */
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  article,
+  [class*="card"] {
+    break-inside: avoid;
+  }
+
+  /* ─── CTA sections: simplify gradient backgrounds ──── */
+  [class*="from-"] {
+    background: #f9fafb !important;
+    color: #000 !important;
+  }
+
+  [class*="from-"] * {
+    color: #000 !important;
+  }
+
+  /* ─── URL display after links (optional, useful for PDF) */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666;
+    word-break: break-all;
+  }
+
+  a[href^="/"]::after,
+  a[href^="#"]::after {
+    content: none;
   }
 }
