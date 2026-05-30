@@ -447,6 +447,7 @@ All content is linked via `relatedArea` references — when editors create a not
 | Contractor | Implementing company | ABC Construction (Pty) Ltd |
 | Project Phase | Current stage | Planning → Procurement → Construction → Commissioning → Operational |
 | Progress Log | Timestamped updates | "Month 3: Foundation complete, 45 employed" |
+| Total Deliverables | Contract scope count | 6 (set once at inception) |
 | Local SMMEs | Businesses benefiting | 12 local SMMEs appointed |
 | Related Listings | Infrastructure served | Links to schools, clinics, facilities |
 
@@ -492,6 +493,30 @@ The board only renders for Initiative type campaigns. All text is uppercase matc
 
 This positions Umkhandlu as a compliance-ready documentation platform that municipalities can reference for WSIG/MIG reporting.
 
+#### Compliance Reporting Alignment
+
+The deliverables system uses **milestone-based progress measurement** — not percentage claims:
+
+| Approach | Example | Auditability |
+|---|---|---|
+| ❌ Percentage-based | "Contractor says 70% complete" | Unverifiable |
+| ✅ Milestone-based | "3 of 6 certified deliverables = 50%" | Auditable |
+
+`totalDeliverables` is set once from the contract scope. As the engineer certifies each milestone, the operator adds it to `deliverables[]`. The progress bar derives from certified completions.
+
+This aligns with:
+- **IPC practice** — payment is milestone-based, not percentage-based
+- **SDBIP reporting** — quarterly progress = deliverables completed in period
+- **Audit requirements** — each deliverable is a verifiable, binary state (done/not done)
+- **PMS evidence** — deliverable list = portfolio of evidence items
+- **EPWP reporting** — beneficiaries + SMMEs + deliverables in one exportable record
+
+The export API returns all fields for PMU report compilation:
+```
+GET /api/campaigns/export?token=<TOKEN>
+→ deliverables[], totalDeliverables, beneficiaries, localSMMEs, progressLog[]
+```
+
 ### Governance Audit & Evidence Preservation
 
 Infrastructure delivery produces multiple reports from multiple sources. These reports do not always agree. The platform preserves all source reports without deleting competing claims.
@@ -525,7 +550,7 @@ The final reporting value is determined by the applicable governance authority i
 | CLO / Ward Councillor | Community governance input |
 | Field observation | Operational observation |
 
-**Variance Types:** Numerical, Status, Timeline, Workforce, Contextual
+**Variance Types:** Numerical (including deliverable completion claims), Status, Timeline, Workforce, Contextual
 
 **Verification States:** Pending Review → Under Review → Verified / Escalated
 
@@ -1067,9 +1092,10 @@ Newcastle Municipality (Sponsor — Government)
 ```
 
 As the project progresses:
+- Deliverables checked off as engineer certifies (progress bar updates)
 - Photos added to gallery (construction milestones)
 - Beneficiaries updated (100 employed → community served)
-- Deliverables checked off (weir, boreholes, treatment works)
+- Progress log entries added weekly
 - Status: Active → Completed → Reported
 - Impact summary written for municipal reporting
 

@@ -82,7 +82,18 @@ Example:
 **Metadata updates** — only when confirmed:
 - `beneficiaries` (employment numbers)
 - `projectPhase` (only engineer/PMU confirmed)
-- `deliverables` status
+- `deliverables` (add milestone when engineer certifies completion)
+- `totalDeliverables` (set once at project inception from contract scope)
+
+**Progress measurement:**
+
+Umkhandlu uses **milestone-based progress**, not percentage-based:
+- ❌ "Contractor says 70% complete" (unverifiable claim)
+- ✅ "3 of 6 certified deliverables completed = 50%" (auditable)
+
+The `totalDeliverables` field is set once from the contract scope. As the engineer certifies each milestone, the operator adds it to `deliverables[]`. The progress bar derives from certified completions.
+
+This aligns with IPC (Interim Payment Certificate) practice where payment is milestone-based, not percentage-based.
 
 **Evidence linking:**
 - Images → `gallery[]`
@@ -132,6 +143,8 @@ Then: compile PMU summary, cross-check with progress log, produce structured mon
 | Certificates/reports | `documents[]` | When engineer issues IPC or report |
 | Employment numbers | `beneficiaries` | When PMU confirms EPWP numbers |
 | Local businesses | `localSMMEs` | When confirmed by PMU |
+| Project scope | `totalDeliverables` | Once at project inception (from contract) |
+| Milestone certified | `deliverables[]` | When engineer certifies a deliverable |
 | Phase transition | `projectPhase` | Only when engineer/PMU certifies milestone |
 | Project completion | `status` → completed | Only when municipality confirms |
 | Final reporting | `impactSummary` | After completion, for CSR/compliance report |

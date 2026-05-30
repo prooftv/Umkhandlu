@@ -14,6 +14,11 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   beneficiaries,
   impactSummary,
   deliverables,
+  totalDeliverables,
+  "deliverableProgress": select(
+    defined(totalDeliverables) && totalDeliverables > 0 => round((count(deliverables) / totalDeliverables) * 100),
+    null
+  ),
   "sponsor": sponsor->{ name, sponsorType, website },
   "contactPerson": contactPerson->{ firstName, lastName, role },
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current },
