@@ -177,6 +177,30 @@
     color: #000 !important;
   }
 
+  /* Info Board: prevent page break splitting */
+  [class*="border-gray-800"][class*="rounded-lg"] {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    break-before: auto;
+    page-break-before: auto;
+  }
+
+  /* Info Board: compact for print */
+  [class*="border-gray-800"][class*="rounded-lg"] [class*="px-5"] {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+  }
+
+  [class*="border-gray-800"][class*="rounded-lg"] [class*="gap-8"] {
+    gap: 1rem !important;
+  }
+
+  [class*="border-gray-800"][class*="rounded-lg"] img {
+    height: 2rem !important;
+  }
+
   /* ─── Cards and grids ───────────────────────────────── */
   [class*="grid"] {
     grid-template-columns: repeat(2, 1fr) !important;
