@@ -1231,11 +1231,15 @@ This turns the operator role into a contractable, auditable, scalable governance
 
 ### For Municipalities / PMUs
 
-> "Umkhandlu provides infrastructure visibility and participation support — structured evidence records supporting project monitoring, stakeholder visibility, and performance reporting throughout the project lifecycle."
+> "Umkhandlu provides infrastructure visibility and participation support — with audit-ready milestone tracking derived from engineer certification. Progress is measured by certified completions, not contractor claims. Structured evidence records support project monitoring, stakeholder visibility, and performance reporting throughout the project lifecycle."
 
 ### For Audit / PMS
 
-> "A governance audit and evidence preservation layer for municipal performance management and infrastructure reporting. Records, preserves, organises, and presents performance information from multiple sources in accordance with municipal verification processes."
+> "A governance audit and evidence preservation layer for municipal performance management and infrastructure reporting. Produces verifiable, milestone-based progress metrics aligned with IPC practice. Records, preserves, organises, and presents performance information from multiple sources in accordance with municipal verification processes. Each deliverable is a binary, auditable state — certified or not certified."
+
+### For Engineers
+
+> "A structured project documentation layer where your certifications become the authoritative progress record. Milestone completion is only recorded when you certify it. Contractor claims are preserved but do not override your certification. The system protects engineering authority."
 
 ### For Ingonyama Trust
 
@@ -1245,15 +1249,15 @@ This turns the operator role into a contractable, auditable, scalable governance
 
 ### For NGOs & Donors
 
-> "Umkhandlu provides structured, traceable data on governance decisions, community infrastructure, and development activity across traditional authority areas — enabling targeted intervention and measurable impact through campaign tracking and data export."
+> "Umkhandlu provides structured, traceable data on governance decisions, community infrastructure, and development activity across traditional authority areas — enabling targeted intervention and measurable impact through milestone-based project tracking and data export."
 
 ### For Government
 
-> "Umkhandlu digitises the local governance layer — structuring how notices, records, and decisions flow within traditional councils, creating transparency without disrupting authority structures."
+> "Umkhandlu digitises the local governance layer — structuring how notices, records, and decisions flow within traditional councils, creating transparency without disrupting authority structures. Infrastructure progress is derived from engineer-certified milestones, not self-reported percentages."
 
 ### For CSR Partners
 
-> "Community development coordination — structured project documentation, impact tracking, evidence preservation, and compliance-ready reporting for sponsor accountability."
+> "Community development coordination — structured project documentation, milestone-based impact tracking, evidence preservation, and compliance-ready reporting for sponsor accountability. Every deliverable is verifiable. Every progress update is traceable to a certified source."
 
 ### For Youth
 
@@ -1261,11 +1265,11 @@ This turns the operator role into a contractable, auditable, scalable governance
 
 ### For Investors / Donors
 
-> "Structured community intelligence and development visibility — traceable governance data, infrastructure mapping, and participation metrics across traditional authority areas."
+> "Structured community intelligence and development visibility — traceable governance data, infrastructure mapping, and audit-ready participation metrics across traditional authority areas. Progress data is derived from certified milestones, not claims."
 
 ### Internal (The Truth)
 
-> "We didn't build a website. We built the missing operating system between traditional authority and modern coordination."
+> "We didn't build a website. We built the missing operating system between traditional authority and modern coordination. Progress is measured by what's been certified, not what's been claimed. The system records, preserves, organises, presents — and never decides."
 
 ---
 
