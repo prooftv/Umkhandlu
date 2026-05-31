@@ -220,3 +220,123 @@ UMKHANDLU — The Missing Operating System
 ```
 
 TCRS is one module inside the operating system. It does not define the operating system.
+
+---
+
+## 14. Proof of Publication Protocol
+
+Statutory notices require proof that proper notification occurred. TCRS provides this through structured evidence preservation.
+
+### The Legal Question
+
+Every statutory notice eventually faces one question:
+
+> "Can you prove that the community was properly notified?"
+
+| Context | Who asks | What they need |
+|---|---|---|
+| SPLUMA application | Municipality | Proof of 30-day public inspection |
+| EIA process | Environmental consultant | Proof of public participation |
+| Estate notice | Master of the High Court | Proof of publication |
+| Liquidation | Attorney / creditors | Proof of notice to affected parties |
+| Traditional council | Induna / community | Proof the notice was issued |
+
+### What the System Preserves (Automatically)
+
+| Evidence | Field | Purpose |
+|---|---|---|
+| Publication date | `publishDate` | When the notice went live |
+| Comment deadline | `commentDeadline` | Mandatory inspection window end |
+| Retention period | `retentionPeriod` | Minimum publication duration |
+| Legal mandate | `legalMandate` | Governing Act reference |
+| Documents hosted | `documents[]` | EIA reports, site plans available for download |
+| Map location | `geopoint` | Site pinned on public map |
+| Public URL | System-generated | Permanent, indexable, accessible |
+| Notice status | `status` | Lifecycle: open → closed → approved/rejected |
+| Applicant | `applicant` | Who submitted the notice |
+| Reference number | `referenceNumber` | Official application reference |
+
+### Proof of Publication Certificate
+
+The platform generates a formal certificate that an applicant can submit to the municipality, court, or authority as proof of compliance. The certificate contains:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│           PROOF OF PUBLICATION CERTIFICATE               │
+│                                                         │
+│  Platform:        Umkhandlu [Council Name]              │
+│  Certificate No:  [auto-generated]                      │
+│  Date Issued:     [current date]                        │
+│                                                         │
+│  ─────────────────────────────────────────────────────  │
+│                                                         │
+│  NOTICE DETAILS                                         │
+│  Title:           [notice title]                        │
+│  Type:            [EIA / SPLUMA / Estate / etc.]        │
+│  Legal Mandate:   [NEMA / SPLUMA / Insolvency Act]      │
+│  Reference No:    [application reference]               │
+│  Applicant:       [developer / attorney name]           │
+│                                                         │
+│  PUBLICATION RECORD                                     │
+│  Published:       [publishDate]                         │
+│  Comment Deadline: [commentDeadline]                    │
+│  Days Published:  [calculated]                          │
+│  Retention:       [retentionPeriod]                     │
+│  Public URL:      [permanent link]                      │
+│  Status:          [current status]                      │
+│                                                         │
+│  DOCUMENTS HOSTED                                       │
+│  1. [document title] — available for public download    │
+│  2. [document title] — available for public download    │
+│                                                         │
+│  SITE LOCATION                                          │
+│  Address:         [location]                            │
+│  Coordinates:     [lat, lng]                            │
+│  Map:             Publicly visible on community map     │
+│                                                         │
+│  ─────────────────────────────────────────────────────  │
+│                                                         │
+│  This certificate confirms that the above notice was    │
+│  published on the Umkhandlu community platform and      │
+│  remained publicly accessible for the stated duration.  │
+│  The notice, supporting documents, and site location    │
+│  were available for public inspection at the URL above. │
+│                                                         │
+│  Issued by: Unami Foundation (Platform Operator)        │
+│  Contact:   [operator email]                            │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### How This Connects to TCRS
+
+The certificate is not a governance decision. It is **evidence preservation output**.
+
+The system:
+- Records when the notice was published
+- Preserves what was available
+- Tracks how long it remained visible
+- Generates a structured proof document
+
+It does NOT:
+- Certify that the notice content is correct
+- Guarantee that the community read it
+- Replace official gazette publication where required
+- Make legal determinations about compliance
+
+### Revenue Implication
+
+The proof of publication certificate is included in the notice fee. It is what attorneys currently pay newspapers R2,000+ for. Umkhandlu provides it at R100–R200 as part of the structured notice fee because the evidence is already in the system.
+
+### Retention Rules
+
+| Notice Type | Minimum Retention | Archive |
+|---|---|---|
+| PTO / Land Transfer | Permanent | Never delete |
+| Estate (Form J187) | 3 months minimum | Archive after closure |
+| Liquidation | 3 months minimum | Archive after closure |
+| SPLUMA / Rezoning | 30 days minimum | Archive after decision |
+| EIA | Full project duration | Archive after ROD issued |
+| Mining | Full project duration | Archive after decision |
+
+Notices are never deleted from the system. After the retention period, status changes to `closed` but the record remains permanently accessible and searchable.
