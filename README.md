@@ -58,7 +58,7 @@ npm run dev
 | `record` | Governance documents (minutes, resolutions, land allocations, dispute resolutions, policies, reports, external resources) |
 | `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
 | `campaign` | Campaigns & activations (sponsorship, activation, initiative) with video, audio, documents, SEO, impact tracking |
-| `developmentNotice` | Public participation notices (EIA, rezoning, mining, cell towers) with comment deadline, applicant, map pin |
+| `developmentNotice` | Statutory & public participation notices (EIA, SPLUMA, estate, liquidation, PTO, mining, cell towers) with comment deadline, applicant, map pin, legal mandate, fee tracking, proof of publication |
 | `conflictLog` | Verification records — source reports, authority classification, verification status, escalation tracking |
 
 ### 27 Page Builder Sections
@@ -179,7 +179,9 @@ Content links via `relatedArea` references on notices, programs, opportunities, 
 
 ## Forms & Webhooks
 
-Contact and subscribe forms validate with Valibot and POST to a webhook URL configured in CMS Settings → Analytics. Works with n8n, Make, Zapier, or any webhook endpoint.
+Contact, subscribe, and public comment forms validate with Valibot and POST to a webhook URL configured in CMS Settings → Analytics. Works with n8n, Make, Zapier, or any webhook endpoint.
+
+The public comment form on development notices captures structured objections/comments with name, contact, relationship to site, and comment type (comment/objection/support/question).
 
 ## Scripts
 
@@ -199,6 +201,8 @@ Contact and subscribe forms validate with Valibot and POST to a webhook URL conf
 | `GET /api/campaigns/export?token=<READ_TOKEN>` | Campaign data export (JSON) |
 | `GET /api/campaigns/export?token=<READ_TOKEN>&status=active` | Filter by status |
 | `GET /api/campaigns/export?token=<READ_TOKEN>&type=csr` | Filter by type |
+| `/development-notices/[slug]` | Public notice detail + comment form |
+| `/notices/certificate/[id]` | Proof of Publication certificate (printable) |
 
 ## Documentation
 

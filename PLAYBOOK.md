@@ -263,7 +263,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report/external-resource), date, summary, status, approvedBy, content, PDF file, externalUrl, source, relatedArea |
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
 | `campaign` | Campaigns & activations | Title, type (sponsorship/activation/initiative), status (draft/approved/active/completed/reported), sponsor, contactPerson, dates, targetAudience, tags, budget, beneficiaries, impact summary, deliverables, video, audio, documents, gallery, SEO |
-| `developmentNotice` | Public participation notices | Title, type (EIA/rezoning/land-use/building/mining/liquor/telecom), status (open/closed/approved/rejected), applicant, reference number, description, location, geopoint, comment deadline, comment contact, documents, related area |
+| `developmentNotice` | Statutory & public participation notices | Title, type (EIA/SPLUMA/estate/liquidation/PTO/mining/telecom/liquor), status, applicant, reference number, legal mandate, retention period, fee, feeStatus, description, location, geopoint, comment deadline, comment contact, documents, related area |
 | `conflictLog` | Verification records | Project reference, reported field, variance type, source records (authority + value + date + evidence), verified reporting value, verification status, escalation level, verification note |
 
 #### 3 Singletons
@@ -344,6 +344,8 @@ All content is linked via `relatedArea` references — when editors create a not
 | **Projects** | `/projects` | hero, programList, teamGrid (sponsors), logoGrid |
 | **Contact** | `/contact` | hero, contactForm (with map), cta |
 | **Area Pages** | `/areas/[slug]` | Auto-generated: induna, listings, notices, programs, opportunities |
+| **Development Notices** | `/development-notices/[slug]` | Notice details, documents, map, public comment form, proof of publication link |
+| **Proof of Publication** | `/notices/certificate/[id]` | Formal certificate (printable PDF for court/authority submission) |
 | **Blog** | `/blog` | Blog listing with pagination |
 | **Blog Post** | `/blog/[slug]` | Full article with JSON-LD |
 
@@ -415,6 +417,10 @@ All content is linked via `relatedArea` references — when editors create a not
 
 - Contact form with Valibot validation (server action)
 - Newsletter subscription (server action, used in both Subscribe section and Footer)
+- Public comment/objection form on development notices (server action)
+  - Captures: name, contact, relationship to site, comment type, free-text comment
+  - Only visible when notice status is `open` and deadline has not passed
+  - Delivered to webhook (same pipeline as contact/subscribe)
 - All forms use React 19 `useActionState` for progressive enhancement
 
 ### Monetisation Layer
@@ -1239,8 +1245,8 @@ This turns the operator role into a contractable, auditable, scalable governance
 | Document types | 13 |
 | Page builder sections | 27 |
 | Singletons | 3 |
-| Frontend routes | 15 |
-| Server actions | 3 (with webhook delivery) |
+| Frontend routes | 17 |
+| Server actions | 4 (contact, subscribe, public comment, webhook delivery) |
 | UI components | 7 |
 | Total components | 66 |
 | i18n translation keys | 50+ |
