@@ -1,18 +1,21 @@
 # Truth Conflict Resolution System (TCRS)
 
-Governance Audit & Evidence Preservation protocol for infrastructure reporting.
+The Evidence Layer of Umkhandlu — preserving institutional memory across infrastructure, participation, governance, and compliance.
 
 ---
 
 ## 1. Core Principle
 
-Infrastructure delivery produces multiple reports from multiple sources. These reports do not always agree.
+Umkhandlu manages the public record. Multiple sources contribute to that record. Those sources do not always agree, and statutory processes require proof that events occurred.
 
-Umkhandlu does not decide which source is correct. It:
+TCRS governs two functions:
 
-> Records all source reports → preserves evidence → organises by authority classification → presents a verified reporting value for governance use.
+1. **Variance Resolution** — When sources disagree, preserve all claims and present a verified reporting value
+2. **Evidence Preservation** — When proof is required, maintain timestamped, traceable, auditable records
 
-The final reporting value is determined by the applicable governance authority in accordance with municipal verification processes.
+The system does not decide which source is correct. It does not certify compliance. It:
+
+> Records → preserves → organises by authority classification → presents for governance use.
 
 ---
 
@@ -187,39 +190,45 @@ The `conflictLog` document type stores:
 
 ### Internal (operators, developers)
 
-> TCRS — Truth Conflict Resolution System. Records competing claims, assigns authority weights, resolves display truth.
+> TCRS — The Evidence Layer. Preserves institutional memory across infrastructure, participation, governance, and compliance. Handles variance resolution when sources disagree.
 
 ### External (municipalities, PMUs, audit)
 
-> Governance Audit & Evidence Preservation Layer. Records, preserves, organises, and presents infrastructure reporting evidence from multiple sources in accordance with municipal verification processes.
+> Governance Audit & Evidence Preservation Layer. Records, preserves, organises, and presents performance and compliance evidence from multiple sources in accordance with municipal verification processes.
 
 ### One-Line Definition
 
-> Umkhandlu preserves all source reports on infrastructure performance, organises them by authority classification, and maintains a transparent, auditable evidence trail supporting governance accountability and PMS reporting requirements.
+> Umkhandlu’s evidence layer preserves all source reports, publication records, participation evidence, and governance decisions — maintaining a transparent, auditable institutional memory supporting accountability, compliance, and community oversight.
 
 ---
 
 ## 13. System Architecture Position
 
 ```
-UMKHANDLU — The Missing Operating System
+UMKHANDLU — Community-Scale Institutional Memory
 │
 ├── Community Participation Layer
 ├── Infrastructure Visibility Layer
 ├── Development Coordination Layer
 ├── Opportunity & Programme Layer
 ├── Council Oversight Layer
+├── Public Notice & Compliance Layer
 │
-└── Governance Audit & Evidence Preservation Layer
-        └── TCRS
-              ├── Evidence Capture
-              ├── Source Traceability
-              ├── Verification Tracking
-              ├── Audit History
-              └── Reporting Support
+└── Governance Audit & Evidence Layer (TCRS)
+        ├── Infrastructure Evidence (project milestones, verification records)
+        ├── Publication Evidence (proof of publication, retention tracking)
+        ├── Participation Evidence (comments, objections, community input)
+        ├── Compliance Evidence (legal mandates, deadlines, certificates)
+        └── Governance Evidence (decisions, resolutions, approvals)
 ```
 
-TCRS is one module inside the operating system. It does not define the operating system.
+TCRS is the evidence layer of the entire operating system. It does not only handle conflicts — it preserves all institutional memory across every module.
+
+The recurring pattern:
+
+> Public Record → Participation → Evidence → Traceability
+
+Every module answers the same question in different contexts: *"Can you prove what happened?"*
 
 ---
 

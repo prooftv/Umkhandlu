@@ -1,10 +1,10 @@
 # Umkhandlu — Project Playbook
 
-> **Umkhandlu is participation infrastructure for underrepresented communities — enabling them to represent, coordinate, and develop themselves on their own terms.**
+> **Umkhandlu is community-scale institutional memory — managing the public record surrounding projects, participation, governance, opportunity, and compliance.**
 
 ## Community Self-Determination Architecture
 
-**Version:** 3.2
+**Version:** 3.3
 **Status:** Production-Ready
 **Repository:** github.com/prooftv/Umkhandlu
 
@@ -12,9 +12,9 @@
 
 ## 0. Philosophical Framework
 
-Umkhandlu is not a website, a CMS, or a digital transformation project.
+Umkhandlu is not a website, a CMS, a project management tool, or a digital transformation project.
 
-It is **participation infrastructure for community self-determination**.
+It is **community-scale institutional memory** — the public record of what was promised, what was decided, what was notified, and what was delivered.
 
 Digital invisibility is a form of dependency. If communities cannot publish themselves, document themselves, coordinate themselves, or represent themselves digitally — then outsiders become the primary narrators of their governance, their economy, their development, and their identity.
 
@@ -62,15 +62,21 @@ This model changes that. The community becomes:
 
 ### What Umkhandlu Actually Builds
 
-Not content. Not media. Not apps.
+Not content. Not media. Not apps. Not dashboards.
 
-- **Memory** — governance records, decisions, resolutions
-- **Visibility** — infrastructure mapping, directory, map
-- **Coordination** — notices, campaigns, programs
-- **Opportunity** — jobs, training, bursaries, development
-- **Accountability** — project tracking, impact reporting, public participation
+- **Memory** — governance records, decisions, resolutions, project outcomes
+- **Visibility** — infrastructure mapping, directory, community map
+- **Coordination** — notices, campaigns, programs, development
+- **Opportunity** — jobs, training, bursaries, procurement
+- **Accountability** — milestone tracking, impact reporting, evidence preservation
+- **Compliance** — statutory notices, proof of publication, comment capture, retention
+- **Participation** — public comment forms, objections, community input
 
-Philosophy becomes systems. Systems survive.
+The recurring pattern across all modules:
+
+> **Public Record → Participation → Evidence → Traceability**
+
+That is the operating model. Philosophy becomes systems. Systems survive.
 
 ### The Operating Model
 
@@ -127,16 +133,23 @@ Always frame as:
 
 Umkhandlu is a governance state engine for traditional councils. It structures how decisions, communication, and opportunities flow within a traditional authority — without altering authority structures.
 
-This is not a website. It is not a CMS. It is the missing operating system between traditional authority and modern coordination.
+This is not a website. It is not a CMS. It is not a project management tool.
 
-Four layers:
+It is the missing operating system between traditional authority and modern coordination.
+
+> Umkhandlu does not manage projects. It manages the public record surrounding projects, participation, governance, opportunity, and compliance.
+
+Seven layers:
 
 | Layer | What it does | Components |
 |---|---|---|
 | **Authority** | Mirrors real governance hierarchy | Inkosi → Izinduna → Council → Community |
 | **System** | Structures how information moves | Notices (awareness), Records (memory), Listings (visibility), Opportunities (flow), Programs (activity), Campaigns (development) |
-| **Evidence** | Preserves governance accountability | Verification records, source traceability, milestone-based progress, audit history |
-| **Output** | Interfaces people actually use | Website, Maps, WhatsApp, Reports, Data Export |
+| **Evidence** | Preserves institutional memory | Verification records, source traceability, milestone-based progress, proof of publication |
+| **Participation** | Captures community input | Public comment forms, objections, support, questions |
+| **Compliance** | Enforces statutory requirements | Legal mandates, retention periods, comment deadlines, certificates |
+| **Records** | Archives governance decisions permanently | Resolutions, allocations, minutes, project outcomes, notice history |
+| **Output** | Interfaces people actually use | Website, Maps, WhatsApp, Reports, PDF Certificates, Data Export |
 
 The system layer is the core. Document types are not content — they are state containers. The page builder is not a layout tool — it is a view renderer. The CMS is not a publishing platform — it is a control panel for governance operations.
 
@@ -1200,6 +1213,40 @@ The system fills the gap between community participation, project monitoring, PM
 
 The system doesn't change how the council governs. It structures the information that governance produces — making it visible, traceable, and exportable.
 
+### The Deeper Pattern
+
+Across all modules, the same pattern repeats:
+
+| Context | Question | System Answer |
+|---|---|---|
+| Infrastructure | "What was promised?" | Project record + milestones + evidence |
+| SPLUMA | "Was the community notified?" | Publication + deadline + certificate |
+| EIA | "Did participation occur?" | Comments + documents + evidence trail |
+| Traditional Council | "What was decided?" | Record + approvedBy + archive |
+| Estate | "Was it published?" | Notice + retention + proof |
+| Dispute | "What did each party claim?" | Verification record + sources |
+
+The answer is always: **Public Record → Participation → Evidence → Traceability.**
+
+This is not a feature list. It is the operating model of community-scale institutional memory.
+
+### Next Architectural Milestone: Institutional Records Layer
+
+The `record` document type exists but is underutilised. It should become the backbone of permanent community memory:
+
+- Traditional council records (PTO allocations, resolutions, imbizo outcomes)
+- Development records (project histories, contractor performance, implementation outcomes)
+- Community records (infrastructure assets, local organisations, service history)
+- Governance records (notices, certificates, evidence trails, decision archives)
+
+Municipalities change. Councillors change. Indunas change. Contractors change. But the community memory remains. The platform is becoming that memory.
+
+The `record` document type needs:
+- A frontend detail page at `/records/[slug]`
+- Integration with the proof of publication system
+- Permanent archive (records are never deleted, only status-changed)
+- Search and filter by type, area, date, authority
+
 ---
 
 ## 16. Operator SOP (Infrastructure Documentation)
@@ -1301,7 +1348,7 @@ This turns the operator role into a contractable, auditable, scalable governance
 
 ### Internal (The Truth)
 
-> "We didn't build a website. We built the missing operating system between traditional authority and modern coordination. Progress is measured by what's been certified, not what's been claimed. The system records, preserves, organises, presents — and never decides."
+> "We didn't build a website. We built community-scale institutional memory — the public record of what was promised, what was decided, what was notified, and what was delivered. Progress is measured by what's been certified, not what's been claimed. The system records, preserves, organises, presents — and never decides."
 
 ---
 
@@ -1370,7 +1417,7 @@ Scaling Umkhandlu is not expansion of geography. It is replication of governance
 
 The core definition does not change per deployment:
 
-> "The missing operating system between traditional authority and modern coordination."
+> "Community-scale institutional memory — the missing operating system between traditional authority and modern coordination."
 
 Everything else is deployment topology.
 
