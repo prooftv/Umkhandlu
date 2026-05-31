@@ -584,22 +584,40 @@ Positioning: *"Supporting local businesses and community development"* — not c
 
 All platform revenue flows to Unami Foundation as the system operator. The council receives the platform and its benefits at zero cost. This is the Council Operating Partner (COP) model — Unami operates, the council governs.
 
-### Development Notices (Public Participation Revenue)
+### Development & Statutory Notices (Public Notice Revenue)
 
-A dedicated document type for legally-required public participation notices — EIA, rezoning, land use change, building plans, mining permits, liquor licenses, cell towers.
+A dedicated document type for legally-required public participation and statutory notices — EIA, rezoning, SPLUMA applications, mining permits, liquor licenses, cell towers, deceased estates, liquidations, PTO transfers.
 
-Every development on Trust land, municipal land, or private land requires public notification. The platform becomes the official digital notice channel for the area.
+Every development on Trust land, municipal land, or private land requires public notification. Estate notices require publication. SPLUMA applications require 30-day community inspection. The platform becomes the official digital notice channel for the area.
 
-| Notice Type | Example | Price |
-|---|---|---|
-| Environmental Impact Assessment | Proposed fuel station | R3,000–R5,000 |
-| Rezoning Application | Residential to commercial | R2,000–R3,000 |
-| Mining / Excavation Permit | Sand mining at river | R2,000–R3,000 |
-| Cell Tower / Mast | Vodacom tower installation | R3,000–R5,000 |
-| Liquor License | New tavern application | R1,500–R2,000 |
-| Building Plan Approval | Multi-unit housing | R2,000–R3,000 |
+| Notice Type | Legal Mandate | Proposed Fee | Retention |
+|---|---|---|---|
+| PTO / Land Transfer | Traditional & Khoi-San Leadership Act | R100–R150 | Permanent |
+| Deceased Estate (Form J187) | Insolvency Act No. 24 of 1936 | R350–R450 | Min. 3 months |
+| Liquidation / Insolvency | Insolvency Act No. 24 of 1936 | R400–R550 | Min. 3 months |
+| Rezoning / SPLUMA | Spatial Planning & Land Use Management Act | R650–R850 | Min. 30 days |
+| Township Establishment | SPLUMA | R650–R850 | Min. 30 days |
+| Environmental Impact Assessment | NEMA | R950–R1,200 | Full project duration |
+| Mining / Excavation Permit | MPRDA | R2,000–R3,000 | Full project duration |
+| Cell Tower / Mast | NEMA + municipal by-laws | R3,000–R5,000 | Full project duration |
+| Liquor License | Liquor Act | R1,500–R2,000 | Min. 30 days |
 
-Fields: applicant, reference number, description, site location + map pin, comment deadline, contact for objections, supporting documents (EIA reports, site plans), status (open → closed → approved/rejected).
+**Fee breakdown logic:**
+- Traditional alignment (facilitating council communication)
+- Digital hosting & mapping (documents, site plans, map pins)
+- Proof of publication (digital certificate for applicant to submit to authority)
+- Comment period tracking (deadline enforcement, public accessibility)
+
+**What makes this legally defensible:**
+- `publishDate` — timestamped proof of when notice went live
+- `commentDeadline` — enforces mandatory inspection windows
+- `retentionPeriod` — notice cannot be unpublished before legal minimum
+- `legalMandate` — references governing Act
+- `documents[]` — hosts EIA reports, site plans, application forms
+- Print/PDF output — proof of publication for court submission
+- Permanent archive — notices remain searchable after closure
+
+Fields: applicant, reference number, description, site location + map pin, comment deadline, contact for objections, supporting documents (EIA reports, site plans), status (open → closed → approved/rejected), legal mandate, retention period.
 
 ### Full Development Lifecycle Revenue
 
@@ -607,19 +625,23 @@ The platform captures value at every stage of a development:
 
 ```
 PRE-DEVELOPMENT:
-  Development Notice (public participation)
-    → Developer pays R2,000–R5,000 for 30–60 day notice
+  Statutory Notice (public participation / legal compliance)
+    → Developer/attorney pays R100–R1,200 per notice type
 
 DURING CONSTRUCTION:
-  Campaign (Initiative) + Project Info Board
+  Campaign (Initiative) + Digital Project Info Board
     → Municipality pays R5,000–R15,000 for documentation
 
 POST-CONSTRUCTION:
   Listing (business/facility on map + directory)
     → Business pays R50–R300/month for visibility
+
+ONGOING:
+  Estate/Legal Notices
+    → Attorneys pay R350–R550 per notice (recurring, volume-based)
 ```
 
-Three revenue events from a single development. This is the commercial engine.
+Four revenue events from a single development. Plus recurring legal notice revenue from attorneys and executors. This is the commercial engine.
 
 ---
 
@@ -743,7 +765,9 @@ All system revenue flows to Unami Foundation. The council receives the platform 
 | **Directory listings** | Featured/premium business listings | R50–R300/month per listing |
 | **Campaign management** | Sponsor activations, CSR documentation | R3,000–R15,000 per campaign |
 | **Infrastructure documentation** | Municipal project tracking + compliance reporting | R5,000–R15,000 per project |
-| **Development notices** | Public participation notices (EIA, rezoning, etc.) | R2,000–R5,000 per notice |
+| **Development notices** | Public participation notices (EIA, rezoning, SPLUMA) | R650–R1,200 per notice |
+| **Estate & legal notices** | Deceased estates, liquidations, creditor meetings | R350–R550 per notice |
+| **PTO / land transfer notices** | Traditional land occupancy transfers | R100–R150 per notice |
 | **Integration upgrades** | WhatsApp, n8n, map, advanced features | Phase-based |
 | **Template licensing** | Additional council deployments from same codebase | Per deployment |
 | **Data partnerships** | Council-approved data insights for planning and development partners | Future phase |

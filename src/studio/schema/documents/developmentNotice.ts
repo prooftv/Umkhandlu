@@ -29,12 +29,16 @@ export default defineType({
       options: {
         list: [
           { title: 'Environmental Impact Assessment (EIA)', value: 'eia' },
-          { title: 'Rezoning Application', value: 'rezoning' },
-          { title: 'Land Use Change', value: 'land-use' },
+          { title: 'Rezoning Application (SPLUMA)', value: 'rezoning' },
+          { title: 'Land Use Change (SPLUMA)', value: 'land-use' },
+          { title: 'Township Establishment (SPLUMA)', value: 'township' },
           { title: 'Building Plan Approval', value: 'building' },
           { title: 'Mining / Excavation Permit', value: 'mining' },
           { title: 'Liquor License', value: 'liquor' },
           { title: 'Cell Tower / Mast', value: 'telecom' },
+          { title: 'Deceased Estate (Form J187)', value: 'estate' },
+          { title: 'Liquidation / Insolvency', value: 'liquidation' },
+          { title: 'PTO / Land Transfer', value: 'pto' },
           { title: 'Other', value: 'other' },
         ],
       },
@@ -54,6 +58,20 @@ export default defineType({
         ],
       },
       initialValue: 'open',
+    }),
+    defineField({
+      name: 'legalMandate',
+      title: 'Legal Mandate',
+      type: 'string',
+      description:
+        'Governing legislation. e.g. SPLUMA, NEMA, Insolvency Act No. 24 of 1936',
+    }),
+    defineField({
+      name: 'retentionPeriod',
+      title: 'Minimum Retention Period',
+      type: 'string',
+      description:
+        'How long this notice must remain published. e.g. 30 days, 3 months, Full project duration, Permanent',
     }),
     defineField({
       name: 'guideNote',
