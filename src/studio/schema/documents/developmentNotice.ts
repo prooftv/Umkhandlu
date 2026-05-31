@@ -74,6 +74,27 @@ export default defineType({
         'How long this notice must remain published. e.g. 30 days, 3 months, Full project duration, Permanent',
     }),
     defineField({
+      name: 'fee',
+      title: 'Publication Fee (ZAR)',
+      type: 'number',
+      description:
+        'Fee charged to the applicant. R0 for traditional council notices (COP model). Suggested: PTO R100–R150 | Estate R350–R450 | SPLUMA R650–R850 | EIA R950–R1,200',
+      initialValue: 0,
+    }),
+    defineField({
+      name: 'feeStatus',
+      title: 'Fee Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Free (Council Notice)', value: 'free' },
+          { title: 'Invoiced', value: 'invoiced' },
+          { title: 'Paid', value: 'paid' },
+        ],
+      },
+      initialValue: 'free',
+    }),
+    defineField({
       name: 'guideNote',
       title: 'Guide',
       type: 'string',
