@@ -1670,12 +1670,14 @@ By remaining external (COP, not employee), the platform gains:
 
 This is fundamentally different from the CLO model where the liaison is employed by (and therefore accountable to) the implementing agent.
 
-### Templates
+### Templates (Commercial — Unami Foundation IP)
 
-| Template | File | Purpose |
+These templates are part of Unami's service delivery model. They are NOT free resources — they are included in the council setup fee when deploying a new COP node.
+
+| Template | File | Included In |
 |---|---|---|
-| Council Resolution | `templates/council-resolution.md` | Formal adoption mandate (bring to council meeting) |
-| PMU Letter | `templates/pmu-letter.md` | Induna's letter requesting stakeholder cooperation |
+| Council Resolution | `templates/council-resolution.md` | Setup fee (new council deployment) |
+| PMU Letter | `templates/pmu-letter.md` | Setup fee (stakeholder coordination) |
 
 ---
 

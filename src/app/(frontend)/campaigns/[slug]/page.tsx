@@ -435,6 +435,17 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
+      {(campaign as unknown as { communityNote?: string }).communityNote && (
+        <div className="mb-8 p-5 bg-amber-50 rounded-xl border border-amber-200">
+          <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide mb-2">
+            📢 Community Notice — Jobs & SMME Opportunities
+          </h2>
+          <p className="text-amber-900 font-medium">
+            {(campaign as unknown as { communityNote: string }).communityNote}
+          </p>
+        </div>
+      )}
+
       <Deliverables campaign={campaign} />
 
       <ProgressLog log={campaign.progressLog} />

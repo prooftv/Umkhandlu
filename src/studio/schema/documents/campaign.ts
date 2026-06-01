@@ -213,6 +213,16 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'communityNote',
+      title: 'Community Notice (Hiring / SMME)',
+      type: 'text',
+      rows: 3,
+      group: 'details',
+      description:
+        'Visible message to community about jobs, SMME opportunities, or next hiring phase. e.g. "Phase 2 hiring opens July 2026 — 70 positions remaining. Register with the Induna."',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
       name: 'relatedListings',
       title: 'Related Infrastructure',
       type: 'array',

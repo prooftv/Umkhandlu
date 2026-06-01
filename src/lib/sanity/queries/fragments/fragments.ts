@@ -410,6 +410,7 @@ export const campaignFragment = /* groq */ `
   impactSummary,
   deliverables,
   totalDeliverables,
+  communityNote,
   "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },
   "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },
