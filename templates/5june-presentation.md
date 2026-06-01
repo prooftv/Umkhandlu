@@ -102,6 +102,31 @@ The council's authority grows with every notice published.
 
 ---
 
+## The Value Proposition (For Contractors and Municipalities)
+
+For a major public infrastructure development like Buffalo River, the platform costs **less than 0.5% of the total WSIG infrastructure budget** — yet it provides:
+
+| What They Currently Pay | Industry Rate | Umkhandlu |
+|---|---|---|
+| Print legal notices (2 ads) | R12,000 | Included |
+| CLO / labour desk (manual) | R15,000–R25,000/month | R3,500–R6,000/month |
+| Social facilitation consultant | R15,000–R45,000/phase | Included in package |
+| Physical site board (once-off) | R5,000–R15,000 | Included |
+
+> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Digital Project Information Board required to maintain community transparency, manage EPWP local labour expectations across Ward 7, and securely document cooperation with the Khathide Traditional Council throughout the 12-month build."*
+
+---
+
+## Platform Performance
+
+- Loads on any phone, including older Android devices
+- Works on low data (optimised images, minimal JavaScript)
+- No app download required — just a link shared on WhatsApp
+- Available 24/7 throughout the 12-month construction cycle
+- Physical site boards get vandalized. This cannot be erased.
+
+---
+
 ## One-Line Summary
 
 > Umkhandlu is the missing operating system between traditional authority and modern coordination — and it is already running in Ward 7.

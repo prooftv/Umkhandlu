@@ -765,34 +765,78 @@ The platform is built with an integration-ready architecture — webhook endpoin
 
 ## 8. Commercial Model
 
-### Unami Foundation Revenue (Platform Operator)
+### Pricing Principle
 
-All system revenue flows to Unami Foundation. The council receives the platform free. Unami operates the commercial layer:
+The traditional council pays nothing. The platform is free for the council. External parties — developers, contractors, municipalities, attorneys, businesses — pay Unami Foundation for services delivered through the platform.
 
-| Tier | What They Get | Suggested Price |
+Full rate card: `templates/rate-card.md`
+
+### Infrastructure Documentation Tiers
+
+| Tier | Target | What They Get | Pricing |
+|---|---|---|---|
+| **Tier 1** | EAPs, developers, attorneys | 30–60 day notice hosting, public comment form, proof of publication certificate | R2,500–R4,500 per notice |
+| **Tier 2** | Municipalities, contractors | Active monitoring, grievance capture, EPWP transparency, traditional council channel | R1,500–R3,000/month |
+| **Tier 3** | Major contractors, mining, government | Full lifecycle documentation, compliance export, ESG audit trail | R12,000–R18,000 once-off |
+
+### Infrastructure Project Pricing Options
+
+**Option A — CLO / EPWP Digital Management Fee (Recommended)**
+
+For 12-month construction projects:
+- R3,500–R6,000/month × 12 months = **R42,000–R72,000 total**
+- Covers: Digital Info Board, EPWP transparency, council channel, monthly updates, SMME visibility
+
+**Option B — Milestone-Based Package**
+
+| Phase | Deliverable | Price |
+|---|---|---|
+| Procurement & Launch | Media statements, job announcements | R7,500 |
+| Implementation | Active progress tracker, 12-month lifecycle | R15,000 |
+| Close-out | Final compliance report, completion documentation | R5,000 |
+| **Total** | | **R27,500** |
+
+### Industry Rate Benchmarks
+
+| Service | Industry Rate | Umkhandlu Rate |
+|---|---|---|
+| Print legal notice (2 ads) | R12,000 | Included in Tier 1 |
+| CLO / labour desk (monthly) | R15,000–R25,000 | R3,500–R6,000 |
+| Social facilitation consultant (per phase) | R15,000–R45,000 | Included in Tier 3 |
+| Physical site board (once-off) | R5,000–R15,000 | Included |
+| Billboard (monthly) | R10,000–R25,000 | Included |
+
+### The Pitch Line
+
+> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Digital Project Information Board required to maintain community transparency, manage EPWP local labour expectations, and securely document cooperation with the traditional council throughout the project lifecycle."*
+
+### Directory & Listing Revenue
+
+| Tier | What They Get | Price |
 |---|---|---|
 | Basic | Directory listing | Free |
 | Featured | Top of grid + verified badge | R100/month |
-| Premium | Featured + ad banner on pages | R300/month |
+| Premium | Featured + ad banner | R300/month |
 | Sponsor | Premium + logo on homepage | R500/month |
 
-### Unami Revenue (Service Model)
+### Unami Revenue (Full Service Model)
 
 | Revenue Stream | Description | Pricing |
 |---|---|---|
-| **Setup fee** | Deployment, Sanity project, initial content, training | Once-off per council |
+| **Setup fee** | Deployment, initial content, training, resolution + PMU letter templates | Once-off per council |
 | **Monthly support** | Hosting, CMS maintenance, content support | Monthly retainer |
-| **Directory listings** | Featured/premium business listings | R50–R300/month per listing |
-| **Campaign management** | Sponsor activations, CSR documentation | R3,000–R15,000 per campaign |
-| **Infrastructure documentation** | Municipal project tracking + compliance reporting | R5,000–R15,000 per project |
-| **Development notices** | Public participation notices (EIA, rezoning, SPLUMA) | R650–R1,200 per notice |
-| **Estate & legal notices** | Deceased estates, liquidations, creditor meetings | R350–R550 per notice |
-| **PTO / land transfer notices** | Traditional land occupancy transfers | R100–R150 per notice |
-| **Integration upgrades** | WhatsApp, n8n, map, advanced features | Phase-based |
-| **Template licensing** | Additional council deployments from same codebase | Per deployment |
-| **Data partnerships** | Council-approved data insights for planning and development partners | Future phase |
+| **Directory listings** | Featured/premium business listings | R50–R300/month |
+| **Infrastructure Tier 1** | Notice hosting + proof of publication | R2,500–R4,500 per notice |
+| **Infrastructure Tier 2** | Active monitoring + grievance redress | R1,500–R3,000/month |
+| **Infrastructure Tier 3** | Full lifecycle documentation + ESG audit | R12,000–R18,000 once-off |
+| **CLO/EPWP management** | Monthly digital management fee | R3,500–R6,000/month |
+| **Estate & legal notices** | Deceased estates, liquidations | R350–R550 per notice |
+| **PTO / land transfer** | Traditional land occupancy transfers | R100–R150 per notice |
+| **Integration upgrades** | WhatsApp, n8n, advanced features | Phase-based |
+| **Template licensing** | Additional council deployments | Per deployment |
+| **Data partnerships** | Council-approved data insights | Future phase |
 
-This positions Unami Foundation as **participation infrastructure provider** — not a dev shop, not an NGO, not a media company.
+This positions Unami Foundation as **community governance infrastructure provider** — not a dev shop, not an NGO, not a media company.
 
 The council gets the platform free. Businesses, sponsors, municipalities, and developers pay Unami for visibility, documentation, and compliance services delivered through the platform.
 

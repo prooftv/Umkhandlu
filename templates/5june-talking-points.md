@@ -115,6 +115,12 @@ When addressing an Induna in a formal setting:
 
 ---
 
+## If Asked About Data / Phone Compatibility
+
+> "This works on any phone. No app to download. Just a WhatsApp link. It uses almost no data to load — less than a single photo. Every resident in Mndozo, Manzana, Dicks, Jobstown, and Johnstone can access it."
+
+---
+
 ## Key Phrases to Return To
 
 - *"This protects the council's authority."*
