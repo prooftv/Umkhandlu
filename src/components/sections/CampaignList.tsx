@@ -87,33 +87,34 @@ export default function CampaignList({ section }: Props) {
                 className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden block"
               >
                 {campaign.image?.asset?._ref && (
-                  <div className="relative">
+                  <div className="relative h-40">
                     <Image
                       src={
                         urlForImage(campaign.image)
                           ?.width(600)
-                          .height(400)
-                          .fit('max')
+                          .height(300)
+                          .fit('crop')
                           .url() as string
                       }
                       alt={campaign.image?.alt || campaign.title}
                       width={600}
-                      height={400}
+                      height={300}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="w-full h-auto"
+                      className="object-cover w-full h-full"
                     />
                   </div>
                 )}
                 <div className="p-5">
-                  <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    <span className="text-sm">
-                      {config.icon} {config.label}
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">{config.icon}</span>
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {config.label}
                     </span>
                     <Badge
-                      className={
+                      className={`ml-auto ${
                         statusColors[campaign.status] ||
                         'bg-gray-100 text-gray-600'
-                      }
+                      }`}
                     >
                       {campaign.status}
                     </Badge>
@@ -145,19 +146,6 @@ export default function CampaignList({ section }: Props) {
                       </span>
                     )}
                   </div>
-                  {campaign.deliverables &&
-                    campaign.deliverables.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-3">
-                        {campaign.deliverables.slice(0, 3).map((d) => (
-                          <span
-                            key={d}
-                            className="text-xs bg-gray-50 text-gray-600 px-2 py-0.5 rounded-full"
-                          >
-                            {d}
-                          </span>
-                        ))}
-                      </div>
-                    )}
                 </div>
               </Link>
             );
