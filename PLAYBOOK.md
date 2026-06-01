@@ -359,6 +359,7 @@ All content is linked via `relatedArea` references — when editors create a not
 | **Area Pages** | `/areas/[slug]` | Auto-generated: induna, listings, notices, programs, opportunities |
 | **Development Notices** | `/development-notices/[slug]` | Notice details, documents, map, public comment form, proof of publication link |
 | **Proof of Publication** | `/notices/certificate/[id]` | Formal certificate (printable PDF for court/authority submission) |
+| **Records** | `/records/[slug]` | Governance record detail (minutes, resolutions, land allocations, project outcomes) |
 | **Blog** | `/blog` | Blog listing with pagination |
 | **Blog Post** | `/blog/[slug]` | Full article with JSON-LD |
 
@@ -1292,7 +1293,7 @@ This turns the operator role into a contractable, auditable, scalable governance
 | Document types | 13 |
 | Page builder sections | 27 |
 | Singletons | 3 |
-| Frontend routes | 17 |
+| Frontend routes | 18 |
 | Server actions | 4 (contact, subscribe, public comment, webhook delivery) |
 | UI components | 7 |
 | Total components | 66 |

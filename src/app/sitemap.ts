@@ -30,6 +30,8 @@ function getPriority(href: string): number {
   if (href.startsWith('/blog/') || href.startsWith('/directory/')) return 0.6;
   if (href.startsWith('/areas/') || href.startsWith('/programs/')) return 0.5;
   if (href.startsWith('/campaigns/')) return 0.5;
+  if (href.startsWith('/records/')) return 0.5;
+  if (href.startsWith('/development-notices/')) return 0.6;
   if (href.startsWith('/category/') || href.startsWith('/people/')) return 0.4;
   return 0.7;
 }

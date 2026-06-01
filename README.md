@@ -202,6 +202,7 @@ The public comment form on development notices captures structured objections/co
 | `GET /api/campaigns/export?token=<READ_TOKEN>&status=active` | Filter by status |
 | `GET /api/campaigns/export?token=<READ_TOKEN>&type=csr` | Filter by type |
 | `/development-notices/[slug]` | Public notice detail + comment form |
+| `/records/[slug]` | Governance record detail (institutional memory) |
 | `/notices/certificate/[id]` | Proof of Publication certificate (printable) |
 
 ## Documentation

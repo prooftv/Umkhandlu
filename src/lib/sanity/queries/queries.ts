@@ -55,7 +55,7 @@ export const getPageQuery = defineQuery(`
 `);
 
 export const getSitemapQuery = defineQuery(`
-  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program", "campaign"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
+  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program", "campaign", "record", "developmentNotice"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{
     "href": select(
       _type == "page" => "/" + slug.current,
       _type == "post" => "/blog/" + slug.current,
@@ -67,6 +67,8 @@ export const getSitemapQuery = defineQuery(`
       _type == "opportunity" => "/opportunities/" + slug.current,
       _type == "program" => "/programs/" + slug.current,
       _type == "campaign" => "/campaigns/" + slug.current,
+      _type == "record" => "/records/" + slug.current,
+      _type == "developmentNotice" => "/development-notices/" + slug.current,
       _type == "blogPage" => "/blog",
       _type == "homePage" => "/",
       slug.current
@@ -240,6 +242,34 @@ export const campaignDetailQuery = defineQuery(`
 
 export const campaignSlugs = defineQuery(`
   *[_type == "campaign" && defined(slug.current)][0..$limit].slug.current
+`);
+
+export const recordDetailQuery = defineQuery(`
+  *[_type == "record" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    recordType,
+    date,
+    summary,
+    status,
+    "approvedBy": approvedBy->{ firstName, lastName, role, "slug": slug.current },
+    content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
+    "fileUrl": file.asset->url,
+    externalUrl,
+    source,
+    verificationNote,
+    "relatedArea": relatedArea->{ name, "slug": slug.current },
+    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }
+  }
+`);
+
+export const recordSlugs = defineQuery(`
+  *[_type == "record" && defined(slug.current)][0..$limit].slug.current
+`);
+
+export const devNoticeSlugs = defineQuery(`
+  *[_type == "developmentNotice" && defined(slug.current)][0..$limit].slug.current
 `);
 
 export const postsArchiveQuery = defineQuery(`

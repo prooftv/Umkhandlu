@@ -9,7 +9,10 @@ import CustomPortableText from '@/components/modules/PortableText';
 import PublicCommentForm from '@/components/modules/PublicCommentForm';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
+import { serverEnv } from '@/env/serverEnv';
+import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
+import { devNoticeSlugs } from '@/lib/sanity/queries/queries';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -223,6 +226,13 @@ function CommentSection({
       )}
     </>
   );
+}
+
+export async function generateStaticParams() {
+  const slugs = await client.fetch(devNoticeSlugs, {
+    limit: serverEnv.MAX_STATIC_PARAMS,
+  });
+  return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {

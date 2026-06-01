@@ -34,6 +34,8 @@ export default defineType({
           { title: 'Public Notice', value: 'public-notice' },
           { title: 'Policy', value: 'policy' },
           { title: 'Report', value: 'report' },
+          { title: 'Project Outcome', value: 'project-outcome' },
+          { title: 'Community Decision', value: 'community-decision' },
           { title: 'External Resource', value: 'external-resource' },
         ],
         layout: 'radio',
@@ -134,6 +136,22 @@ export default defineType({
       options: {
         filter: 'listingType == "area"',
       },
+    }),
+    defineField({
+      name: 'relatedCampaign',
+      title: 'Related Project / Campaign',
+      type: 'reference',
+      to: [{ type: 'campaign' }],
+      description:
+        'Link to an infrastructure project if this record documents its outcome.',
+    }),
+    defineField({
+      name: 'verificationNote',
+      title: 'Verification Note',
+      type: 'text',
+      rows: 2,
+      description:
+        'How this record was verified. e.g. "Confirmed by Inkosi at council meeting 15 May 2026"',
     }),
   ],
   orderings: [
