@@ -452,37 +452,34 @@ export default async function AreaPage(props: Props) {
       {area.campaigns && area.campaigns.length > 0 && (
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Campaigns & Initiatives</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {area.campaigns.map((campaign) => (
               <Link
                 href={`/campaigns/${campaign.slug}`}
                 key={campaign._id}
-                className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block overflow-hidden"
+                className="bg-white block rounded-xl border border-gray-100 shadow-sm overflow-hidden"
               >
                 {campaign.image?.asset?._ref && (
-                  <div className="h-40">
-                    <Image
-                      src={
-                        urlForImage(campaign.image)
-                          ?.width(600)
-                          .height(300)
-                          .fit('crop')
-                          .url() as string
-                      }
-                      alt={campaign.image?.alt || campaign.title}
-                      width={600}
-                      height={300}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
+                  <Image
+                    src={
+                      urlForImage(campaign.image)
+                        ?.width(600)
+                        .fit('max')
+                        .url() as string
+                    }
+                    alt={campaign.image?.alt || campaign.title}
+                    width={600}
+                    height={400}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="w-full h-auto"
+                  />
                 )}
                 <div className="p-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="secondary">{campaign.status}</Badge>
-                    <span className="text-xs text-gray-500">
-                      {campaign.campaignType}
-                    </span>
-                  </div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                    {campaign.campaignType === 'csr'
+                      ? 'initiative'
+                      : campaign.campaignType}
+                  </p>
                   <h3 className="font-semibold">{campaign.title}</h3>
                   {campaign.sponsor && (
                     <p className="text-sm text-gray-500 mt-1">
