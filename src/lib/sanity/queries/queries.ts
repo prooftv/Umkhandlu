@@ -132,6 +132,17 @@ export const areaDetailQuery = defineQuery(`
     },
     "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {
       ${campaignFragment}
+    },
+    "developmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {
+      _id,
+      title,
+      "slug": slug.current,
+      noticeType,
+      status,
+      applicant,
+      commentDeadline,
+      publishDate,
+      location
     }
   }
 `);

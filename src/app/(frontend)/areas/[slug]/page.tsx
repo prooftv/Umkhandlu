@@ -498,6 +498,58 @@ export default async function AreaPage(props: Props) {
         </section>
       )}
 
+      {/* Development Notices */}
+      {area.developmentNotices && area.developmentNotices.length > 0 && (
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">
+            Development & Statutory Notices
+          </h2>
+          <div className="space-y-3">
+            {area.developmentNotices.map((notice) => (
+              <Link
+                href={`/development-notices/${notice.slug}`}
+                key={notice._id}
+                className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
+              >
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge
+                      variant={
+                        notice.status === 'open' ? 'default' : 'secondary'
+                      }
+                    >
+                      {notice.status === 'open'
+                        ? '🟢 Open for Comment'
+                        : notice.status}
+                    </Badge>
+                    <span className="text-xs text-gray-500">
+                      {notice.noticeType}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold">{notice.title}</h3>
+                  {notice.applicant && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      Applicant: {notice.applicant}
+                    </p>
+                  )}
+                </div>
+                <div className="text-right shrink-0">
+                  {notice.commentDeadline && (
+                    <time
+                      dateTime={notice.commentDeadline}
+                      className="text-xs text-gray-400 block"
+                    >
+                      Deadline:{' '}
+                      {new Date(notice.commentDeadline).toLocaleDateString()}
+                    </time>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={area.name || ''} />
       </div>
