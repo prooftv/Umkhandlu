@@ -214,13 +214,49 @@ export default defineType({
     }),
     defineField({
       name: 'communityNote',
-      title: 'Community Notice (Hiring / SMME)',
-      type: 'text',
-      rows: 3,
+      title: 'Community Notices (Hiring / SMME)',
+      type: 'array',
       group: 'details',
       description:
-        'Visible message to community about jobs, SMME opportunities, or next hiring phase. e.g. "Phase 2 hiring opens July 2026 — 70 positions remaining. Register with the Induna."',
+        'Timestamped notices to the community about jobs, SMME opportunities, or project updates. Each entry shows as an amber banner on the public page.',
       hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'date',
+              title: 'Date',
+              type: 'date',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'issuedBy',
+              title: 'Issued By',
+              type: 'string',
+              description:
+                'e.g. Khathide Traditional Council, Unami Foundation, Newcastle Municipality PMU',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'message',
+              title: 'Notice',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: { date: 'date', issuedBy: 'issuedBy', message: 'message' },
+            prepare({ date, issuedBy, message }) {
+              return {
+                title: message?.slice(0, 60) || 'Notice',
+                subtitle: `${date || ''} — ${issuedBy || ''}`,
+              };
+            },
+          },
+        },
+      ],
     }),
     defineField({
       name: 'relatedListings',

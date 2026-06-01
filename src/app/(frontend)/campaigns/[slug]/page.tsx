@@ -435,16 +435,55 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
-      {(campaign as unknown as { communityNote?: string }).communityNote && (
-        <div className="mb-8 p-5 bg-amber-50 rounded-xl border border-amber-200">
-          <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide mb-2">
-            📢 Community Notice — Jobs & SMME Opportunities
-          </h2>
-          <p className="text-amber-900 font-medium">
-            {(campaign as unknown as { communityNote: string }).communityNote}
-          </p>
+      {(
+        campaign as unknown as {
+          communityNote?: {
+            _key: string;
+            date: string;
+            issuedBy: string;
+            message: string;
+          }[];
+        }
+      ).communityNote?.length ? (
+        <div className="mb-8 space-y-3">
+          {(
+            campaign as unknown as {
+              communityNote: {
+                _key: string;
+                date: string;
+                issuedBy: string;
+                message: string;
+              }[];
+            }
+          ).communityNote.map((note) => (
+            <div
+              key={note._key}
+              className="p-5 bg-amber-50 rounded-xl border border-amber-200"
+            >
+              <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide">
+                  📢 Community Notice — Jobs & SMME Opportunities
+                </h2>
+                <div className="flex items-center gap-2 text-xs text-amber-600">
+                  {note.date && (
+                    <time dateTime={note.date}>
+                      {new Date(note.date).toLocaleDateString('en-ZA', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </time>
+                  )}
+                  {note.issuedBy && (
+                    <span className="font-medium">— {note.issuedBy}</span>
+                  )}
+                </div>
+              </div>
+              <p className="text-amber-900 text-sm">{note.message}</p>
+            </div>
+          ))}
         </div>
-      )}
+      ) : null}
 
       <Deliverables campaign={campaign} />
 
