@@ -1611,13 +1611,71 @@ The order matters. Getting this wrong creates resistance that is very difficult 
 
 A COP node is considered successfully onboarded when:
 
-- [ ] Inkosi has endorsed (formally or informally)
+- [ ] Inkosi/Induna has endorsed (formally or informally)
+- [ ] Council Resolution signed (see `templates/council-resolution.md`)
+- [ ] PMU notification letter issued by Induna (see `templates/pmu-letter.md`)
 - [ ] Council Admin can log in and create content independently
 - [ ] At least 3 leadership profiles are published
 - [ ] At least 1 notice has been published
 - [ ] At least 1 area page exists with linked listings
 - [ ] WhatsApp link has been shared with community
 - [ ] Weekly content cadence has been maintained for 2 consecutive weeks
+
+### The CLO Dynamic (Critical Operational Insight)
+
+If a Community Liaison Officer is appointed by the contractor/municipality:
+
+**The CLO is NOT your competitor. The CLO is your primary data source.**
+
+| If you are CLO | If someone else is CLO |
+|---|---|
+| You have direct access but compromised neutrality | You have independence but need cooperation |
+| Paid by contractor = cannot easily challenge them | External = can highlight gaps neutrally |
+| Internal employee | Institutional partner |
+
+**The stronger position is external.** The COP model is designed for this.
+
+**Pitch to the CLO:**
+
+> "We have donated this system to the Council to make your job easy. Instead of hundreds of people knocking on your door or accusing you of corruption, you can push project updates and hiring phases directly to this page. It protects you and proves you are doing your job."
+
+**Result:** The CLO becomes your active field agent, feeding the platform data to protect their own reputation.
+
+### Tripartite Evidence Collection (Without Direct Site Access)
+
+If the operator does not have direct access to project site meetings:
+
+```
+[Contractor / CLO Public Outputs] ──┐
+[Traditional Council Field Reports] ─┼─→ [Umkhandlu Institutional Timeline]
+[Community Crowd-Sourced Evidence] ──┘
+```
+
+| Source | Method | Authority Level |
+|---|---|---|
+| Contractor/CLO public outputs | EPWP numbers, H&S notices (legally required to publish) | Implementation report |
+| Council field verification | Designated secretary takes timestamped site photos | Community governance |
+| Community crowd-sourcing | WhatsApp reports from residents (issues, observations) | Field observation |
+
+All three feed into the same evidence layer. TCRS authority classification applies.
+
+### The Independent Auditor Position
+
+By remaining external (COP, not employee), the platform gains:
+
+- **Neutrality** — not paid by contractor or municipality
+- **Mandate** — operates under Council resolution, not personal authority
+- **Evidence authority** — can highlight gaps (e.g. "100 jobs promised, 30 observed") without career risk
+- **Institutional permanence** — outlasts any single project, CLO, or councillor
+
+This is fundamentally different from the CLO model where the liaison is employed by (and therefore accountable to) the implementing agent.
+
+### Templates
+
+| Template | File | Purpose |
+|---|---|---|
+| Council Resolution | `templates/council-resolution.md` | Formal adoption mandate (bring to council meeting) |
+| PMU Letter | `templates/pmu-letter.md` | Induna's letter requesting stakeholder cooperation |
 
 ---
 
