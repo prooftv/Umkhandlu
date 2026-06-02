@@ -113,29 +113,30 @@ export default function PresentationPage() {
           stakeholders report on the same project parameter.
         </p>
         <p>
-          When a variance is discovered — such as a municipal media statement
-          claiming 100 local residents are employed while a traditional council
-          field inspection verifies only 30 active labourers — the system does
-          not break or ignore the mismatch.
+          When a variance is discovered — such as a contractor reporting 65%
+          construction completion while the consulting engineer certifies only
+          40% based on site inspection — the system does not break or ignore the
+          mismatch.
         </p>
         <CodeBlock>
           {`┌───────────────────────────────────┐
-│      WORKFORCE DISCREPANCY        │
+│      PROGRESS % DISCREPANCY        │
 └───────────────────────────────────┘
                   │
     ┌─────────────┴─────────────┐
     ▼                           ▼
 ┌──────────────────┐   ┌──────────────────┐
-│ MUNICIPAL REPORT │   │ COUNCIL OBSERVE  │
-│ 100 General Labor│   │ 30 Active On Site│
+│ CONTRACTOR CLAIM │   │ ENGINEER CERTIFY │
+│ 65% Complete     │   │ 40% Complete     │
 └──────────────────┘   └──────────────────┘
                   │
                   ▼
 ┌───────────────────────────────────┐
-│     VERIFICATION RECORD           │
-│ Status: 🟡 Pending Review         │
-│ Context: Phase-based allocation   │
-│ Evidence: Both sources preserved  │
+│     VERIFICATION RECORD            │
+│ Reporting Value: 40% (Engineer)   │
+│ Status: 🟢 Verified                 │
+│ Authority: Engineer > Contractor  │
+│ Evidence: Both claims preserved   │
 └───────────────────────────────────┘`}
         </CodeBlock>
         <h3 className="text-lg font-bold mt-6 mb-3">How It Operates</h3>
