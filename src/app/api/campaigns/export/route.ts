@@ -41,6 +41,15 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
     status,
     commentDeadline
   },
+  "verifications": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...10] {
+    _id,
+    field,
+    displayTruth,
+    resolutionState,
+    detectedAt,
+    resolvedAt,
+    "claims": claims[]{ source, value, date }
+  },
   "verificationCount": count(*[_type == "conflictLog" && references(^._id)]),
   "communityNoteCount": count(communityNote),
   "photoCount": count(gallery)
