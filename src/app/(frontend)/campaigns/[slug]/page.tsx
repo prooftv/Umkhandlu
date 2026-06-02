@@ -855,9 +855,15 @@ export default async function CampaignPage(props: Props) {
       {/* Project updates timeline (sod turning, phase completions, etc.) */}
       <CampaignUpdatesTimeline campaign={campaign} />
 
-      {/* Sponsorship/activation gallery + media */}
+      {/* Gallery: show for non-CSR, or for CSR when no projectUpdates exist */}
       <CampaignGallery
-        gallery={campaign.campaignType !== 'csr' ? campaign.gallery : null}
+        gallery={
+          campaign.campaignType !== 'csr' ||
+          !(campaign as unknown as { projectUpdates?: unknown[] })
+            .projectUpdates?.length
+            ? campaign.gallery
+            : null
+        }
       />
       <CampaignMedia campaign={campaign} />
 
