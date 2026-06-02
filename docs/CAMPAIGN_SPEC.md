@@ -55,7 +55,13 @@ Consumers should assume these fields may be undefined or empty arrays.
 
 ## 6. API/export
 
-- `src/app/api/campaigns/export/route.ts` updated to include `deliverablesCertified` and compute `deliverableProgress` by coalescing certified items with plain deliverables.
+- `src/app/api/campaigns/export/route.ts` updated to include `deliverablesCertified`, `projectPhase`, and compute `deliverableProgress` by coalescing certified items with plain deliverables.
+- The export route also provides campaign-level compliance summary counts: `noticeCount`, `opportunityCount`, `developmentNoticeCount`, `verificationCount`, `communityNoteCount`, and `photoCount`.
+- This endpoint is campaign-focused. Detailed evidence records remain stored in `conflictLog` documents and are surfaced on the campaign page via `verificationRecords`.
+
+## 7. Related project content
+
+- `relatedOpportunities` and `relatedDevelopmentNotices` are synthetic relationships that resolve from `opportunity` and `developmentNotice` documents referencing the campaign.
 
 ## 7. Studio editor guidance (copyable)
 

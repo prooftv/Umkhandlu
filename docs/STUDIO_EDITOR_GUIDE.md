@@ -43,8 +43,9 @@ Example claim array:
 
 ## Notes & Best Practices
 
-- Always add a `certificationDate` for `certified` items.
+- Link related opportunities and development notices to a campaign using the `relatedCampaign` field so they surface on the campaign page and are available for compliance review.
 - Use `conflictLog` to preserve source traceability — include original evidence files when possible.
+- Always add a `certificationDate` for `certified` items.
 - The frontend prefers `deliverablesCertified` and will display certification metadata along with verification records.
 - If you need help, refer to `docs/CAMPAIGN_SPEC.md` for full schema and implementation details.
 

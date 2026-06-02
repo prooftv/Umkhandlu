@@ -56,6 +56,12 @@ Operator identifies that two or more sources report different values for the sam
 
 Create a verification record (`conflictLog`) in Sanity. Add each source's reported value with date and evidence reference. **Never delete a source record.**
 
+These records are implemented as Sanity `conflictLog` documents that reference the campaign and store:
+- `field`, `conflictType`, `claims[]`, `displayTruth`, `resolutionState`, `resolutionNote`, `detectedAt`, and `resolvedAt`.
+- Each claim includes `source`, `value`, `date`, and `evidence`.
+
+The campaign page fetches these records as `verificationRecords` and renders them in collapsible summaries.
+
 ### Step 3 — Classify by Authority
 
 Note the authority classification of each source. The highest-authority source with validated evidence informs the reporting value.

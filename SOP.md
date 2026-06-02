@@ -119,7 +119,9 @@ At end of month:
 GET /api/campaigns/export?token=<TOKEN>
 ```
 
-Then: compile PMU summary, cross-check with progress log, produce structured monthly report.
+This returns campaign-level JSON with `deliverablesCertified`, `deliverableProgress`, `projectPhase`, sponsor/contact metadata, related areas/programs, and summary counts for notices, opportunities, development notices, verifications, community notes, and photos.
+
+Then: compile PMU summary, cross-check with the published progress log, and compare the campaign export against `conflictLog` verification records for evidence consistency.
 
 ---
 

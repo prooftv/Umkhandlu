@@ -6,6 +6,7 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   "slug": slug.current,
   campaignType,
   status,
+  projectPhase,
   description,
   targetAudience,
   tags,
@@ -25,6 +26,10 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current },
   "relatedProgram": relatedProgram->{ title, "slug": slug.current },
   "noticeCount": count(*[_type == "notice" && references(^._id)]),
+  "opportunityCount": count(*[_type == "opportunity" && references(^._id)]),
+  "developmentNoticeCount": count(*[_type == "developmentNotice" && references(^._id)]),
+  "verificationCount": count(*[_type == "conflictLog" && references(^._id)]),
+  "communityNoteCount": count(communityNote),
   "photoCount": count(gallery)
 }`;
 

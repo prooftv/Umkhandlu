@@ -198,7 +198,7 @@ The public comment form on development notices captures structured objections/co
 
 | Endpoint | Purpose |
 |---|---|
-| `GET /api/campaigns/export?token=<READ_TOKEN>` | Campaign data export (JSON) |
+| `GET /api/campaigns/export?token=<READ_TOKEN>` | Campaign data export (JSON), including deliverables, certified progress, sponsor/contact info, area/program references, and related notice/opportunity counts |
 | `GET /api/campaigns/export?token=<READ_TOKEN>&status=active` | Filter by status |
 | `GET /api/campaigns/export?token=<READ_TOKEN>&type=csr` | Filter by type |
 | `/development-notices/[slug]` | Public notice detail + comment form |
