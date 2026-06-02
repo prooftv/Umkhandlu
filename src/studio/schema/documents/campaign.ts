@@ -186,7 +186,8 @@ export default defineType({
       title: 'Progress Updates',
       type: 'array',
       group: 'tracking',
-      description: 'Timestamped progress entries.',
+      description:
+        'Timestamped technical progress entries (engineer/PMU verified).',
       hidden: ({ parent }) => parent?.campaignType !== 'csr',
       of: [
         {
@@ -208,6 +209,79 @@ export default defineType({
           ],
           preview: {
             select: { title: 'update', subtitle: 'date' },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'projectUpdates',
+      title: 'Project Updates (Media & Events)',
+      type: 'array',
+      group: 'media',
+      description:
+        'Each major project event — sod turning, phase completion, commissioning. Add a new entry for each event with its own media statement, photos, and video.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'date',
+              title: 'Event Date',
+              type: 'date',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'title',
+              title: 'Event Title',
+              type: 'string',
+              validation: (rule) => rule.required(),
+              description:
+                'e.g. Sod Turning Ceremony, Phase 1 Complete, Commissioning',
+            }),
+            defineField({
+              name: 'content',
+              title: 'Media Statement / Content',
+              type: 'blockContent',
+            }),
+            defineField({
+              name: 'gallery',
+              title: 'Photos',
+              type: 'array',
+              of: [
+                {
+                  type: 'image',
+                  options: { hotspot: true },
+                  fields: [
+                    defineField({
+                      name: 'alt',
+                      type: 'string',
+                      title: 'Alt text',
+                    }),
+                    defineField({
+                      name: 'caption',
+                      type: 'string',
+                      title: 'Caption',
+                    }),
+                  ],
+                },
+              ],
+            }),
+            defineField({
+              name: 'videoUrl',
+              title: 'Video Embed URL',
+              type: 'url',
+              description: 'YouTube embed URL for this event.',
+            }),
+          ],
+          preview: {
+            select: { title: 'title', date: 'date' },
+            prepare({ title, date }) {
+              return {
+                title: title || 'Update',
+                subtitle: date || '',
+              };
+            },
           },
         },
       ],

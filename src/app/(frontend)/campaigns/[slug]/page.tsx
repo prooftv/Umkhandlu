@@ -33,6 +33,29 @@ type CampaignData = NonNullable<
   Awaited<ReturnType<typeof sanityFetch<typeof campaignDetailQuery>>>['data']
 >;
 
+type CommunityNote = {
+  _key: string;
+  date: string;
+  issuedBy: string;
+  message: string;
+};
+
+type ProjectUpdate = {
+  _key: string;
+  date: string;
+  title: string;
+  content?: PortableTextBlock[];
+  gallery?: {
+    _key: string;
+    alt?: string | null;
+    caption?: string | null;
+    asset?: { _id: string; url: string | null } | null;
+  }[];
+  videoUrl?: string | null;
+};
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
 function CampaignSponsor({ sponsor }: { sponsor: CampaignData['sponsor'] }) {
   if (!sponsor) return null;
   return (
@@ -76,9 +99,7 @@ function CampaignStats({ campaign }: { campaign: CampaignData }) {
     });
   if (campaign.targetAudience)
     items.push({ label: 'Audience', value: campaign.targetAudience });
-
   if (items.length === 0) return null;
-
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
       {items.map((item) => (
@@ -87,6 +108,23 @@ function CampaignStats({ campaign }: { campaign: CampaignData }) {
           <p className="font-semibold">{item.value}</p>
         </div>
       ))}
+    </div>
+  );
+}
+
+function CampaignCover({ campaign }: { campaign: CampaignData }) {
+  if (campaign.hideCoverImage) return null;
+  if (!campaign.image?.asset?._ref) return null;
+  return (
+    <div className="mb-8 rounded-2xl overflow-hidden">
+      <Image
+        src={urlForImage(campaign.image)?.width(1200).url() as string}
+        alt={campaign.image?.alt || campaign.title}
+        width={1200}
+        height={675}
+        sizes="(max-width: 896px) 100vw, 896px"
+        className="w-full h-auto"
+      />
     </div>
   );
 }
@@ -105,11 +143,11 @@ function CampaignGallery({ gallery }: { gallery: CampaignData['gallery'] }) {
 }
 
 function CampaignMedia({ campaign }: { campaign: CampaignData }) {
-  const hasVideo = campaign.videoUrl;
+  // For CSR campaigns, video lives in projectUpdates entries
+  const hasVideo = campaign.videoUrl && campaign.campaignType !== 'csr';
   const hasAudio = campaign.audioFileUrl;
   const hasDocs = campaign.documents && campaign.documents.length > 0;
   if (!hasVideo && !hasAudio && !hasDocs) return null;
-
   return (
     <>
       {hasVideo && (
@@ -129,7 +167,6 @@ function CampaignMedia({ campaign }: { campaign: CampaignData }) {
           </div>
         </div>
       )}
-
       {hasAudio && (
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Audio</h2>
@@ -143,7 +180,6 @@ function CampaignMedia({ campaign }: { campaign: CampaignData }) {
           </audio>
         </div>
       )}
-
       {hasDocs && (
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Documents</h2>
@@ -170,21 +206,105 @@ function CampaignMedia({ campaign }: { campaign: CampaignData }) {
   );
 }
 
-function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
-  if (!log?.length) return null;
+function ProjectUpdateEntry({ update }: { update: ProjectUpdate }) {
+  const images =
+    update.gallery
+      ?.filter((img) => img.asset?.url)
+      .map((img) => ({
+        _key: img._key,
+        alt: img.alt,
+        caption: img.caption,
+        url: img.asset?.url ?? '',
+      })) ?? [];
+  return (
+    <div className="border-l-2 border-primary/20 pl-6">
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-3 h-3 rounded-full bg-primary -ml-[1.625rem] shrink-0" />
+        <time className="text-xs text-gray-400 font-medium">
+          {new Date(update.date).toLocaleDateString('en-ZA', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </time>
+      </div>
+      <h3 className="text-lg font-bold mb-3">{update.title}</h3>
+      {update.content && (
+        <div className="prose max-w-none mb-4">
+          <CustomPortableText value={update.content} />
+        </div>
+      )}
+      {images.length > 0 && <ClientGallery images={images} />}
+      {update.videoUrl && (
+        <div className="mt-4 rounded-xl overflow-hidden aspect-video">
+          <iframe
+            src={update.videoUrl}
+            width="100%"
+            height="100%"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            loading="lazy"
+            title={update.title}
+            className="w-full h-full"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CampaignUpdatesTimeline({ campaign }: { campaign: CampaignData }) {
+  const updates = (campaign as unknown as { projectUpdates?: ProjectUpdate[] })
+    .projectUpdates;
+  if (!updates?.length) return null;
+  const sorted = [...updates].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-bold mb-3">Progress Updates</h2>
-      <div className="border-l-2 border-primary/30 pl-4 space-y-4">
-        {log.map((entry) => (
-          <div key={entry._key}>
-            <time className="text-xs text-gray-400 font-medium">
-              {new Date(entry.date).toLocaleDateString()}
-            </time>
-            <p className="text-sm text-gray-700 mt-0.5">{entry.update}</p>
-          </div>
+      <h2 className="text-xl font-bold mb-6">Project Updates</h2>
+      <div className="space-y-10">
+        {sorted.map((update) => (
+          <ProjectUpdateEntry key={update._key} update={update} />
         ))}
       </div>
+    </div>
+  );
+}
+
+function CommunityNotices({ campaign }: { campaign: CampaignData }) {
+  const notes = (campaign as unknown as { communityNote?: CommunityNote[] })
+    .communityNote;
+  if (!notes?.length) return null;
+  return (
+    <div className="mb-8 space-y-3">
+      {notes.map((note) => (
+        <div
+          key={note._key}
+          className="p-5 bg-amber-50 rounded-xl border border-amber-200"
+        >
+          <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+            <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide">
+              📢 Community Notice — Jobs & SMME Opportunities
+            </h2>
+            <div className="flex items-center gap-2 text-xs text-amber-600">
+              {note.date && (
+                <time dateTime={note.date}>
+                  {new Date(note.date).toLocaleDateString('en-ZA', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </time>
+              )}
+              {note.issuedBy && (
+                <span className="font-medium">— {note.issuedBy}</span>
+              )}
+            </div>
+          </div>
+          <p className="text-amber-900 text-sm">{note.message}</p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -195,7 +315,6 @@ function Deliverables({ campaign }: { campaign: CampaignData }) {
     .totalDeliverables;
   const completed = campaign.deliverables.length;
   const pct = total && total > 0 ? Math.round((completed / total) * 100) : null;
-
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold mb-3">Deliverables</h2>
@@ -230,22 +349,132 @@ function Deliverables({ campaign }: { campaign: CampaignData }) {
   );
 }
 
-function CampaignCover({ campaign }: { campaign: CampaignData }) {
-  if (campaign.hideCoverImage) return null;
-  if (!campaign.image?.asset?._ref) return null;
+function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
+  if (!log?.length) return null;
   return (
-    <div className="mb-8 rounded-2xl overflow-hidden">
-      <Image
-        src={urlForImage(campaign.image)?.width(1200).url() as string}
-        alt={campaign.image?.alt || campaign.title}
-        width={1200}
-        height={675}
-        sizes="(max-width: 896px) 100vw, 896px"
-        className="w-full h-auto"
-      />
+    <div className="mb-8">
+      <h2 className="text-xl font-bold mb-3">Progress Log</h2>
+      <div className="border-l-2 border-primary/30 pl-4 space-y-4">
+        {log.map((entry) => (
+          <div key={entry._key}>
+            <time className="text-xs text-gray-400 font-medium">
+              {new Date(entry.date).toLocaleDateString()}
+            </time>
+            <p className="text-sm text-gray-700 mt-0.5">{entry.update}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
+
+function CampaignRelations({ campaign }: { campaign: CampaignData }) {
+  return (
+    <>
+      {campaign.relatedAreas && campaign.relatedAreas.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">Target Areas</h2>
+          <div className="space-y-2">
+            {campaign.relatedAreas.map((area) => (
+              <Link
+                key={area.slug}
+                href={`/areas/${area.slug}`}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <span className="text-sm font-medium">🏘️ {area.name}</span>
+                {area.induna && (
+                  <span className="text-xs text-gray-500">
+                    Induna: {area.induna.firstName} {area.induna.lastName}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+      {campaign.relatedProgram && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">Related Program</h2>
+          <Link
+            href={`/programs/${campaign.relatedProgram.slug}`}
+            className="inline-block text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors"
+          >
+            🚀 {campaign.relatedProgram.title}
+          </Link>
+        </div>
+      )}
+      {campaign.relatedNotices && campaign.relatedNotices.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">Community Notices</h2>
+          <div className="space-y-2">
+            {campaign.relatedNotices.map((notice) => (
+              <Link
+                key={notice._id}
+                href={`/notices/${notice.slug}`}
+                className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-shadow"
+              >
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">{notice.noticeType}</Badge>
+                  <span className="font-medium text-sm">{notice.title}</span>
+                </div>
+                {notice.date && (
+                  <time
+                    dateTime={notice.date}
+                    className="text-xs text-gray-400"
+                  >
+                    {new Date(notice.date).toLocaleDateString()}
+                  </time>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+      {campaign.link && (
+        <div className="mb-8">
+          <a
+            href={campaign.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+          >
+            Visit Campaign Page →
+          </a>
+        </div>
+      )}
+    </>
+  );
+}
+
+function CampaignHeader({
+  campaign,
+  config,
+}: {
+  campaign: CampaignData;
+  config: { icon: string; label: string };
+}) {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <Badge>
+          {config.icon} {config.label}
+        </Badge>
+        <Badge variant="secondary">{campaign.status}</Badge>
+        {campaign.tags?.map((tag) => (
+          <Badge key={tag} variant="outline">
+            {tag}
+          </Badge>
+        ))}
+      </div>
+      <h1 className="text-3xl md:text-5xl font-bold mb-4">{campaign.title}</h1>
+      {campaign.description && (
+        <p className="text-xl text-gray-600">{campaign.description}</p>
+      )}
+    </div>
+  );
+}
+
+// ─── JSON-LD ──────────────────────────────────────────────────────────────────
 
 function buildCampaignJsonLd(campaign: CampaignData) {
   return {
@@ -280,62 +509,7 @@ function buildCampaignJsonLd(campaign: CampaignData) {
   };
 }
 
-function CampaignHeader({
-  campaign,
-  config,
-}: {
-  campaign: CampaignData;
-  config: { icon: string; label: string };
-}) {
-  return (
-    <div className="mb-8">
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <Badge>
-          {config.icon} {config.label}
-        </Badge>
-        <Badge variant="secondary">{campaign.status}</Badge>
-        {campaign.tags?.map((tag) => (
-          <Badge key={tag} variant="outline">
-            {tag}
-          </Badge>
-        ))}
-      </div>
-      <h1 className="text-3xl md:text-5xl font-bold mb-4">{campaign.title}</h1>
-      {campaign.description && (
-        <p className="text-xl text-gray-600">{campaign.description}</p>
-      )}
-    </div>
-  );
-}
-
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { slug } = await props.params;
-  const { data } = await sanityFetch({
-    query: campaignDetailQuery,
-    params: { slug },
-  });
-  if (!data) return {};
-
-  if (data.seo) {
-    return {
-      ...formatMetaData(data.seo, data.title),
-      alternates: { canonical: `/campaigns/${slug}` },
-    };
-  }
-
-  return {
-    title: data.title,
-    description: data.description || undefined,
-    alternates: { canonical: `/campaigns/${slug}` },
-  };
-}
-
-export async function generateStaticParams() {
-  const slugs = await client.fetch(campaignSlugs, {
-    limit: serverEnv.MAX_STATIC_PARAMS,
-  });
-  return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
-}
+// ─── Stakeholder logos ────────────────────────────────────────────────────────
 
 function getStakeholderLogos(campaign: CampaignData) {
   const logos: { url: string; name: string; website?: string }[] = [];
@@ -354,6 +528,37 @@ function getStakeholderLogos(campaign: CampaignData) {
   return logos;
 }
 
+// ─── Metadata + Static params ─────────────────────────────────────────────────
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { slug } = await props.params;
+  const { data } = await sanityFetch({
+    query: campaignDetailQuery,
+    params: { slug },
+  });
+  if (!data) return {};
+  if (data.seo) {
+    return {
+      ...formatMetaData(data.seo, data.title),
+      alternates: { canonical: `/campaigns/${slug}` },
+    };
+  }
+  return {
+    title: data.title,
+    description: data.description || undefined,
+    alternates: { canonical: `/campaigns/${slug}` },
+  };
+}
+
+export async function generateStaticParams() {
+  const slugs = await client.fetch(campaignSlugs, {
+    limit: serverEnv.MAX_STATIC_PARAMS,
+  });
+  return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default async function CampaignPage(props: Props) {
   const { slug } = await props.params;
   const { data: campaign } = await sanityFetch({
@@ -368,13 +573,14 @@ export default async function CampaignPage(props: Props) {
     label: campaign.campaignType,
   };
 
-  const jsonLd = buildCampaignJsonLd(campaign);
-
   return (
     <div className="container mx-auto max-w-4xl py-12">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildCampaignJsonLd(campaign)),
+        }}
       />
       <Breadcrumbs
         items={[
@@ -383,8 +589,8 @@ export default async function CampaignPage(props: Props) {
         ]}
       />
 
+      {/* Header */}
       <CampaignHeader campaign={campaign} config={config} />
-
       <CampaignSponsor sponsor={campaign.sponsor} />
 
       {campaign.contactPerson && (
@@ -404,8 +610,10 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
+      {/* Cover image */}
       <CampaignCover campaign={campaign} />
 
+      {/* Digital Project Information Board */}
       <ProjectInfoBoard
         title={campaign.title}
         campaignType={campaign.campaignType}
@@ -425,8 +633,10 @@ export default async function CampaignPage(props: Props) {
 
       <CampaignStats campaign={campaign} />
 
+      {/* Project overview (permanent description) */}
       {campaign.content && (
         <div className="mb-8 mt-8 pt-8 border-t border-gray-200">
+          <h2 className="text-xl font-bold mb-4">About This Project</h2>
           <div className="prose max-w-none">
             <CustomPortableText
               value={campaign.content as PortableTextBlock[]}
@@ -435,59 +645,16 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
-      {(
-        campaign as unknown as {
-          communityNote?: {
-            _key: string;
-            date: string;
-            issuedBy: string;
-            message: string;
-          }[];
-        }
-      ).communityNote?.length ? (
-        <div className="mb-8 space-y-3">
-          {(
-            campaign as unknown as {
-              communityNote: {
-                _key: string;
-                date: string;
-                issuedBy: string;
-                message: string;
-              }[];
-            }
-          ).communityNote.map((note) => (
-            <div
-              key={note._key}
-              className="p-5 bg-amber-50 rounded-xl border border-amber-200"
-            >
-              <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-                <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide">
-                  📢 Community Notice — Jobs & SMME Opportunities
-                </h2>
-                <div className="flex items-center gap-2 text-xs text-amber-600">
-                  {note.date && (
-                    <time dateTime={note.date}>
-                      {new Date(note.date).toLocaleDateString('en-ZA', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </time>
-                  )}
-                  {note.issuedBy && (
-                    <span className="font-medium">— {note.issuedBy}</span>
-                  )}
-                </div>
-              </div>
-              <p className="text-amber-900 text-sm">{note.message}</p>
-            </div>
-          ))}
-        </div>
-      ) : null}
+      {/* Community notices (hiring / SMME) */}
+      <CommunityNotices campaign={campaign} />
 
+      {/* Deliverables progress */}
       <Deliverables campaign={campaign} />
 
+      {/* Technical progress log (engineer/PMU verified) */}
       <ProgressLog log={campaign.progressLog} />
+
+      {/* Impact summary */}
       {campaign.impactSummary && (
         <div className="mb-8 p-6 bg-green-50 rounded-xl border border-green-100">
           <h2 className="text-xl font-bold mb-2 text-green-800">
@@ -497,83 +664,17 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
-      {campaign.relatedAreas && campaign.relatedAreas.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-3">Target Areas</h2>
-          <div className="space-y-2">
-            {campaign.relatedAreas.map((area) => (
-              <Link
-                key={area.slug}
-                href={`/areas/${area.slug}`}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <span className="text-sm font-medium">🏘️ {area.name}</span>
-                {area.induna && (
-                  <span className="text-xs text-gray-500">
-                    Induna: {area.induna.firstName} {area.induna.lastName}
-                  </span>
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Project updates timeline (sod turning, phase completions, etc.) */}
+      <CampaignUpdatesTimeline campaign={campaign} />
 
-      {campaign.relatedProgram && (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-3">Related Program</h2>
-          <Link
-            href={`/programs/${campaign.relatedProgram.slug}`}
-            className="inline-block text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors"
-          >
-            🚀 {campaign.relatedProgram.title}
-          </Link>
-        </div>
-      )}
-
-      <CampaignGallery gallery={campaign.gallery} />
+      {/* Sponsorship/activation gallery + media */}
+      <CampaignGallery
+        gallery={campaign.campaignType !== 'csr' ? campaign.gallery : null}
+      />
       <CampaignMedia campaign={campaign} />
 
-      {campaign.relatedNotices && campaign.relatedNotices.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-3">Community Notices</h2>
-          <div className="space-y-2">
-            {campaign.relatedNotices.map((notice) => (
-              <Link
-                key={notice._id}
-                href={`/notices/${notice.slug}`}
-                className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-shadow"
-              >
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">{notice.noticeType}</Badge>
-                  <span className="font-medium text-sm">{notice.title}</span>
-                </div>
-                {notice.date && (
-                  <time
-                    dateTime={notice.date}
-                    className="text-xs text-gray-400"
-                  >
-                    {new Date(notice.date).toLocaleDateString()}
-                  </time>
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {campaign.link && (
-        <div className="mb-8">
-          <a
-            href={campaign.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-          >
-            Visit Campaign Page →
-          </a>
-        </div>
-      )}
+      {/* Relations */}
+      <CampaignRelations campaign={campaign} />
 
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={campaign.title || ''} />
