@@ -60,6 +60,8 @@ type CertifiedDeliverable = {
   _key: string;
   task: string;
   status: 'pending' | 'certified' | 'disputed';
+  percentageComplete?: number;
+  weightage?: number;
   certifiedBy?: string;
   certificationDate?: string;
   notes?: string;

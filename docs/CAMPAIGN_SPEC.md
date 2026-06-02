@@ -14,6 +14,8 @@ This document describes the Campaign data model, Studio editor expectations, fro
   - Object fields:
     - `task` (string) — short, human-friendly description of the deliverable (required)
     - `status` (string enum) — `pending` | `certified` | `disputed` (required)
+    - `percentageComplete` (number, 0–100) — engineer-verified completion percentage for this specific deliverable. Allows concurrent tracking of overlapping phases. Default 0.
+    - `weightage` (number, 0–100) — optional relative weight of this deliverable in the overall project scope. If any item has weightage, the master progress bar uses weighted average; otherwise flat average.
     - `certifiedBy` (string) — verifier name or unit (optional; recommended when certified)
     - `certificationDate` (date) — required when `status === 'certified'` (validator enforced)
     - `notes` (text) — optional contextual notes
@@ -33,7 +35,7 @@ This document describes the Campaign data model, Studio editor expectations, fro
 
 The `campaignFragment` includes (relevant subset):
 
-- `deliverablesCertified[] { _key, task, status, certifiedBy, certificationDate, notes }`
+- `deliverablesCertified[] { _key, task, status, percentageComplete, weightage, certifiedBy, certificationDate, notes }`
 - `verificationRecords` synthetic field (server side fragment):
   - query: `*[_type == "conflictLog" && references(^._id)] | order(detectedAt desc)[0...5] { _id, field, displayTruth, resolutionState, detectedAt, resolvedAt, claims }`
 
@@ -42,13 +44,13 @@ Consumers should assume these fields may be undefined or empty arrays.
 ## 5. Frontend contract
 
 - Types (TS):
-  - `CertifiedDeliverable` { _key: string; task: string; status: 'pending'|'certified'|'disputed'; certifiedBy?: string; certificationDate?: string; notes?: string }
+  - `CertifiedDeliverable` { _key: string; task: string; status: 'pending'|'certified'|'disputed'; percentageComplete?: number; weightage?: number; certifiedBy?: string; certificationDate?: string; notes?: string }
   - `VerificationRecord` { _id: string; field: string; displayTruth?: string; resolutionState: 'pending'|'partial'|'resolved'|'escalated'; detectedAt: string; resolvedAt?: string; claims?: { source: string; value: string; date?: string; evidence?: string }[] }
 
 - Components:
   - `DeliverablesList` (src/components/modules/DeliverablesList.tsx)
     - Props: `deliverables?: string[]`, `deliverablesCertified?: CertifiedDeliverable[]`, `total?: number | null`
-    - Renders progress bar (completed/total), and either certified items (with status pills and verifier/date) or fallback plain deliverables list.
+    - Renders overall progress bar (weighted or simple average of per-item `percentageComplete`), and individual deliverable rows each with their own progress bar, status pill, and verifier info. Falls back to milestone count if no `percentageComplete` data exists.
   - `VerificationRecords` (src/components/modules/VerificationRecords.tsx)
     - Props: `records: VerificationRecord[]`
     - Renders a compact list of verification records and claims.

@@ -32,6 +32,9 @@ const typeColors: Record<
   resolution: 'secondary',
   alert: 'destructive',
   opportunity: 'outline',
+  employment: 'default',
+  smme: 'default',
+  'project-update': 'secondary',
 };
 
 export default function NoticeList({ section }: Props) {

@@ -572,6 +572,22 @@ export default defineType({
                 'Name of the person or entity that verified this deliverable.',
             }),
             defineField({
+              name: 'percentageComplete',
+              title: 'Progress (%)',
+              type: 'number',
+              description: 'Engineer-verified completion percentage (0–100).',
+              validation: (rule) => rule.min(0).max(100),
+              initialValue: 0,
+            }),
+            defineField({
+              name: 'weightage',
+              title: 'Weight (%)',
+              type: 'number',
+              description:
+                'Relative weight of this deliverable in overall project scope. Optional — if omitted, equal weighting is assumed.',
+              validation: (rule) => rule.min(0).max(100),
+            }),
+            defineField({
               name: 'certificationDate',
               title: 'Certification Date',
               type: 'date',

@@ -269,7 +269,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `post` | Blog posts, stories, learner content | Title, author, categories, content, image, SEO |
 | `person` | Leadership, council, community profiles | Name, role, type (inkosi/induna/council/youth/community/author), skills, organization |
 | `category` | Content categories | Title, slug, description |
-| `notice` | Community notices | Title, type (meeting/announcement/resolution/alert/opportunity), date, pinned, relatedArea |
+| `notice` | Community notices | Title, type (meeting/announcement/resolution/alert/opportunity/employment/smme/project-update), date, pinned, relatedArea, relatedCampaign |
 | `listing` | Directory (schools, clinics, businesses, areas) | Name, type, location, geopoint (map coordinates), contact, WhatsApp, services, hours, verification level, image, rich content, featured, induna, relatedListings |
 | `opportunity` | Jobs, training, bursaries, funding | Title, type, description, organization, deadline, apply link, relatedArea, featured |
 | `program` | Youth events, skills programs, school collabs | Title, type, status (upcoming/active/completed), date, relatedArea |
@@ -403,11 +403,15 @@ All content is linked via `relatedArea` references — when editors create a not
 Editors: to publish certified deliverables and verification records, use the following guidance.
 
 - **Campaign — Deliverables (field: deliverablesCertified)**
-    - Add items with: `task`, `status` (pending|certified|disputed), `certifiedBy`, `certificationDate`, `notes`.
+    - Add items with: `task`, `status` (pending|certified|disputed), `percentageComplete` (0–100), `weightage` (optional), `certifiedBy`, `certificationDate`, `notes`.
     - `certificationDate` is required when `status` is `certified` (Studio validation enforces this).
+    - `percentageComplete` tracks engineer-verified progress per deliverable. The frontend computes an overall project progress bar from the weighted or simple average of all item percentages.
+    - `weightage` represents the relative importance of this deliverable (e.g. 40 for treatment works, 10 for borehole drilling). If any item has weightage, a weighted average is used for the master progress bar.
     - Example:
         - task: "Rehabilitate 2km road"
         - status: "certified"
+        - percentageComplete: 100
+        - weightage: 25
         - certifiedBy: "PMU - J. Doe"
         - certificationDate: "2026-05-12"
         - notes: "Inspected and signed off."
@@ -541,6 +545,31 @@ The board displays:
 The board only renders for Initiative type campaigns. All text is uppercase matching the physical board format. The cover image can be hidden via a toggle when poster/flyer images are too tall and obstruct the board.
 
 This positions Umkhandlu as a compliance-ready documentation platform that municipalities can reference for WSIG/MIG reporting.
+
+#### Project ↔ Community Notice Architecture
+
+Infrastructure projects produce two fundamentally different information types:
+
+| Type | Purpose | Data Model | Audience |
+|---|---|---|---|
+| **Technical Milestone** | Engineering KPI — binary, certified, auditable | `deliverablesCertified[]` on campaign | PMU, engineers, audit |
+| **Community Notice** | Human announcement — rich text, actionable, accessible | Independent `notice` document with `relatedCampaign` reference | Community, job seekers, SMMEs |
+
+The `communityNote[]` field on campaigns is an internal operator log. Community-facing project announcements (hiring, SMME procurement, project updates) MUST be created as independent `notice` documents with:
+- `noticeType`: `employment`, `smme`, or `project-update`
+- `relatedCampaign`: reference back to the campaign
+- `relatedArea`: for area page visibility
+- `content`: full rich text (blockContent) for detailed instructions, tables, attachments
+
+This ensures:
+- Notices appear on `/notices` (the community’s primary feed)
+- Each notice has its own permanent URL (auditable)
+- Each notice has its own `_createdAt` timestamp (evidence)
+- The campaign page automatically queries and displays `relatedNotices`
+- Area pages show relevant project announcements
+- The export API can count notices by type for compliance reporting
+
+**SMME Profiles**: Vetted local businesses should be created as `listing` documents (type: `business`) with full profiles, media, and verification. Link them to the campaign via `relatedListings[]`. They appear on the map, directory, AND project page.
 
 #### Compliance Reporting Alignment
 

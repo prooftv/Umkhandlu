@@ -427,6 +427,8 @@ export const campaignFragment = /* groq */ `
     _key,
     task,
     status,
+    percentageComplete,
+    weightage,
     certifiedBy,
     certificationDate,
     notes

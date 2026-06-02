@@ -51,7 +51,7 @@ npm run dev
 | `post` | Blog posts, stories, learner content |
 | `person` | Leadership, council members, community profiles |
 | `category` | Content categories |
-| `notice` | Community notices (meeting, announcement, resolution, alert, opportunity) |
+| `notice` | Community notices (meeting, announcement, resolution, alert, opportunity, employment, smme, project-update) |
 | `listing` | Directory (school, clinic, business, accommodation, church, facility, area) with map coordinates and rich content |
 | `opportunity` | Jobs, training, bursaries, funding |
 | `program` | Youth events, skills programs, school collaborations |
