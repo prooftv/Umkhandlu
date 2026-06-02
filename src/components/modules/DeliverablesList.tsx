@@ -101,8 +101,10 @@ export default function DeliverablesList({
   const certified = deliverablesCertified?.length
     ? deliverablesCertified
     : undefined;
-  const completed = certified?.length ?? deliverables?.length ?? 0;
-  if (completed === 0) return null;
+  const certifiedCount =
+    certified?.filter((i) => i.status === 'certified').length ?? 0;
+  const completed = certifiedCount || (deliverables?.length ?? 0);
+  if (!certified?.length && !deliverables?.length) return null;
 
   // Use per-item progress if certified items have percentageComplete data
   const hasItemProgress = certified?.some(
