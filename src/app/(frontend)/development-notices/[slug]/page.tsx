@@ -203,8 +203,10 @@ function CommentSection({
           </h2>
           <p className="text-sm text-gray-500 mb-4">
             Comments must be received before{' '}
-            {formatDateZA(notice.commentDeadline!)}. You may also submit
-            directly to: {notice.commentContact}
+            {notice.commentDeadline
+              ? formatDateZA(notice.commentDeadline)
+              : 'the deadline'}
+            . You may also submit directly to: {notice.commentContact}
           </p>
           <PublicCommentForm
             noticeId={notice._id}

@@ -16,7 +16,14 @@ export default function HeroSection({
     return (
       <section className="relative min-h-[400px] md:min-h-[500px] flex items-center">
         <Image
-          src={urlForImage(section.image!)?.width(1920).url() as string}
+          // biome-disable-next-line lint/suspicious/noExplicitAny: guarded by hasImage check
+          src={
+            urlForImage(
+              section.image as unknown as { asset?: { _ref?: string } }
+            )
+              ?.width(1920)
+              .url() as string
+          }
           alt={section?.image?.alt || ''}
           width={1920}
           height={1080}

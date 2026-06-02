@@ -8,7 +8,6 @@ import { POSTS_PER_PAGE } from '@/lib/constants';
 import { getDocumentLink } from '@/lib/links';
 import { paginatedData } from '@/lib/pagination';
 import { client } from '@/lib/sanity/client/client';
-import { generatePersonJsonLd } from '@/lib/sanity/client/jsonLd';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import {
   personQuery,

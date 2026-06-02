@@ -18,20 +18,24 @@ export default function LanguageToggle() {
       aria-label="Language"
     >
       {languages.map(({ code, label }) => (
-        <button
-          key={code}
-          type="button"
-          role="radio"
-          aria-checked={locale === code}
-          onClick={() => setLocale(code)}
-          className={`px-2 py-1 rounded transition-colors ${
-            locale === code
-              ? 'bg-primary text-white font-medium'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          {label}
-        </button>
+        <label key={code} className="inline-flex items-center">
+          <input
+            type="radio"
+            name="language"
+            checked={locale === code}
+            onChange={() => setLocale(code)}
+            className="sr-only"
+          />
+          <span
+            className={`px-2 py-1 rounded transition-colors cursor-pointer ${
+              locale === code
+                ? 'bg-primary text-white font-medium'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            {label}
+          </span>
+        </label>
       ))}
     </div>
   );
