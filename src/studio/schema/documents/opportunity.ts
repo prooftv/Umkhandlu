@@ -99,6 +99,14 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'relatedCampaign',
+      title: 'Related Campaign',
+      type: 'reference',
+      to: [{ type: 'campaign' }],
+      description:
+        'Optional campaign reference for procurement or job opportunities tied to a specific project.',
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured',
       type: 'boolean',

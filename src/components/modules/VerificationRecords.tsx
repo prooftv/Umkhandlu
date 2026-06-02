@@ -87,54 +87,61 @@ function VerificationRecordItem({ record }: { record: VerificationRecord }) {
   const pill = verificationStatePill(record.resolutionState);
   const fieldText = getVerificationFieldLabel(record.field);
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <div>
-          <p className="text-sm text-slate-500 uppercase tracking-wide">
+    <details className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <summary className="flex flex-wrap items-center justify-between gap-3 p-4 cursor-pointer bg-slate-50 text-left">
+        <div className="min-w-0">
+          <p className="text-sm text-slate-500 uppercase tracking-wide truncate">
             {fieldText}
             {record.conflictType ? ` • ${record.conflictType}` : ''}
           </p>
-          {record.displayTruth ? (
-            <p className="mt-1 text-lg font-semibold text-slate-900">
-              Public report: {record.displayTruth}
-            </p>
-          ) : (
-            <p className="mt-1 text-lg font-semibold text-slate-900">
-              Under review
-            </p>
+          <p className="mt-1 text-base font-semibold text-slate-900 truncate">
+            {record.displayTruth
+              ? `Public report: ${record.displayTruth}`
+              : 'Under review'}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={pill.className}>{pill.label}</span>
+          <span className="text-xs uppercase tracking-wide text-slate-500">
+            {new Date(record.detectedAt).toLocaleDateString()}
+          </span>
+        </div>
+      </summary>
+      <div className="p-4 border-t border-slate-200">
+        {record.resolutionNote && (
+          <p className="text-sm text-slate-600 mb-3">{record.resolutionNote}</p>
+        )}
+        <div className="grid gap-2 sm:grid-cols-2 text-xs uppercase tracking-wide text-slate-500 mb-4">
+          <div>
+            Detected: {new Date(record.detectedAt).toLocaleDateString()}
+          </div>
+          {record.resolvedAt && (
+            <div>
+              Verified: {new Date(record.resolvedAt).toLocaleDateString()}
+            </div>
           )}
         </div>
-        <span className={pill.className}>{pill.label}</span>
-      </div>
-      {record.resolutionNote && (
-        <p className="text-sm text-slate-600 mb-2">{record.resolutionNote}</p>
-      )}
-      <div className="grid gap-2 sm:grid-cols-2">
-        <div className="text-xs uppercase tracking-wide text-slate-500">
-          Detected: {new Date(record.detectedAt).toLocaleDateString()}
-        </div>
-        {record.resolvedAt && (
-          <div className="text-xs uppercase tracking-wide text-slate-500">
-            Verified: {new Date(record.resolvedAt).toLocaleDateString()}
+        {record.claims?.length ? (
+          <div className="space-y-3">
+            <p className="text-sm font-semibold text-slate-800">
+              Source claims
+            </p>
+            <div className="space-y-3">
+              {record.claims.map((claim, index) => (
+                <VerificationClaimItem
+                  key={getClaimKey(claim, index)}
+                  claim={claim}
+                />
+              ))}
+            </div>
           </div>
+        ) : (
+          <p className="text-sm text-slate-500">
+            No source claims recorded yet.
+          </p>
         )}
       </div>
-      {record.claims?.length ? (
-        <div className="mt-4">
-          <p className="text-sm font-semibold text-slate-800 mb-2">
-            Source claims
-          </p>
-          <div className="space-y-3">
-            {record.claims.map((claim, index) => (
-              <VerificationClaimItem
-                key={getClaimKey(claim, index)}
-                claim={claim}
-              />
-            ))}
-          </div>
-        </div>
-      ) : null}
-    </div>
+    </details>
   );
 }
 

@@ -211,7 +211,8 @@ export const opportunityDetailQuery = defineQuery(`
     deadline,
     link,
     featured,
-    "relatedArea": relatedArea->{ name, "slug": slug.current }
+    "relatedArea": relatedArea->{ name, "slug": slug.current },
+    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current }
   }
 `);
 

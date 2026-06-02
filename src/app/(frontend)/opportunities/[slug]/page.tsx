@@ -82,6 +82,17 @@ export default async function OpportunityPage(props: Props) {
             </Link>
           </p>
         )}
+        {opp.relatedCampaign && (
+          <p className="text-gray-500 mb-2">
+            💼{' '}
+            <Link
+              href={`/campaigns/${opp.relatedCampaign.slug}`}
+              className="underline hover:text-gray-700"
+            >
+              {opp.relatedCampaign.title}
+            </Link>
+          </p>
+        )}
         {opp.deadline && (
           <p className="text-gray-500">
             Deadline:{' '}

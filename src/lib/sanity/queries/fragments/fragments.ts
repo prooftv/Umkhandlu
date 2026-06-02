@@ -382,6 +382,20 @@ export const adBannerSectionFragment = /* groq */ `
   size
 `;
 
+export const opportunityFragment = /* groq */ `
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  opportunityType,
+  description,
+  organization,
+  deadline,
+  link,
+  featured,
+  image,
+`;
+
 export const campaignFragment = /* groq */ `
   _id,
   _type,
@@ -457,6 +471,20 @@ export const campaignFragment = /* groq */ `
   "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },
   "relatedProgram": relatedProgram->{ title, "slug": slug.current },
+  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {
+    ${opportunityFragment}
+  },
+  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {
+    _id,
+    title,
+    "slug": slug.current,
+    noticeType,
+    status,
+    applicant,
+    commentDeadline,
+    publishDate,
+    location
+  },
   "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {
     ${noticeFragment}
   },
@@ -494,20 +522,6 @@ export const communityMapSectionFragment = /* groq */ `
   )] | order(featured desc, name asc) {
     ${listingFragment}
   }
-`;
-
-export const opportunityFragment = /* groq */ `
-  _id,
-  _type,
-  title,
-  "slug": slug.current,
-  opportunityType,
-  description,
-  organization,
-  deadline,
-  link,
-  featured,
-  image,
 `;
 
 export const opportunityListSectionFragment = /* groq */ `

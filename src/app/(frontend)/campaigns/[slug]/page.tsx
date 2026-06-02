@@ -83,9 +83,36 @@ type VerificationRecord = {
   resolvedAt?: string;
   claims?: VerificationClaim[];
 };
+
+type OpportunityLink = {
+  _id: string;
+  title: string;
+  slug: string;
+  opportunityType: string;
+  description?: string;
+  organization?: string;
+  deadline?: string;
+  link?: string;
+  featured?: boolean;
+};
+
+type DevelopmentNoticeSummary = {
+  _id: string;
+  title: string;
+  slug: string;
+  noticeType: string;
+  status: string;
+  applicant?: string;
+  commentDeadline?: string;
+  publishDate?: string;
+  location?: string;
+};
+
 type CampaignWithVerification = CampaignData & {
   deliverablesCertified?: CertifiedDeliverable[];
   verificationRecords?: VerificationRecord[];
+  relatedOpportunities?: OpportunityLink[];
+  relatedDevelopmentNotices?: DevelopmentNoticeSummary[];
 };
 
 // Verification UI moved to a dedicated component (src/components/modules/VerificationRecords.tsx)
@@ -297,13 +324,28 @@ function CampaignUpdatesTimeline({ campaign }: { campaign: CampaignData }) {
   const sorted = [...updates].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+  const visibleUpdates = sorted.slice(0, 3);
+  const hiddenUpdates = sorted.slice(3);
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold mb-6">Project Updates</h2>
       <div className="space-y-10">
-        {sorted.map((update) => (
+        {visibleUpdates.map((update) => (
           <ProjectUpdateEntry key={update._key} update={update} />
         ))}
+        {hiddenUpdates.length > 0 && (
+          <details className="rounded-2xl border border-gray-200 bg-white p-4">
+            <summary className="cursor-pointer text-sm font-semibold text-primary">
+              View {hiddenUpdates.length} older update
+              {hiddenUpdates.length > 1 ? 's' : ''}
+            </summary>
+            <div className="mt-4 space-y-10">
+              {hiddenUpdates.map((update) => (
+                <ProjectUpdateEntry key={update._key} update={update} />
+              ))}
+            </div>
+          </details>
+        )}
       </div>
     </div>
   );
@@ -313,35 +355,72 @@ function CommunityNotices({ campaign }: { campaign: CampaignData }) {
   const notes = (campaign as unknown as { communityNote?: CommunityNote[] })
     .communityNote;
   if (!notes?.length) return null;
+
+  const sortedNotes = [...notes].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+  const [latestNote, ...previousNotes] = sortedNotes;
+
   return (
-    <div className="mb-8 space-y-3">
-      {notes.map((note) => (
-        <div
-          key={note._key}
-          className="p-5 bg-amber-50 rounded-xl border border-amber-200"
-        >
-          <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-            <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide">
-              📢 Community Notice — Jobs & SMME Opportunities
-            </h2>
-            <div className="flex items-center gap-2 text-xs text-amber-600">
-              {note.date && (
-                <time dateTime={note.date}>
-                  {new Date(note.date).toLocaleDateString('en-ZA', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </time>
-              )}
-              {note.issuedBy && (
-                <span className="font-medium">— {note.issuedBy}</span>
-              )}
-            </div>
+    <div className="mb-8 space-y-4">
+      <div className="p-5 bg-amber-50 rounded-xl border border-amber-200">
+        <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide">
+            📢 Community Notice — Jobs & SMME Opportunities
+          </h2>
+          <div className="flex items-center gap-2 text-xs text-amber-600">
+            {latestNote.date && (
+              <time dateTime={latestNote.date}>
+                {new Date(latestNote.date).toLocaleDateString('en-ZA', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </time>
+            )}
+            {latestNote.issuedBy && (
+              <span className="font-medium">— {latestNote.issuedBy}</span>
+            )}
           </div>
-          <p className="text-amber-900 text-sm">{note.message}</p>
         </div>
-      ))}
+        <p className="text-amber-900 text-sm">{latestNote.message}</p>
+      </div>
+
+      {previousNotes.length > 0 && (
+        <details className="rounded-2xl border border-gray-200 bg-white p-4">
+          <summary className="cursor-pointer text-sm font-semibold text-gray-900">
+            View {previousNotes.length} earlier community notice
+            {previousNotes.length > 1 ? 's' : ''}
+          </summary>
+          <div className="mt-4 space-y-3">
+            {previousNotes.map((note) => (
+              <div
+                key={note._key}
+                className="rounded-xl border border-gray-100 bg-gray-50 p-4"
+              >
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <p className="text-xs uppercase tracking-wide text-gray-500">
+                    {note.issuedBy}
+                  </p>
+                  {note.date && (
+                    <time
+                      dateTime={note.date}
+                      className="text-xs text-gray-400"
+                    >
+                      {new Date(note.date).toLocaleDateString('en-ZA', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </time>
+                  )}
+                </div>
+                <p className="text-sm text-gray-700">{note.message}</p>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   );
 }
@@ -403,6 +482,51 @@ function CampaignRelations({ campaign }: { campaign: CampaignData }) {
           </Link>
         </div>
       )}
+      {campaign.relatedOpportunities &&
+        campaign.relatedOpportunities.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-3">Related Opportunities</h2>
+            <div className="space-y-3">
+              {campaign.relatedOpportunities.map((opp) => (
+                <Link
+                  key={opp._id}
+                  href={`/opportunities/${opp.slug}`}
+                  className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge>{opp.opportunityType}</Badge>
+                      {opp.organization && (
+                        <span className="text-xs text-gray-500">
+                          {opp.organization}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-semibold">{opp.title}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {opp.description}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    {opp.deadline && (
+                      <time
+                        dateTime={opp.deadline}
+                        className="text-xs text-gray-400 block"
+                      >
+                        Closes {new Date(opp.deadline).toLocaleDateString()}
+                      </time>
+                    )}
+                    {opp.link && (
+                      <span className="text-primary text-sm font-medium">
+                        Apply →
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       {campaign.relatedNotices && campaign.relatedNotices.length > 0 && (
         <div className="mb-8">
           <h2 className="text-xl font-bold mb-3">Community Notices</h2>
@@ -430,6 +554,55 @@ function CampaignRelations({ campaign }: { campaign: CampaignData }) {
           </div>
         </div>
       )}
+      {campaign.relatedDevelopmentNotices &&
+        campaign.relatedDevelopmentNotices.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-3">Development Notices</h2>
+            <div className="space-y-3">
+              {campaign.relatedDevelopmentNotices.map((notice) => (
+                <Link
+                  key={notice._id}
+                  href={`/development-notices/${notice.slug}`}
+                  className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge
+                        variant={
+                          notice.status === 'open' ? 'default' : 'secondary'
+                        }
+                      >
+                        {notice.status === 'open'
+                          ? '🟢 Open for Comment'
+                          : notice.status}
+                      </Badge>
+                      <span className="text-xs text-gray-500">
+                        {notice.noticeType}
+                      </span>
+                    </div>
+                    <h3 className="font-semibold">{notice.title}</h3>
+                    {notice.applicant && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Applicant: {notice.applicant}
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-right shrink-0">
+                    {notice.commentDeadline && (
+                      <time
+                        dateTime={notice.commentDeadline}
+                        className="text-xs text-gray-400 block"
+                      >
+                        Deadline:{' '}
+                        {new Date(notice.commentDeadline).toLocaleDateString()}
+                      </time>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       {campaign.link && (
         <div className="mb-8">
           <a
