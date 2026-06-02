@@ -602,6 +602,17 @@ export default defineType({
       ],
       description:
         'Add confirmed deliverables with certification metadata so public reporting can distinguish verified completion from provisional claims.',
+      validation: (rule) =>
+        rule.custom((items: unknown) => {
+          if (!items) return true;
+          type CD = { status?: string; certificationDate?: string | undefined };
+          for (const it of items as CD[]) {
+            if (it?.status === 'certified' && !it?.certificationDate) {
+              return 'Certified items must have a Certification Date.';
+            }
+          }
+          return true;
+        }),
     }),
     defineField({
       name: 'totalDeliverables',
@@ -635,15 +646,17 @@ export default defineType({
       status: 'status',
       sponsor: 'sponsor.name',
       media: 'image',
+      certified: 'deliverablesCertified',
     },
-    prepare({ title, campaignType, status, sponsor, media }) {
+    prepare({ title, campaignType, status, sponsor, media, certified }) {
       const typeLabel =
         { ad: '📢 Ad', activation: '🎯 Activation', csr: '💚 CSR' }[
           campaignType as string
         ] || campaignType;
+      const certifiedCount = Array.isArray(certified) ? certified.length : 0;
       return {
         title,
-        subtitle: `${typeLabel} — ${status || 'draft'}${sponsor ? ` — ${sponsor}` : ''}`,
+        subtitle: `${typeLabel} — ${status || 'draft'}${sponsor ? ` — ${sponsor}` : ''}${certifiedCount ? ` — ${certifiedCount} certified` : ''}`,
         media,
       };
     },

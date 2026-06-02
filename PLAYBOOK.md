@@ -398,6 +398,33 @@ All content is linked via `relatedArea` references — when editors create a not
 
 ## 5. Features
 
+### Campaign verification (editor steps)
+
+Editors: to publish certified deliverables and verification records, use the following guidance.
+
+- **Campaign — Deliverables (field: deliverablesCertified)**
+    - Add items with: `task`, `status` (pending|certified|disputed), `certifiedBy`, `certificationDate`, `notes`.
+    - `certificationDate` is required when `status` is `certified` (Studio validation enforces this).
+    - Example:
+        - task: "Rehabilitate 2km road"
+        - status: "certified"
+        - certifiedBy: "PMU - J. Doe"
+        - certificationDate: "2026-05-12"
+        - notes: "Inspected and signed off."
+
+- **Verification records — Conflict Log (document: conflictLog)**
+    - Key fields: `field` (which campaign field is disputed/verified), `displayTruth`, `resolutionState` (pending|partial|resolved|escalated), `detectedAt`, `resolvedAt`, `claims` (array of { source, value, date, evidence }).
+    - Example:
+        - field: "totalDeliverables"
+        - displayTruth: "10 deliverables completed and certified"
+        - resolutionState: "resolved"
+        - detectedAt: "2026-05-10"
+        - resolvedAt: "2026-05-12"
+        - claims: [{ source: "Contractor report", value: "12", date: "2026-05-09", evidence: "photo-001.jpg" }, { source: "PMU inspection", value: "10", date: "2026-05-11", evidence: "inspection-report.pdf" }]
+
+Where to edit: open the Campaign document in Studio to add `deliverablesCertified`. Create a `conflictLog` document for verification records and ensure it references or describes the affected campaign/field.
+
+
 ### SEO & Performance
 
 - `metadataBase` for fully-qualified OG/canonical URLs
