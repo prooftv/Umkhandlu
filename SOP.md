@@ -125,6 +125,8 @@ Then: compile PMU summary, cross-check with the published progress log, and comp
 
 Note: The export includes brief `relatedOpportunities` and `relatedDevelopmentNotices` arrays (up to 10 items) to aid compliance reviews. For full notice or opportunity details, query the respective endpoints.
 
+The export now also includes redacted `verifications` summaries. Each verification contains a truncated `resolutionNote` (first 200 characters) and `claims[].evidenceSummary` (first 200 characters) so auditors can review context without receiving full sensitive evidence files.
+
 ---
 
 ## 5. Decision Rules

@@ -60,6 +60,7 @@ Consumers should assume these fields may be undefined or empty arrays.
 - This endpoint is campaign-focused. Detailed evidence records remain stored in `conflictLog` documents and are surfaced on the campaign page via `verificationRecords`.
 
 - The export also includes short lists of `relatedOpportunities` and `relatedDevelopmentNotices` (limited to the first 10 items) with minimal metadata for compliance reporting. Detailed opportunity and notice content should be fetched from the respective endpoints if needed.
+- The export also includes redacted verification summaries in `verifications` (up to 10), containing `field`, `displayTruth`, `resolutionState`, `detectedAt`, `resolvedAt`, a truncated `resolutionNote` (first 200 chars) and `claims[].evidenceSummary` (first 200 chars) to aid compliance reviews without exposing PII.
 
 ## 7. Related project content
 

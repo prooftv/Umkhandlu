@@ -45,10 +45,11 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
     _id,
     field,
     displayTruth,
+    resolutionNote,
     resolutionState,
     detectedAt,
     resolvedAt,
-    "claims": claims[]{ source, value, date }
+    "claims": claims[]{ source, value, date, evidence }
   },
   "verificationCount": count(*[_type == "conflictLog" && references(^._id)]),
   "communityNoteCount": count(communityNote),
@@ -90,6 +91,57 @@ export async function GET(request: NextRequest) {
       0
     ),
   };
+
+  // Redact and truncate sensitive fields for export (in-place)
+  type Claim = {
+    source?: string;
+    value?: string;
+    date?: string;
+    evidence?: unknown;
+  };
+  type Verification = {
+    _id?: string;
+    field?: string;
+    displayTruth?: string;
+    resolutionNote?: unknown;
+    resolutionState?: string;
+    detectedAt?: string;
+    resolvedAt?: string;
+    claims?: Claim[];
+    [k: string]: unknown;
+  };
+  type CampaignExport = {
+    verifications?: Verification[];
+    [k: string]: unknown;
+  };
+
+  filtered.forEach((c: CampaignExport) => {
+    if (Array.isArray(c.verifications)) {
+      c.verifications = c.verifications.map((v) => {
+        const redactedV: Verification = { ...v };
+        if (redactedV.resolutionNote) {
+          redactedV.resolutionNote = String(redactedV.resolutionNote).slice(
+            0,
+            200
+          );
+        }
+        if (Array.isArray(redactedV.claims)) {
+          redactedV.claims = redactedV.claims.map(
+            (cl) =>
+              ({
+                source: cl.source,
+                value: cl.value,
+                date: cl.date,
+                evidenceSummary: cl.evidence
+                  ? String(cl.evidence).slice(0, 200)
+                  : undefined,
+              }) as unknown as Claim
+          );
+        }
+        return redactedV;
+      });
+    }
+  });
 
   return NextResponse.json(
     { exportedAt: new Date().toISOString(), summary, campaigns: filtered },
