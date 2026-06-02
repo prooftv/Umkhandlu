@@ -409,8 +409,32 @@ export const campaignFragment = /* groq */ `
   beneficiaries,
   impactSummary,
   deliverables,
+  deliverablesCertified[] {
+    _key,
+    task,
+    status,
+    certifiedBy,
+    certificationDate,
+    notes
+  },
   totalDeliverables,
-  communityNote[]{
+  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {
+    _id,
+    field,
+    conflictType,
+    displayTruth,
+    resolutionState,
+    resolutionNote,
+    detectedAt,
+    resolvedAt,
+    claims[] {
+      source,
+      value,
+      date,
+      evidence
+    }
+  },
+  communityNote[] {
     _key,
     date,
     issuedBy,

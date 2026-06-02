@@ -275,7 +275,7 @@ This is NOT "a website for the council." This is a **digital layer around existi
 | `program` | Youth events, skills programs, school collabs | Title, type, status (upcoming/active/completed), date, relatedArea |
 | `record` | Governance documents | Title, type (minutes/resolution/land-allocation/dispute-resolution/policy/report/external-resource), date, summary, status, approvedBy, content, PDF file, externalUrl, source, relatedArea |
 | `sponsor` | Sponsors and partners | Name, type (NGO/business/government/community/individual), logo, website, description |
-| `campaign` | Campaigns & activations | Title, type (sponsorship/activation/initiative), status (draft/approved/active/completed/reported), sponsor, contactPerson, dates, targetAudience, tags, budget, beneficiaries, impact summary, deliverables, video, audio, documents, gallery, SEO |
+| `campaign` | Campaigns & activations | Title, type (sponsorship/activation/initiative), status (draft/approved/active/completed/reported), sponsor, contactPerson, dates, targetAudience, tags, budget, beneficiaries, impact summary, deliverables (including certified deliverables), video, audio, documents, gallery, SEO |
 | `developmentNotice` | Statutory & public participation notices | Title, type (EIA/SPLUMA/estate/liquidation/PTO/mining/telecom/liquor), status, applicant, reference number, legal mandate, retention period, fee, feeStatus, description, location, geopoint, comment deadline, comment contact, documents, related area |
 | `conflictLog` | Verification records | Project reference, reported field, variance type, source records (authority + value + date + evidence), verified reporting value, verification status, escalation level, verification note |
 
@@ -454,10 +454,10 @@ All content is linked via `relatedArea` references — when editors create a not
 - 5-stage status workflow: Draft → Approved → Active → Completed → Reported
 - Contact person, target audience, freeform tags
 - Video embed (YouTube/Vimeo), audio file upload, document attachments (PDF/DOC)
-- Budget tracking (ZAR, internal only — not shown on frontend), beneficiary counts, impact summaries, deliverables list
+- Budget tracking (ZAR, internal only — not shown on frontend), beneficiary counts, impact summaries, deliverables list, certified deliverable metadata for verified public reporting
 - Links to sponsors, target areas, related programs, contact person
 - `campaignList` page builder section (filterable by type and status)
-- Campaign detail pages at `/campaigns/[slug]` with JSON-LD structured data and project info board
+- Campaign detail pages at `/campaigns/[slug]` with JSON-LD structured data, project info board, and public verification/conflict record surfacing
 - Full SEO fields (metaTitle, metaDescription, OG, Twitter)
 - Data export API: `GET /api/campaigns/export?token=<READ_TOKEN>`
 

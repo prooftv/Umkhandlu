@@ -14,9 +14,10 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   beneficiaries,
   impactSummary,
   deliverables,
+  deliverablesCertified,
   totalDeliverables,
   "deliverableProgress": select(
-    defined(totalDeliverables) && totalDeliverables > 0 => round((count(deliverables) / totalDeliverables) * 100),
+    defined(totalDeliverables) && totalDeliverables > 0 => round((count(coalesce(deliverablesCertified, deliverables)) / totalDeliverables) * 100),
     null
   ),
   "sponsor": sponsor->{ name, sponsorType, website },

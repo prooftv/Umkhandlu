@@ -54,6 +54,109 @@ type ProjectUpdate = {
   videoUrl?: string | null;
 };
 
+type CertifiedDeliverable = {
+  _key: string;
+  task: string;
+  status: 'pending' | 'certified' | 'disputed';
+  certifiedBy?: string;
+  certificationDate?: string;
+  notes?: string;
+};
+
+type VerificationClaim = {
+  source: string;
+  value: string;
+  date?: string;
+  evidence?: string;
+};
+
+type VerificationRecord = {
+  _id: string;
+  field: string;
+  conflictType?: string;
+  displayTruth?: string;
+  resolutionState: 'pending' | 'partial' | 'resolved' | 'escalated';
+  resolutionNote?: string;
+  detectedAt: string;
+  resolvedAt?: string;
+  claims?: VerificationClaim[];
+};
+
+type CampaignWithVerification = CampaignData & {
+  deliverablesCertified?: CertifiedDeliverable[];
+  verificationRecords?: VerificationRecord[];
+};
+
+const certificationPill = (status: CertifiedDeliverable['status']) => {
+  switch (status) {
+    case 'certified':
+      return {
+        label: 'Certified',
+        className:
+          'inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700',
+      };
+    case 'disputed':
+      return {
+        label: 'Disputed',
+        className:
+          'inline-flex items-center rounded-full bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-700',
+      };
+    default:
+      return {
+        label: 'Pending',
+        className:
+          'inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700',
+      };
+  }
+};
+
+const verificationStatePill = (
+  state: VerificationRecord['resolutionState']
+) => {
+  switch (state) {
+    case 'resolved':
+      return {
+        label: 'Verified',
+        className:
+          'inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700',
+      };
+    case 'escalated':
+      return {
+        label: 'Escalated',
+        className:
+          'inline-flex rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700',
+      };
+    case 'partial':
+      return {
+        label: 'Under Review',
+        className:
+          'inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700',
+      };
+    default:
+      return {
+        label: 'Pending',
+        className:
+          'inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700',
+      };
+  }
+};
+
+const getVerificationFieldLabel = (field: string) => {
+  const labels: Record<string, string> = {
+    progress: 'Progress %',
+    phase: 'Project Phase',
+    workforce: 'Workforce / EPWP Numbers',
+    timeline: 'Timeline / Dates',
+    status: 'Project Status',
+    budget: 'Budget / Expenditure',
+    other: 'Other',
+  };
+  return labels[field] || field;
+};
+
+const getClaimKey = (claim: VerificationClaim, index: number) =>
+  `${claim.source}-${claim.value}-${claim.date ?? index}`;
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function CampaignSponsor({ sponsor }: { sponsor: CampaignData['sponsor'] }) {
@@ -309,12 +412,16 @@ function CommunityNotices({ campaign }: { campaign: CampaignData }) {
   );
 }
 
-function Deliverables({ campaign }: { campaign: CampaignData }) {
-  if (!campaign.deliverables?.length) return null;
-  const total = (campaign as unknown as { totalDeliverables?: number })
-    .totalDeliverables;
-  const completed = campaign.deliverables.length;
+function Deliverables({ campaign }: { campaign: CampaignWithVerification }) {
+  const certified = campaign.deliverablesCertified?.length
+    ? campaign.deliverablesCertified
+    : undefined;
+  const completed = certified?.length ?? campaign.deliverables?.length ?? 0;
+  if (completed === 0) return null;
+
+  const total = campaign.totalDeliverables;
   const pct = total && total > 0 ? Math.round((completed / total) * 100) : null;
+
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold mb-3">Deliverables</h2>
@@ -335,15 +442,49 @@ function Deliverables({ campaign }: { campaign: CampaignData }) {
         </div>
       )}
       <div className="space-y-1.5">
-        {campaign.deliverables.map((d) => (
-          <div
-            key={d}
-            className="flex items-center gap-2 text-sm text-gray-700"
-          >
-            <span className="text-green-600">✓</span>
-            <span>{d}</span>
-          </div>
-        ))}
+        {certified
+          ? certified.map((item) => (
+              <div
+                key={item._key}
+                className="rounded-xl border border-gray-200 p-4 bg-white"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="font-semibold text-gray-900">{item.task}</p>
+                    {item.certifiedBy && (
+                      <p className="text-xs text-gray-500">
+                        Verified by {item.certifiedBy}
+                        {item.certificationDate && (
+                          <>
+                            {' '}
+                            on{' '}
+                            {new Date(
+                              item.certificationDate
+                            ).toLocaleDateString()}
+                          </>
+                        )}
+                      </p>
+                    )}
+                  </div>
+                  {(() => {
+                    const pill = certificationPill(item.status);
+                    return <span className={pill.className}>{pill.label}</span>;
+                  })()}
+                </div>
+                {item.notes && (
+                  <p className="mt-2 text-sm text-gray-600">{item.notes}</p>
+                )}
+              </div>
+            ))
+          : campaign.deliverables?.map((d) => (
+              <div
+                key={d}
+                className="flex items-center gap-2 text-sm text-gray-700"
+              >
+                <span className="text-green-600">✓</span>
+                <span>{d}</span>
+              </div>
+            ))}
       </div>
     </div>
   );
@@ -362,6 +503,104 @@ function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
             </time>
             <p className="text-sm text-gray-700 mt-0.5">{entry.update}</p>
           </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VerificationClaimItem({ claim }: { claim: VerificationClaim }) {
+  return (
+    <div className="rounded-lg bg-slate-50 p-3">
+      <p className="text-sm text-slate-700">
+        <span className="font-semibold">{claim.source}</span> reported{' '}
+        <span className="font-semibold">{claim.value}</span>
+        {claim.date ? ` on ${new Date(claim.date).toLocaleDateString()}` : ''}
+      </p>
+      {claim.evidence && (
+        <p className="text-xs text-slate-500 mt-1">
+          Evidence: {claim.evidence}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function VerificationRecordItem({ record }: { record: VerificationRecord }) {
+  const pill = verificationStatePill(record.resolutionState);
+  const fieldText = getVerificationFieldLabel(record.field);
+  return (
+    <div
+      key={record._id}
+      className="rounded-xl border border-slate-200 bg-white p-4"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div>
+          <p className="text-sm text-slate-500 uppercase tracking-wide">
+            {fieldText}
+            {record.conflictType ? ` • ${record.conflictType}` : ''}
+          </p>
+          {record.displayTruth ? (
+            <p className="mt-1 text-lg font-semibold text-slate-900">
+              Public report: {record.displayTruth}
+            </p>
+          ) : (
+            <p className="mt-1 text-lg font-semibold text-slate-900">
+              Under review
+            </p>
+          )}
+        </div>
+        <span className={pill.className}>{pill.label}</span>
+      </div>
+      {record.resolutionNote && (
+        <p className="text-sm text-slate-600 mb-2">{record.resolutionNote}</p>
+      )}
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div className="text-xs uppercase tracking-wide text-slate-500">
+          Detected: {new Date(record.detectedAt).toLocaleDateString()}
+        </div>
+        {record.resolvedAt && (
+          <div className="text-xs uppercase tracking-wide text-slate-500">
+            Verified: {new Date(record.resolvedAt).toLocaleDateString()}
+          </div>
+        )}
+      </div>
+      {record.claims?.length ? (
+        <div className="mt-4">
+          <p className="text-sm font-semibold text-slate-800 mb-2">
+            Source claims
+          </p>
+          <div className="space-y-3">
+            {record.claims.map((claim, index) => (
+              <VerificationClaimItem
+                key={getClaimKey(claim, index)}
+                claim={claim}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function VerificationRecords({ records }: { records: VerificationRecord[] }) {
+  if (!records?.length) return null;
+
+  return (
+    <div className="mb-8 p-6 bg-slate-50 rounded-2xl border border-slate-200">
+      <div className="flex items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 className="text-xl font-bold">Verification Records</h2>
+          <p className="text-sm text-slate-600">
+            Public reporting is aligned with verified evidence from the TCRS
+            conflict log.
+          </p>
+        </div>
+      </div>
+      <div className="space-y-4">
+        {records.map((record) => (
+          <VerificationRecordItem key={record._id} record={record} />
         ))}
       </div>
     </div>
@@ -577,7 +816,7 @@ export default async function CampaignPage(props: Props) {
     <div className="container mx-auto max-w-4xl py-12">
       <script
         type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
+        // biome-disable-next-line lint/security/noDangerouslySetInnerHtml: structured data
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(buildCampaignJsonLd(campaign)),
         }}
@@ -649,10 +888,17 @@ export default async function CampaignPage(props: Props) {
       <CommunityNotices campaign={campaign} />
 
       {/* Deliverables progress */}
-      <Deliverables campaign={campaign} />
+      <Deliverables campaign={campaign as CampaignWithVerification} />
 
       {/* Technical progress log (engineer/PMU verified) */}
       <ProgressLog log={campaign.progressLog} />
+
+      {/* Verified evidence / conflict records */}
+      <VerificationRecords
+        records={
+          (campaign as CampaignWithVerification).verificationRecords ?? []
+        }
+      />
 
       {/* Impact summary */}
       {campaign.impactSummary && (

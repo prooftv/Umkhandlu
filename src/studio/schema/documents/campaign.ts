@@ -535,6 +535,75 @@ export default defineType({
         'Add as you complete them. e.g. Weir construction, Borehole drilling, Rising main installation',
     }),
     defineField({
+      name: 'deliverablesCertified',
+      title: 'Certified Deliverables',
+      type: 'array',
+      group: 'tracking',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'task',
+              title: 'Deliverable Task',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'status',
+              title: 'Certification Status',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Pending', value: 'pending' },
+                  { title: 'Certified', value: 'certified' },
+                  { title: 'Disputed', value: 'disputed' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'pending',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'certifiedBy',
+              title: 'Certified By',
+              type: 'string',
+              description:
+                'Name of the person or entity that verified this deliverable.',
+            }),
+            defineField({
+              name: 'certificationDate',
+              title: 'Certification Date',
+              type: 'date',
+              hidden: ({ parent }) => parent?.status !== 'certified',
+            }),
+            defineField({
+              name: 'notes',
+              title: 'Verification Notes',
+              type: 'text',
+              rows: 2,
+              description:
+                'Optional context about the evidence, certificate, or decision that verified this deliverable.',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'task',
+              subtitle: 'status',
+            },
+            prepare({ title, subtitle }) {
+              return {
+                title,
+                subtitle: subtitle === 'certified' ? 'Certified' : subtitle,
+              };
+            },
+          },
+        },
+      ],
+      description:
+        'Add confirmed deliverables with certification metadata so public reporting can distinguish verified completion from provisional claims.',
+    }),
+    defineField({
       name: 'totalDeliverables',
       title: 'Total Planned Deliverables',
       type: 'number',
