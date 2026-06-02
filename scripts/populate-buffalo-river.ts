@@ -93,19 +93,58 @@ const campaign = {
       '"We have more projects in the pipeline to ensure the community does not suffer from water scarcity again. We have projects that go as far as Entendeka that will commence in a few weeks. There are also plans of a new mall for this area in the future, and these water infrastructure projects are laying the groundwork for that development to happen."'
     ),
   ],
+  projectUpdates: [
+    {
+      _type: 'projectUpdate',
+      date: '2026-05-21',
+      title: 'Sod Turning Ceremony — Project Launch',
+      content: [
+        textBlock(
+          'pu-1',
+          'For Immediate Release: The Newcastle Local Municipality has commenced the Buffalo River Abstraction Works project, a multi-million infrastructure investment aimed at securing a reliable and sustainable potable water supply for the communities of Mndozo, Manzana, Dicks, Jobstown, and Johnstone in Ward 7.'
+        ),
+        textBlock(
+          'pu-2',
+          'Funded through the Water Services Infrastructure Grant (WSIG), the project responds to rapid residential growth in the area, which has driven water demand far beyond current supply capacity.'
+        ),
+      ],
+      gallery: [],
+    },
+    {
+      _type: 'projectUpdate',
+      date: '2026-06-01',
+      title: 'CLO Assessment Testing — Status Update',
+      content: [
+        textBlock(
+          'pu-3',
+          '🚨 PROJECT STATUS UPDATE – 01 JUNE 2026: CLO assessment testing was conducted on-site today. Candidates are currently awaiting official evaluations and final recruitment callbacks.'
+        ),
+        textBlock(
+          'pu-4',
+          "SMME & LOCAL BUSINESS NOTICE: Procurement packages for local Ward 7 subcontractors have not yet been presented by the main engineering contractor. Local business owners and specialized laborers are urged to log their compliance profiles with the Mndozo Traditional Council desk immediately to protect local procurement quotas. Contact the Induna's office or WhatsApp [number] to register on the community database."
+        ),
+      ],
+      gallery: [],
+    },
+  ],
   targetAudience: 'Ward 7 residents, local SMMEs, job seekers',
   tags: ['water', 'infrastructure', 'WSIG', 'Ward 7', 'employment'],
-  startDate: new Date().toISOString().split('T')[0],
+  startDate: '2026-05-21',
+  endDate: '2027-05-21',
   relatedAreas: [{ _key: 'area-1', _type: 'reference', _ref: AREA_ID }],
   link: 'https://web.facebook.com/profile.php?id=61560539701565',
   beneficiaries: 100,
-  deliverables: [
-    'Weir construction',
-    'Abstraction tower refurbishment',
-    'Borehole drilling',
-    'Rising main installation',
-    '10ML Water Treatment Works',
-    'Electrical works',
+  // Deliverables are planned items; do not mark as completed here.
+  deliverables: [],
+  totalDeliverables: 6,
+  communityNote: [
+    {
+      _type: 'communityNote',
+      date: '2026-06-01',
+      issuedBy: 'Khathide Traditional Council',
+      message:
+        'Phase 1 hiring is underway — 30 positions confirmed at commencement.\n70 positions remain for construction, pipe-laying, and treatment works phases.\nWard 7 residents (Mndozo, Manzana, Dicks, Jobstown, Johnstone) register interest with the Induna at Mndozo Traditional Area. Priority given to verified community members.\nLocal SMMEs seeking sub-contracting opportunities: contact the Khathide Traditional Council.',
+    },
   ],
 };
 
