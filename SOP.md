@@ -123,6 +123,8 @@ This returns campaign-level JSON with `deliverablesCertified`, `deliverableProgr
 
 Then: compile PMU summary, cross-check with the published progress log, and compare the campaign export against `conflictLog` verification records for evidence consistency.
 
+Note: The export includes brief `relatedOpportunities` and `relatedDevelopmentNotices` arrays (up to 10 items) to aid compliance reviews. For full notice or opportunity details, query the respective endpoints.
+
 ---
 
 ## 5. Decision Rules

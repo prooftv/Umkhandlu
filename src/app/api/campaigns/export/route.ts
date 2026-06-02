@@ -28,6 +28,19 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   "noticeCount": count(*[_type == "notice" && references(^._id)]),
   "opportunityCount": count(*[_type == "opportunity" && references(^._id)]),
   "developmentNoticeCount": count(*[_type == "developmentNotice" && references(^._id)]),
+  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...10] {
+    title,
+    "slug": slug.current,
+    opportunityType,
+    organization,
+    deadline
+  },
+  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...10] {
+    title,
+    "slug": slug.current,
+    status,
+    commentDeadline
+  },
   "verificationCount": count(*[_type == "conflictLog" && references(^._id)]),
   "communityNoteCount": count(communityNote),
   "photoCount": count(gallery)

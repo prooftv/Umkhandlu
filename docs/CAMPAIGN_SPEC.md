@@ -59,6 +59,8 @@ Consumers should assume these fields may be undefined or empty arrays.
 - The export route also provides campaign-level compliance summary counts: `noticeCount`, `opportunityCount`, `developmentNoticeCount`, `verificationCount`, `communityNoteCount`, and `photoCount`.
 - This endpoint is campaign-focused. Detailed evidence records remain stored in `conflictLog` documents and are surfaced on the campaign page via `verificationRecords`.
 
+- The export also includes short lists of `relatedOpportunities` and `relatedDevelopmentNotices` (limited to the first 10 items) with minimal metadata for compliance reporting. Detailed opportunity and notice content should be fetched from the respective endpoints if needed.
+
 ## 7. Related project content
 
 - `relatedOpportunities` and `relatedDevelopmentNotices` are synthetic relationships that resolve from `opportunity` and `developmentNotice` documents referencing the campaign.
