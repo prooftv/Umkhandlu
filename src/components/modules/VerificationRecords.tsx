@@ -94,7 +94,7 @@ function VerificationRecordItem({ record }: { record: VerificationRecord }) {
             {fieldText}
             {record.conflictType ? ` • ${record.conflictType}` : ''}
           </p>
-          <p className="mt-1 text-base font-semibold text-slate-900 truncate">
+          <p className="mt-1 text-base font-semibold text-slate-900">
             {record.displayTruth
               ? `Public report: ${record.displayTruth}`
               : 'Under review'}
