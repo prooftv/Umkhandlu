@@ -88,10 +88,27 @@ export default defineType({
       options: { aiAssist: { translateAction: true } },
     }),
     defineField({
+      name: 'contentNote',
+      title: 'Content Guide',
+      type: 'string',
+      group: 'details',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      components: {
+        field: () =>
+          StudioNote({
+            title: 'Do NOT edit this field to add new updates',
+            description:
+              'This is the PERMANENT project overview. Write it once and leave it. For new media statements, sod turnings, phase completions — use "Project Updates (Media & Events)" in the Media tab. Each event gets its own entry with date, title, content, photos, and video. Never overwrite this field.',
+          }),
+      },
+    }),
+    defineField({
       name: 'content',
-      title: 'Full Content',
+      title: 'Project Overview (Permanent)',
       type: 'blockContent',
       group: 'details',
+      description:
+        'Write once: what the project is, scope, deliverables, purpose. For media statements and event updates, use Project Updates in the Media tab.',
     }),
     defineField({
       name: 'targetAudience',
