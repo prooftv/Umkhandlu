@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import PageNarrator from '@/components/modules/PageNarrator';
+import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
   title: 'Umkhandlu — Institutional Presentation',
@@ -24,9 +24,6 @@ export default function PresentationPage() {
           Councils, Municipalities, and Engineering Contractors.
         </p>
       </header>
-
-      {/* AI Narrator */}
-      <PageNarrator />
 
       {/* Chapter 1 */}
       <Chapter number="1" title="The Philosophy of Digital Self-Determination">
@@ -354,14 +351,16 @@ function Chapter({
   title: string;
   children: React.ReactNode;
 }) {
+  const id = `chapter-${number}`;
   return (
-    <section className="mb-16">
+    <section className="mb-16" id={id}>
       <div className="flex items-baseline gap-3 mb-6">
         <span className="text-sm font-bold text-primary uppercase tracking-wide">
           Chapter {number}
         </span>
       </div>
-      <h2 className="text-2xl md:text-3xl font-bold mb-6">{title}</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-4">{title}</h2>
+      <SectionNarrator sectionId={id} />
       <div className="prose prose-gray max-w-none">{children}</div>
     </section>
   );
