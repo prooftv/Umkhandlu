@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import PageNarrator from '@/components/modules/PageNarrator';
 
 export const metadata: Metadata = {
   title: 'Umkhandlu — Institutional Presentation',
@@ -23,6 +24,9 @@ export default function PresentationPage() {
           Councils, Municipalities, and Engineering Contractors.
         </p>
       </header>
+
+      {/* AI Narrator */}
+      <PageNarrator />
 
       {/* Chapter 1 */}
       <Chapter number="1" title="The Philosophy of Digital Self-Determination">
