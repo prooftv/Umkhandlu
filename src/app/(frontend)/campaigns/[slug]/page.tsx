@@ -449,6 +449,61 @@ function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
 }
 // VerificationRecords component moved to src/components/modules/VerificationRecords.tsx
 
+type SmmeEntry = {
+  _key: string;
+  name: string;
+  service?: string | null;
+  owner?: string | null;
+  verified?: boolean | null;
+  logoUrl?: string | null;
+};
+
+function SmmeDirectory({ campaign }: { campaign: CampaignData }) {
+  const smmes = (campaign as unknown as { smmeDirectory?: SmmeEntry[] })
+    .smmeDirectory;
+  if (!smmes?.length) return null;
+  return (
+    <div className="mb-8">
+      <h2 className="text-xl font-bold mb-4">Local SMMEs Appointed</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {smmes.map((smme) => (
+          <div
+            key={smme._key}
+            className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100"
+          >
+            {smme.logoUrl && (
+              <img
+                src={smme.logoUrl}
+                alt={smme.name}
+                className="w-10 h-10 object-contain rounded"
+              />
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm truncate">
+                {smme.name}
+                {smme.verified && (
+                  <span
+                    className="ml-1 text-green-600"
+                    title="Verified by Council"
+                  >
+                    ✓
+                  </span>
+                )}
+              </p>
+              {smme.service && (
+                <p className="text-xs text-gray-500">{smme.service}</p>
+              )}
+              {smme.owner && (
+                <p className="text-xs text-gray-400">{smme.owner}</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function CampaignRelations({ campaign }: { campaign: CampaignData }) {
   return (
     <>
@@ -851,6 +906,9 @@ export default async function CampaignPage(props: Props) {
           <p className="text-green-700">{campaign.impactSummary}</p>
         </div>
       )}
+
+      {/* Local SMMEs */}
+      <SmmeDirectory campaign={campaign} />
 
       {/* Project updates timeline (sod turning, phase completions, etc.) */}
       <CampaignUpdatesTimeline campaign={campaign} />

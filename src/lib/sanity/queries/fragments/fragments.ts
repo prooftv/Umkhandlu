@@ -419,6 +419,14 @@ export const campaignFragment = /* groq */ `
   consultingEngineer,
   projectPhase,
   localSMMEs,
+  smmeDirectory[] {
+    _key,
+    name,
+    service,
+    owner,
+    verified,
+    "logoUrl": logo.asset->url
+  },
   budget,
   beneficiaries,
   impactSummary,

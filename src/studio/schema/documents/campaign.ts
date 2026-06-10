@@ -637,7 +637,25 @@ export default defineType({
                 layout: 'radio',
               },
               initialValue: 'pending',
-              validation: (rule) => rule.required(),
+              validation: (rule) =>
+                rule.required().custom((value, context) => {
+                  if (value === 'certified') {
+                    const parent = context?.parent as {
+                      percentageComplete?: number;
+                      certifiedBy?: string;
+                    };
+                    if (
+                      !parent?.percentageComplete ||
+                      parent.percentageComplete < 100
+                    ) {
+                      return 'Cannot certify: Progress must be 100% before marking as Certified.';
+                    }
+                    if (!parent?.certifiedBy) {
+                      return 'Cannot certify: "Certified By" is required.';
+                    }
+                  }
+                  return true;
+                }),
             }),
             defineField({
               name: 'certifiedBy',
