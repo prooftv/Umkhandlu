@@ -168,6 +168,22 @@ export default defineType({
       initialValue: () => new Date().toISOString().split('T')[0],
     }),
     defineField({
+      name: 'commentsReceived',
+      title: 'Comments Received',
+      type: 'number',
+      description:
+        'Number of public comments/objections received. Update manually from webhook data.',
+      initialValue: 0,
+    }),
+    defineField({
+      name: 'proofIssued',
+      title: 'Proof of Publication Issued',
+      type: 'boolean',
+      description:
+        'Check when the applicant has received their proof of publication certificate.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'image',
       title: 'Site Plan / Notice Image',
       type: 'image',

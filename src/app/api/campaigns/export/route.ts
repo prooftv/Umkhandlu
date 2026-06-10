@@ -12,15 +12,23 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   tags,
   startDate,
   endDate,
+  fundingSource,
+  contractor,
+  contractNumber,
+  consultingEngineer,
   beneficiaries,
+  localSMMEs,
   impactSummary,
   deliverables,
-  deliverablesCertified,
+  deliverablesCertified[] { task, status, percentageComplete, certifiedBy, certificationDate },
   totalDeliverables,
   "deliverableProgress": select(
-    defined(totalDeliverables) && totalDeliverables > 0 => round((count(coalesce(deliverablesCertified, deliverables)) / totalDeliverables) * 100),
+    defined(totalDeliverables) && totalDeliverables > 0 => round((count(deliverablesCertified[status == "certified"]) / totalDeliverables) * 100),
     null
   ),
+  smmeDirectory[] { name, service, owner, verified },
+  communityNote[] { date, issuedBy, message },
+  progressLog[] { date, update },
   "sponsor": sponsor->{ name, sponsorType, website },
   "contactPerson": contactPerson->{ firstName, lastName, role },
   "relatedAreas": relatedAreas[]->{ name, "slug": slug.current },
@@ -28,19 +36,6 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
   "noticeCount": count(*[_type == "notice" && references(^._id)]),
   "opportunityCount": count(*[_type == "opportunity" && references(^._id)]),
   "developmentNoticeCount": count(*[_type == "developmentNotice" && references(^._id)]),
-  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...10] {
-    title,
-    "slug": slug.current,
-    opportunityType,
-    organization,
-    deadline
-  },
-  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...10] {
-    title,
-    "slug": slug.current,
-    status,
-    commentDeadline
-  },
   "verifications": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...10] {
     _id,
     field,

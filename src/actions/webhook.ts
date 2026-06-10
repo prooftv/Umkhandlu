@@ -19,7 +19,7 @@ async function getWebhookUrl(): Promise<string | null> {
 }
 
 export async function sendToWebhook(
-  type: 'contact' | 'subscribe',
+  type: 'contact' | 'subscribe' | 'public_comment',
   data: Record<string, unknown>
 ): Promise<boolean> {
   const url = await getWebhookUrl();
