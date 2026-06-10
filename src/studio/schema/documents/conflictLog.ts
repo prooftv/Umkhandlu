@@ -94,11 +94,31 @@ export default defineType({
             }),
             defineField({
               name: 'evidence',
-              title: 'Supporting Evidence',
+              title: 'Supporting Evidence (Description)',
               type: 'text',
               rows: 2,
               description:
                 'Reference to IPC, site diary, meeting minutes, certificate, etc.',
+            }),
+            defineField({
+              name: 'evidenceFiles',
+              title: 'Evidence Documents',
+              type: 'array',
+              description:
+                'Upload IPC certificates, site diary pages, photos, meeting minutes as audit trail.',
+              of: [
+                {
+                  type: 'file',
+                  options: { accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png' },
+                  fields: [
+                    defineField({
+                      name: 'title',
+                      type: 'string',
+                      title: 'Document Title',
+                    }),
+                  ],
+                },
+              ],
             }),
           ],
           preview: {

@@ -175,11 +175,69 @@ export default defineType({
     }),
     defineField({
       name: 'localSMMEs',
-      title: 'Local SMMEs Involved',
+      title: 'Local SMMEs Count',
       type: 'number',
       group: 'tracking',
-      description: 'Number of local small businesses benefiting.',
+      description: 'Total number of local small businesses appointed.',
       hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'smmeDirectory',
+      title: 'SMME Directory',
+      type: 'array',
+      group: 'tracking',
+      description:
+        'Local SMMEs appointed on this project. Each entry appears in the SMME section on the public page.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Business Name',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'service',
+              title: 'Service / Trade',
+              type: 'string',
+              description: 'e.g. Earthworks, Plumbing, Fencing, Transport',
+            }),
+            defineField({
+              name: 'owner',
+              title: 'Owner Name',
+              type: 'string',
+            }),
+            defineField({
+              name: 'verified',
+              title: 'Verified by Council',
+              type: 'boolean',
+              initialValue: false,
+            }),
+            defineField({
+              name: 'logo',
+              title: 'Business Logo',
+              type: 'image',
+              options: { hotspot: false },
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'name',
+              subtitle: 'service',
+              verified: 'verified',
+            },
+            prepare({ title, subtitle, verified }) {
+              return {
+                title: `${verified ? '\u2713 ' : ''}${title}`,
+                subtitle: subtitle || '',
+              };
+            },
+          },
+        },
+      ],
     }),
     defineField({
       name: 'projectPhase',

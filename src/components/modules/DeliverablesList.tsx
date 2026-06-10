@@ -26,6 +26,11 @@ function statusPill(status: CertifiedDeliverable['status']) {
   return <span className={styles[status]}>{labels[status]}</span>;
 }
 
+function getItemProgress(item: CertifiedDeliverable): number {
+  if (item.status === 'certified') return item.percentageComplete || 100;
+  return item.percentageComplete || 0;
+}
+
 function computeOverallProgress(items: CertifiedDeliverable[]): number {
   if (items.length === 0) return 0;
   const hasWeights = items.some((i) => i.weightage && i.weightage > 0);
@@ -33,12 +38,12 @@ function computeOverallProgress(items: CertifiedDeliverable[]): number {
     const totalWeight = items.reduce((sum, i) => sum + (i.weightage || 0), 0);
     if (totalWeight === 0) return 0;
     const weighted = items.reduce(
-      (sum, i) => sum + (i.percentageComplete || 0) * (i.weightage || 0),
+      (sum, i) => sum + getItemProgress(i) * (i.weightage || 0),
       0
     );
     return Math.round(weighted / totalWeight);
   }
-  const total = items.reduce((sum, i) => sum + (i.percentageComplete || 0), 0);
+  const total = items.reduce((sum, i) => sum + getItemProgress(i), 0);
   return Math.round(total / items.length);
 }
 
@@ -61,7 +66,7 @@ function ProgressBar({
 }
 
 function CertifiedItem({ item }: { item: CertifiedDeliverable }) {
-  const pct = item.percentageComplete || 0;
+  const pct = getItemProgress(item);
   return (
     <div className="rounded-xl border border-gray-200 p-4 bg-white">
       <div className="flex items-start justify-between gap-4 mb-2">
@@ -106,10 +111,8 @@ export default function DeliverablesList({
   const completed = certifiedCount || (deliverables?.length ?? 0);
   if (!certified?.length && !deliverables?.length) return null;
 
-  // Use per-item progress if certified items have percentageComplete data
-  const hasItemProgress = certified?.some(
-    (i) => (i.percentageComplete ?? 0) > 0
-  );
+  // Use per-item progress if any certified item exists or has percentageComplete
+  const hasItemProgress = certified?.some((i) => getItemProgress(i) > 0);
   const overallPct =
     hasItemProgress && certified
       ? computeOverallProgress(certified)
