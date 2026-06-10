@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
   title: 'Operator Dashboard — Umkhandlu',
@@ -225,9 +226,13 @@ function Section({
   title: string;
   children: React.ReactNode;
 }) {
+  const id = `section-${title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
   return (
-    <section className="mb-10">
-      <h2 className="text-lg font-bold mb-4 text-gray-900">{title}</h2>
+    <section className="mb-10" id={id}>
+      <div className="flex items-center gap-3 mb-4">
+        <h2 className="text-lg font-bold text-gray-900">{title}</h2>
+        <SectionNarrator sectionId={id} />
+      </div>
       <div className="space-y-3">{children}</div>
     </section>
   );
