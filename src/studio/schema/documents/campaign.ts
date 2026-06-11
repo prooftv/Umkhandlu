@@ -408,6 +408,88 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'participationLog',
+      title: 'Public Participation Log',
+      type: 'array',
+      group: 'tracking',
+      description:
+        'Auditable record of community feedback received. Add entries from webhook data. Do NOT include personal details (POPIA). Record type, date, summary only.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'date',
+              title: 'Date Received',
+              type: 'date',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'commentType',
+              title: 'Type',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Comment', value: 'comment' },
+                  { title: 'Objection', value: 'objection' },
+                  { title: 'Support', value: 'support' },
+                  { title: 'Question', value: 'question' },
+                  { title: 'Complaint', value: 'complaint' },
+                  { title: 'Issue Report', value: 'issue' },
+                ],
+              },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'relationship',
+              title: 'Submitter Relationship',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Resident', value: 'resident' },
+                  { title: 'Landowner', value: 'landowner' },
+                  { title: 'Business Owner', value: 'business' },
+                  { title: 'Community Member', value: 'community' },
+                  { title: 'Organisation', value: 'organisation' },
+                  { title: 'Other', value: 'other' },
+                ],
+              },
+            }),
+            defineField({
+              name: 'summary',
+              title: 'Summary (No Personal Info)',
+              type: 'text',
+              rows: 2,
+              description:
+                'Brief summary of the comment/issue. Do NOT include names, phone numbers, or emails.',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'actionTaken',
+              title: 'Action Taken',
+              type: 'string',
+              description:
+                'e.g. Forwarded to PMU, Noted, Escalated to engineer, Resolved',
+            }),
+          ],
+          preview: {
+            select: {
+              type: 'commentType',
+              summary: 'summary',
+              date: 'date',
+            },
+            prepare({ type, summary, date }) {
+              return {
+                title: `${type}: ${summary?.slice(0, 50) || ''}`,
+                subtitle: date || '',
+              };
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'relatedListings',
       title: 'Related Infrastructure',
       type: 'array',
