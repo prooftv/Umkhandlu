@@ -166,6 +166,46 @@ export default function OperatorPage() {
         />
       </Section>
 
+      <Section title="Public Participation Log">
+        <HowTo
+          title="How to log received community feedback"
+          steps={[
+            'Receive comment via webhook (n8n/email)',
+            'Open Studio → Campaign → Tracking & Impact → Public Participation Log',
+            'Click Add Item',
+            'Set: Date Received, Type (comment/objection/complaint/issue/support/question)',
+            'Set: Submitter Relationship (resident/landowner/business/community)',
+            'Write Summary — DO NOT include names, emails, or phone numbers (POPIA)',
+            'Set: Action Taken (e.g. Forwarded to PMU, Noted, Escalated, Resolved)',
+            'This creates the auditable evidence trail for PMU reporting',
+          ]}
+        />
+        <HowTo
+          title="Why not store personal details?"
+          steps={[
+            'POPIA compliance — personal data must not be in a public CMS',
+            'Personal details stay in webhook delivery (n8n/email) only',
+            'The participationLog stores: type + relationship + summary + action',
+            'This is enough for audit: proves participation occurred + action was taken',
+          ]}
+        />
+      </Section>
+
+      <Section title="Webhook Settings">
+        <HowTo
+          title="How to configure webhooks"
+          steps={[
+            'Open Studio → Site Settings → Analytics tab',
+            'Primary Webhook URL — receives all form submissions',
+            'Public Comment Webhook (optional) — separate endpoint for comments',
+            'Infrastructure Feedback Webhook (optional) — separate for project feedback',
+            'If specific webhooks are empty, all forms use the Primary URL',
+            'Operator Email — shown on certificates and escalation',
+            'API Export Token — share with PMU for data access',
+          ]}
+        />
+      </Section>
+
       <Section title="Project Updates (Media Events)">
         <HowTo
           title="How to add a new project event"

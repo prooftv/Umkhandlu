@@ -246,6 +246,32 @@ export default function PresentationPage() {
             </tbody>
           </table>
         </div>
+        <h3 className="text-lg font-bold mt-6 mb-3">
+          Public Participation & Community Feedback
+        </h3>
+        <p>
+          Active infrastructure projects include a structured community feedback
+          form — residents can report issues, ask questions, or submit
+          observations. All submissions are:
+        </p>
+        <ul className="space-y-2 text-gray-700 mt-3">
+          <li>
+            <strong>Delivered</strong> to the operator via webhook (with
+            personal details for follow-up)
+          </li>
+          <li>
+            <strong>Logged</strong> in the Participation Log (date, type,
+            relationship, summary — no personal data stored in CMS)
+          </li>
+          <li>
+            <strong>Auditable</strong> — PMU reports can reference: "12 comments
+            received, 3 complaints escalated, all actioned"
+          </li>
+          <li>
+            <strong>POPIA compliant</strong> — personal details never stored in
+            the public system
+          </li>
+        </ul>
       </Chapter>
 
       {/* Chapter 5 */}
