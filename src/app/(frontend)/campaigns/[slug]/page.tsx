@@ -475,6 +475,119 @@ const complianceBadges: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'bg-gray-100 text-gray-600' },
 };
 
+function SmmeComplianceDetails({ smme }: { smme: SmmeEntry }) {
+  return (
+    <div className="px-4 pb-4 border-t border-gray-100">
+      <div className="grid grid-cols-2 gap-3 text-xs text-gray-600 pt-3">
+        {smme.cipcNumber && (
+          <div>
+            <p className="text-gray-400 uppercase tracking-wide text-[10px]">
+              CIPC
+            </p>
+            <p className="font-medium">{smme.cipcNumber}</p>
+          </div>
+        )}
+        {smme.bbbeeLevel && smme.bbbeeLevel !== 'none' && (
+          <div>
+            <p className="text-gray-400 uppercase tracking-wide text-[10px]">
+              B-BBEE
+            </p>
+            <p className="font-medium">
+              {smme.bbbeeLevel === 'eme'
+                ? 'EME (Exempt)'
+                : smme.bbbeeLevel === 'qse'
+                  ? 'QSE'
+                  : 'Level ' + smme.bbbeeLevel}
+            </p>
+          </div>
+        )}
+        {smme.taxClearance && smme.taxClearance !== 'none' && (
+          <div>
+            <p className="text-gray-400 uppercase tracking-wide text-[10px]">
+              Tax Clearance
+            </p>
+            <p className="font-medium">
+              {smme.taxClearance === 'valid' ? '✅ Valid' : '⚠️ Expired'}
+            </p>
+          </div>
+        )}
+        {smme.contactPhone && (
+          <div>
+            <p className="text-gray-400 uppercase tracking-wide text-[10px]">
+              Contact
+            </p>
+            <p className="font-medium">{smme.contactPhone}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SmmeCard({ smme }: { smme: SmmeEntry }) {
+  const badge = complianceBadges[smme.complianceStatus ?? 'pending'];
+  return (
+    <details
+      key={smme._key}
+      className="rounded-xl border border-gray-100 bg-white overflow-hidden"
+    >
+      <summary className="flex items-start gap-4 p-4 cursor-pointer hover:bg-gray-50 transition-colors">
+        {smme.logoUrl && (
+          <img
+            src={smme.logoUrl}
+            alt={smme.name}
+            className="w-12 h-12 object-contain rounded shrink-0"
+          />
+        )}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-semibold text-sm">
+              {smme.name}
+              {smme.verified && (
+                <span
+                  className="ml-1 text-green-600"
+                  title="Verified by Council"
+                >
+                  ✓
+                </span>
+              )}
+            </p>
+            {badge && (
+              <span
+                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.className}`}
+              >
+                {badge.label}
+              </span>
+            )}
+          </div>
+          {smme.service && (
+            <p className="text-xs text-gray-500 mt-0.5">{smme.service}</p>
+          )}
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-gray-400">
+            {smme.owner && <span>👤 {smme.owner}</span>}
+            {smme.ward && <span>📍 {smme.ward}</span>}
+            {smme.cipcNumber && <span>CIPC: {smme.cipcNumber}</span>}
+            {smme.bbbeeLevel && smme.bbbeeLevel !== 'none' && (
+              <span>
+                B-BBEE:{' '}
+                {smme.bbbeeLevel === 'eme'
+                  ? 'EME'
+                  : smme.bbbeeLevel === 'qse'
+                    ? 'QSE'
+                    : `Level ${smme.bbbeeLevel}`}
+              </span>
+            )}
+            {smme.taxClearance === 'valid' && (
+              <span className="text-green-600">Tax ✓</span>
+            )}
+          </div>
+        </div>
+      </summary>
+      <SmmeComplianceDetails smme={smme} />
+    </details>
+  );
+}
+
 function SmmeDirectory({ campaign }: { campaign: CampaignData }) {
   const smmes = (campaign as unknown as { smmeDirectory?: SmmeEntry[] })
     .smmeDirectory;
@@ -485,66 +598,9 @@ function SmmeDirectory({ campaign }: { campaign: CampaignData }) {
         Local SMMEs & Subcontractors ({smmes.length})
       </h2>
       <div className="grid grid-cols-1 gap-3">
-        {smmes.map((smme) => {
-          const badge = complianceBadges[smme.complianceStatus ?? 'pending'];
-          return (
-            <div
-              key={smme._key}
-              className="flex items-start gap-4 p-4 bg-white rounded-xl border border-gray-100"
-            >
-              {smme.logoUrl && (
-                <img
-                  src={smme.logoUrl}
-                  alt={smme.name}
-                  className="w-12 h-12 object-contain rounded shrink-0"
-                />
-              )}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="font-semibold text-sm">
-                    {smme.name}
-                    {smme.verified && (
-                      <span
-                        className="ml-1 text-green-600"
-                        title="Verified by Council"
-                      >
-                        ✓
-                      </span>
-                    )}
-                  </p>
-                  {badge && (
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.className}`}
-                    >
-                      {badge.label}
-                    </span>
-                  )}
-                </div>
-                {smme.service && (
-                  <p className="text-xs text-gray-500 mt-0.5">{smme.service}</p>
-                )}
-                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-gray-400">
-                  {smme.owner && <span>👤 {smme.owner}</span>}
-                  {smme.ward && <span>📍 {smme.ward}</span>}
-                  {smme.cipcNumber && <span>CIPC: {smme.cipcNumber}</span>}
-                  {smme.bbbeeLevel && smme.bbbeeLevel !== 'none' && (
-                    <span>
-                      B-BBEE:{' '}
-                      {smme.bbbeeLevel === 'eme'
-                        ? 'EME'
-                        : smme.bbbeeLevel === 'qse'
-                          ? 'QSE'
-                          : `Level ${smme.bbbeeLevel}`}
-                    </span>
-                  )}
-                  {smme.taxClearance === 'valid' && (
-                    <span className="text-green-600">Tax ✓</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {smmes.map((smme) => (
+          <SmmeCard key={smme._key} smme={smme} />
+        ))}
       </div>
     </div>
   );
