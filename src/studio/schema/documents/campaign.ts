@@ -187,7 +187,7 @@ export default defineType({
       type: 'array',
       group: 'tracking',
       description:
-        'Local SMMEs appointed on this project. Each entry appears in the SMME section on the public page.',
+        'Local SMMEs appointed or registered on this project. Each entry appears in the SMME section on the public page.',
       hidden: ({ parent }) => parent?.campaignType !== 'csr',
       of: [
         {
@@ -211,10 +211,75 @@ export default defineType({
               type: 'string',
             }),
             defineField({
+              name: 'cipcNumber',
+              title: 'CIPC Registration Number',
+              type: 'string',
+              description:
+                'Companies and Intellectual Property Commission registration.',
+            }),
+            defineField({
+              name: 'taxClearance',
+              title: 'Tax Clearance',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Valid', value: 'valid' },
+                  { title: 'Expired', value: 'expired' },
+                  { title: 'Not Submitted', value: 'none' },
+                ],
+              },
+              initialValue: 'none',
+            }),
+            defineField({
+              name: 'bbbeeLevel',
+              title: 'B-BBEE Level',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Level 1', value: '1' },
+                  { title: 'Level 2', value: '2' },
+                  { title: 'Level 3', value: '3' },
+                  { title: 'Level 4', value: '4' },
+                  { title: 'EME (Exempt)', value: 'eme' },
+                  { title: 'QSE', value: 'qse' },
+                  { title: 'Not Submitted', value: 'none' },
+                ],
+              },
+              initialValue: 'none',
+            }),
+            defineField({
+              name: 'ward',
+              title: 'Ward',
+              type: 'string',
+              description: 'e.g. Ward 7',
+            }),
+            defineField({
+              name: 'contactPhone',
+              title: 'Contact Phone',
+              type: 'string',
+            }),
+            defineField({
               name: 'verified',
               title: 'Verified by Council',
               type: 'boolean',
               initialValue: false,
+              description:
+                'Council confirms this business operates in the area.',
+            }),
+            defineField({
+              name: 'complianceStatus',
+              title: 'Compliance Status',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Fully Compliant', value: 'compliant' },
+                  { title: 'Partially Compliant', value: 'partial' },
+                  { title: 'Non-Compliant', value: 'non-compliant' },
+                  { title: 'Pending Review', value: 'pending' },
+                ],
+              },
+              initialValue: 'pending',
+              description: 'Overall compliance readiness for procurement.',
             }),
             defineField({
               name: 'logo',
@@ -228,10 +293,18 @@ export default defineType({
               title: 'name',
               subtitle: 'service',
               verified: 'verified',
+              compliance: 'complianceStatus',
             },
-            prepare({ title, subtitle, verified }) {
+            prepare({ title, subtitle, verified, compliance }) {
+              const badge = verified ? '\u2713 ' : '';
+              const status =
+                compliance === 'compliant'
+                  ? ' \u2705'
+                  : compliance === 'partial'
+                    ? ' \u26a0\ufe0f'
+                    : '';
               return {
-                title: `${verified ? '\u2713 ' : ''}${title}`,
+                title: `${badge}${title}${status}`,
                 subtitle: subtitle || '',
               };
             },

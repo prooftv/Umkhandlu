@@ -424,7 +424,13 @@ export const campaignFragment = /* groq */ `
     name,
     service,
     owner,
+    cipcNumber,
+    taxClearance,
+    bbbeeLevel,
+    ward,
+    contactPhone,
     verified,
+    complianceStatus,
     "logoUrl": logo.asset->url
   },
   budget,
