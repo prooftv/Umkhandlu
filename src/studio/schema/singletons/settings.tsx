@@ -133,10 +133,42 @@ export default defineType({
     }),
     defineField({
       name: 'webhookUrl',
-      title: 'Form Webhook URL',
+      title: 'Primary Webhook URL',
       type: 'url',
       description:
-        'Webhook endpoint for contact/subscribe form submissions (e.g. n8n, Make, Zapier). Leave empty to disable.',
+        'Main webhook for all form submissions (contact, subscribe, public comments). Works with n8n, Make, Zapier. Leave empty to disable.',
+      group: 'analytics',
+    }),
+    defineField({
+      name: 'webhookPublicComment',
+      title: 'Public Comment Webhook (Optional)',
+      type: 'url',
+      description:
+        'Separate webhook for public participation comments/objections. If empty, uses the primary webhook above.',
+      group: 'analytics',
+    }),
+    defineField({
+      name: 'webhookInfraFeedback',
+      title: 'Infrastructure Feedback Webhook (Optional)',
+      type: 'url',
+      description:
+        'Separate webhook for community feedback on infrastructure projects. If empty, uses the primary webhook above.',
+      group: 'analytics',
+    }),
+    defineField({
+      name: 'operatorEmail',
+      title: 'Operator Email',
+      type: 'string',
+      description:
+        'Platform operator contact email — shown on certificates and used for escalation.',
+      group: 'analytics',
+    }),
+    defineField({
+      name: 'exportToken',
+      title: 'API Export Token',
+      type: 'string',
+      description:
+        'Token required to access /api/campaigns/export. Share with PMU for reporting access.',
       group: 'analytics',
     }),
   ],
