@@ -336,13 +336,19 @@ export default function PresentationPage() {
         </div>
         <h3 className="text-lg font-bold mt-6 mb-3">Data Export</h3>
         <p>
-          Campaign data, milestone progress, employment numbers, and compliance
-          records are exportable via authenticated API for PMU reporting:
+          Campaign data, milestone progress, employment numbers, participation
+          records, and compliance evidence are exportable via authenticated API
+          for PMU reporting:
         </p>
         <CodeBlock>{`GET /api/campaigns/export?token=<TOKEN>
-→ deliverables[], totalDeliverables, deliverableProgress,
-  beneficiaries, localSMMEs, progressLog[], fundingSource,
-  contractor, projectPhase, sponsor, relatedAreas`}</CodeBlock>
+→ Project: title, status, projectPhase, fundingSource, contractor
+→ Progress: deliverablesCertified[], deliverableProgress%, progressLog[]
+→ Employment: beneficiaries, localSMMEs, smmeDirectory[]
+→ Participation: communityNote[], participationLog count
+→ Verification: verifications[], verificationCount
+→ Relations: sponsor, relatedAreas[], noticeCount, developmentNoticeCount
+
+Filters: ?status=active  ?type=csr`}</CodeBlock>
       </Chapter>
 
       {/* Footer */}
