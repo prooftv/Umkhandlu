@@ -8,6 +8,7 @@ import ClientGallery from '@/components/modules/ClientGallery';
 import DeliverablesList from '@/components/modules/DeliverablesList';
 import CustomPortableText from '@/components/modules/PortableText';
 import ProjectInfoBoard from '@/components/modules/ProjectInfoBoard';
+import PublicCommentForm from '@/components/modules/PublicCommentForm';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import VerificationRecords from '@/components/modules/VerificationRecords';
 import { Badge } from '@/components/ui/Badge';
@@ -463,8 +464,10 @@ function SmmeDirectory({ campaign }: { campaign: CampaignData }) {
     .smmeDirectory;
   if (!smmes?.length) return null;
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold mb-4">Local SMMEs Appointed</h2>
+    <div className="mb-8 mt-6 pt-6 border-t border-gray-200">
+      <h2 className="text-xl font-bold mb-4">
+        Local SMMEs Appointed ({smmes.length})
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {smmes.map((smme) => (
           <div
@@ -861,6 +864,9 @@ export default async function CampaignPage(props: Props) {
         ward={campaign.relatedAreas?.map((a) => a.name).join(', ') ?? undefined}
       />
 
+      {/* Local SMMEs — directly below info board */}
+      <SmmeDirectory campaign={campaign} />
+
       <CampaignStats campaign={campaign} />
 
       {/* Project overview (permanent description) */}
@@ -907,9 +913,6 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
-      {/* Local SMMEs */}
-      <SmmeDirectory campaign={campaign} />
-
       {/* Project updates timeline (sod turning, phase completions, etc.) */}
       <CampaignUpdatesTimeline campaign={campaign} />
 
@@ -927,6 +930,24 @@ export default async function CampaignPage(props: Props) {
 
       {/* Relations */}
       <CampaignRelations campaign={campaign} />
+
+      {/* Public Participation — community feedback for initiative projects */}
+      {campaign.campaignType === 'csr' && campaign.status === 'active' && (
+        <div className="mb-8 mt-8 pt-8 border-t border-gray-200">
+          <h2 className="text-xl font-bold mb-2">
+            Community Feedback & Participation
+          </h2>
+          <p className="text-sm text-gray-500 mb-4">
+            Report issues, ask questions, or share observations about this
+            project. Your submission will be forwarded to the project
+            coordination team.
+          </p>
+          <PublicCommentForm
+            noticeId={campaign._id}
+            noticeTitle={campaign.title ?? ''}
+          />
+        </div>
+      )}
 
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={campaign.title || ''} />
