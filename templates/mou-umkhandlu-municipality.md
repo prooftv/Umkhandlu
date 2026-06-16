@@ -90,11 +90,15 @@ The Unami Foundation has developed **Umkhandlu** — the missing digital operati
 - The Municipality does not require the platform to bypass or override traditional authority structures
 - Joint engagement with the Khathide Traditional Council is facilitated for the pilot
 
-### 5.5 Revenue Independence
+### 5.5 Commercial Arrangement
 
-- The Municipality pays no licence fee or subscription for platform visibility
-- Revenue from external parties (developers, attorneys, businesses using statutory notice services) flows to Unami Foundation as the platform operator
-- Infrastructure documentation services may be quoted separately per project at agreed rates
+- Infrastructure documentation and community engagement services are billable under the municipality's existing communication/PMU reporting budget
+- Pricing aligned with industry benchmarks (see rate card):
+  - Tier 2: Active Monitoring & Community Engagement — R1,500–R3,000/month
+  - Tier 3: Full Infrastructure Documentation Package — R12,000–R18,000 per project
+  - Statutory notices: R650–R1,200 per notice (paid by applicant, not municipality)
+- Revenue from external parties (developers, attorneys, businesses) flows to Unami Foundation independently
+- Specific pricing per project to be agreed in a Service Level Agreement (SLA)
 
 ---
 
@@ -109,6 +113,40 @@ The Unami Foundation has developed **Umkhandlu** — the missing digital operati
 | Audit-ready evidence | Timestamped publication records, milestone verification, participation logs |
 | Cost saving | Replaces print media notices (R6,000–R12,000 per ad) with permanent digital publication |
 | SDBIP/PMS support | Data export API provides structured project data for reporting |
+
+### 6.1 Data Sharing & API Endpoints
+
+The platform provides authenticated API access for any authorised stakeholder (PMU, auditors, partners):
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/campaigns/export?token=<TOKEN>` | Full project data export (JSON) |
+| `GET /api/campaigns/export?token=<TOKEN>&status=active` | Filter by project status |
+| `GET /api/campaigns/export?token=<TOKEN>&type=csr` | Filter by project type |
+
+**Export includes:**
+- Project metadata (title, phase, funding source, contractor, engineer)
+- Certified deliverables with progress percentage
+- SMME directory (names, compliance status, B-BBEE, CIPC)
+- Employment numbers (beneficiaries, local SMMEs count)
+- Community notices issued (timestamped, attributed)
+- Participation log (comment count, types, actions taken)
+- Verification records (variances documented, resolution status)
+- Progress log (timestamped technical updates)
+
+**Access:** Token-authenticated. Municipality and PMU receive read access tokens. Data is shareable with any interested party (auditors, sponsors, oversight bodies) at the municipality's discretion.
+
+**Public pages (no authentication required):**
+
+| Route | Content |
+|---|---|
+| `/campaigns/[slug]` | Live project page — info board, deliverables, notices, SMMEs |
+| `/development-notices/[slug]` | Statutory notice + public comment form |
+| `/notices/certificate/[id]` | Proof of publication certificate (printable) |
+| `/records/[slug]` | Governance record detail |
+| `/areas/[slug]` | Community digital twin — all content for an area |
+| `/presentation` | Institutional overview of the platform |
+| `/api/campaigns/export` | Authenticated data export |
 
 ---
 

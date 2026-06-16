@@ -23,10 +23,11 @@ The pilot (Buffalo River Abstraction Works, Ward 7) is already live and operatio
 **https://umkhandlu.vercel.app/campaigns/buffalo-river-abstraction-works-ward-7**
 
 The MOU outlines:
-- What the platform provides to the municipality (transparency, compliance, audit-ready evidence)
+- What the platform provides to the municipality (transparency, compliance, audit-ready evidence, data export)
 - What we expect (recognition, data cooperation, pilot support, traditional council coordination)
 - The pilot framework (Buffalo River, 6 months)
-- That the municipality pays nothing — this is not a procurement request
+- Commercial arrangement (services billable under existing communication/PMU reporting budget)
+- Data sharing: authenticated API endpoints for PMU reporting + public routes for community access
 
 I am currently in the process of engaging the Khathide Traditional Council for formal platform endorsement. Municipal support materially assists that process — which is why the MOU is important now.
 
