@@ -53,7 +53,7 @@ export default async function CertificatePage(props: Props) {
 
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://umkhandlu.vercel.app';
-  const publicUrl = `${siteUrl}/notices/${notice.slug}`;
+  const publicUrl = `${siteUrl}/development-notices/${notice.slug}`;
 
   return (
     <div className="py-8 print:py-0">
