@@ -102,6 +102,21 @@ export default function PresentationPage() {
             percentages. Each deliverable is a binary, auditable state —
             certified or not certified.
           </li>
+          <li>
+            <strong>Project Health (RAG):</strong> Every initiative carries a
+            real-time health indicator — Green (On Track), Amber (At Risk), Red
+            (Critical) — visible on dashboards and the public project page.
+          </li>
+          <li>
+            <strong>Unique Reference:</strong> Each project receives a reference
+            number (PRJ-YYYY-XXXX) for audit trails, correspondence, and PMU
+            reporting alignment.
+          </li>
+          <li>
+            <strong>Institutional Closure:</strong> At completion, lessons
+            learned are captured — completing the lifecycle from initiation
+            through to permanent institutional memory.
+          </li>
         </ul>
       </Chapter>
 

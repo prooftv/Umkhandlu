@@ -123,6 +123,39 @@ export default function OperatorPage() {
         />
       </Section>
 
+      <Section title="Project Governance (Reference, Health, Closure)">
+        <HowTo
+          title="How to set project reference number"
+          steps={[
+            'Open Studio → Campaign → Details tab → Project Reference Number',
+            'Format: PRJ-YYYY-XXXX (e.g. PRJ-2026-0001)',
+            'Set once at project initiation — used on reports and correspondence',
+            'Shows in mono font above project title on public page',
+          ]}
+        />
+        <HowTo
+          title="How to update project health (RAG status)"
+          steps={[
+            'Open Studio → Campaign → Details tab → Project Health (RAG)',
+            'Green: On Track — milestones being met, no major issues',
+            'Amber: At Risk — delays, resource issues, needs attention',
+            'Red: Critical — major problems, escalation required',
+            'Update whenever project status materially changes',
+            'Shows as coloured badge on public page and campaign cards',
+          ]}
+        />
+        <HowTo
+          title="How to record lessons learned (project closure)"
+          steps={[
+            'Only visible when status is Completed or Reported',
+            'Open Studio → Campaign → Tracking & Impact → Lessons Learned',
+            'Write: what worked, what failed, what to do differently',
+            'This becomes permanent institutional memory for future projects',
+            'Completes the lifecycle: Initiation → Active → Completed → Lessons',
+          ]}
+        />
+      </Section>
+
       <Section title="Deliverables (Milestone Tracking)">
         <HowTo
           title="How to certify a deliverable"
