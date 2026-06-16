@@ -778,6 +778,12 @@ function CampaignRelations({ campaign }: { campaign: CampaignData }) {
   );
 }
 
+const healthConfig: Record<string, { label: string; className: string }> = {
+  green: { label: 'On Track', className: 'bg-green-100 text-green-700' },
+  amber: { label: 'At Risk', className: 'bg-amber-100 text-amber-700' },
+  red: { label: 'Critical', className: 'bg-red-100 text-red-700' },
+};
+
 function CampaignHeader({
   campaign,
   config,
@@ -785,6 +791,10 @@ function CampaignHeader({
   campaign: CampaignData;
   config: { icon: string; label: string };
 }) {
+  const health = (campaign as unknown as { projectHealth?: string })
+    .projectHealth;
+  const reference = (campaign as unknown as { projectReference?: string })
+    .projectReference;
   return (
     <div className="mb-8">
       <div className="flex items-center gap-3 mb-4 flex-wrap">
@@ -792,16 +802,41 @@ function CampaignHeader({
           {config.icon} {config.label}
         </Badge>
         <Badge variant="secondary">{campaign.status}</Badge>
+        <HealthBadge health={health} />
         {campaign.tags?.map((tag) => (
           <Badge key={tag} variant="outline">
             {tag}
           </Badge>
         ))}
       </div>
+      {reference && (
+        <p className="text-xs text-gray-400 font-mono mb-2">{reference}</p>
+      )}
       <h1 className="text-3xl md:text-5xl font-bold mb-4">{campaign.title}</h1>
       {campaign.description && (
         <p className="text-xl text-gray-600">{campaign.description}</p>
       )}
+    </div>
+  );
+}
+
+function HealthBadge({ health }: { health?: string | null }) {
+  if (!health) return null;
+  const hc = healthConfig[health];
+  if (!hc) return null;
+  return <Badge className={hc.className}>{hc.label}</Badge>;
+}
+
+function LessonsLearned({ campaign }: { campaign: CampaignData }) {
+  const lessons = (campaign as unknown as { lessonsLearned?: string })
+    .lessonsLearned;
+  if (!lessons) return null;
+  return (
+    <div className="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
+      <h2 className="text-xl font-bold mb-2 text-blue-800">
+        📝 Lessons Learned
+      </h2>
+      <p className="text-blue-700">{lessons}</p>
     </div>
   );
 }
@@ -1011,6 +1046,8 @@ export default async function CampaignPage(props: Props) {
           <p className="text-green-700">{campaign.impactSummary}</p>
         </div>
       )}
+
+      <LessonsLearned campaign={campaign} />
 
       {/* Project updates timeline (sod turning, phase completions, etc.) */}
       <CampaignUpdatesTimeline campaign={campaign} />

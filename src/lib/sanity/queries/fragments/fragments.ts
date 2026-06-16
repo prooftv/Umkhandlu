@@ -403,6 +403,8 @@ export const campaignFragment = /* groq */ `
   "slug": slug.current,
   campaignType,
   status,
+  projectReference,
+  projectHealth,
   description,
   targetAudience,
   tags,
@@ -436,6 +438,7 @@ export const campaignFragment = /* groq */ `
   budget,
   beneficiaries,
   impactSummary,
+  lessonsLearned,
   deliverables,
   deliverablesCertified[] {
     _key,

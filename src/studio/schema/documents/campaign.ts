@@ -63,6 +63,33 @@ export default defineType({
       initialValue: 'draft',
     }),
     defineField({
+      name: 'projectReference',
+      title: 'Project Reference Number',
+      type: 'string',
+      group: 'details',
+      description:
+        'Unique project identifier. Format: PRJ-YYYY-XXXX (e.g. PRJ-2026-0001). Used on reports and correspondence.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'projectHealth',
+      title: 'Project Health (RAG)',
+      type: 'string',
+      group: 'details',
+      options: {
+        list: [
+          { title: '🟢 Green — On Track', value: 'green' },
+          { title: '🟠 Amber — At Risk', value: 'amber' },
+          { title: '🔴 Red — Critical', value: 'red' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      description:
+        'Overall project health indicator for dashboard and reporting.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
       name: 'sponsor',
       title: 'Sponsor / Partner',
       type: 'reference',
@@ -754,6 +781,18 @@ export default defineType({
       description:
         'Fill when reporting. Summary of outcomes for CSR reports and sponsor feedback.',
       options: { aiAssist: { translateAction: true } },
+    }),
+    defineField({
+      name: 'lessonsLearned',
+      title: 'Lessons Learned',
+      type: 'text',
+      rows: 4,
+      group: 'tracking',
+      description:
+        'Fill at project closure. What worked, what failed, what to do differently next time. Becomes part of permanent institutional memory.',
+      hidden: ({ parent }) =>
+        parent?.campaignType !== 'csr' ||
+        (parent?.status !== 'completed' && parent?.status !== 'reported'),
     }),
     defineField({
       name: 'deliverables',
