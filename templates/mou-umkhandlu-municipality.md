@@ -1,6 +1,6 @@
 # MEMORANDUM OF UNDERSTANDING (MOU)
 
-## Community Digital Engagement Platform — Umkhandlu
+## Umkhandlu — The Missing Digital Operating System Between Traditional Authority and Modern Coordination
 
 ### Between Newcastle Local Municipality and Unami Foundation
 
@@ -25,7 +25,7 @@ Position: Platform Architect & Operator
 
 ## 2. PURPOSE
 
-This Memorandum of Understanding establishes a framework for the deployment and operation of **Umkhandlu** — a community digital engagement platform — as the official external transparency and public participation layer for municipal infrastructure projects within traditional authority areas under Newcastle Municipality's jurisdiction.
+This Memorandum of Understanding establishes a framework for the deployment and operation of **Umkhandlu** — the missing digital operating system between traditional authority and modern coordination — as the official governance, transparency, and public participation layer for municipal infrastructure projects within traditional authority areas under Newcastle Municipality's jurisdiction.
 
 ---
 
@@ -39,7 +39,7 @@ Newcastle Municipality implements infrastructure projects (water, roads, sanitat
 - Audit-ready evidence of community engagement
 - Traditional council coordination and oversight visibility
 
-The Unami Foundation has developed **Umkhandlu** — a live, operational platform that provides all of the above. The platform is currently piloting on the Buffalo River Abstraction Works (Ward 7) in coordination with the Khathide Traditional Council area.
+The Unami Foundation has developed **Umkhandlu** — the missing digital operating system between traditional authority and modern coordination. The platform provides community-scale institutional memory: managing the public record surrounding projects, participation, governance, opportunity, and compliance. The platform is currently piloting on the Buffalo River Abstraction Works (Ward 7) in coordination with the Khathide Traditional Council area.
 
 **Live platform:** umkhandlu.vercel.app
 
