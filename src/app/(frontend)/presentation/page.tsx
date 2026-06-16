@@ -258,8 +258,36 @@ export default function PresentationPage() {
                   'Permanent',
                 ]}
               />
+              <TableRow
+                cells={[
+                  'Liquor Licence',
+                  'KZN Liquor Licensing Act',
+                  'Min. 30 days',
+                ]}
+              />
             </tbody>
           </table>
+        </div>
+        <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+          <p className="text-sm font-bold mb-2">Live Example</p>
+          <p className="text-sm text-gray-600 mb-3">
+            A liquor licence application notice with public comment form,
+            spatial mapping, and proof of publication certificate:
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/development-notices/liquor-licence-application-mndozo-2026"
+              className="text-sm text-primary font-medium hover:underline"
+            >
+              View Notice →
+            </Link>
+            <Link
+              href="/notices/certificate/e2d20d11-e33d-4e44-90fa-6dc354ebaec8"
+              className="text-sm text-primary font-medium hover:underline"
+            >
+              View Proof of Publication Certificate →
+            </Link>
+          </div>
         </div>
         <h3 className="text-lg font-bold mt-6 mb-3">
           Public Participation & Community Feedback
