@@ -409,7 +409,18 @@ export default async function AreaPage(props: Props) {
                       <Badge variant="secondary">{record.status}</Badge>
                     )}
                   </div>
-                  <h3 className="font-semibold">{record.title}</h3>
+                  <h3 className="font-semibold">
+                    {record.slug ? (
+                      <Link
+                        href={`/records/${record.slug}`}
+                        className="hover:text-primary transition-colors"
+                      >
+                        {record.title}
+                      </Link>
+                    ) : (
+                      record.title
+                    )}
+                  </h3>
                   {record.summary && (
                     <p className="text-sm text-gray-600 mt-1">
                       {record.summary}

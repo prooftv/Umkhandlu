@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 type Record = {
   _id: string;
   title: string;
+  slug?: string;
   recordType: string;
   date: string;
   summary?: string;
@@ -74,7 +75,18 @@ export default function RecordList({ section }: Props) {
                       {new Date(record.date).toLocaleDateString()}
                     </time>
                   </div>
-                  <h3 className="font-semibold">{record.title}</h3>
+                  <h3 className="font-semibold">
+                    {record.slug ? (
+                      <Link
+                        href={`/records/${record.slug}`}
+                        className="hover:text-primary transition-colors"
+                      >
+                        {record.title}
+                      </Link>
+                    ) : (
+                      record.title
+                    )}
+                  </h3>
                   {record.summary && (
                     <p className="text-gray-600 text-sm mt-1">
                       {record.summary}
