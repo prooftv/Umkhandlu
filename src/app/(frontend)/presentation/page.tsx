@@ -13,16 +13,17 @@ export default function PresentationPage() {
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
       {/* Hero */}
-      <header className="mb-16 text-center">
+      <header className="mb-16 text-center" id="presentation-hero">
         <h1 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
           Umkhandlu: The Missing Digital Operating System Between Traditional
           Authority and Modern Co-ordination
         </h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
           An institutional guide to digital self-determination, evidence-based
           compliance, and multi-stakeholder project tracking for Traditional
           Councils, Municipalities, and Engineering Contractors.
         </p>
+        <SectionNarrator sectionId="presentation-hero" />
       </header>
 
       {/* Chapter 1 */}
