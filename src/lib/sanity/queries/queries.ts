@@ -284,6 +284,10 @@ export const devNoticeSlugs = defineQuery(`
   *[_type == "developmentNotice" && defined(slug.current)][0..$limit].slug.current
 `);
 
+export const latestContentQuery = defineQuery(`
+  *[_type in ["notice", "developmentNotice", "opportunity", "program", "campaign"] && !(_id in path("drafts.**"))] | order(_updatedAt desc) [0]._updatedAt
+`);
+
 export const postsArchiveQuery = defineQuery(`
   {
     "allResults": *[

@@ -1,17 +1,22 @@
 import Link from 'next/link';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { settingsQuery } from '@/lib/sanity/queries/queries';
+import {
+  latestContentQuery,
+  settingsQuery,
+} from '@/lib/sanity/queries/queries';
 import { SITE_NAME } from '@/lib/siteConfig';
 import Logo from '../icons/Logo';
 import LanguageToggle from '../modules/LanguageToggle';
+import NewContentIndicator from '../modules/NewContentIndicator';
 import SearchDialog from '../modules/SearchDialog';
 import NavBar from './NavBar';
 
 export default async function Header() {
   try {
-    const { data: settings } = await sanityFetch({
-      query: settingsQuery,
-    });
+    const [{ data: settings }, { data: latestUpdate }] = await Promise.all([
+      sanityFetch({ query: settingsQuery }),
+      sanityFetch({ query: latestContentQuery }),
+    ]);
 
     return (
       <header className="bg-white text-gray-800 py-4 relative z-50">
@@ -25,6 +30,7 @@ export default async function Header() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
+            <NewContentIndicator latestUpdate={latestUpdate} />
             <SearchDialog />
             <LanguageToggle />
             {settings?.menu && <NavBar menuItems={settings.menu} />}
