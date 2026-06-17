@@ -303,6 +303,43 @@ If any party formally requests removal of published project data:
 
 ---
 
-## 15. One-Line System Definition
+## 15. Evidence Classification Levels
+
+Not all information warrants the same treatment. Classify incoming intelligence before deciding what to publish:
+
+| Level | Meaning | Source Examples | Umkhandlu Treatment |
+|---|---|---|---|
+| **Level 1 — Planning** | Mentioned in IDPs, sector plans, or community consultations | IDP community priorities, ward committee inputs, sector plan references | Store as `record` (type: external-resource). Reference in area page. Use in stakeholder meetings as engagement checklist. |
+| **Level 2 — Approved** | Budgeted with defined KPIs, implementation targets, or formal commitment | IDP capital budget line items, SDBIP KPIs, council resolutions with budget allocation | Eligible for a campaign page with basic project metadata. Progress tracking begins when Level 3 evidence arrives. |
+| **Level 3 — Active** | Contractor appointed, site activity confirmed, engineer verification available | IPC certificates, site diaries, PMU monthly reports, contractor WhatsApp updates | Full campaign with milestone tracking, media, community notices, verification records, and export. |
+
+### Decision Rules
+
+| Question | If Yes | If No |
+|---|---|---|
+| Is there a contractor on site? | Level 3 | Not yet |
+| Is there a budget allocation with a KPI target? | At least Level 2 | Level 1 |
+| Is it only mentioned in community input or planning documents? | Level 1 only | — |
+| Can an engineer or PMU verify progress? | Level 3 | Cannot track milestones |
+
+### Promotion Path
+
+```
+Level 1 (Planning intelligence)
+    → Confirmed budget + KPI target → Level 2 (Approved)
+        → Contractor + site activity + verification → Level 3 (Active)
+```
+
+Items stay at their current level until evidence justifies promotion. Do NOT create full campaign pages for Level 1 items — that produces empty shells that undermine platform credibility.
+
+### Practical Application
+
+- **Level 1:** "The IDP mentions bridge rehabilitation as a Ward 7 priority." → Store as external-resource record. Raise in PMU meeting.
+- **Level 2:** "Buffalo River Abstraction Works has R40m WSIG allocation and a June 2026 target in the SDBIP." → Campaign created with project metadata.
+- **Level 3:** "Engineer certified weir foundation at 25% complete. 45 workers on site." → Full progress tracking active.
+
+---
+
+## 16. One-Line System Definition
 
 > Collect, verify, structure, resolve conflicts, and publish infrastructure data as a continuously updated, audit-ready, governance-accountable project intelligence layer.
