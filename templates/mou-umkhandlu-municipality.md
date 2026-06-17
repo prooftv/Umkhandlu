@@ -49,7 +49,7 @@ The Unami Foundation has developed **Umkhandlu** — the missing digital operati
 
 | Capability | Description |
 |---|---|
-| Digital Project Information Board | DPWI/CIDB format — employer, funding, contractor, phase, EPWP targets |
+| Infrastructure Project Information Board | DPWI/CIDB format — employer, funding, contractor, phase, EPWP targets |
 | Milestone-Based Progress Tracking | Engineer-certified deliverables — auditable, not self-reported |
 | Community Notices | Hiring phases, SMME opportunities, project updates — timestamped, attributed |
 | SMME Directory | Local subcontractor profiles with compliance data (CIPC, tax, B-BBEE) |

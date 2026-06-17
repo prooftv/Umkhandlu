@@ -141,7 +141,7 @@ export default function ProjectInfoBoard(props: Props) {
     <div className="mb-8 border-2 border-gray-800 rounded-lg overflow-hidden">
       <div className="bg-primary px-5 py-4 text-center">
         <p className="text-[10px] font-bold text-white/80 uppercase tracking-[0.2em] mb-1">
-          Digital Project Information Board
+          Infrastructure Project Information Board
         </p>
         <h3 className="text-lg font-black text-white uppercase tracking-wide">
           {props.title}

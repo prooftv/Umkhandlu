@@ -864,7 +864,7 @@ For 12-month construction projects:
 
 ### The Pitch Line
 
-> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Digital Project Information Board required to maintain community transparency, manage EPWP local labour expectations, and securely document cooperation with the traditional council throughout the project lifecycle."*
+> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Infrastructure Project Information Board required to maintain community transparency, manage EPWP local labour expectations, and securely document cooperation with the traditional council throughout the project lifecycle."*
 
 ### Directory & Listing Revenue
 

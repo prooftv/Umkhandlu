@@ -980,7 +980,7 @@ export default async function CampaignPage(props: Props) {
       {/* Cover image */}
       <CampaignCover campaign={campaign} />
 
-      {/* Digital Project Information Board */}
+      {/* Infrastructure Project Information Board */}
       <ProjectInfoBoard
         title={campaign.title}
         campaignType={campaign.campaignType}

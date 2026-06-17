@@ -113,7 +113,7 @@ For a major public infrastructure development like Buffalo River, the platform c
 | Social facilitation consultant | R15,000–R45,000/phase | Included in package |
 | Physical site board (once-off) | R5,000–R15,000 | Included |
 
-> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Digital Project Information Board required to maintain community transparency, manage EPWP local labour expectations across Ward 7, and securely document cooperation with the Khathide Traditional Council throughout the 12-month build."*
+> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Infrastructure Project Information Board required to maintain community transparency, manage EPWP local labour expectations across Ward 7, and securely document cooperation with the Khathide Traditional Council throughout the 12-month build."*
 
 ---
 

@@ -51,7 +51,7 @@ External parties — developers, contractors, municipalities, attorneys, busines
 
 **What they get:**
 - Full project lifecycle documentation (procurement → construction → commissioning → operational)
-- Digital Project Information Board (DPWI/CIDB format)
+- Infrastructure Project Information Board (DPWI/CIDB format)
 - Milestone-based progress tracking (engineer-certified completions)
 - EPWP socio-economic targets (employment + SMME tracking)
 - End-of-project compliance export (PDF audit trail)
@@ -72,7 +72,7 @@ For projects with a 12-month construction cycle (e.g. Buffalo River Abstraction 
 **Total project value:** R42,000 – R72,000
 
 **What this covers:**
-- Live Digital Project Information Board
+- Live Infrastructure Project Information Board
 - EPWP recruitment transparency (100 local labour positions)
 - Traditional council oversight channel
 - Monthly progress updates
@@ -108,7 +108,7 @@ For municipalities that prefer a single procurement line item:
 
 ## The Pitch Line
 
-> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Digital Project Information Board required to maintain community transparency, manage EPWP local labour expectations, and securely document cooperation with the traditional council throughout the project lifecycle."*
+> *"For less than 0.5% of the total WSIG infrastructure budget, Umkhandlu provides the Infrastructure Project Information Board required to maintain community transparency, manage EPWP local labour expectations, and securely document cooperation with the traditional council throughout the project lifecycle."*
 
 ---
 

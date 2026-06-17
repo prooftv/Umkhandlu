@@ -63,7 +63,7 @@ export default function PresentationPage() {
           When a multi-million Rand public infrastructure investment — such as
           the Buffalo River Abstraction Works project — enters a traditional
           area, it is transformed from a static, paper-based budget line item
-          into a live <strong>Digital Project Information Board</strong>.
+          into a live <strong>Infrastructure Project Information Board</strong>.
         </p>
         <p>
           Umkhandlu tracks development progress using a milestone-based
