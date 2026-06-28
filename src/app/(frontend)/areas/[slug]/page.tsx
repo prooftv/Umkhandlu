@@ -21,38 +21,45 @@ type AreaData = NonNullable<
 >;
 
 function AreaInduna({ induna }: { induna: AreaData['induna'] }) {
-  if (!induna) return null;
   return (
     <section className="mb-12">
       <h2 className="text-2xl font-bold mb-4">Induna</h2>
-      <Link
-        href={`/people/${induna.slug}`}
-        className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-      >
-        {induna.image?.asset?._ref && (
-          <Image
-            src={
-              urlForImage(induna.image)
-                ?.width(96)
-                .height(96)
-                .fit('crop')
-                .url() as string
-            }
-            alt={`${induna.firstName} ${induna.lastName}`}
-            width={96}
-            height={96}
-            className="w-12 h-12 rounded-full object-cover"
-          />
-        )}
-        <div>
-          <p className="font-semibold">
-            {induna.firstName} {induna.lastName}
-          </p>
-          {induna.role && (
-            <p className="text-sm text-gray-500">{induna.role}</p>
+      {induna ? (
+        <Link
+          href={`/people/${induna.slug}`}
+          className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+        >
+          {induna.image?.asset?._ref && (
+            <Image
+              src={
+                urlForImage(induna.image)
+                  ?.width(96)
+                  .height(96)
+                  .fit('crop')
+                  .url() as string
+              }
+              alt={`${induna.firstName} ${induna.lastName}`}
+              width={96}
+              height={96}
+              className="w-12 h-12 rounded-full object-cover"
+            />
           )}
+          <div>
+            <p className="font-semibold">
+              {induna.firstName} {induna.lastName}
+            </p>
+            {induna.role && (
+              <p className="text-sm text-gray-500">{induna.role}</p>
+            )}
+          </div>
+        </Link>
+      ) : (
+        <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl">
+          <p className="text-sm text-amber-800 font-medium">
+            No recognised Induna currently assigned to this area.
+          </p>
         </div>
-      </Link>
+      )}
     </section>
   );
 }
