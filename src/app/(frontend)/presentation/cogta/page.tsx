@@ -149,50 +149,205 @@ Permanent Institutional Memory`}
         </p>
       </Chapter>
 
-      <Chapter
-        number="4"
-        title="Live Example — Headmanship Recognition Process"
-      >
+      <Chapter number="4" title="The Governance Audit Trail">
         <p>
-          On 24 June 2026, the community of KwaGudlucingo (under Khathide
-          Traditional Council) convened a meeting to petition for recognition as
-          a separate Isigodi. The platform recorded:
+          Every governance process in Umkhandlu produces an auto-generated audit
+          trail. The trail is not manually assembled — it builds itself from the
+          references between documents. When a new record is created and linked
+          to its parent, the trail extends automatically.
+        </p>
+        <h3 className="text-lg font-bold mt-6 mb-3">
+          What COGTA Sees When Assessing a Submission
+        </h3>
+        <p>
+          When a petition, recognition application, or dispute resolution
+          reaches COGTA, the audit trail provides immediate answers:
+        </p>
+        <div className="overflow-x-auto my-6">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b-2 border-gray-200">
+                <th className="text-left py-2 pr-4">COGTA Question</th>
+                <th className="text-left py-2">Audit Trail Answers</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700">
+              <TableRow
+                cells={[
+                  'Was a meeting held?',
+                  'Notice exists with date, location, agenda',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  'Was it properly convened?',
+                  'Notice published before meeting date',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  'What was discussed?',
+                  'Minutes record with full content',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  'Did community resolve this?',
+                  'Resolution record — adopted by consensus',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  'Is there evidence?',
+                  'Signed petition, attendance register attached',
+                ]}
+              />
+              <TableRow
+                cells={['Who verified?', 'Verification note on each record']}
+              />
+              <TableRow
+                cells={[
+                  'What is the full process chain?',
+                  'Notice → Minutes → Resolution → Petition → Submission',
+                ]}
+              />
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="text-lg font-bold mt-6 mb-3">
+          Live Example — KwaGudlucingo Headmanship Recognition
+        </h3>
+        <p>
+          On 27 June 2026, the community of KwaGudlucingo (under Khathide
+          Traditional Council) convened a meeting at the soccer ground opposite
+          Izazi High School to petition for recognition as a separate Isigodi.
+          The platform automatically generated this audit trail:
         </p>
         <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 my-6">
           <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-3">
-            Governance Lineage — KwaGudlucingo Recognition
+            Auto-Generated Governance Audit Trail
           </p>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>
-              📢 <strong>Notice (Meeting):</strong> Community Meeting —
-              KwaGudlucingo Headmanship & Safety
-            </li>
-            <li className="ml-6">
-              └ 📄 <strong>Record (Minutes):</strong> Full discussion —
-              governance, safety, infrastructure
-            </li>
-            <li className="ml-10">
-              ├ 📄 <strong>Record (Resolution):</strong> Petition for
-              headmanship recognition — signed at meeting
-            </li>
-            <li className="ml-10">
-              └ 📄 <strong>Record (Resolution):</strong> Community whistle alert
-              system (safety measure)
-            </li>
-          </ul>
+          <div className="space-y-1 text-sm text-gray-700">
+            <div className="flex items-center gap-2 font-medium text-amber-800">
+              <span>📢</span>
+              <span>
+                Community Meeting — KwaGudlucingo Governance, Community Safety &
+                Infrastructure
+              </span>
+            </div>
+            <div className="ml-4 border-l-2 border-amber-200 pl-3 space-y-1 mt-1">
+              <div>
+                <span className="font-medium">📄 Minutes</span>
+                <span className="text-gray-400 ml-1">
+                  — minutes — 27/06/2026
+                </span>
+              </div>
+              <div className="ml-4 border-l-2 border-amber-100 pl-3 space-y-1">
+                <div>
+                  <span className="font-medium">
+                    📄 Resolution — Petition for Recognition
+                  </span>
+                  <span className="text-gray-400 ml-1">
+                    — community-decision — adopted
+                  </span>
+                </div>
+                <div>
+                  <span className="font-medium">
+                    📄 Resolution — Community Safety Whistle Alert
+                  </span>
+                  <span className="text-gray-400 ml-1">
+                    — community-decision — adopted
+                  </span>
+                </div>
+                <div>
+                  <span className="font-medium">
+                    📄 Infrastructure Record — Apollo Street Lighting
+                  </span>
+                  <span className="text-gray-400 ml-1">— report — open</span>
+                </div>
+              </div>
+            </div>
+          </div>
           <p className="text-xs text-gray-500 mt-4">
-            Evidence attached: signed petition, attendance register
-          </p>
-          <p className="text-xs text-gray-500 mt-1">
-            Future records (as process unfolds): petition submission → COGTA
-            acknowledgement → assessment → recognition decision
+            Evidence: signed petition, community signatures, attendance register
           </p>
         </div>
+
+        <h3 className="text-lg font-bold mt-6 mb-3">
+          How the Trail Extends Over Time
+        </h3>
         <p>
-          Without this system, in five years the only evidence may be
-          &quot;someone remembers a meeting.&quot; With Umkhandlu, the full
-          chain from community concern to COGTA decision is preserved,
-          timestamped, and traceable.
+          As the recognition process continues, each new institutional event
+          becomes a record linked to its parent. The audit trail grows
+          automatically:
+        </p>
+        <CodeBlock>
+          {`Resolution — Petition for Recognition (adopted)
+    │
+    ▼
+Petition Handed to Inkosi Kubheka (record)
+    │
+    ▼
+Submission to COGTA (record)
+    │
+    ▼
+COGTA Acknowledgement (record)
+    │
+    ▼
+COGTA Assessment (record)
+    │
+    ▼
+Recognition Decision (record)
+    │
+    ▼
+Appointment of Recognised Induna (record)
+    │
+    ▼
+Permanent Institutional Memory`}
+        </CodeBlock>
+        <p>
+          Nothing is manually assembled. Each record sets its{' '}
+          <code className="text-xs bg-gray-100 px-1 py-0.5 rounded">
+            parentRecord
+          </code>{' '}
+          reference. The trail renders itself on the notice page and on every
+          record page in the chain.
+        </p>
+
+        <h3 className="text-lg font-bold mt-6 mb-3">
+          Applies to Any Governance Process
+        </h3>
+        <p>
+          The audit trail is not specific to headmanship recognition. It works
+          identically for:
+        </p>
+        <ul className="space-y-2 text-gray-700 mt-3">
+          <li>
+            <strong>Land allocations:</strong> Application → Council meeting →
+            Resolution → Allocation → PTO documentation
+          </li>
+          <li>
+            <strong>Dispute resolutions:</strong> Complaint → Hearing → Minutes
+            → Resolution → Outcome
+          </li>
+          <li>
+            <strong>Infrastructure projects:</strong> Notice → Community meeting
+            → Concerns recorded → Municipal engagement → Project outcome
+          </li>
+          <li>
+            <strong>Policy adoption:</strong> Discussion → Draft → Community
+            input → Adoption → Implementation
+          </li>
+          <li>
+            <strong>Boundary reviews:</strong> Petition → Assessment →
+            Consultation → Decision → Gazette
+          </li>
+        </ul>
+        <p className="mt-4">
+          Every governance process that follows the pattern Notice → Record →
+          Record → Record produces an audit trail. The system does not need to
+          know what kind of process it is — it follows the references.
         </p>
       </Chapter>
 
@@ -357,8 +512,12 @@ Permanent Institutional Memory`}
             description="Traditional Council activities become retrievable institutional records — not scattered paper or memory-dependent processes."
           />
           <Benefit
-            title="Recognition Process Audit Trail"
-            description="Headmanship petitions, boundary reviews, and COGTA submissions are preserved with full lineage from community meeting to decision."
+            title="Auto-Generated Audit Trails"
+            description="Every governance process produces a traceable chain from originating notice through to final outcome. No manual assembly. The trail builds itself as records are created."
+          />
+          <Benefit
+            title="Recognition & Boundary Process Verification"
+            description="When a petition or recognition application reaches COGTA, the full evidence chain is immediately accessible — meeting notice, minutes, resolution, petition, signatures."
           />
           <Benefit
             title="Compliance Monitoring"
@@ -369,12 +528,16 @@ Permanent Institutional Memory`}
             description="Municipal projects on traditional land carry engineer-certified milestones, verification records, and community participation logs."
           />
           <Benefit
+            title="Institutional Continuity"
+            description="When leadership changes, when boundaries are redrawn, when Izinduna retire — the institutional memory remains. The audit trail persists beyond any individual office bearer."
+          />
+          <Benefit
             title="Scalable Across Councils"
-            description="Same platform, different content. Each council gets its own institutional presence without per-council development cost."
+            description="Same platform, different content. Each council gets its own institutional presence without per-council development cost. COGTA could facilitate deployment across an entire district."
           />
           <Benefit
             title="No Administrative Burden on Council"
-            description="The Unami Foundation operates the platform on behalf of the council. The council's only obligation is to produce governance — which it already does."
+            description="The Unami Foundation operates the platform on behalf of the council. The council's only obligation is to produce governance — which it already does. The system follows."
           />
         </div>
       </Chapter>
