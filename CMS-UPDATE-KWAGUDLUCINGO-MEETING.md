@@ -322,3 +322,46 @@ Information is transformed, not duplicated. Every institutional artefact retains
 - **Notices** initiate or communicate.
 - **Meetings** produce Records.
 - **Records** produce Decisions, Outcomes, Reports, Projects, External Submissions, or future Notices.
+
+---
+
+## CMS Entry Notes
+
+### Slug format
+Slugs must NOT contain backticks. Enter plain text only:
+- ✓ `community-meeting-kwagudlucingo-governance-community-safety-27-june-2026`
+- ✗ `` `community-meeting-kwagudlucingo-governance-community-safety-27-june-2026` ``
+
+### Record Type values (what exists in schema)
+| CMS Label | Value |
+|---|---|
+| Meeting Minutes | `minutes` |
+| Resolution | `resolution` |
+| Land Allocation | `land-allocation` |
+| Dispute Resolution | `dispute-resolution` |
+| Public Notice | `public-notice` |
+| Policy | `policy` |
+| Report | `report` |
+| Project Outcome | `project-outcome` |
+| Community Decision | `community-decision` |
+| External Resource | `external-resource` |
+
+The infrastructure record uses **Report** (not "Infrastructure Concern" — that label doesn't exist).
+
+### Status values (available on all record types)
+| Value | Use for |
+|---|---|
+| `adopted` | Resolutions, community decisions |
+| `approved` | Land allocations, formal approvals |
+| `pending` | Awaiting action |
+| `open` | Ongoing concerns, unresolved matters |
+| `rejected` | Denied applications |
+| `resolved` | Disputes, completed matters |
+
+### Area structure
+Umndozo is now two areas in the CMS:
+- **Mndozo Traditional Area** (slug: `mndozo`) — umbrella area
+- **KwaGudlucingo** — separate area listing (no recognised Induna)
+
+Records from this meeting should reference the **KwaGudlucingo** area listing.
+The IDP record references Mndozo (broader municipal planning document).
