@@ -149,7 +149,7 @@ Permanent Institutional Memory`}
         </p>
       </Chapter>
 
-      <Chapter number="4" title="The Governance Audit Trail">
+      <Chapter number="4" title="Governance Record Lineage">
         <p>
           Every governance process in Umkhandlu produces an auto-generated audit
           trail. The trail is not manually assembled — it builds itself from the
@@ -226,7 +226,7 @@ Permanent Institutional Memory`}
         </p>
         <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 my-6">
           <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-3">
-            Auto-Generated Governance Audit Trail
+            Governance Record Lineage
           </p>
           <div className="space-y-1 text-sm text-gray-700">
             <div className="flex items-center gap-2 font-medium text-amber-800">

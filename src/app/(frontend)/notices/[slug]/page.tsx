@@ -147,7 +147,7 @@ export default async function NoticePage(props: Props) {
       {notice.producedRecords && notice.producedRecords.length > 0 && (
         <div className="mt-8 p-5 bg-amber-50 border border-amber-100 rounded-xl">
           <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-4">
-            Governance Audit Trail
+            Governance Record Lineage
           </p>
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-sm text-amber-800 font-medium mb-3">
