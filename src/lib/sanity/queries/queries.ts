@@ -303,6 +303,19 @@ export const recordSlugs = defineQuery(`
   *[_type == "record" && defined(slug.current)][0..$limit].slug.current
 `);
 
+export const recordListPageQuery = defineQuery(`
+  *[_type == "record" && defined(slug.current)] | order(date desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    recordType,
+    date,
+    summary,
+    status,
+    "relatedArea": relatedArea->{ name, "slug": slug.current }
+  }
+`);
+
 export const devNoticeSlugs = defineQuery(`
   *[_type == "developmentNotice" && defined(slug.current)][0..$limit].slug.current
 `);
