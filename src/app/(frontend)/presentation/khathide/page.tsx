@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
   title: 'Umkhandlu — Khathide Traditional Council',
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 export default function KhathidePresentation() {
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
-      <header className="mb-16 text-center">
+      <header className="mb-16 text-center" id="khathide-hero">
         <p className="text-sm font-bold text-primary uppercase tracking-wide mb-4">
           Presented to
         </p>
@@ -23,6 +24,7 @@ export default function KhathidePresentation() {
           Traditional Council as an institution — preserving decisions,
           coordinating Izigodi, and building permanent institutional memory.
         </p>
+        <SectionNarrator sectionId="khathide-hero" />
       </header>
 
       <Chapter number="1" title="What Umkhandlu Is">
@@ -305,11 +307,12 @@ function Chapter({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mb-16">
+    <section className="mb-16" id={`khathide-${number}`}>
       <span className="text-sm font-bold text-primary uppercase tracking-wide">
         {number}
       </span>
       <h2 className="text-2xl md:text-3xl font-bold mb-4 mt-1">{title}</h2>
+      <SectionNarrator sectionId={`khathide-${number}`} />
       <div className="prose prose-gray max-w-none">{children}</div>
     </section>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
   title: 'Umkhandlu — COGTA Presentation',
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 export default function CogtaPresentation() {
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
-      <header className="mb-16 text-center">
+      <header className="mb-16 text-center" id="cogta-hero">
         <p className="text-sm font-bold text-primary uppercase tracking-wide mb-4">
           Presented to
         </p>
@@ -24,6 +25,7 @@ export default function CogtaPresentation() {
           preserving governance processes as permanent, traceable records
           aligned with COGTA administrative requirements.
         </p>
+        <SectionNarrator sectionId="cogta-hero" />
       </header>
 
       <Chapter number="1" title="The Problem Umkhandlu Addresses">
@@ -456,11 +458,12 @@ function Chapter({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mb-16">
+    <section className="mb-16" id={`cogta-${number}`}>
       <span className="text-sm font-bold text-primary uppercase tracking-wide">
         {number}
       </span>
       <h2 className="text-2xl md:text-3xl font-bold mb-4 mt-1">{title}</h2>
+      <SectionNarrator sectionId={`cogta-${number}`} />
       <div className="prose prose-gray max-w-none">{children}</div>
     </section>
   );
