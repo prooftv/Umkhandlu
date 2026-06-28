@@ -363,13 +363,13 @@ export default function PresentationPage() {
 ├── Opportunity & Programme Layer
 ├── Council Oversight Layer
 ├── Public Notice & Compliance Layer
+├── Governance Audit & Evidence Layer
 │
-└── Governance Audit & Evidence Layer
-        ├── Infrastructure Evidence (milestones, verification)
-        ├── Publication Evidence (proof of publication, retention)
-        ├── Participation Evidence (comments, objections)
-        ├── Compliance Evidence (mandates, deadlines, certificates)
-        └── Governance Evidence (decisions, resolutions, approvals)`}
+└── Governance Record Lineage (spans all layers)
+        Notice → Record → Record → Record → ...
+        Every governance process, regardless of layer,
+        produces traceable institutional lineage.
+        The memory backbone of the operating system.`}
         </CodeBlock>
         <h3 className="text-lg font-bold mt-6 mb-3">Platform Capabilities</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
