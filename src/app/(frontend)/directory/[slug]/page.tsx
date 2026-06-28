@@ -126,7 +126,9 @@ function ListingHeader({ listing }: { listing: ListingData }) {
   return (
     <div className="mb-8">
       <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <Badge>{typeLabels[listing.listingType] || listing.listingType}</Badge>
+        <Badge>
+          {typeLabels[listing.listingType || ''] || listing.listingType}
+        </Badge>
         {listing.verifiedByInduna &&
           listing.verifiedByInduna !== 'community' && (
             <Badge variant="secondary">
@@ -169,6 +171,7 @@ export async function generateStaticParams() {
   return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: page component with multiple conditional sections
 export default async function ListingPage(props: Props) {
   const { slug } = await props.params;
   const { data: listing } = await sanityFetch({
@@ -179,9 +182,9 @@ export default async function ListingPage(props: Props) {
   if (!listing) notFound();
 
   const jsonLd = generateLocalBusinessJsonLd({
-    name: listing.name,
-    slug: listing.slug,
-    listingType: listing.listingType,
+    name: listing.name || '',
+    slug: listing.slug || '',
+    listingType: listing.listingType || '',
     description: listing.description ?? undefined,
     location: listing.location ?? undefined,
     contactInfo: listing.contactInfo ?? undefined,
@@ -213,7 +216,7 @@ export default async function ListingPage(props: Props) {
                 .fit('crop')
                 .url() as string
             }
-            alt={listing.image?.alt || listing.name}
+            alt={listing.image?.alt || listing.name || ''}
             width={1200}
             height={600}
             className="w-full object-cover"
@@ -238,8 +241,8 @@ export default async function ListingPage(props: Props) {
           <LocationPin
             lat={listing.geopoint.lat}
             lng={listing.geopoint.lng}
-            name={listing.name}
-            listingType={listing.listingType}
+            name={listing.name || ''}
+            listingType={listing.listingType ?? undefined}
             verifiedByInduna={listing.verifiedByInduna ?? undefined}
           />
         </div>

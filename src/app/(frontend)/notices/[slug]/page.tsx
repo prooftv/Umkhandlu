@@ -109,6 +109,31 @@ export default async function NoticePage(props: Props) {
         </div>
       )}
 
+      {notice.producedRecords && notice.producedRecords.length > 0 && (
+        <div className="mt-8 p-4 bg-amber-50 border border-amber-100 rounded-xl">
+          <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-3">
+            Institutional Records
+          </p>
+          <ul className="space-y-2">
+            {notice.producedRecords.map((record) => (
+              <li key={record._id}>
+                <Link
+                  href={`/records/${record.slug}`}
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  📄 {record.title}
+                </Link>
+                {record.date && (
+                  <span className="text-xs text-gray-400 ml-2">
+                    {new Date(record.date).toLocaleDateString()}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={notice.title || ''} />
       </div>

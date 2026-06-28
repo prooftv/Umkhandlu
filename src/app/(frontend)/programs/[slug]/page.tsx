@@ -51,8 +51,8 @@ export default async function ProgramPage(props: Props) {
   if (!program) notFound();
 
   const jsonLd = generateEventJsonLd({
-    title: program.title,
-    slug: program.slug,
+    title: program.title || '',
+    slug: program.slug || '',
     description: program.description ?? undefined,
     date: program.date ?? undefined,
     status: program.status ?? undefined,
@@ -104,7 +104,7 @@ export default async function ProgramPage(props: Props) {
                 .fit('crop')
                 .url() as string
             }
-            alt={program.image?.alt || program.title}
+            alt={program.image?.alt || program.title || ''}
             width={1200}
             height={600}
             className="w-full object-cover"

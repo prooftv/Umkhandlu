@@ -148,26 +148,92 @@ function RecordMeta({ record }: { record: RecordData }) {
   );
 }
 
-function RecordActions({ record }: { record: RecordData }) {
-  if (!record.fileUrl && !record.externalUrl) return null;
+function RecordLineage({ record }: { record: RecordData }) {
+  const hasOrigin = record.originNotice;
+  const hasParent = record.parentRecord;
+  const hasChildren = record.childRecords && record.childRecords.length > 0;
+
+  if (!hasOrigin && !hasParent && !hasChildren) return null;
+
   return (
-    <div className="mb-8 flex gap-3 flex-wrap">
-      {record.fileUrl && (
-        <a
-          href={record.fileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:opacity-90"
-        >
-          📄 Download Document
-        </a>
+    <div className="bg-amber-50 border border-amber-100 rounded-xl p-6 mb-8 space-y-3">
+      <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-2">
+        Governance Lineage
+      </p>
+      {record.originNotice && (
+        <div className="flex justify-between items-baseline">
+          <span className="text-sm text-gray-500">Origin Notice</span>
+          <Link
+            href={`/notices/${record.originNotice.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            📢 {record.originNotice.title}
+          </Link>
+        </div>
+      )}
+      {record.parentRecord && (
+        <div className="flex justify-between items-baseline">
+          <span className="text-sm text-gray-500">Produced From</span>
+          <Link
+            href={`/records/${record.parentRecord.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            📄 {record.parentRecord.title}
+          </Link>
+        </div>
+      )}
+      {record.childRecords && record.childRecords.length > 0 && (
+        <div className="pt-2 border-t border-amber-200">
+          <p className="text-xs text-gray-500 mb-2">Produced Records</p>
+          <ul className="space-y-1">
+            {record.childRecords.map((child) => (
+              <li key={child._id}>
+                <Link
+                  href={`/records/${child.slug}`}
+                  className="text-sm text-primary hover:underline"
+                >
+                  {typeLabels[child.recordType ?? ''] || child.recordType} →{' '}
+                  {child.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RecordEvidence({ record }: { record: RecordData }) {
+  const hasEvidence = record.evidence && record.evidence.length > 0;
+  if (!hasEvidence && !record.externalUrl) return null;
+
+  return (
+    <div className="mb-8">
+      {record.evidence && record.evidence.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">
+            Evidence & Attachments
+          </p>
+          {record.evidence.map((item) => (
+            <a
+              key={item._key}
+              href={item.url || '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-100 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+            >
+              📎 {item.title}
+            </a>
+          ))}
+        </div>
       )}
       {record.externalUrl && (
         <a
           href={record.externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200"
+          className="inline-flex items-center gap-2 px-4 py-2 mt-3 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200"
         >
           🔗 View External Resource
         </a>
@@ -213,8 +279,9 @@ export default async function RecordPage(props: Props) {
       />
 
       <RecordHeader record={record} />
+      <RecordLineage record={record} />
       <RecordMeta record={record} />
-      <RecordActions record={record} />
+      <RecordEvidence record={record} />
 
       {record.content && (
         <div className="mb-8 prose max-w-none">

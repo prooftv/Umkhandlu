@@ -129,7 +129,7 @@ function CampaignSponsor({ sponsor }: { sponsor: CampaignData['sponsor'] }) {
       {sponsor.logo?.asset?._ref && (
         <Image
           src={urlForImage(sponsor.logo)?.width(160).fit('max').url() as string}
-          alt={sponsor.name}
+          alt={sponsor.name || ''}
           width={160}
           height={64}
           className="h-12 w-auto object-contain"
@@ -185,7 +185,7 @@ function CampaignCover({ campaign }: { campaign: CampaignData }) {
     <div className="mb-8 rounded-2xl overflow-hidden">
       <Image
         src={urlForImage(campaign.image)?.width(1200).url() as string}
-        alt={campaign.image?.alt || campaign.title}
+        alt={campaign.image?.alt || campaign.title || ''}
         width={1200}
         height={675}
         sizes="(max-width: 896px) 100vw, 896px"
@@ -439,7 +439,7 @@ function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
         {log.map((entry) => (
           <div key={entry._key}>
             <time className="text-xs text-gray-400 font-medium">
-              {new Date(entry.date).toLocaleDateString()}
+              {new Date(entry.date || '').toLocaleDateString()}
             </time>
             <p className="text-sm text-gray-700 mt-0.5">{entry.update}</p>
           </div>
@@ -497,7 +497,7 @@ function SmmeComplianceDetails({ smme }: { smme: SmmeEntry }) {
                 ? 'EME (Exempt)'
                 : smme.bbbeeLevel === 'qse'
                   ? 'QSE'
-                  : 'Level ' + smme.bbbeeLevel}
+                  : `Level ${smme.bbbeeLevel}`}
             </p>
           </div>
         )}
@@ -533,6 +533,7 @@ function SmmeCard({ smme }: { smme: SmmeEntry }) {
     >
       <summary className="flex items-start gap-4 p-4 cursor-pointer hover:bg-gray-50 transition-colors">
         {smme.logoUrl && (
+          // biome-ignore lint/performance/noImgElement: external URL not compatible with next/image
           <img
             src={smme.logoUrl}
             alt={smme.name}
@@ -888,7 +889,7 @@ function getStakeholderLogos(campaign: CampaignData) {
   if (logos.length === 0 && campaign.sponsor?.logoUrl) {
     logos.push({
       url: campaign.sponsor.logoUrl,
-      name: campaign.sponsor.name,
+      name: campaign.sponsor.name || '',
       website: campaign.sponsor.website ?? undefined,
     });
   }
@@ -906,7 +907,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   if (!data) return {};
   if (data.seo) {
     return {
-      ...formatMetaData(data.seo, data.title),
+      ...formatMetaData(data.seo, data.title || ''),
       alternates: { canonical: `/campaigns/${slug}` },
     };
   }
@@ -926,6 +927,7 @@ export async function generateStaticParams() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: page component with multiple conditional sections
 export default async function CampaignPage(props: Props) {
   const { slug } = await props.params;
   const { data: campaign } = await sanityFetch({
@@ -982,9 +984,9 @@ export default async function CampaignPage(props: Props) {
 
       {/* Infrastructure Project Information Board */}
       <ProjectInfoBoard
-        title={campaign.title}
-        campaignType={campaign.campaignType}
-        sponsor={campaign.sponsor?.name}
+        title={campaign.title || ''}
+        campaignType={campaign.campaignType ?? undefined}
+        sponsor={campaign.sponsor?.name ?? undefined}
         sponsorLogos={getStakeholderLogos(campaign)}
         fundingSource={campaign.fundingSource}
         contractor={campaign.contractor}
@@ -1020,7 +1022,7 @@ export default async function CampaignPage(props: Props) {
 
       {/* Deliverables progress */}
       <DeliverablesList
-        deliverables={campaign.deliverables}
+        deliverables={campaign.deliverables ?? undefined}
         deliverablesCertified={
           (campaign as CampaignWithVerification).deliverablesCertified
         }

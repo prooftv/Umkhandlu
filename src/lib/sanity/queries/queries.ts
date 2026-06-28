@@ -192,7 +192,10 @@ export const noticeDetailQuery = defineQuery(`
     content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
     pinned,
     "relatedArea": relatedArea->{ name, "slug": slug.current },
-    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }
+    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status },
+    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
+      _id, title, "slug": slug.current, recordType, date
+    }
   }
 `);
 
@@ -267,10 +270,15 @@ export const recordDetailQuery = defineQuery(`
     status,
     "approvedBy": approvedBy->{ firstName, lastName, role, "slug": slug.current },
     content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
-    "fileUrl": file.asset->url,
+    evidence[]{ _key, title, "url": asset->url },
     externalUrl,
     source,
     verificationNote,
+    "originNotice": originNotice->{ title, "slug": slug.current, noticeType },
+    "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },
+    "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
+      _id, title, "slug": slug.current, recordType, date
+    },
     "relatedArea": relatedArea->{ name, "slug": slug.current },
     "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }
   }

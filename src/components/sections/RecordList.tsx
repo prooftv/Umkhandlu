@@ -12,9 +12,11 @@ type Record = {
   summary?: string;
   status?: string;
   approvedBy?: { firstName: string; lastName: string; role?: string };
-  fileUrl?: string;
+  evidence?: { _key: string; title: string; url?: string }[];
   externalUrl?: string;
   source?: string;
+  originNotice?: { title: string; slug: string; noticeType: string };
+  parentRecord?: { title: string; slug: string; recordType: string };
 };
 
 type Props = {
@@ -108,14 +110,15 @@ export default function RecordList({ section }: Props) {
                     </div>
                   )}
                 </div>
-                {record.fileUrl && (
+                {record.evidence && record.evidence.length > 0 && (
                   <a
-                    href={record.fileUrl}
+                    href={record.evidence[0].url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary text-sm font-medium hover:text-primary shrink-0"
                   >
-                    📄 Download
+                    📎 {record.evidence.length} file
+                    {record.evidence.length > 1 ? 's' : ''}
                   </a>
                 )}
                 {record.externalUrl && (

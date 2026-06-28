@@ -84,6 +84,7 @@ export async function generateStaticParams() {
     : [];
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: page component with multiple conditional sections
 export default async function AreaPage(props: Props) {
   const { slug } = await props.params;
   const { data: area } = await sanityFetch({
@@ -119,7 +120,7 @@ export default async function AreaPage(props: Props) {
           <LocationPin
             lat={area.geopoint?.lat ?? -27.82}
             lng={area.geopoint?.lng ?? 30.05}
-            name={area.name}
+            name={area.name || ''}
             listingType="area"
           />
         </section>
@@ -146,7 +147,7 @@ export default async function AreaPage(props: Props) {
                           .fit('crop')
                           .url() as string
                       }
-                      alt={listing.image?.alt || listing.name}
+                      alt={listing.image?.alt || listing.name || ''}
                       width={400}
                       height={200}
                       className="object-cover w-full h-full"
@@ -255,7 +256,7 @@ export default async function AreaPage(props: Props) {
                             .fit('crop')
                             .url() as string
                         }
-                        alt={notice.image?.alt || notice.title}
+                        alt={notice.image?.alt || notice.title || ''}
                         width={256}
                         height={256}
                         className="object-cover w-full h-full aspect-square"
@@ -314,7 +315,7 @@ export default async function AreaPage(props: Props) {
                           .fit('crop')
                           .url() as string
                       }
-                      alt={program.image?.alt || program.title}
+                      alt={program.image?.alt || program.title || ''}
                       width={600}
                       height={280}
                       className="object-cover w-full h-full"
@@ -442,14 +443,15 @@ export default async function AreaPage(props: Props) {
                       {new Date(record.date).toLocaleDateString()}
                     </time>
                   )}
-                  {record.fileUrl && (
+                  {record.evidence && record.evidence.length > 0 && (
                     <a
-                      href={record.fileUrl}
+                      href={record.evidence[0].url || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary text-sm font-medium"
                     >
-                      Download →
+                      📎 {record.evidence.length} file
+                      {record.evidence.length > 1 ? 's' : ''}
                     </a>
                   )}
                 </div>
@@ -478,7 +480,7 @@ export default async function AreaPage(props: Props) {
                         .fit('max')
                         .url() as string
                     }
-                    alt={campaign.image?.alt || campaign.title}
+                    alt={campaign.image?.alt || campaign.title || ''}
                     width={600}
                     height={400}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

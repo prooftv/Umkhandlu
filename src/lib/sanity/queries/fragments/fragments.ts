@@ -605,9 +605,11 @@ export const recordFragment = /* groq */ `
   summary,
   status,
   "approvedBy": approvedBy->{ firstName, lastName, role },
-  "fileUrl": file.asset->url,
+  evidence[]{ _key, title, "url": asset->url },
   externalUrl,
   source,
+  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },
+  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },
 `;
 
 export const recordListSectionFragment = /* groq */ `

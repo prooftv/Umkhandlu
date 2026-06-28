@@ -106,11 +106,40 @@ export default defineType({
       type: 'blockContent',
     }),
     defineField({
-      name: 'file',
-      title: 'Attached File (PDF)',
-      type: 'file',
-      description: 'Upload a PDF or document if available.',
+      name: 'originNotice',
+      title: 'Origin Notice',
+      type: 'reference',
+      to: [{ type: 'notice' }],
+      description: 'The notice (e.g. meeting) that produced this record.',
+    }),
+    defineField({
+      name: 'parentRecord',
+      title: 'Parent Record',
+      type: 'reference',
+      to: [{ type: 'record' }],
+      description:
+        'The record this was produced from (e.g. minutes → resolution).',
+    }),
+    defineField({
+      name: 'evidence',
+      title: 'Evidence & Attachments',
+      type: 'array',
+      description: 'Petitions, attendance registers, signatures, photos, PDFs.',
       hidden: ({ parent }) => parent?.recordType === 'external-resource',
+      of: [
+        {
+          type: 'file',
+          options: { accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png,.webp' },
+          fields: [
+            defineField({
+              name: 'title',
+              type: 'string',
+              title: 'Document Title',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+        },
+      ],
     }),
     defineField({
       name: 'externalUrl',
