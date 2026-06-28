@@ -533,7 +533,7 @@ function SmmeCard({ smme }: { smme: SmmeEntry }) {
     >
       <summary className="flex items-start gap-4 p-4 cursor-pointer hover:bg-gray-50 transition-colors">
         {smme.logoUrl && (
-          // biome-ignore lint/performance/noImgElement: external URL not compatible with next/image
+          // biome-ignore lint/performance/noImgElement: external URL not optimizable via next/image
           <img
             src={smme.logoUrl}
             alt={smme.name}
@@ -927,7 +927,47 @@ export async function generateStaticParams() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: page component with multiple conditional sections
+function CampaignParticipation({ campaign }: { campaign: CampaignData }) {
+  if (campaign.campaignType !== 'csr' || campaign.status !== 'active')
+    return null;
+  return (
+    <div className="mb-8 mt-8 pt-8 border-t border-gray-200">
+      <h2 className="text-xl font-bold mb-2">
+        Community Feedback & Participation
+      </h2>
+      <p className="text-sm text-gray-500 mb-4">
+        Report issues, ask questions, or share observations about this project.
+        Your submission will be forwarded to the project coordination team.
+      </p>
+      <PublicCommentForm
+        noticeId={campaign._id}
+        noticeTitle={campaign.title ?? ''}
+      />
+    </div>
+  );
+}
+
+function CampaignContact({
+  contactPerson,
+}: {
+  contactPerson: CampaignData['contactPerson'];
+}) {
+  if (!contactPerson) return null;
+  return (
+    <div className="mb-8">
+      <Link
+        href={`/people/${contactPerson.slug}`}
+        className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+      >
+        👤 Contact: {contactPerson.firstName} {contactPerson.lastName}
+        {contactPerson.role && (
+          <span className="text-gray-400">— {contactPerson.role}</span>
+        )}
+      </Link>
+    </div>
+  );
+}
+
 export default async function CampaignPage(props: Props) {
   const { slug } = await props.params;
   const { data: campaign } = await sanityFetch({
@@ -962,22 +1002,7 @@ export default async function CampaignPage(props: Props) {
       <CampaignHeader campaign={campaign} config={config} />
       <CampaignSponsor sponsor={campaign.sponsor} />
 
-      {campaign.contactPerson && (
-        <div className="mb-8">
-          <Link
-            href={`/people/${campaign.contactPerson.slug}`}
-            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
-          >
-            👤 Contact: {campaign.contactPerson.firstName}{' '}
-            {campaign.contactPerson.lastName}
-            {campaign.contactPerson.role && (
-              <span className="text-gray-400">
-                — {campaign.contactPerson.role}
-              </span>
-            )}
-          </Link>
-        </div>
-      )}
+      <CampaignContact contactPerson={campaign.contactPerson} />
 
       {/* Cover image */}
       <CampaignCover campaign={campaign} />
@@ -1039,7 +1064,6 @@ export default async function CampaignPage(props: Props) {
         }
       />
 
-      {/* Impact summary */}
       {campaign.impactSummary && (
         <div className="mb-8 p-6 bg-green-50 rounded-xl border border-green-100">
           <h2 className="text-xl font-bold mb-2 text-green-800">
@@ -1069,23 +1093,7 @@ export default async function CampaignPage(props: Props) {
       {/* Relations */}
       <CampaignRelations campaign={campaign} />
 
-      {/* Public Participation — community feedback for initiative projects */}
-      {campaign.campaignType === 'csr' && campaign.status === 'active' && (
-        <div className="mb-8 mt-8 pt-8 border-t border-gray-200">
-          <h2 className="text-xl font-bold mb-2">
-            Community Feedback & Participation
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            Report issues, ask questions, or share observations about this
-            project. Your submission will be forwarded to the project
-            coordination team.
-          </p>
-          <PublicCommentForm
-            noticeId={campaign._id}
-            noticeTitle={campaign.title ?? ''}
-          />
-        </div>
-      )}
+      <CampaignParticipation campaign={campaign} />
 
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={campaign.title || ''} />

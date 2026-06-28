@@ -171,7 +171,43 @@ export async function generateStaticParams() {
   return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: page component with multiple conditional sections
+function ListingCover({ listing }: { listing: ListingData }) {
+  if (!listing.image?.asset?._ref) return null;
+  return (
+    <div className="mb-8 rounded-2xl overflow-hidden">
+      <Image
+        src={
+          urlForImage(listing.image)
+            ?.width(1200)
+            .height(600)
+            .fit('crop')
+            .url() as string
+        }
+        alt={listing.image?.alt || listing.name || ''}
+        width={1200}
+        height={600}
+        className="w-full object-cover"
+      />
+    </div>
+  );
+}
+
+function ListingMap({ listing }: { listing: ListingData }) {
+  if (!listing.geopoint?.lat || !listing.geopoint?.lng) return null;
+  return (
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-4">Location</h2>
+      <LocationPin
+        lat={listing.geopoint.lat}
+        lng={listing.geopoint.lng}
+        name={listing.name || ''}
+        listingType={listing.listingType ?? undefined}
+        verifiedByInduna={listing.verifiedByInduna ?? undefined}
+      />
+    </div>
+  );
+}
+
 export default async function ListingPage(props: Props) {
   const { slug } = await props.params;
   const { data: listing } = await sanityFetch({
@@ -205,24 +241,7 @@ export default async function ListingPage(props: Props) {
       />
       <ListingHeader listing={listing} />
 
-      {/* Cover image */}
-      {listing.image?.asset?._ref && (
-        <div className="mb-8 rounded-2xl overflow-hidden">
-          <Image
-            src={
-              urlForImage(listing.image)
-                ?.width(1200)
-                .height(600)
-                .fit('crop')
-                .url() as string
-            }
-            alt={listing.image?.alt || listing.name || ''}
-            width={1200}
-            height={600}
-            className="w-full object-cover"
-          />
-        </div>
-      )}
+      <ListingCover listing={listing} />
 
       {/* Details grid */}
       <ListingDetails listing={listing} />
@@ -234,19 +253,7 @@ export default async function ListingPage(props: Props) {
         </div>
       )}
 
-      {/* Map */}
-      {listing.geopoint?.lat && listing.geopoint?.lng && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Location</h2>
-          <LocationPin
-            lat={listing.geopoint.lat}
-            lng={listing.geopoint.lng}
-            name={listing.name || ''}
-            listingType={listing.listingType ?? undefined}
-            verifiedByInduna={listing.verifiedByInduna ?? undefined}
-          />
-        </div>
-      )}
+      <ListingMap listing={listing} />
 
       {/* Gallery */}
       {listing.images && listing.images.length > 0 && (
