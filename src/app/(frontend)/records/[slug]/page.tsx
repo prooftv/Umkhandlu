@@ -33,8 +33,10 @@ const typeLabels: Record<string, string> = {
 };
 
 const statusLabels: Record<string, { label: string; variant: string }> = {
+  adopted: { label: '✓ Adopted', variant: 'default' },
   approved: { label: '✓ Approved', variant: 'default' },
   pending: { label: '⏳ Pending', variant: 'secondary' },
+  open: { label: '◯ Open', variant: 'secondary' },
   rejected: { label: '✗ Rejected', variant: 'destructive' },
   resolved: { label: '✓ Resolved', variant: 'default' },
 };

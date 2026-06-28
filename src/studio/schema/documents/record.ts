@@ -79,16 +79,15 @@ export default defineType({
       type: 'string',
       options: {
         list: [
+          { title: 'Adopted', value: 'adopted' },
           { title: 'Approved', value: 'approved' },
           { title: 'Pending', value: 'pending' },
+          { title: 'Open', value: 'open' },
           { title: 'Rejected', value: 'rejected' },
           { title: 'Resolved', value: 'resolved' },
         ],
       },
-      description: 'For land allocations and dispute resolutions.',
-      hidden: ({ parent }) =>
-        parent?.recordType !== 'land-allocation' &&
-        parent?.recordType !== 'dispute-resolution',
+      description: 'Status of this record.',
     }),
     defineField({
       name: 'approvedBy',
@@ -98,7 +97,9 @@ export default defineType({
       description: 'The Inkosi or authority who approved this decision.',
       hidden: ({ parent }) =>
         parent?.recordType !== 'land-allocation' &&
-        parent?.recordType !== 'dispute-resolution',
+        parent?.recordType !== 'dispute-resolution' &&
+        parent?.recordType !== 'community-decision' &&
+        parent?.recordType !== 'resolution',
     }),
     defineField({
       name: 'content',

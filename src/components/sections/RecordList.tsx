@@ -41,8 +41,10 @@ const statusColors: globalThis.Record<
   string,
   'default' | 'secondary' | 'destructive' | 'outline'
 > = {
+  adopted: 'default',
   approved: 'default',
   pending: 'outline',
+  open: 'secondary',
   rejected: 'destructive',
   resolved: 'secondary',
 };
