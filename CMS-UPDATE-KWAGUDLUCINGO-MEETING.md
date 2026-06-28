@@ -1,98 +1,145 @@
-# CMS Update — KwaGudlucingo Community Meeting (24 June 2026)
+# CMS UPDATE — KwaGudlucingo Community Meeting
 
-Governance lifecycle: Notice → Record (minutes) → Record (resolution)
+**Meeting Date:** 27 June 2026
+
+**Location:** Umndozo Community Hall, KwaGudlucingo (Khathide Traditional Council)
 
 ---
 
-## 1. Notice (Meeting Announcement)
+## Information Transformation
+
+```
+Community Notice
+        │
+        ▼
+Meeting Minutes (Record)
+        │
+        ├──────────────┬──────────────────────┐
+        ▼              ▼                      ▼
+Governance        Community Safety      Infrastructure
+Resolution        Resolution            Record
+```
+
+Every item below is an existing Umkhandlu document.
+
+No new schemas.
+
+No code changes.
+
+---
+
+## 1. COMMUNITY NOTICE
 
 > Studio → Community Notices → Create
 
+### Basic Information
+
 | Field | Value |
 |---|---|
-| Title | Community Meeting — KwaGudlucingo Headmanship & Safety |
-| Slug | `community-meeting-kwagudlucingo-headmanship-safety` |
-| Type | Meeting |
-| Date | 2026-06-24 |
-| Short Description | Community meeting at Umndozo, isigodi KwaGudlucingo. Agenda: recognition of KwaGudlucingo as a separate headmanship under Khathide Traditional Council, and community safety concerns including targeted crime against women households. |
-| Related Area | Mndozo Traditional Area |
+| Title | Community Meeting — KwaGudlucingo Governance, Community Safety & Infrastructure |
+| Slug | `community-meeting-kwagudlucingo-governance-community-safety-27-june-2026` |
+| Notice Type | Meeting |
+| Status | Completed |
+| Date | 2026-06-27 |
+| Related Area | KwaGudlucingo, Mndozo Traditional Area |
 | Pinned | Yes |
 
-### Full Content (blockContent)
+### Short Description
 
-Meeting convened by the informal council of KwaGudlucingo (previous temporary headmen) at Umndozo community hall.
+Community meeting convened by the informal council of KwaGudlucingo to discuss governance representation, community safety concerns and local infrastructure affecting residents.
 
-**Agenda Items:**
+### Full Content
 
-1. Governance — Recognition of KwaGudlucingo as a separate Isigodi with its own Induna
-2. Community Safety — Targeted crime against women-headed households (3 consecutive days pattern)
-3. Infrastructure — Absence of street lighting (Apollo lights) contributing to unsafe conditions
+The informal council of KwaGudlucingo, consisting largely of previous temporary headmen, convened a community meeting at Umndozo Community Hall.
+
+The purpose of the meeting was to discuss matters affecting the community and to consider future governance arrangements for KwaGudlucingo.
+
+**Agenda**
+
+1. Recognition of KwaGudlucingo as a separate Isigodi with its own recognised Induna.
+2. Community safety concerns affecting women-headed households.
+3. Infrastructure concerns relating to the absence of Apollo street lighting.
+
+This notice serves as the originating governance event from which institutional records were produced.
 
 ---
 
-## 2. Record — Meeting Minutes
+## 2. DOCUMENT & RECORD — Meeting Minutes
 
 > Studio → Documents & Records → Create
 
+### Basic Information
+
 | Field | Value |
 |---|---|
-| Title | Minutes — KwaGudlucingo Community Meeting, 24 June 2026 |
-| Slug | `minutes-kwagudlucingo-community-meeting-24-june-2026` |
-| Type | Meeting Minutes |
-| Date | 2026-06-24 |
-| Summary | Minutes of the KwaGudlucingo community meeting covering headmanship recognition, community safety, and infrastructure concerns. |
-| Origin Notice | → Community Meeting — KwaGudlucingo Headmanship & Safety |
-| Related Area | Mndozo Traditional Area |
-| Verification Note | Attended and recorded by Unami Foundation representative, 24 June 2026 |
+| Title | Minutes — KwaGudlucingo Community Meeting (27 June 2026) |
+| Slug | `minutes-kwagudlucingo-community-meeting-27-june-2026` |
+| Record Type | Meeting Minutes |
+| Date | 2026-06-27 |
+| Origin Notice | Community Meeting — KwaGudlucingo Governance, Community Safety & Infrastructure |
+| Related Area | KwaGudlucingo (Mndozo Traditional Area) |
+| Summary | Official minutes recording governance discussions, community safety concerns and infrastructure matters affecting KwaGudlucingo. |
+| Verification Note | Attended and documented by a Unami Foundation representative. |
 
-### Full Content (blockContent)
+### Full Content
 
-**1. Governance — Headmanship Recognition**
+#### GOVERNANCE
 
-Background:
-- KwaGudlucingo has historically been without a formally recognised Induna
-- Community believed they fell under Induna Dlamini (Umndozo omdala)
-- According to Inkosi Kubheka of Khathide Traditional Council and COGTA, KwaGudlucingo was designated under Induna Mloi of Fairview (across Umzinyathi)
-- Neither arrangement resulted in local representation
-- The informal council (previous temporary headmen) convened this meeting
+**Background**
 
-Discussion:
-- Community expressed concern at being left without governance representation
-- Inkosi Kubheka (not present) has requested a petition from the community
-- Petition to be submitted to COGTA for formal recognition of KwaGudlucingo as a separate Isigodi
+Community members explained that KwaGudlucingo has historically been without a formally recognised local Induna.
 
-Resolution:
-- Community resolves to support petition for recognition of KwaGudlucingo headmanship
-- Petition circulated and signed at the meeting
-- Petition to be submitted to Inkosi Kubheka for forwarding to COGTA
+For many years residents believed that KwaGudlucingo formed part of Umndozo under the leadership of Induna Dlamini.
 
----
+During the meeting it was explained that, according to Inkosi Kubheka of the Khathide Traditional Council and guidance received from COGTA, KwaGudlucingo falls under Induna Mloi of Fairview across the Umzinyathi River.
 
-**2. Community Safety — Targeted Crime**
+Community members expressed concern that neither arrangement resulted in effective local governance representation within KwaGudlucingo.
 
-Concern:
-- Women-headed households in KwaGudlucingo are being targeted by criminals
-- Attacks occur in a pattern — 3 consecutive days
-- Contributing factors: no street/Apollo lights, area is dark at night
-- Communication barriers: not all households have airtime or data bundles to call for help
+The meeting was convened by the informal council consisting largely of previous temporary headmen serving the community.
 
-Suggested solutions discussed:
-- Community Policing Forum (CPF) engagement
-- Community watch groups (e.g. Abaqondisi model)
-- Use of distinctive whistles as an alert system (works without airtime/data)
+Community members advised that Inkosi Kubheka had requested the community to prepare a petition supporting formal recognition of KwaGudlucingo as a separate Isigodi with its own recognised headmanship.
 
-Issues raised with suggested solutions:
-- CPF arrangements have their own challenges (not elaborated — noted for follow-up)
-- Community watch groups require coordination and trust
-- Whistle system agreed as immediate low-cost measure
+**Discussion**
+
+The community discussed the need for local governance representation.
+
+Residents agreed that KwaGudlucingo should have its own recognised Induna serving the community directly.
+
+The meeting further agreed that a petition supporting recognition should be signed by community members.
+
+During the meeting the petition was circulated and signed by members of the community.
+
+It was confirmed that the signed petition would be handed to Inkosi Kubheka, who would submit it to COGTA for consideration.
 
 ---
 
-**3. Infrastructure — Street Lighting**
+#### COMMUNITY SAFETY
 
-- The absence of Apollo/street lights was identified as a direct contributor to crime
-- Dark conditions enable criminals to operate undetected
-- Raised as a priority for municipal/ward engagement (Newcastle LM, Ward 7)
+Residents raised concerns regarding targeted criminal activity affecting women-headed households.
+
+Concerns raised included:
+
+- repeated criminal incidents occurring over consecutive days;
+- inadequate street lighting;
+- limited access to airtime or mobile data during emergencies.
+
+Possible responses discussed included:
+
+- Community Policing Forum engagement;
+- community watch initiatives;
+- a distinctive whistle alert system.
+
+Community members noted that whistle alerts provide an immediate and low-cost communication mechanism without relying on mobile phones.
+
+---
+
+#### INFRASTRUCTURE
+
+Residents identified the absence of Apollo street lighting as contributing directly to public safety risks.
+
+The lack of lighting was identified as one of the factors enabling criminal activity during the night.
+
+The matter was recorded for future engagement with Newcastle Local Municipality and other relevant stakeholders.
 
 ---
 
@@ -100,118 +147,178 @@ Issues raised with suggested solutions:
 
 | Document Title | File |
 |---|---|
-| Attendance Register — 24 June 2026 | *(upload when available)* |
+| Attendance Register | *(upload when available)* |
 | Meeting Agenda | *(upload when available)* |
+| Meeting Photographs | *(upload when available)* |
+| Signed Petition | *(upload when available)* |
 
 ---
 
-## 3. Record — Resolution (Headmanship Petition)
+## 3. DOCUMENT & RECORD — Governance Resolution
 
 > Studio → Documents & Records → Create
 
+### Basic Information
+
 | Field | Value |
 |---|---|
-| Title | Resolution — Petition for KwaGudlucingo Headmanship Recognition |
-| Slug | `resolution-petition-kwagudlucingo-headmanship-recognition` |
-| Type | Community Decision |
-| Date | 2026-06-24 |
-| Summary | Community resolves to petition Inkosi Kubheka and COGTA for formal recognition of KwaGudlucingo as a separate Isigodi with its own headmanship. |
-| Parent Record | → Minutes — KwaGudlucingo Community Meeting, 24 June 2026 |
-| Related Area | Mndozo Traditional Area |
-| Verification Note | Petition circulated and signed at community meeting, 24 June 2026 |
+| Title | Resolution — Petition for Recognition of KwaGudlucingo as a Separate Isigodi |
+| Slug | `resolution-petition-kwagudlucingo-isigodi-recognition` |
+| Record Type | Community Decision |
+| Parent Record | Minutes — KwaGudlucingo Community Meeting (27 June 2026) |
+| Date | 2026-06-27 |
+| Related Area | KwaGudlucingo |
 
-### Full Content (blockContent)
+### Full Content
 
-The community of KwaGudlucingo, meeting on 24 June 2026, resolves:
+After discussion, the community unanimously resolved:
 
-1. To support the establishment of KwaGudlucingo as a formally recognised Isigodi under the Khathide Traditional Council
-2. To petition Inkosi Kubheka for the appointment of a recognised Induna for KwaGudlucingo
-3. To submit the signed petition to COGTA through the office of Inkosi Kubheka
-4. That the community has been without formal representation and this situation must be resolved
+1. To support the formal recognition of KwaGudlucingo as a separate Isigodi under the Khathide Traditional Council.
+2. To support the appointment of a formally recognised Induna serving KwaGudlucingo.
+3. To prepare and endorse a community petition supporting the recognition process.
+4. The petition was circulated during the meeting and signed by community members present.
+5. The signed petition will be handed to Inkosi Kubheka, who will submit the petition to COGTA as requested for consideration under the applicable traditional leadership recognition processes.
 
-This resolution was adopted by community consensus at the meeting.
+The resolution was adopted by community consensus.
+
+### Status
+
+Adopted
 
 ### Evidence & Attachments
 
 | Document Title | File |
 |---|---|
-| Community Petition — KwaGudlucingo Recognition | *(upload signed petition scan)* |
-| Community Signatures | *(upload signature pages)* |
+| Signed Community Petition | *(upload when available)* |
+| Community Signature Pages | *(upload when available)* |
 
 ---
 
-## 4. Record — Safety Resolution (Whistle System)
+## 4. DOCUMENT & RECORD — Community Safety Resolution
 
 > Studio → Documents & Records → Create
+
+### Basic Information
 
 | Field | Value |
 |---|---|
 | Title | Resolution — Community Safety Whistle Alert System |
 | Slug | `resolution-community-safety-whistle-alert-system` |
-| Type | Community Decision |
-| Date | 2026-06-24 |
-| Summary | Community agrees to implement a distinctive whistle alert system for immediate safety communication, addressing crime targeting women households. |
-| Parent Record | → Minutes — KwaGudlucingo Community Meeting, 24 June 2026 |
-| Related Area | Mndozo Traditional Area |
-| Verification Note | Agreed at community meeting, 24 June 2026 |
+| Record Type | Community Decision |
+| Parent Record | Minutes — KwaGudlucingo Community Meeting (27 June 2026) |
+| Date | 2026-06-27 |
+| Related Area | KwaGudlucingo |
 
-### Full Content (blockContent)
+### Full Content
 
-Given:
-- Targeted crime against women-headed households occurring in 3-day patterns
-- Absence of street lighting making the area unsafe at night
-- Not all households have airtime or data to make emergency calls
+Following discussion regarding community safety, the meeting resolved:
 
-The community resolves:
-1. To adopt a distinctive whistle system as an immediate alert mechanism
-2. Whistles to be used when a household is under threat
-3. Neighbouring households to respond to whistle alerts
-4. This serves as an interim measure while CPF and community watch arrangements are explored
+1. To adopt a distinctive whistle alert system as an immediate emergency communication mechanism.
+2. Households hearing the agreed whistle signal should provide immediate assistance or alert neighbouring residents.
+3. The whistle system will serve as an interim community safety measure while broader Community Policing Forum and community watch initiatives continue to be explored.
+
+The resolution was adopted by community consensus.
+
+### Status
+
+Adopted
 
 ---
 
-## 5. Notice — Infrastructure Alert (optional)
+## 5. DOCUMENT & RECORD — Infrastructure Record
 
-> Studio → Community Notices → Create
+> Studio → Documents & Records → Create
+
+### Basic Information
 
 | Field | Value |
 |---|---|
-| Title | Alert — No Street Lighting in KwaGudlucingo (Safety Risk) |
-| Slug | `alert-no-street-lighting-kwagudlucingo-safety-risk` |
-| Type | Alert |
-| Date | 2026-06-24 |
-| Short Description | KwaGudlucingo area has no Apollo/street lights. Identified as a contributing factor to targeted crime against women households. Raised for Ward 7 municipal engagement. |
-| Related Area | Mndozo Traditional Area |
+| Title | Infrastructure Record — Absence of Apollo Street Lighting, KwaGudlucingo |
+| Slug | `infrastructure-record-apollo-street-lighting-kwagudlucingo` |
+| Record Type | Report |
+| Parent Record | Minutes — KwaGudlucingo Community Meeting (27 June 2026) |
+| Date | 2026-06-27 |
+| Related Area | KwaGudlucingo |
+
+### Full Content
+
+During the community meeting, residents identified the absence of Apollo street lighting throughout KwaGudlucingo as a significant infrastructure concern.
+
+Community members agreed that poor lighting contributes directly to public safety risks, particularly affecting women-headed households during evening and night-time hours.
+
+This institutional record documents the concern arising from the meeting and establishes a persistent governance record for future engagement with Newcastle Local Municipality, Ward 7 leadership and other relevant stakeholders.
+
+No public infrastructure notice has been issued at this stage.
+
+### Status
+
+Open
+
+### Future Stakeholders
+
+- Newcastle Local Municipality
+- Ward 7 Councillor
+- Technical Services
+- Khathide Traditional Council
 
 ---
 
-## Governance Lineage (what connects to what)
+## INFORMATION LINEAGE
 
 ```
-Notice: Community Meeting — KwaGudlucingo Headmanship & Safety
-  │
-  └── Record (minutes): Minutes — KwaGudlucingo Community Meeting
+Community Notice
+Community Meeting — KwaGudlucingo Governance, Community Safety & Infrastructure
         │
-        ├── Record (community-decision): Resolution — Petition for Headmanship
+        ▼
+Meeting Minutes
+(Governance Record)
         │
-        └── Record (community-decision): Resolution — Whistle Alert System
+        ├──────────────────────┬────────────────────────┐
+        │                      │                        │
+        ▼                      ▼                        ▼
+Governance               Community Safety      Infrastructure
+Resolution               Resolution            Record
+        │
+        ▼
+Signed Community Petition
+        │
+        ▼
+Petition Handed to Inkosi Kubheka
+        │
+        ▼
+Submission by Inkosi Kubheka to COGTA
+        │
+        ▼
+COGTA Acknowledgement
+        │
+        ▼
+COGTA Assessment
+        │
+        ▼
+Recognition Decision
+        │
+        ▼
+Recognition of KwaGudlucingo as a Separate Isigodi
+        │
+        ▼
+Appointment of a Recognised Induna
+        │
+        ▼
+Permanent Institutional Memory
 ```
-
-All items share `relatedArea: Mndozo Traditional Area` so they appear on the area page.
-
-The notice detail page will automatically show "Institutional Records" linking to the minutes.
-The minutes detail page will show "Origin Notice" and "Produced Records" (both resolutions).
-Each resolution shows "Produced From" linking back to the minutes.
 
 ---
 
-## Future records (as the process unfolds)
+## Why This Matters
 
-| When | Record Type | Parent Record | Title |
-|---|---|---|---|
-| Petition submitted to Inkosi | Community Decision | Resolution — Petition | Petition Submitted to Inkosi Kubheka |
-| Inkosi submits to COGTA | External Resource | above | COGTA Submission — KwaGudlucingo Recognition |
-| COGTA acknowledges | External Resource | above | COGTA Acknowledgement — Reference No. [X] |
-| COGTA decides | Resolution | above | COGTA Decision — KwaGudlucingo Recognition |
-| CPF engagement happens | Report | Minutes | CPF Engagement Report — KwaGudlucingo |
-| Municipality responds re: lights | Project Outcome | Minutes | NLM Response — Street Lighting KwaGudlucingo |
+This real-world example demonstrates the operating system exactly as designed. A single governance event (the meeting) generates a Notice, which produces a Meeting Minutes Record. That record, in turn, produces multiple child records: a governance decision, a community safety decision, and an infrastructure concern.
+
+Each of those records can later generate new records — petitions, submissions, municipal engagements, external acknowledgements, and formal decisions — without changing the underlying architecture.
+
+Information is transformed, not duplicated. Every institutional artefact retains its lineage, creating a persistent and traceable history of governance that can be followed from the originating notice through to eventual outcomes.
+
+**Key architectural note:** The Infrastructure Concern is a Record, not a Notice. The meeting did not issue a public infrastructure notice — it produced an institutional record documenting a concern. That record can later produce a Notice, a Municipal Engagement Record, or a Project Record when the governance process advances. This preserves the transformation principle:
+
+- **Notices** initiate or communicate.
+- **Meetings** produce Records.
+- **Records** produce Decisions, Outcomes, Reports, Projects, External Submissions, or future Notices.
