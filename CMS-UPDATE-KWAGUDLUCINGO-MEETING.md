@@ -2,7 +2,7 @@
 
 **Meeting Date:** 27 June 2026
 
-**Location:** Umndozo Community Hall, KwaGudlucingo (Khathide Traditional Council)
+**Location:** Soccer ground opposite Izazi High School, KwaGudlucingo (Khathide Traditional Council)
 
 ---
 
@@ -50,7 +50,7 @@ Community meeting convened by the informal council of KwaGudlucingo to discuss g
 
 ### Full Content
 
-The informal council of KwaGudlucingo, consisting largely of previous temporary headmen, convened a community meeting at Umndozo Community Hall.
+The informal council of KwaGudlucingo, consisting largely of previous temporary headmen, convened a community meeting at the soccer ground opposite Izazi High School.
 
 The purpose of the meeting was to discuss matters affecting the community and to consider future governance arrangements for KwaGudlucingo.
 
