@@ -150,6 +150,39 @@ function RecordMeta({ record }: { record: RecordData }) {
   );
 }
 
+type ChildRecord = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  recordType: string | null;
+  date: string | null;
+  status: string | null;
+  childRecords?: ChildRecord[] | null;
+};
+
+function RecordChildNode({ child }: { child: ChildRecord }) {
+  return (
+    <li>
+      <Link
+        href={`/records/${child.slug}`}
+        className="text-sm text-primary hover:underline"
+      >
+        {typeLabels[child.recordType ?? ''] || child.recordType} → {child.title}
+      </Link>
+      {child.status && (
+        <span className="text-xs text-gray-400 ml-1">— {child.status}</span>
+      )}
+      {child.childRecords && child.childRecords.length > 0 && (
+        <ul className="ml-4 mt-1 space-y-1 border-l border-amber-100 pl-3">
+          {child.childRecords.map((grandchild) => (
+            <RecordChildNode key={grandchild._id} child={grandchild} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+
 function RecordLineage({ record }: { record: RecordData }) {
   const hasOrigin = record.originNotice;
   const hasParent = record.parentRecord;
@@ -189,15 +222,7 @@ function RecordLineage({ record }: { record: RecordData }) {
           <p className="text-xs text-gray-500 mb-2">Produced Records</p>
           <ul className="space-y-1">
             {record.childRecords.map((child) => (
-              <li key={child._id}>
-                <Link
-                  href={`/records/${child.slug}`}
-                  className="text-sm text-primary hover:underline"
-                >
-                  {typeLabels[child.recordType ?? ''] || child.recordType} →{' '}
-                  {child.title}
-                </Link>
-              </li>
+              <RecordChildNode key={child._id} child={child as ChildRecord} />
             ))}
           </ul>
         </div>

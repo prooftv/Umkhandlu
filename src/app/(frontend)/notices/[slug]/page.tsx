@@ -15,6 +15,41 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+type AuditRecord = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  recordType: string | null;
+  date: string | null;
+  status: string | null;
+  childRecords?: AuditRecord[] | null;
+};
+
+function AuditNode({ record }: { record: AuditRecord }) {
+  return (
+    <div className="ml-4 border-l-2 border-amber-200 pl-3 py-0.5">
+      <Link
+        href={`/records/${record.slug}`}
+        className="text-sm font-medium text-primary hover:underline"
+      >
+        📄 {record.title}
+      </Link>
+      <span className="text-xs text-gray-400 ml-2">
+        {record.recordType}
+        {record.status && ` — ${record.status}`}
+        {record.date && ` — ${new Date(record.date).toLocaleDateString()}`}
+      </span>
+      {record.childRecords && record.childRecords.length > 0 && (
+        <div className="mt-1 space-y-0.5">
+          {record.childRecords.map((child) => (
+            <AuditNode key={child._id} record={child} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const { data } = await sanityFetch({
@@ -125,46 +160,7 @@ export default async function NoticePage(props: Props) {
               )}
             </div>
             {notice.producedRecords.map((record) => (
-              <div
-                key={record._id}
-                className="ml-4 border-l-2 border-amber-200 pl-3"
-              >
-                <Link
-                  href={`/records/${record.slug}`}
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  📄 {record.title}
-                </Link>
-                <span className="text-xs text-gray-400 ml-2">
-                  {record.recordType}
-                  {record.status && ` — ${record.status}`}
-                  {record.date &&
-                    ` — ${new Date(record.date).toLocaleDateString()}`}
-                </span>
-                {record.childRecords && record.childRecords.length > 0 && (
-                  <div className="mt-1 space-y-1">
-                    {record.childRecords.map((child) => (
-                      <div
-                        key={child._id}
-                        className="ml-4 border-l-2 border-amber-100 pl-3"
-                      >
-                        <Link
-                          href={`/records/${child.slug}`}
-                          className="text-sm font-medium text-primary hover:underline"
-                        >
-                          📄 {child.title}
-                        </Link>
-                        <span className="text-xs text-gray-400 ml-2">
-                          {child.recordType}
-                          {child.status && ` — ${child.status}`}
-                          {child.date &&
-                            ` — ${new Date(child.date).toLocaleDateString()}`}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <AuditNode key={record._id} record={record} />
             ))}
           </div>
         </div>

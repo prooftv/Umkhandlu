@@ -196,7 +196,13 @@ export const noticeDetailQuery = defineQuery(`
     "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
       _id, title, "slug": slug.current, recordType, date, status,
       "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-        _id, title, "slug": slug.current, recordType, date, status
+        _id, title, "slug": slug.current, recordType, date, status,
+        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
+          _id, title, "slug": slug.current, recordType, date, status,
+          "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
+            _id, title, "slug": slug.current, recordType, date, status
+          }
+        }
       }
     }
   }
@@ -280,7 +286,13 @@ export const recordDetailQuery = defineQuery(`
     "originNotice": originNotice->{ title, "slug": slug.current, noticeType },
     "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },
     "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-      _id, title, "slug": slug.current, recordType, date
+      _id, title, "slug": slug.current, recordType, date, status,
+      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
+        _id, title, "slug": slug.current, recordType, date, status,
+        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
+          _id, title, "slug": slug.current, recordType, date, status
+        }
+      }
     },
     "relatedArea": relatedArea->{ name, "slug": slug.current },
     "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }
