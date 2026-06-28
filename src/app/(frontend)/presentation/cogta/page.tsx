@@ -472,6 +472,35 @@ Permanent Institutional Memory`}
             ]}
           />
         </div>
+        <h3 className="text-lg font-bold mt-6 mb-3">
+          Governance Record Lineage Export
+        </h3>
+        <p>
+          The full governance record lineage is exportable as structured JSON
+          for COGTA reporting or integration with departmental systems:
+        </p>
+        <CodeBlock>
+          {`GET /api/governance/export?token=<TOKEN>
+→ Every notice that produced institutional records
+→ Full recursive tree: notice → minutes → resolutions → submissions
+→ Each record includes: type, status, date, evidence URLs, verification
+
+Filter by area: ?area=kwagudlucingo
+
+Example output:
+{
+  "title": "Community Meeting — KwaGudlucingo...",
+  "producedRecords": [
+    {
+      "title": "Minutes...",
+      "childRecords": [
+        { "title": "Resolution — Petition...", "status": "adopted" },
+        { "title": "Resolution — Safety...", "status": "adopted" }
+      ]
+    }
+  ]
+}`}
+        </CodeBlock>
       </Chapter>
 
       <Chapter number="7" title="Deployment Model">

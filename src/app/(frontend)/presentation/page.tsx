@@ -393,6 +393,23 @@ export default function PresentationPage() {
 → Relations: sponsor, relatedAreas[], noticeCount, developmentNoticeCount
 
 Filters: ?status=active  ?type=csr`}</CodeBlock>
+        <h3 className="text-lg font-bold mt-6 mb-3">
+          Governance Record Lineage Export
+        </h3>
+        <p>
+          The full governance record lineage — every notice and its produced
+          institutional records — is exportable as structured JSON for COGTA
+          reporting, PMU submissions, or external system integration:
+        </p>
+        <CodeBlock>{`GET /api/governance/export?token=<TOKEN>
+→ Notice: title, date, noticeType, relatedArea
+→ Produced Records (recursive tree, 4 levels deep):
+   → recordType, status, date, summary
+   → verificationNote
+   → evidence[] (title + URL)
+   → childRecords[] (same structure, nested)
+
+Filter by area: ?area=kwagudlucingo`}</CodeBlock>
       </Chapter>
 
       {/* Footer */}

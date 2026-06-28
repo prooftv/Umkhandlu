@@ -180,7 +180,8 @@ Permanent Institutional Memory`}
               'Local SMME & EPWP tracking',
               'Community feedback forms',
               'Verification records',
-              'Data export for PMU reporting',
+              'Data export for PMU & COGTA reporting',
+              'Governance record lineage export (JSON)',
             ]}
           />
           <Card
