@@ -318,7 +318,12 @@ function RecordCard({
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Badge variant="outline">{record.recordType}</Badge>
-          {record.status && <Badge variant="secondary">{record.status}</Badge>}
+          {record.status && (
+            <Badge variant="secondary">
+              {record.status.charAt(0).toUpperCase()}
+              {record.status.slice(1)}
+            </Badge>
+          )}
         </div>
         <h3 className="font-semibold">
           {record.slug ? (

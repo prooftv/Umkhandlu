@@ -34,6 +34,7 @@ export default defineType({
           { title: 'Public Notice', value: 'public-notice' },
           { title: 'Policy', value: 'policy' },
           { title: 'Report', value: 'report' },
+          { title: 'Infrastructure Concern', value: 'infrastructure-concern' },
           { title: 'Project Outcome', value: 'project-outcome' },
           { title: 'Community Decision', value: 'community-decision' },
           { title: 'External Resource', value: 'external-resource' },

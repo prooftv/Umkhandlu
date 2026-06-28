@@ -23,6 +23,7 @@ const typeLabels: Record<string, string> = {
   'public-notice': 'Public Notice',
   policy: 'Policy',
   report: 'Report',
+  'infrastructure-concern': 'Infrastructure Concern',
   'project-outcome': 'Project Outcome',
   'community-decision': 'Community Decision',
   'external-resource': 'External Resource',
@@ -60,7 +61,8 @@ function AuditNode({
         </Link>
         <p className="text-xs text-gray-400 mt-0.5">
           {typeLabels[record.recordType || ''] || record.recordType}
-          {record.status && ` • ${record.status}`}
+          {record.status &&
+            ` • ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
           {record.date &&
             ` • ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
         </p>

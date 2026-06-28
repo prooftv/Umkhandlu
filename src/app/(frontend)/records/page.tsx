@@ -19,6 +19,7 @@ const typeLabels: Record<string, string> = {
   'public-notice': 'Public Notice',
   policy: 'Policy',
   report: 'Report',
+  'infrastructure-concern': 'Infrastructure Concern',
   'project-outcome': 'Project Outcome',
   'community-decision': 'Community Decision',
   'external-resource': 'External Resource',
@@ -66,7 +67,8 @@ export default async function RecordsPage() {
                   </Badge>
                   {record.status && (
                     <Badge variant={statusVariants[record.status] || 'outline'}>
-                      {record.status}
+                      {record.status.charAt(0).toUpperCase()}
+                      {record.status.slice(1)}
                     </Badge>
                   )}
                 </div>

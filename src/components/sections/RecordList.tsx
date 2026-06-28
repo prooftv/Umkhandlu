@@ -35,6 +35,7 @@ const typeLabels: globalThis.Record<string, string> = {
   'external-resource': 'Resource',
   policy: 'Policy',
   report: 'Report',
+  'infrastructure-concern': 'Infrastructure Concern',
 };
 
 const statusColors: globalThis.Record<
@@ -99,7 +100,8 @@ export default function RecordList({ section }: Props) {
                   {record.status && (
                     <div className="flex items-center gap-2 mt-2">
                       <Badge variant={statusColors[record.status] || 'outline'}>
-                        {record.status}
+                        {record.status.charAt(0).toUpperCase()}
+                        {record.status.slice(1)}
                       </Badge>
                       {record.approvedBy && (
                         <span className="text-xs text-gray-500">
