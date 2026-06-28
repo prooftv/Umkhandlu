@@ -110,27 +110,63 @@ export default async function NoticePage(props: Props) {
       )}
 
       {notice.producedRecords && notice.producedRecords.length > 0 && (
-        <div className="mt-8 p-4 bg-amber-50 border border-amber-100 rounded-xl">
-          <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-3">
-            Institutional Records
+        <div className="mt-8 p-5 bg-amber-50 border border-amber-100 rounded-xl">
+          <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-4">
+            Governance Audit Trail
           </p>
-          <ul className="space-y-2">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-sm text-amber-800 font-medium mb-3">
+              <span>📢</span>
+              <span>{notice.title}</span>
+              {notice.date && (
+                <span className="text-xs text-gray-400">
+                  {new Date(notice.date).toLocaleDateString()}
+                </span>
+              )}
+            </div>
             {notice.producedRecords.map((record) => (
-              <li key={record._id}>
+              <div
+                key={record._id}
+                className="ml-4 border-l-2 border-amber-200 pl-3"
+              >
                 <Link
                   href={`/records/${record.slug}`}
                   className="text-sm font-medium text-primary hover:underline"
                 >
                   📄 {record.title}
                 </Link>
-                {record.date && (
-                  <span className="text-xs text-gray-400 ml-2">
-                    {new Date(record.date).toLocaleDateString()}
-                  </span>
+                <span className="text-xs text-gray-400 ml-2">
+                  {record.recordType}
+                  {record.status && ` — ${record.status}`}
+                  {record.date &&
+                    ` — ${new Date(record.date).toLocaleDateString()}`}
+                </span>
+                {record.childRecords && record.childRecords.length > 0 && (
+                  <div className="mt-1 space-y-1">
+                    {record.childRecords.map((child) => (
+                      <div
+                        key={child._id}
+                        className="ml-4 border-l-2 border-amber-100 pl-3"
+                      >
+                        <Link
+                          href={`/records/${child.slug}`}
+                          className="text-sm font-medium text-primary hover:underline"
+                        >
+                          📄 {child.title}
+                        </Link>
+                        <span className="text-xs text-gray-400 ml-2">
+                          {child.recordType}
+                          {child.status && ` — ${child.status}`}
+                          {child.date &&
+                            ` — ${new Date(child.date).toLocaleDateString()}`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 )}
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
 
