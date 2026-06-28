@@ -15,6 +15,19 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+const typeLabels: Record<string, string> = {
+  minutes: 'Meeting Minutes',
+  resolution: 'Resolution',
+  'land-allocation': 'Land Allocation',
+  'dispute-resolution': 'Dispute Resolution',
+  'public-notice': 'Public Notice',
+  policy: 'Policy',
+  report: 'Report',
+  'project-outcome': 'Project Outcome',
+  'community-decision': 'Community Decision',
+  'external-resource': 'External Resource',
+};
+
 type AuditRecord = {
   _id: string;
   title: string | null;
@@ -25,24 +38,43 @@ type AuditRecord = {
   childRecords?: AuditRecord[] | null;
 };
 
-function AuditNode({ record }: { record: AuditRecord }) {
+function AuditNode({
+  record,
+  isLast,
+}: {
+  record: AuditRecord;
+  isLast: boolean;
+}) {
+  const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
-    <div className="ml-4 border-l-2 border-amber-200 pl-3 py-0.5">
-      <Link
-        href={`/records/${record.slug}`}
-        className="text-sm font-medium text-primary hover:underline"
-      >
-        📄 {record.title}
-      </Link>
-      <span className="text-xs text-gray-400 ml-2">
-        {record.recordType}
-        {record.status && ` — ${record.status}`}
-        {record.date && ` — ${new Date(record.date).toLocaleDateString()}`}
+    <div className="relative pl-6">
+      <span className="absolute left-0 top-0 text-gray-300 text-xs font-mono select-none">
+        {isLast ? '└──' : '├──'}
       </span>
-      {record.childRecords && record.childRecords.length > 0 && (
-        <div className="mt-1 space-y-0.5">
-          {record.childRecords.map((child) => (
-            <AuditNode key={child._id} record={child} />
+      <div className="pb-2">
+        <Link
+          href={`/records/${record.slug}`}
+          className="text-sm font-medium text-primary hover:underline"
+        >
+          📄 {record.title}
+        </Link>
+        <p className="text-xs text-gray-400 mt-0.5">
+          {typeLabels[record.recordType || ''] || record.recordType}
+          {record.status && ` • ${record.status}`}
+          {record.date &&
+            ` • ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+        </p>
+      </div>
+      {hasChildren && (
+        <div
+          className={`${isLast ? '' : 'border-l border-gray-200'} ml-0 space-y-0`}
+        >
+          {record.childRecords?.map((child, i) => (
+            <AuditNode
+              key={child._id}
+              record={child}
+              isLast={i === (record.childRecords?.length ?? 0) - 1}
+            />
           ))}
         </div>
       )}
@@ -146,21 +178,31 @@ export default async function NoticePage(props: Props) {
 
       {notice.producedRecords && notice.producedRecords.length > 0 && (
         <div className="mt-8 p-5 bg-amber-50 border border-amber-100 rounded-xl">
-          <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-4">
+          <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-5">
             Governance Record Lineage
           </p>
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm text-amber-800 font-medium mb-3">
-              <span>📢</span>
-              <span>{notice.title}</span>
-              {notice.date && (
-                <span className="text-xs text-gray-400">
-                  {new Date(notice.date).toLocaleDateString()}
-                </span>
-              )}
-            </div>
-            {notice.producedRecords.map((record) => (
-              <AuditNode key={record._id} record={record} />
+
+          {/* Origin notice */}
+          <div className="mb-4">
+            <p className="text-sm font-medium text-amber-800">
+              📢 {notice.title}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {notice.noticeType &&
+                `${notice.noticeType.charAt(0).toUpperCase()}${notice.noticeType.slice(1)}`}
+              {notice.date &&
+                ` • ${new Date(notice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+            </p>
+          </div>
+
+          {/* Produced records tree */}
+          <div className="border-l border-amber-200 ml-2 pl-0 space-y-0">
+            {notice.producedRecords.map((record, i) => (
+              <AuditNode
+                key={record._id}
+                record={record}
+                isLast={i === (notice.producedRecords?.length ?? 0) - 1}
+              />
             ))}
           </div>
         </div>
