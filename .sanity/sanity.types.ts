@@ -12,7 +12,9 @@
  * ---------------------------------------------------------------------------------
  */
 
-// Source: schema.json
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
+// Source: .sanity/schema.json
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -69,9 +71,11 @@ export type OpenGraph = {
 
 export type MetaTag = {
   _type: "metaTag";
-  metaAttributes?: Array<{
-    _key: string;
-  } & MetaAttribute>;
+  metaAttributes?: Array<
+    {
+      _key: string;
+    } & MetaAttribute
+  >;
 };
 
 export type MetaAttribute = {
@@ -97,9 +101,11 @@ export type MenuItem = {
   text?: string;
   type?: "link" | "child-menu";
   link?: Link;
-  childMenu?: Array<{
-    _key: string;
-  } & MenuItem>;
+  childMenu?: Array<
+    {
+      _key: string;
+    } & MenuItem
+  >;
 };
 
 export type Button = {
@@ -109,36 +115,39 @@ export type Button = {
   link?: Link;
 };
 
-export type BlockContent = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal" | "h2" | "h3" | "h4" | "blockquote";
-  listItem?: "bullet" | "number";
-  markDefs?: Array<{
-    customLink?: Link;
-    _type: "customLink";
-    _key: string;
-  }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-} | {
-  asset?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-  };
-  hotspot?: SanityImageHotspot;
-  crop?: SanityImageCrop;
-  alt?: string;
-  _type: "image";
-  _key: string;
-}>;
+export type BlockContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h2" | "h3" | "h4" | "blockquote";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        customLink?: Link;
+        _type: "customLink";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      _key: string;
+    }
+>;
 
 export type TeamGrid = {
   _type: "teamGrid";
@@ -187,7 +196,16 @@ export type RichText = {
 export type RecordList = {
   _type: "recordList";
   heading?: string;
-  filterType?: "all" | "minutes" | "resolution" | "land-allocation" | "dispute-resolution" | "public-notice" | "policy" | "report" | "external-resource";
+  filterType?:
+    | "all"
+    | "minutes"
+    | "resolution"
+    | "land-allocation"
+    | "dispute-resolution"
+    | "public-notice"
+    | "policy"
+    | "report"
+    | "external-resource";
   limit?: number;
 };
 
@@ -219,7 +237,8 @@ export type PeopleGrid = {
   _type: "peopleGrid";
   heading?: string;
   description?: string;
-  filterType?: "all" | "inkosi" | "induna" | "council" | "youth" | "community" | "author";
+  filterType?:
+    "all" | "inkosi" | "induna" | "council" | "youth" | "community" | "author";
   limit?: number;
 };
 
@@ -301,7 +320,15 @@ export type ListingGrid = {
   _type: "listingGrid";
   heading?: string;
   description?: string;
-  filterType?: "all" | "school" | "clinic" | "business" | "accommodation" | "church" | "facility" | "area";
+  filterType?:
+    | "all"
+    | "school"
+    | "clinic"
+    | "business"
+    | "accommodation"
+    | "church"
+    | "facility"
+    | "area";
   limit?: number;
 };
 
@@ -396,9 +423,11 @@ export type MediaText = {
     alt?: string;
     _type: "image";
   };
-  buttons?: Array<{
-    _key: string;
-  } & Button>;
+  buttons?: Array<
+    {
+      _key: string;
+    } & Button
+  >;
 };
 
 export type Hero = {
@@ -417,18 +446,22 @@ export type Hero = {
     alt?: string;
     _type: "image";
   };
-  buttons?: Array<{
-    _key: string;
-  } & Button>;
+  buttons?: Array<
+    {
+      _key: string;
+    } & Button
+  >;
 };
 
 export type Cta = {
   _type: "cta";
   heading?: string;
   text?: string;
-  buttons?: Array<{
-    _key: string;
-  } & Button>;
+  buttons?: Array<
+    {
+      _key: string;
+    } & Button
+  >;
 };
 
 export type CommunityMap = {
@@ -438,7 +471,15 @@ export type CommunityMap = {
   centerLat?: number;
   centerLng?: number;
   zoom?: number;
-  filterType?: "all" | "school" | "clinic" | "business" | "accommodation" | "church" | "facility" | "area";
+  filterType?:
+    | "all"
+    | "school"
+    | "clinic"
+    | "business"
+    | "accommodation"
+    | "church"
+    | "facility"
+    | "area";
 };
 
 export type CampaignList = {
@@ -490,10 +531,23 @@ export type ConflictLog = {
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "campaign";
   };
-  field?: "progress" | "phase" | "workforce" | "timeline" | "status" | "budget" | "other";
+  field?:
+    | "progress"
+    | "phase"
+    | "workforce"
+    | "timeline"
+    | "status"
+    | "budget"
+    | "other";
   conflictType?: "numerical" | "status" | "time" | "workforce" | "political";
   claims?: Array<{
-    source?: "engineer" | "municipality" | "pmu" | "contractor" | "clo" | "observation";
+    source?:
+      | "engineer"
+      | "municipality"
+      | "pmu"
+      | "contractor"
+      | "clo"
+      | "observation";
     value?: string;
     date?: string;
     evidence?: string;
@@ -512,7 +566,8 @@ export type ConflictLog = {
   }>;
   displayTruth?: string;
   resolutionState?: "pending" | "partial" | "resolved" | "escalated";
-  escalationLevel?: "operator" | "engineer" | "pmu" | "site_meeting" | "municipal";
+  escalationLevel?:
+    "operator" | "engineer" | "pmu" | "site_meeting" | "municipal";
   resolutionNote?: string;
   detectedAt?: string;
   resolvedAt?: string;
@@ -526,7 +581,17 @@ export type Record = {
   _rev: string;
   title?: string;
   slug?: Slug;
-  recordType?: "minutes" | "resolution" | "land-allocation" | "dispute-resolution" | "public-notice" | "policy" | "report" | "project-outcome" | "community-decision" | "external-resource";
+  recordType?:
+    | "minutes"
+    | "resolution"
+    | "land-allocation"
+    | "dispute-resolution"
+    | "public-notice"
+    | "policy"
+    | "report"
+    | "project-outcome"
+    | "community-decision"
+    | "external-resource";
   date?: string;
   summary?: string;
   statusNote?: string;
@@ -627,7 +692,15 @@ export type Notice = {
   _rev: string;
   title?: string;
   slug?: Slug;
-  noticeType?: "meeting" | "announcement" | "resolution" | "alert" | "opportunity" | "employment" | "smme" | "project-update";
+  noticeType?:
+    | "meeting"
+    | "announcement"
+    | "resolution"
+    | "alert"
+    | "opportunity"
+    | "employment"
+    | "smme"
+    | "project-update";
   date?: string;
   excerpt?: string;
   content?: BlockContent;
@@ -667,7 +740,19 @@ export type DevelopmentNotice = {
   _rev: string;
   title?: string;
   slug?: Slug;
-  noticeType?: "eia" | "rezoning" | "land-use" | "township" | "building" | "mining" | "liquor" | "telecom" | "estate" | "liquidation" | "pto" | "other";
+  noticeType?:
+    | "eia"
+    | "rezoning"
+    | "land-use"
+    | "township"
+    | "building"
+    | "mining"
+    | "liquor"
+    | "telecom"
+    | "estate"
+    | "liquidation"
+    | "pto"
+    | "other";
   status?: "open" | "closed" | "approved" | "rejected" | "withdrawn";
   legalMandate?: string;
   retentionPeriod?: string;
@@ -782,7 +867,12 @@ export type Campaign = {
     };
     _key: string;
   }>;
-  projectPhase?: "planning" | "procurement" | "construction" | "commissioning" | "operational";
+  projectPhase?:
+    | "planning"
+    | "procurement"
+    | "construction"
+    | "commissioning"
+    | "operational";
   progressLog?: Array<{
     date?: string;
     update?: string;
@@ -817,8 +907,15 @@ export type Campaign = {
   }>;
   participationLog?: Array<{
     date?: string;
-    commentType?: "comment" | "objection" | "support" | "question" | "complaint" | "issue";
-    relationship?: "resident" | "landowner" | "business" | "community" | "organisation" | "other";
+    commentType?:
+      "comment" | "objection" | "support" | "question" | "complaint" | "issue";
+    relationship?:
+      | "resident"
+      | "landowner"
+      | "business"
+      | "community"
+      | "organisation"
+      | "other";
     summary?: string;
     actionTaken?: string;
     _key: string;
@@ -1005,7 +1102,14 @@ export type Listing = {
   _rev: string;
   name?: string;
   slug?: Slug;
-  listingType?: "school" | "clinic" | "business" | "accommodation" | "church" | "facility" | "area";
+  listingType?:
+    | "school"
+    | "clinic"
+    | "business"
+    | "accommodation"
+    | "church"
+    | "facility"
+    | "area";
   description?: string;
   content?: BlockContent;
   location?: string;
@@ -1165,7 +1269,8 @@ export type Person = {
     alt?: string;
     _type: "image";
   };
-  personType?: "inkosi" | "induna" | "council" | "youth" | "community" | "author";
+  personType?:
+    "inkosi" | "induna" | "council" | "youth" | "community" | "author";
   leadershipNote?: string;
   communityNote?: string;
   role?: string;
@@ -1198,63 +1303,92 @@ export type Page = {
   _rev: string;
   name?: string;
   slug?: Slug;
-  pageSections?: Array<{
-    _key: string;
-  } & AdBanner | {
-    _key: string;
-  } & CampaignList | {
-    _key: string;
-  } & CardGrid | {
-    _key: string;
-  } & CommunityMap | {
-    _key: string;
-  } & ContactForm | {
-    _key: string;
-  } & Cta | {
-    _key: string;
-  } & Divider | {
-    _key: string;
-  } & Embed | {
-    _key: string;
-  } & Faq | {
-    _key: string;
-  } & Gallery | {
-    _key: string;
-  } & Hero | {
-    _key: string;
-  } & ListingGrid | {
-    _key: string;
-  } & LogoGrid | {
-    _key: string;
-  } & MediaText | {
-    _key: string;
-  } & NoticeList | {
-    _key: string;
-  } & OpportunityList | {
-    _key: string;
-  } & Organogram | {
-    _key: string;
-  } & PostList | {
-    _key: string;
-  } & Process | {
-    _key: string;
-  } & ProgramList | {
-    _key: string;
-  } & PeopleGrid | {
-    _key: string;
-  } & Quote | {
-    _key: string;
-  } & RecordList | {
-    _key: string;
-  } & RichText | {
-    _key: string;
-  } & SponsorGrid | {
-    _key: string;
-  } & Stats | {
-    _key: string;
-  } & Subscribe | {
-    _key: string;
-  } & TeamGrid>;
+  pageSections?: Array<
+    | ({
+        _key: string;
+      } & AdBanner)
+    | ({
+        _key: string;
+      } & CampaignList)
+    | ({
+        _key: string;
+      } & CardGrid)
+    | ({
+        _key: string;
+      } & CommunityMap)
+    | ({
+        _key: string;
+      } & ContactForm)
+    | ({
+        _key: string;
+      } & Cta)
+    | ({
+        _key: string;
+      } & Divider)
+    | ({
+        _key: string;
+      } & Embed)
+    | ({
+        _key: string;
+      } & Faq)
+    | ({
+        _key: string;
+      } & Gallery)
+    | ({
+        _key: string;
+      } & Hero)
+    | ({
+        _key: string;
+      } & ListingGrid)
+    | ({
+        _key: string;
+      } & LogoGrid)
+    | ({
+        _key: string;
+      } & MediaText)
+    | ({
+        _key: string;
+      } & NoticeList)
+    | ({
+        _key: string;
+      } & OpportunityList)
+    | ({
+        _key: string;
+      } & Organogram)
+    | ({
+        _key: string;
+      } & PostList)
+    | ({
+        _key: string;
+      } & Process)
+    | ({
+        _key: string;
+      } & ProgramList)
+    | ({
+        _key: string;
+      } & PeopleGrid)
+    | ({
+        _key: string;
+      } & Quote)
+    | ({
+        _key: string;
+      } & RecordList)
+    | ({
+        _key: string;
+      } & RichText)
+    | ({
+        _key: string;
+      } & SponsorGrid)
+    | ({
+        _key: string;
+      } & Stats)
+    | ({
+        _key: string;
+      } & Subscribe)
+    | ({
+        _key: string;
+      } & TeamGrid)
+  >;
   seo?: SeoMetaFields;
 };
 
@@ -1271,63 +1405,92 @@ export type BlogPage = {
   _updatedAt: string;
   _rev: string;
   name?: string;
-  pageSections?: Array<{
-    _key: string;
-  } & AdBanner | {
-    _key: string;
-  } & CampaignList | {
-    _key: string;
-  } & CardGrid | {
-    _key: string;
-  } & CommunityMap | {
-    _key: string;
-  } & ContactForm | {
-    _key: string;
-  } & Cta | {
-    _key: string;
-  } & Divider | {
-    _key: string;
-  } & Embed | {
-    _key: string;
-  } & Faq | {
-    _key: string;
-  } & Gallery | {
-    _key: string;
-  } & Hero | {
-    _key: string;
-  } & ListingGrid | {
-    _key: string;
-  } & LogoGrid | {
-    _key: string;
-  } & MediaText | {
-    _key: string;
-  } & NoticeList | {
-    _key: string;
-  } & OpportunityList | {
-    _key: string;
-  } & Organogram | {
-    _key: string;
-  } & PostList | {
-    _key: string;
-  } & Process | {
-    _key: string;
-  } & ProgramList | {
-    _key: string;
-  } & PeopleGrid | {
-    _key: string;
-  } & Quote | {
-    _key: string;
-  } & RecordList | {
-    _key: string;
-  } & RichText | {
-    _key: string;
-  } & SponsorGrid | {
-    _key: string;
-  } & Stats | {
-    _key: string;
-  } & Subscribe | {
-    _key: string;
-  } & TeamGrid>;
+  pageSections?: Array<
+    | ({
+        _key: string;
+      } & AdBanner)
+    | ({
+        _key: string;
+      } & CampaignList)
+    | ({
+        _key: string;
+      } & CardGrid)
+    | ({
+        _key: string;
+      } & CommunityMap)
+    | ({
+        _key: string;
+      } & ContactForm)
+    | ({
+        _key: string;
+      } & Cta)
+    | ({
+        _key: string;
+      } & Divider)
+    | ({
+        _key: string;
+      } & Embed)
+    | ({
+        _key: string;
+      } & Faq)
+    | ({
+        _key: string;
+      } & Gallery)
+    | ({
+        _key: string;
+      } & Hero)
+    | ({
+        _key: string;
+      } & ListingGrid)
+    | ({
+        _key: string;
+      } & LogoGrid)
+    | ({
+        _key: string;
+      } & MediaText)
+    | ({
+        _key: string;
+      } & NoticeList)
+    | ({
+        _key: string;
+      } & OpportunityList)
+    | ({
+        _key: string;
+      } & Organogram)
+    | ({
+        _key: string;
+      } & PostList)
+    | ({
+        _key: string;
+      } & Process)
+    | ({
+        _key: string;
+      } & ProgramList)
+    | ({
+        _key: string;
+      } & PeopleGrid)
+    | ({
+        _key: string;
+      } & Quote)
+    | ({
+        _key: string;
+      } & RecordList)
+    | ({
+        _key: string;
+      } & RichText)
+    | ({
+        _key: string;
+      } & SponsorGrid)
+    | ({
+        _key: string;
+      } & Stats)
+    | ({
+        _key: string;
+      } & Subscribe)
+    | ({
+        _key: string;
+      } & TeamGrid)
+  >;
   seo?: SeoMetaFields;
 };
 
@@ -1338,63 +1501,92 @@ export type HomePage = {
   _updatedAt: string;
   _rev: string;
   name?: string;
-  pageSections?: Array<{
-    _key: string;
-  } & AdBanner | {
-    _key: string;
-  } & CampaignList | {
-    _key: string;
-  } & CardGrid | {
-    _key: string;
-  } & CommunityMap | {
-    _key: string;
-  } & ContactForm | {
-    _key: string;
-  } & Cta | {
-    _key: string;
-  } & Divider | {
-    _key: string;
-  } & Embed | {
-    _key: string;
-  } & Faq | {
-    _key: string;
-  } & Gallery | {
-    _key: string;
-  } & Hero | {
-    _key: string;
-  } & ListingGrid | {
-    _key: string;
-  } & LogoGrid | {
-    _key: string;
-  } & MediaText | {
-    _key: string;
-  } & NoticeList | {
-    _key: string;
-  } & OpportunityList | {
-    _key: string;
-  } & Organogram | {
-    _key: string;
-  } & PostList | {
-    _key: string;
-  } & Process | {
-    _key: string;
-  } & ProgramList | {
-    _key: string;
-  } & PeopleGrid | {
-    _key: string;
-  } & Quote | {
-    _key: string;
-  } & RecordList | {
-    _key: string;
-  } & RichText | {
-    _key: string;
-  } & SponsorGrid | {
-    _key: string;
-  } & Stats | {
-    _key: string;
-  } & Subscribe | {
-    _key: string;
-  } & TeamGrid>;
+  pageSections?: Array<
+    | ({
+        _key: string;
+      } & AdBanner)
+    | ({
+        _key: string;
+      } & CampaignList)
+    | ({
+        _key: string;
+      } & CardGrid)
+    | ({
+        _key: string;
+      } & CommunityMap)
+    | ({
+        _key: string;
+      } & ContactForm)
+    | ({
+        _key: string;
+      } & Cta)
+    | ({
+        _key: string;
+      } & Divider)
+    | ({
+        _key: string;
+      } & Embed)
+    | ({
+        _key: string;
+      } & Faq)
+    | ({
+        _key: string;
+      } & Gallery)
+    | ({
+        _key: string;
+      } & Hero)
+    | ({
+        _key: string;
+      } & ListingGrid)
+    | ({
+        _key: string;
+      } & LogoGrid)
+    | ({
+        _key: string;
+      } & MediaText)
+    | ({
+        _key: string;
+      } & NoticeList)
+    | ({
+        _key: string;
+      } & OpportunityList)
+    | ({
+        _key: string;
+      } & Organogram)
+    | ({
+        _key: string;
+      } & PostList)
+    | ({
+        _key: string;
+      } & Process)
+    | ({
+        _key: string;
+      } & ProgramList)
+    | ({
+        _key: string;
+      } & PeopleGrid)
+    | ({
+        _key: string;
+      } & Quote)
+    | ({
+        _key: string;
+      } & RecordList)
+    | ({
+        _key: string;
+      } & RichText)
+    | ({
+        _key: string;
+      } & SponsorGrid)
+    | ({
+        _key: string;
+      } & Stats)
+    | ({
+        _key: string;
+      } & Subscribe)
+    | ({
+        _key: string;
+      } & TeamGrid)
+  >;
   seo?: SeoMetaFields;
 };
 
@@ -1417,9 +1609,11 @@ export type SeoMetaFields = {
   };
   seoKeywords?: Array<string>;
   openGraph?: OpenGraph;
-  additionalMetaTags?: Array<{
-    _key: string;
-  } & MetaTag>;
+  additionalMetaTags?: Array<
+    {
+      _key: string;
+    } & MetaTag
+  >;
   twitter?: Twitter;
 };
 
@@ -1429,27 +1623,31 @@ export type Link = {
   openInNewTab?: boolean;
   external?: string;
   href?: string;
-  internal?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "post";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "page";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "category";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "person";
-  };
+  internal?:
+    | {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "post";
+      }
+    | {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "page";
+      }
+    | {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "category";
+      }
+    | {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "person";
+      };
 };
 
 export type Settings = {
@@ -1460,9 +1658,11 @@ export type Settings = {
   _rev: string;
   title?: string;
   description?: string;
-  menu?: Array<{
-    _key: string;
-  } & MenuItem>;
+  menu?: Array<
+    {
+      _key: string;
+    } & MenuItem
+  >;
   ogImage?: {
     asset?: {
       _ref: string;
@@ -1563,17 +1763,21 @@ export type SanityAssistInstructionTask = {
 
 export type SanityAssistTaskStatus = {
   _type: "sanity.assist.task.status";
-  tasks?: Array<{
-    _key: string;
-  } & SanityAssistInstructionTask>;
+  tasks?: Array<
+    {
+      _key: string;
+    } & SanityAssistInstructionTask
+  >;
 };
 
 export type SanityAssistSchemaTypeAnnotations = {
   _type: "sanity.assist.schemaType.annotations";
   title?: string;
-  fields?: Array<{
-    _key: string;
-  } & SanityAssistSchemaTypeField>;
+  fields?: Array<
+    {
+      _key: string;
+    } & SanityAssistSchemaTypeField
+  >;
 };
 
 export type SanityAssistOutputType = {
@@ -1626,18 +1830,23 @@ export type SanityAssistInstructionUserInput = {
 };
 
 export type SanityAssistInstructionPrompt = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  } | {
-    _key: string;
-  } & SanityAssistInstructionFieldRef | {
-    _key: string;
-  } & SanityAssistInstructionContext | {
-    _key: string;
-  } & SanityAssistInstructionUserInput>;
+  children?: Array<
+    | {
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }
+    | ({
+        _key: string;
+      } & SanityAssistInstructionFieldRef)
+    | ({
+        _key: string;
+      } & SanityAssistInstructionContext)
+    | ({
+        _key: string;
+      } & SanityAssistInstructionUserInput)
+  >;
   style?: "normal";
   listItem?: never;
   markDefs?: null;
@@ -1658,24 +1867,106 @@ export type SanityAssistInstruction = {
   title?: string;
   userId?: string;
   createdById?: string;
-  output?: Array<{
-    _key: string;
-  } & SanityAssistOutputField | {
-    _key: string;
-  } & SanityAssistOutputType>;
+  output?: Array<
+    | ({
+        _key: string;
+      } & SanityAssistOutputField)
+    | ({
+        _key: string;
+      } & SanityAssistOutputType)
+  >;
 };
 
 export type SanityAssistSchemaTypeField = {
   _type: "sanity.assist.schemaType.field";
   path?: string;
-  instructions?: Array<{
-    _key: string;
-  } & SanityAssistInstruction>;
+  instructions?: Array<
+    {
+      _key: string;
+    } & SanityAssistInstruction
+  >;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | Twitter | OpenGraph | MetaTag | MetaAttribute | MenuItem | Button | BlockContent | TeamGrid | Subscribe | Stats | SponsorGrid | RichText | RecordList | Quote | PeopleGrid | ProgramList | Process | Organogram | OpportunityList | NoticeList | LogoGrid | ListingGrid | Gallery | Faq | Embed | Divider | ContactForm | CardGrid | Card | PostList | MediaText | Hero | Cta | CommunityMap | CampaignList | AdBanner | ConflictLog | Record | Opportunity | Notice | DevelopmentNotice | Campaign | Program | Sponsor | Listing | SanityFileAsset | Geopoint | Category | Post | Person | Page | Slug | BlogPage | HomePage | SeoMetaFields | Link | Settings | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
-export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./src/lib/sanity/queries/queries.ts
+export type AllSanitySchemaTypes =
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | Twitter
+  | OpenGraph
+  | MetaTag
+  | MetaAttribute
+  | MenuItem
+  | Button
+  | BlockContent
+  | TeamGrid
+  | Subscribe
+  | Stats
+  | SponsorGrid
+  | RichText
+  | RecordList
+  | Quote
+  | PeopleGrid
+  | ProgramList
+  | Process
+  | Organogram
+  | OpportunityList
+  | NoticeList
+  | LogoGrid
+  | ListingGrid
+  | Gallery
+  | Faq
+  | Embed
+  | Divider
+  | ContactForm
+  | CardGrid
+  | Card
+  | PostList
+  | MediaText
+  | Hero
+  | Cta
+  | CommunityMap
+  | CampaignList
+  | AdBanner
+  | ConflictLog
+  | Record
+  | Opportunity
+  | Notice
+  | DevelopmentNotice
+  | Campaign
+  | Program
+  | Sponsor
+  | Listing
+  | SanityFileAsset
+  | Geopoint
+  | Category
+  | Post
+  | Person
+  | Page
+  | Slug
+  | BlogPage
+  | HomePage
+  | SeoMetaFields
+  | Link
+  | Settings
+  | SanityImageCrop
+  | SanityImageHotspot
+  | SanityImageAsset
+  | SanityAssetSourceData
+  | SanityImageMetadata
+  | SanityAssistInstructionTask
+  | SanityAssistTaskStatus
+  | SanityAssistSchemaTypeAnnotations
+  | SanityAssistOutputType
+  | SanityAssistOutputField
+  | SanityAssistInstructionContext
+  | AssistInstructionContext
+  | SanityAssistInstructionUserInput
+  | SanityAssistInstructionPrompt
+  | SanityAssistInstructionFieldRef
+  | SanityAssistInstruction
+  | SanityAssistSchemaTypeField;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]{  title,  description,  primaryColor,  secondaryColor,  contactEmail,  contactPhone,  address,  socialLinks,  gtmId,  webhookUrl,    menu[]{      _type,  _key,  text,  type,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },    childMenu[]{        _type,  _key,  text,  type,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },    }  }}
 export type SettingsQueryResult = {
@@ -1706,23 +1997,28 @@ export type SettingsQueryResult = {
       openInNewTab: boolean | null;
       external: string | null;
       href: string | null;
-      internal: {
-        _type: "category";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "page";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "person";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "post";
-        _id: string;
-        slug: string | null;
-      } | null;
+      internal:
+        | {
+            _type: "category";
+            _id: string;
+            slug: string | null;
+          }
+        | {
+            _type: "page";
+            _id: string;
+            slug: string | null;
+          }
+        | {
+            _type: "person";
+            _id: string;
+            slug: string | null;
+          }
+        | {
+            _type: "post";
+            _id: string;
+            slug: string | null;
+          }
+        | null;
     } | null;
     childMenu: Array<{
       _type: "menuItem";
@@ -1735,27 +2031,34 @@ export type SettingsQueryResult = {
         openInNewTab: boolean | null;
         external: string | null;
         href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
+        internal:
+          | {
+              _type: "category";
+              _id: string;
+              slug: string | null;
+            }
+          | {
+              _type: "page";
+              _id: string;
+              slug: string | null;
+            }
+          | {
+              _type: "person";
+              _id: string;
+              slug: string | null;
+            }
+          | {
+              _type: "post";
+              _id: string;
+              slug: string | null;
+            }
+          | null;
       } | null;
     }> | null;
   }> | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: homePageQuery
 // Query: *[_type == "homePage"][0]{  _id,  _type,  ...,      pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  projectReference,  projectHealth,  description,  targetAudience,  tags,  startDate,  endDate,  image,  hideCoverImage,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  fundingSource,  contractor,  contractNumber,  consultingEngineer,  projectPhase,  localSMMEs,  smmeDirectory[] {    _key,    name,    service,    owner,    cipcNumber,    taxClearance,    bbbeeLevel,    ward,    contactPhone,    verified,    complianceStatus,    "logoUrl": logo.asset->url  },  budget,  beneficiaries,  impactSummary,  lessonsLearned,  deliverables,  deliverablesCertified[] {    _key,    task,    status,    percentageComplete,    weightage,    certifiedBy,    certificationDate,    notes  },  totalDeliverables,  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {    _id,    field,    conflictType,    displayTruth,    resolutionState,    resolutionNote,    detectedAt,    resolvedAt,    claims[] {      source,      value,      date,      evidence    }  },  communityNote[] {    _key,    date,    issuedBy,    message  },  projectUpdates[] {    _key,    date,    title,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    },    videoUrl  },  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  },  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {    _id,    title,    "slug": slug.current,    noticeType,    status,    applicant,    commentDeadline,    publishDate,    location  },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  }},    _type == 'organogram' => {  _type,  heading,  description,  "inkosi": inkosi->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "izinduna": izinduna[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "council": council[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'peopleGrid' => {  _type,  heading,  description,  filterType,  limit,  "people": *[_type == 'person' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    personType == ^.filterType  )] | order(firstName asc) [0...12] {      _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  evidence[]{ _key, title, "url": asset->url },  externalUrl,  source,  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'sponsorGrid' => {  _type,  heading,  description,  filterType,  limit,  "sponsors": *[_type == 'sponsor' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    sponsorType == ^.filterType  )] | order(name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,  }},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },}
 export type HomePageQueryResult = {
@@ -1765,1125 +2068,717 @@ export type HomePageQueryResult = {
   _updatedAt: string;
   _rev: string;
   name?: string;
-  pageSections: Array<{
-    _key: string;
-    _type: "adBanner";
-    title: string | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    } | null;
-    sponsor: {
-      name: string | null;
-      website: string | null;
-    } | null;
-    sponsorName: string | null;
-    link: string | null;
-    startDate: string | null;
-    endDate: string | null;
-    size: "full" | "half" | null;
-  } | {
-    _key: string;
-    _type: "campaignList";
-    heading: string | null;
-    description: string | null;
-    filterType: "activation" | "ad" | "all" | "csr" | null;
-    filterStatus: "active" | "all" | "completed" | null;
-    limit: number | null;
-    campaigns: Array<{
-      _id: string;
-      _type: "campaign";
-      title: string | null;
-      slug: string | null;
-      campaignType: "activation" | "ad" | "csr" | null;
-      status: "active" | "approved" | "completed" | "draft" | "reported" | null;
-      projectReference: string | null;
-      projectHealth: "amber" | "green" | "red" | null;
-      description: string | null;
-      targetAudience: string | null;
-      tags: Array<string> | null;
-      startDate: string | null;
-      endDate: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      hideCoverImage: boolean | null;
-      link: string | null;
-      videoUrl: string | null;
-      audioFileUrl: string | null;
-      fundingSource: string | null;
-      contractor: string | null;
-      contractNumber: string | null;
-      consultingEngineer: string | null;
-      projectPhase: "commissioning" | "construction" | "operational" | "planning" | "procurement" | null;
-      localSMMEs: number | null;
-      smmeDirectory: Array<{
+  pageSections: Array<
+    | {
         _key: string;
-        name: string | null;
-        service: string | null;
-        owner: string | null;
-        cipcNumber: string | null;
-        taxClearance: "expired" | "none" | "valid" | null;
-        bbbeeLevel: "1" | "2" | "3" | "4" | "eme" | "none" | "qse" | null;
-        ward: string | null;
-        contactPhone: string | null;
-        verified: boolean | null;
-        complianceStatus: "compliant" | "non-compliant" | "partial" | "pending" | null;
-        logoUrl: string | null;
-      }> | null;
-      budget: number | null;
-      beneficiaries: number | null;
-      impactSummary: string | null;
-      lessonsLearned: string | null;
-      deliverables: Array<string> | null;
-      deliverablesCertified: Array<{
-        _key: string;
-        task: string | null;
-        status: "certified" | "disputed" | "pending" | null;
-        percentageComplete: number | null;
-        weightage: number | null;
-        certifiedBy: string | null;
-        certificationDate: string | null;
-        notes: string | null;
-      }> | null;
-      totalDeliverables: number | null;
-      verificationRecords: Array<{
-        _id: string;
-        field: "budget" | "other" | "phase" | "progress" | "status" | "timeline" | "workforce" | null;
-        conflictType: "numerical" | "political" | "status" | "time" | "workforce" | null;
-        displayTruth: string | null;
-        resolutionState: "escalated" | "partial" | "pending" | "resolved" | null;
-        resolutionNote: string | null;
-        detectedAt: string | null;
-        resolvedAt: string | null;
-        claims: Array<{
-          source: "clo" | "contractor" | "engineer" | "municipality" | "observation" | "pmu" | null;
-          value: string | null;
-          date: string | null;
-          evidence: string | null;
-        }> | null;
-      }>;
-      communityNote: Array<{
-        _key: string;
-        date: string | null;
-        issuedBy: string | null;
-        message: string | null;
-      }> | null;
-      projectUpdates: Array<{
-        _key: string;
-        date: string | null;
+        _type: "adBanner";
         title: string | null;
-        content: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        sponsor: {
+          name: string | null;
+          website: string | null;
+        } | null;
+        sponsorName: string | null;
+        link: string | null;
+        startDate: string | null;
+        endDate: string | null;
+        size: "full" | "half" | null;
+      }
+    | {
+        _key: string;
+        _type: "campaignList";
+        heading: string | null;
+        description: string | null;
+        filterType: "activation" | "ad" | "all" | "csr" | null;
+        filterStatus: "active" | "all" | "completed" | null;
+        limit: number | null;
+        campaigns: Array<{
+          _id: string;
+          _type: "campaign";
+          title: string | null;
+          slug: string | null;
+          campaignType: "activation" | "ad" | "csr" | null;
+          status:
+            "active" | "approved" | "completed" | "draft" | "reported" | null;
+          projectReference: string | null;
+          projectHealth: "amber" | "green" | "red" | null;
+          description: string | null;
+          targetAudience: string | null;
+          tags: Array<string> | null;
+          startDate: string | null;
+          endDate: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          hideCoverImage: boolean | null;
+          link: string | null;
+          videoUrl: string | null;
+          audioFileUrl: string | null;
+          fundingSource: string | null;
+          contractor: string | null;
+          contractNumber: string | null;
+          consultingEngineer: string | null;
+          projectPhase:
+            | "commissioning"
+            | "construction"
+            | "operational"
+            | "planning"
+            | "procurement"
+            | null;
+          localSMMEs: number | null;
+          smmeDirectory: Array<{
             _key: string;
+            name: string | null;
+            service: string | null;
+            owner: string | null;
+            cipcNumber: string | null;
+            taxClearance: "expired" | "none" | "valid" | null;
+            bbbeeLevel: "1" | "2" | "3" | "4" | "eme" | "none" | "qse" | null;
+            ward: string | null;
+            contactPhone: string | null;
+            verified: boolean | null;
+            complianceStatus:
+              "compliant" | "non-compliant" | "partial" | "pending" | null;
+            logoUrl: string | null;
+          }> | null;
+          budget: number | null;
+          beneficiaries: number | null;
+          impactSummary: string | null;
+          lessonsLearned: string | null;
+          deliverables: Array<string> | null;
+          deliverablesCertified: Array<{
+            _key: string;
+            task: string | null;
+            status: "certified" | "disputed" | "pending" | null;
+            percentageComplete: number | null;
+            weightage: number | null;
+            certifiedBy: string | null;
+            certificationDate: string | null;
+            notes: string | null;
+          }> | null;
+          totalDeliverables: number | null;
+          verificationRecords: Array<{
+            _id: string;
+            field:
+              | "budget"
+              | "other"
+              | "phase"
+              | "progress"
+              | "status"
+              | "timeline"
+              | "workforce"
+              | null;
+            conflictType:
+              | "numerical"
+              | "political"
+              | "status"
+              | "time"
+              | "workforce"
+              | null;
+            displayTruth: string | null;
+            resolutionState:
+              "escalated" | "partial" | "pending" | "resolved" | null;
+            resolutionNote: string | null;
+            detectedAt: string | null;
+            resolvedAt: string | null;
+            claims: Array<{
+              source:
+                | "clo"
+                | "contractor"
+                | "engineer"
+                | "municipality"
+                | "observation"
+                | "pmu"
+                | null;
+              value: string | null;
+              date: string | null;
+              evidence: string | null;
+            }> | null;
           }>;
-          style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-          listItem?: "bullet" | "number";
-          markDefs: Array<{
-            customLink?: Link;
-            _type: "customLink";
+          communityNote: Array<{
             _key: string;
-          } | {
-            customLink?: Link;
+            date: string | null;
+            issuedBy: string | null;
+            message: string | null;
+          }> | null;
+          projectUpdates: Array<{
+            _key: string;
+            date: string | null;
+            title: string | null;
+            content: Array<
+              | {
+                  children?: Array<{
+                    marks?: Array<string>;
+                    text?: string;
+                    _type: "span";
+                    _key: string;
+                  }>;
+                  style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                  listItem?: "bullet" | "number";
+                  markDefs: Array<
+                    | {
+                        customLink?: Link;
+                        _type: "customLink";
+                        _key: string;
+                      }
+                    | {
+                        customLink?: Link;
+                        _type: "link";
+                        _key: string;
+                        type: "external" | "internal" | null;
+                        openInNewTab: boolean | null;
+                        external: string | null;
+                        href: string | null;
+                        internal:
+                          | {
+                              _type: "category";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "page";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "person";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "post";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | null;
+                      }
+                  > | null;
+                  level?: number;
+                  _type: "block";
+                  _key: string;
+                }
+              | {
+                  asset?: {
+                    _ref: string;
+                    _type: "reference";
+                    _weak?: boolean;
+                    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                  };
+                  hotspot?: SanityImageHotspot;
+                  crop?: SanityImageCrop;
+                  alt?: string;
+                  _type: "image";
+                  _key: string;
+                  markDefs: null;
+                }
+            > | null;
+            gallery: Array<{
+              _key: string;
+              alt: string | null;
+              caption: string | null;
+              asset: {
+                _id: string;
+                url: string | null;
+              } | null;
+            }> | null;
+            videoUrl: string | null;
+          }> | null;
+          sponsor: {
+            name: string | null;
+            slug: string | null;
+            logo: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+            } | null;
+            logoUrl: string | null;
+            website: string | null;
+            sponsorType:
+              | "business"
+              | "community"
+              | "government"
+              | "individual"
+              | "ngo"
+              | null;
+          } | null;
+          contactPerson: {
+            firstName: string | null;
+            lastName: string | null;
+            role: string | null;
+            slug: string | null;
+          } | null;
+          relatedAreas: Array<{
+            name: string | null;
+            slug: string | null;
+            induna: {
+              firstName: string | null;
+              lastName: string | null;
+              role: string | null;
+            } | null;
+          }> | null;
+          relatedProgram: {
+            title: string | null;
+            slug: string | null;
+          } | null;
+          relatedOpportunities: Array<{
+            _id: string;
+            _type: "opportunity";
+            title: string | null;
+            slug: string | null;
+            opportunityType: "bursary" | "funding" | "job" | "training" | null;
+            description: string | null;
+            organization: string | null;
+            deadline: string | null;
+            link: string | null;
+            featured: boolean | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+          }>;
+          relatedDevelopmentNotices: Array<{
+            _id: string;
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "building"
+              | "eia"
+              | "estate"
+              | "land-use"
+              | "liquidation"
+              | "liquor"
+              | "mining"
+              | "other"
+              | "pto"
+              | "rezoning"
+              | "telecom"
+              | "township"
+              | null;
+            status:
+              "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
+            applicant: string | null;
+            commentDeadline: string | null;
+            publishDate: string | null;
+            location: string | null;
+          }>;
+          relatedNotices: Array<{
+            _id: string;
+            _type: "notice";
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "alert"
+              | "announcement"
+              | "employment"
+              | "meeting"
+              | "opportunity"
+              | "project-update"
+              | "resolution"
+              | "smme"
+              | null;
+            date: string | null;
+            excerpt: string | null;
+            pinned: boolean | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+            relatedCampaign: {
+              title: string | null;
+              slug: string | null;
+            } | null;
+          }>;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "cardGrid";
+        heading: string | null;
+        content: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet" | "number";
+              markDefs: Array<
+                | {
+                    customLink?: Link;
+                    _type: "customLink";
+                    _key: string;
+                  }
+                | {
+                    customLink?: Link;
+                    _type: "link";
+                    _key: string;
+                    type: "external" | "internal" | null;
+                    openInNewTab: boolean | null;
+                    external: string | null;
+                    href: string | null;
+                    internal:
+                      | {
+                          _type: "category";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "page";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "person";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "post";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | null;
+                  }
+              > | null;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+              _key: string;
+              markDefs: null;
+            }
+        > | null;
+        cards: Array<{
+          _type: "card";
+          heading: string | null;
+          content: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "communityMap";
+        heading: string | null;
+        description: string | null;
+        centerLat: number | null;
+        centerLng: number | null;
+        zoom: number | null;
+        filterType:
+          | "accommodation"
+          | "all"
+          | "area"
+          | "business"
+          | "church"
+          | "clinic"
+          | "facility"
+          | "school"
+          | null;
+        listings: Array<{
+          _id: string;
+          _type: "listing";
+          name: string | null;
+          slug: string | null;
+          listingType:
+            | "accommodation"
+            | "area"
+            | "business"
+            | "church"
+            | "clinic"
+            | "facility"
+            | "school"
+            | null;
+          description: string | null;
+          location: string | null;
+          geopoint: Geopoint | null;
+          contactInfo: string | null;
+          whatsappContact: string | null;
+          website: string | null;
+          servicesOffered: Array<string> | null;
+          operatingHours: string | null;
+          verifiedByInduna: "community" | "council" | "induna" | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          imageUrl: string | null;
+          areaName: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "contactForm";
+        heading: string | null;
+        description: string | null;
+        showMap: boolean | null;
+        mapEmbedUrl: string | null;
+      }
+    | {
+        _key: string;
+        _type: "cta";
+        heading: string | null;
+        text: string | null;
+        buttons: Array<{
+          _key: string;
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
             _type: "link";
-            _key: string;
             type: "external" | "internal" | null;
             openInNewTab: boolean | null;
             external: string | null;
             href: string | null;
-            internal: {
-              _type: "category";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "page";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "person";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "post";
-              _id: string;
-              slug: string | null;
-            } | null;
-          }> | null;
-          level?: number;
-          _type: "block";
-          _key: string;
-        } | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-          _key: string;
-          markDefs: null;
-        }> | null;
-        gallery: Array<{
-          _key: string;
-          alt: string | null;
-          caption: string | null;
-          asset: {
-            _id: string;
-            url: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
           } | null;
         }> | null;
-        videoUrl: string | null;
-      }> | null;
-      sponsor: {
-        name: string | null;
-        slug: string | null;
-        logo: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: "image";
-        } | null;
-        logoUrl: string | null;
-        website: string | null;
-        sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      } | null;
-      contactPerson: {
-        firstName: string | null;
-        lastName: string | null;
-        role: string | null;
-        slug: string | null;
-      } | null;
-      relatedAreas: Array<{
-        name: string | null;
-        slug: string | null;
-        induna: {
-          firstName: string | null;
-          lastName: string | null;
-          role: string | null;
-        } | null;
-      }> | null;
-      relatedProgram: {
-        title: string | null;
-        slug: string | null;
-      } | null;
-      relatedOpportunities: Array<{
-        _id: string;
-        _type: "opportunity";
-        title: string | null;
-        slug: string | null;
-        opportunityType: "bursary" | "funding" | "job" | "training" | null;
-        description: string | null;
-        organization: string | null;
-        deadline: string | null;
-        link: string | null;
-        featured: boolean | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-      }>;
-      relatedDevelopmentNotices: Array<{
-        _id: string;
-        title: string | null;
-        slug: string | null;
-        noticeType: "building" | "eia" | "estate" | "land-use" | "liquidation" | "liquor" | "mining" | "other" | "pto" | "rezoning" | "telecom" | "township" | null;
-        status: "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
-        applicant: string | null;
-        commentDeadline: string | null;
-        publishDate: string | null;
-        location: string | null;
-      }>;
-      relatedNotices: Array<{
-        _id: string;
-        _type: "notice";
-        title: string | null;
-        slug: string | null;
-        noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-        date: string | null;
-        excerpt: string | null;
-        pinned: boolean | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-        relatedCampaign: {
-          title: string | null;
-          slug: string | null;
-        } | null;
-      }>;
-    }>;
-  } | {
-    _key: string;
-    _type: "cardGrid";
-    heading: string | null;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
+      }
+    | {
         _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs: Array<{
-        customLink?: Link;
-        _type: "customLink";
-        _key: string;
-      } | {
-        customLink?: Link;
-        _type: "link";
-        _key: string;
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      }> | null;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-      markDefs: null;
-    }> | null;
-    cards: Array<{
-      _type: "card";
-      heading: string | null;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "communityMap";
-    heading: string | null;
-    description: string | null;
-    centerLat: number | null;
-    centerLng: number | null;
-    zoom: number | null;
-    filterType: "accommodation" | "all" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-    listings: Array<{
-      _id: string;
-      _type: "listing";
-      name: string | null;
-      slug: string | null;
-      listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-      description: string | null;
-      location: string | null;
-      geopoint: Geopoint | null;
-      contactInfo: string | null;
-      whatsappContact: string | null;
-      website: string | null;
-      servicesOffered: Array<string> | null;
-      operatingHours: string | null;
-      verifiedByInduna: "community" | "council" | "induna" | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      imageUrl: string | null;
-      areaName: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "contactForm";
-    heading: string | null;
-    description: string | null;
-    showMap: boolean | null;
-    mapEmbedUrl: string | null;
-  } | {
-    _key: string;
-    _type: "cta";
-    heading: string | null;
-    text: string | null;
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "divider";
-    height: number | null;
-  } | {
-    _key: string;
-    _type: "embed";
-    heading: string | null;
-    url: string | null;
-    aspectRatio: "1/1" | "16/9" | "4/3" | null;
-  } | {
-    _key: string;
-    _type: "faq";
-    heading: string | null;
-    items: Array<{
-      _key: string;
-      question: string | null;
-      answer: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "gallery";
-    heading: string | null;
-    description: string | null;
-    images: Array<{
-      _key: string;
-      alt: string | null;
-      caption: string | null;
-      _type: "image";
-      crop: {
-        _type: "sanity.imageCrop";
-        right: number | null;
-        top: number | null;
-        left: number | null;
-        bottom: number | null;
-      } | null;
-      hotspot: {
-        _type: "sanity.imageHotspot";
-        x: number | null;
-        y: number | null;
+        _type: "divider";
         height: number | null;
-        width: number | null;
-      } | null;
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "hero";
-    heading: string | null;
-    text: BlockContent | null;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    };
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "listingGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "accommodation" | "all" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-    limit: number | null;
-    listings: Array<{
-      _id: string;
-      _type: "listing";
-      name: string | null;
-      slug: string | null;
-      listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-      description: string | null;
-      location: string | null;
-      geopoint: Geopoint | null;
-      contactInfo: string | null;
-      whatsappContact: string | null;
-      website: string | null;
-      servicesOffered: Array<string> | null;
-      operatingHours: string | null;
-      verifiedByInduna: "community" | "council" | "induna" | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      imageUrl: string | null;
-      areaName: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "logoGrid";
-    heading: string | null;
-    description: string | null;
-    sponsors: Array<{
-      _id: string;
-      _type: "sponsor";
-      name: string | null;
-      slug: string | null;
-      sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      logo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      } | null;
-      website: string | null;
-      description: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "mediaText";
-    heading: string | null;
-    content?: BlockContent;
-    imagePosition: "left" | "right" | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    } | null;
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-    text: null;
-  } | {
-    _key: string;
-    _type: "noticeList";
-    heading: string | null;
-    numberOfNotices: number | null;
-    filterType: "alert" | "all" | "announcement" | "meeting" | "opportunity" | null;
-    notices: Array<{
-      _id: string;
-      _type: "notice";
-      title: string | null;
-      slug: string | null;
-      noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-      date: string | null;
-      excerpt: string | null;
-      pinned: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      relatedCampaign: {
-        title: string | null;
-        slug: string | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "opportunityList";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "bursary" | "funding" | "job" | "training" | null;
-    limit: number | null;
-    opportunities: Array<{
-      _id: string;
-      _type: "opportunity";
-      title: string | null;
-      slug: string | null;
-      opportunityType: "bursary" | "funding" | "job" | "training" | null;
-      description: string | null;
-      organization: string | null;
-      deadline: string | null;
-      link: string | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "organogram";
-    heading: string | null;
-    description: string | null;
-    inkosi: {
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    } | null;
-    izinduna: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+        _type: "embed";
+        heading: string | null;
+        url: string | null;
+        aspectRatio: "1/1" | "16/9" | "4/3" | null;
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-    council: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+        _type: "faq";
+        heading: string | null;
+        items: Array<{
+          _key: string;
+          question: string | null;
+          answer: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+        }> | null;
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "peopleGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-    limit: number | null;
-    people: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
-        _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "postList";
-    heading: string | null;
-    numberOfPosts: number | null;
-    posts: Array<{
-      _type: "post";
-      _id: string;
-      status: "draft" | "published";
-      title: string | "Untitled";
-      slug: string | null;
-      excerpt: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      categories: Array<{
-        _id: string;
-        _type: "category";
-        title: string | null;
-        slug: string | null;
+        _type: "gallery";
+        heading: string | null;
         description: string | null;
-      }> | null;
-      date: string;
-      author: {
-        _id: string;
-        _type: "person";
-        firstName: string | null;
-        lastName: string | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-        role: string | null;
-        personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-        email: string | null;
-        phone: string | null;
-        organization: string | null;
-        skills: Array<string> | null;
-        biography: BlockContent | null;
-        gallery: Array<{
+        images: Array<{
           _key: string;
           alt: string | null;
           caption: string | null;
-          asset: {
-            _id: string;
-            url: string | null;
-          } | null;
-        }> | null;
-        slug: string | null;
-      } | null;
-      wordCount: number;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-      seo: {
-        _type: "seoMetaFields";
-        metaTitle: string | null;
-        noIndex: boolean | null;
-        seoKeywords: Array<string> | null;
-        metaDescription: string | null;
-        metaImage: {
           _type: "image";
           crop: {
             _type: "sanity.imageCrop";
@@ -2921,16 +2816,618 @@ export type HomePageQueryResult = {
             metadata?: SanityImageMetadata;
             source?: SanityAssetSourceData;
           } | null;
-        } | null;
-        additionalMetaTags: Array<{
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "hero";
+        heading: string | null;
+        text: BlockContent | null;
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        };
+        buttons: Array<{
           _key: string;
-          _type: "metaTag";
-          metaAttributes: Array<{
-            _type: "metaAttribute";
-            attributeValueString: string | null;
-            attributeType: "image" | "string" | null;
-            attributeKey: string | null;
-            attributeValueImage: {
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
+            _type: "link";
+            type: "external" | "internal" | null;
+            openInNewTab: boolean | null;
+            external: string | null;
+            href: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "listingGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          | "accommodation"
+          | "all"
+          | "area"
+          | "business"
+          | "church"
+          | "clinic"
+          | "facility"
+          | "school"
+          | null;
+        limit: number | null;
+        listings: Array<{
+          _id: string;
+          _type: "listing";
+          name: string | null;
+          slug: string | null;
+          listingType:
+            | "accommodation"
+            | "area"
+            | "business"
+            | "church"
+            | "clinic"
+            | "facility"
+            | "school"
+            | null;
+          description: string | null;
+          location: string | null;
+          geopoint: Geopoint | null;
+          contactInfo: string | null;
+          whatsappContact: string | null;
+          website: string | null;
+          servicesOffered: Array<string> | null;
+          operatingHours: string | null;
+          verifiedByInduna: "community" | "council" | "induna" | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          imageUrl: string | null;
+          areaName: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "logoGrid";
+        heading: string | null;
+        description: string | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string | null;
+          slug: string | null;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "mediaText";
+        heading: string | null;
+        content?: BlockContent;
+        imagePosition: "left" | "right" | null;
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        buttons: Array<{
+          _key: string;
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
+            _type: "link";
+            type: "external" | "internal" | null;
+            openInNewTab: boolean | null;
+            external: string | null;
+            href: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
+          } | null;
+        }> | null;
+        text: null;
+      }
+    | {
+        _key: string;
+        _type: "noticeList";
+        heading: string | null;
+        numberOfNotices: number | null;
+        filterType:
+          "alert" | "all" | "announcement" | "meeting" | "opportunity" | null;
+        notices: Array<{
+          _id: string;
+          _type: "notice";
+          title: string | null;
+          slug: string | null;
+          noticeType:
+            | "alert"
+            | "announcement"
+            | "employment"
+            | "meeting"
+            | "opportunity"
+            | "project-update"
+            | "resolution"
+            | "smme"
+            | null;
+          date: string | null;
+          excerpt: string | null;
+          pinned: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          relatedCampaign: {
+            title: string | null;
+            slug: string | null;
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "opportunityList";
+        heading: string | null;
+        description: string | null;
+        filterType: "all" | "bursary" | "funding" | "job" | "training" | null;
+        limit: number | null;
+        opportunities: Array<{
+          _id: string;
+          _type: "opportunity";
+          title: string | null;
+          slug: string | null;
+          opportunityType: "bursary" | "funding" | "job" | "training" | null;
+          description: string | null;
+          organization: string | null;
+          deadline: string | null;
+          link: string | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "organogram";
+        heading: string | null;
+        description: string | null;
+        inkosi: {
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        } | null;
+        izinduna: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }> | null;
+        council: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "peopleGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          | "all"
+          | "author"
+          | "community"
+          | "council"
+          | "induna"
+          | "inkosi"
+          | "youth"
+          | null;
+        limit: number | null;
+        people: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "postList";
+        heading: string | null;
+        numberOfPosts: number | null;
+        posts: Array<{
+          _type: "post";
+          _id: string;
+          status: "draft" | "published";
+          title: string | "Untitled";
+          slug: string | null;
+          excerpt: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          categories: Array<{
+            _id: string;
+            _type: "category";
+            title: string | null;
+            slug: string | null;
+            description: string | null;
+          }> | null;
+          date: string;
+          author: {
+            _id: string;
+            _type: "person";
+            firstName: string | null;
+            lastName: string | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+            role: string | null;
+            personType:
+              | "author"
+              | "community"
+              | "council"
+              | "induna"
+              | "inkosi"
+              | "youth"
+              | null;
+            email: string | null;
+            phone: string | null;
+            organization: string | null;
+            skills: Array<string> | null;
+            biography: BlockContent | null;
+            gallery: Array<{
+              _key: string;
+              alt: string | null;
+              caption: string | null;
+              asset: {
+                _id: string;
+                url: string | null;
+              } | null;
+            }> | null;
+            slug: string | null;
+          } | null;
+          wordCount: number;
+          content: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+          seo: {
+            _type: "seoMetaFields";
+            metaTitle: string | null;
+            noIndex: boolean | null;
+            seoKeywords: Array<string> | null;
+            metaDescription: string | null;
+            metaImage: {
               _type: "image";
               crop: {
                 _type: "sanity.imageCrop";
@@ -2969,318 +3466,441 @@ export type HomePageQueryResult = {
                 source?: SanityAssetSourceData;
               } | null;
             } | null;
-          }> | null;
-        }> | null;
-        openGraph: {
-          _type: "openGraph";
-          siteName: string | null;
-          url: string | null;
-          description: string | null;
-          title: string | null;
-          image: {
-            _type: "image";
-            crop: {
-              _type: "sanity.imageCrop";
-              right: number | null;
-              top: number | null;
-              left: number | null;
-              bottom: number | null;
+            additionalMetaTags: Array<{
+              _key: string;
+              _type: "metaTag";
+              metaAttributes: Array<{
+                _type: "metaAttribute";
+                attributeValueString: string | null;
+                attributeType: "image" | "string" | null;
+                attributeKey: string | null;
+                attributeValueImage: {
+                  _type: "image";
+                  crop: {
+                    _type: "sanity.imageCrop";
+                    right: number | null;
+                    top: number | null;
+                    left: number | null;
+                    bottom: number | null;
+                  } | null;
+                  hotspot: {
+                    _type: "sanity.imageHotspot";
+                    x: number | null;
+                    y: number | null;
+                    height: number | null;
+                    width: number | null;
+                  } | null;
+                  asset: {
+                    _id: string;
+                    _type: "sanity.imageAsset";
+                    _createdAt: string;
+                    _updatedAt: string;
+                    _rev: string;
+                    originalFilename?: string;
+                    label?: string;
+                    title?: string;
+                    description?: string;
+                    altText?: string;
+                    sha1hash?: string;
+                    extension?: string;
+                    mimeType?: string;
+                    size?: number;
+                    assetId?: string;
+                    uploadId?: string;
+                    path?: string;
+                    url?: string;
+                    metadata?: SanityImageMetadata;
+                    source?: SanityAssetSourceData;
+                  } | null;
+                } | null;
+              }> | null;
+            }> | null;
+            openGraph: {
+              _type: "openGraph";
+              siteName: string | null;
+              url: string | null;
+              description: string | null;
+              title: string | null;
+              image: {
+                _type: "image";
+                crop: {
+                  _type: "sanity.imageCrop";
+                  right: number | null;
+                  top: number | null;
+                  left: number | null;
+                  bottom: number | null;
+                } | null;
+                hotspot: {
+                  _type: "sanity.imageHotspot";
+                  x: number | null;
+                  y: number | null;
+                  height: number | null;
+                  width: number | null;
+                } | null;
+                asset: {
+                  _id: string;
+                  _type: "sanity.imageAsset";
+                  _createdAt: string;
+                  _updatedAt: string;
+                  _rev: string;
+                  originalFilename?: string;
+                  label?: string;
+                  title?: string;
+                  description?: string;
+                  altText?: string;
+                  sha1hash?: string;
+                  extension?: string;
+                  mimeType?: string;
+                  size?: number;
+                  assetId?: string;
+                  uploadId?: string;
+                  path?: string;
+                  url?: string;
+                  metadata?: SanityImageMetadata;
+                  source?: SanityAssetSourceData;
+                } | null;
+              } | null;
             } | null;
-            hotspot: {
-              _type: "sanity.imageHotspot";
-              x: number | null;
-              y: number | null;
-              height: number | null;
-              width: number | null;
-            } | null;
-            asset: {
-              _id: string;
-              _type: "sanity.imageAsset";
-              _createdAt: string;
-              _updatedAt: string;
-              _rev: string;
-              originalFilename?: string;
-              label?: string;
-              title?: string;
-              description?: string;
-              altText?: string;
-              sha1hash?: string;
-              extension?: string;
-              mimeType?: string;
-              size?: number;
-              assetId?: string;
-              uploadId?: string;
-              path?: string;
-              url?: string;
-              metadata?: SanityImageMetadata;
-              source?: SanityAssetSourceData;
+            twitter: {
+              _type: "twitter";
+              site: string | null;
+              creator: string | null;
+              cardType: string | null;
+              handle: string | null;
             } | null;
           } | null;
-        } | null;
-        twitter: {
-          _type: "twitter";
-          site: string | null;
-          creator: string | null;
-          cardType: string | null;
-          handle: string | null;
-        } | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "process";
-    heading: string | null;
-    description: string | null;
-    steps: Array<{
-      _key: string;
-      title: string | null;
-      description: string | null;
-    }> | null;
-    footnote: string | null;
-  } | {
-    _key: string;
-    _type: "programList";
-    heading: string | null;
-    description: string | null;
-    filterStatus: "active" | "all" | "completed" | "upcoming" | null;
-    limit: number | null;
-    programs: Array<{
-      _id: string;
-      _type: "program";
-      title: string | null;
-      slug: string | null;
-      programType: "community" | "school" | "skills" | "youth-event" | null;
-      status: "active" | "completed" | "upcoming" | null;
-      date: string | null;
-      description: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "quote";
-    text: string | null;
-    author: {
-      firstName: string | null;
-      lastName: string | null;
-      role: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    } | null;
-    authorName: string | null;
-    authorRole: string | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    } | null;
-  } | {
-    _key: string;
-    _type: "recordList";
-    heading: string | null;
-    filterType: "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
-    limit: number | null;
-    records: Array<{
-      _id: string;
-      _type: "record";
-      title: string | null;
-      slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
-      date: string | null;
-      summary: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
-      approvedBy: {
-        firstName: string | null;
-        lastName: string | null;
-        role: string | null;
-      } | null;
-      evidence: Array<{
+        }>;
+      }
+    | {
         _key: string;
-        title: string | null;
-        url: string | null;
-      }> | null;
-      externalUrl: string | null;
-      source: string | null;
-      originNotice: {
-        title: string | null;
-        slug: string | null;
-        noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-      } | null;
-      parentRecord: {
-        title: string | null;
-        slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "richText";
-    heading: string | null;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
+        _type: "process";
+        heading: string | null;
+        description: string | null;
+        steps: Array<{
+          _key: string;
+          title: string | null;
+          description: string | null;
+        }> | null;
+        footnote: string | null;
+      }
+    | {
         _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs: Array<{
-        customLink?: Link;
-        _type: "customLink";
-        _key: string;
-      } | {
-        customLink?: Link;
-        _type: "link";
-        _key: string;
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
+        _type: "programList";
+        heading: string | null;
+        description: string | null;
+        filterStatus: "active" | "all" | "completed" | "upcoming" | null;
+        limit: number | null;
+        programs: Array<{
           _id: string;
+          _type: "program";
+          title: string | null;
           slug: string | null;
-        } | {
-          _type: "page";
+          programType: "community" | "school" | "skills" | "youth-event" | null;
+          status: "active" | "completed" | "upcoming" | null;
+          date: string | null;
+          description: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "quote";
+        text: string | null;
+        author: {
+          firstName: string | null;
+          lastName: string | null;
+          role: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        } | null;
+        authorName: string | null;
+        authorRole: string | null;
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "recordList";
+        heading: string | null;
+        filterType:
+          | "all"
+          | "dispute-resolution"
+          | "external-resource"
+          | "land-allocation"
+          | "minutes"
+          | "policy"
+          | "public-notice"
+          | "report"
+          | "resolution"
+          | null;
+        limit: number | null;
+        records: Array<{
           _id: string;
+          _type: "record";
+          title: string | null;
           slug: string | null;
-        } | {
+          recordType:
+            | "community-decision"
+            | "dispute-resolution"
+            | "external-resource"
+            | "land-allocation"
+            | "minutes"
+            | "policy"
+            | "project-outcome"
+            | "public-notice"
+            | "report"
+            | "resolution"
+            | null;
+          date: string | null;
+          summary: string | null;
+          status: "approved" | "pending" | "rejected" | "resolved" | null;
+          approvedBy: {
+            firstName: string | null;
+            lastName: string | null;
+            role: string | null;
+          } | null;
+          evidence: Array<{
+            _key: string;
+            title: string | null;
+            url: string | null;
+          }> | null;
+          externalUrl: string | null;
+          source: string | null;
+          originNotice: {
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "alert"
+              | "announcement"
+              | "employment"
+              | "meeting"
+              | "opportunity"
+              | "project-update"
+              | "resolution"
+              | "smme"
+              | null;
+          } | null;
+          parentRecord: {
+            title: string | null;
+            slug: string | null;
+            recordType:
+              | "community-decision"
+              | "dispute-resolution"
+              | "external-resource"
+              | "land-allocation"
+              | "minutes"
+              | "policy"
+              | "project-outcome"
+              | "public-notice"
+              | "report"
+              | "resolution"
+              | null;
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "richText";
+        heading: string | null;
+        content: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet" | "number";
+              markDefs: Array<
+                | {
+                    customLink?: Link;
+                    _type: "customLink";
+                    _key: string;
+                  }
+                | {
+                    customLink?: Link;
+                    _type: "link";
+                    _key: string;
+                    type: "external" | "internal" | null;
+                    openInNewTab: boolean | null;
+                    external: string | null;
+                    href: string | null;
+                    internal:
+                      | {
+                          _type: "category";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "page";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "person";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "post";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | null;
+                  }
+              > | null;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+              _key: string;
+              markDefs: null;
+            }
+        > | null;
+      }
+    | {
+        _key: string;
+        _type: "sponsorGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          "all" | "business" | "community" | "government" | "ngo" | null;
+        limit: number | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string | null;
+          slug: string | null;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "stats";
+        heading: string | null;
+        items: Array<{
+          _key: string;
+          value: string | null;
+          label: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "subscribe";
+        heading: string | null;
+        content: BlockContent | null;
+        buttonText: string | null;
+      }
+    | {
+        _key: string;
+        _type: "teamGrid";
+        heading: string | null;
+        description: string | null;
+        members: Array<{
+          _id: string;
           _type: "person";
-          _id: string;
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
           slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      }> | null;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-      markDefs: null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "sponsorGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "business" | "community" | "government" | "ngo" | null;
-    limit: number | null;
-    sponsors: Array<{
-      _id: string;
-      _type: "sponsor";
-      name: string | null;
-      slug: string | null;
-      sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      logo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      } | null;
-      website: string | null;
-      description: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "stats";
-    heading: string | null;
-    items: Array<{
-      _key: string;
-      value: string | null;
-      label: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "subscribe";
-    heading: string | null;
-    content: BlockContent | null;
-    buttonText: string | null;
-  } | {
-    _key: string;
-    _type: "teamGrid";
-    heading: string | null;
-    description: string | null;
-    members: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
-        _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-  }> | null;
+        }> | null;
+      }
+  > | null;
   seo: {
     _type: "seoMetaFields";
     metaTitle: string | null;
@@ -3430,6 +4050,8 @@ export type HomePageQueryResult = {
     } | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: blogPageQuery
 // Query: *[_type == "blogPage"][0]{  _id,  _type,  ...,      pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  projectReference,  projectHealth,  description,  targetAudience,  tags,  startDate,  endDate,  image,  hideCoverImage,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  fundingSource,  contractor,  contractNumber,  consultingEngineer,  projectPhase,  localSMMEs,  smmeDirectory[] {    _key,    name,    service,    owner,    cipcNumber,    taxClearance,    bbbeeLevel,    ward,    contactPhone,    verified,    complianceStatus,    "logoUrl": logo.asset->url  },  budget,  beneficiaries,  impactSummary,  lessonsLearned,  deliverables,  deliverablesCertified[] {    _key,    task,    status,    percentageComplete,    weightage,    certifiedBy,    certificationDate,    notes  },  totalDeliverables,  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {    _id,    field,    conflictType,    displayTruth,    resolutionState,    resolutionNote,    detectedAt,    resolvedAt,    claims[] {      source,      value,      date,      evidence    }  },  communityNote[] {    _key,    date,    issuedBy,    message  },  projectUpdates[] {    _key,    date,    title,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    },    videoUrl  },  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  },  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {    _id,    title,    "slug": slug.current,    noticeType,    status,    applicant,    commentDeadline,    publishDate,    location  },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  }},    _type == 'organogram' => {  _type,  heading,  description,  "inkosi": inkosi->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "izinduna": izinduna[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "council": council[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'peopleGrid' => {  _type,  heading,  description,  filterType,  limit,  "people": *[_type == 'person' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    personType == ^.filterType  )] | order(firstName asc) [0...12] {      _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  evidence[]{ _key, title, "url": asset->url },  externalUrl,  source,  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'sponsorGrid' => {  _type,  heading,  description,  filterType,  limit,  "sponsors": *[_type == 'sponsor' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    sponsorType == ^.filterType  )] | order(name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,  }},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },}
 export type BlogPageQueryResult = {
@@ -3439,1125 +4061,717 @@ export type BlogPageQueryResult = {
   _updatedAt: string;
   _rev: string;
   name?: string;
-  pageSections: Array<{
-    _key: string;
-    _type: "adBanner";
-    title: string | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    } | null;
-    sponsor: {
-      name: string | null;
-      website: string | null;
-    } | null;
-    sponsorName: string | null;
-    link: string | null;
-    startDate: string | null;
-    endDate: string | null;
-    size: "full" | "half" | null;
-  } | {
-    _key: string;
-    _type: "campaignList";
-    heading: string | null;
-    description: string | null;
-    filterType: "activation" | "ad" | "all" | "csr" | null;
-    filterStatus: "active" | "all" | "completed" | null;
-    limit: number | null;
-    campaigns: Array<{
-      _id: string;
-      _type: "campaign";
-      title: string | null;
-      slug: string | null;
-      campaignType: "activation" | "ad" | "csr" | null;
-      status: "active" | "approved" | "completed" | "draft" | "reported" | null;
-      projectReference: string | null;
-      projectHealth: "amber" | "green" | "red" | null;
-      description: string | null;
-      targetAudience: string | null;
-      tags: Array<string> | null;
-      startDate: string | null;
-      endDate: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      hideCoverImage: boolean | null;
-      link: string | null;
-      videoUrl: string | null;
-      audioFileUrl: string | null;
-      fundingSource: string | null;
-      contractor: string | null;
-      contractNumber: string | null;
-      consultingEngineer: string | null;
-      projectPhase: "commissioning" | "construction" | "operational" | "planning" | "procurement" | null;
-      localSMMEs: number | null;
-      smmeDirectory: Array<{
+  pageSections: Array<
+    | {
         _key: string;
-        name: string | null;
-        service: string | null;
-        owner: string | null;
-        cipcNumber: string | null;
-        taxClearance: "expired" | "none" | "valid" | null;
-        bbbeeLevel: "1" | "2" | "3" | "4" | "eme" | "none" | "qse" | null;
-        ward: string | null;
-        contactPhone: string | null;
-        verified: boolean | null;
-        complianceStatus: "compliant" | "non-compliant" | "partial" | "pending" | null;
-        logoUrl: string | null;
-      }> | null;
-      budget: number | null;
-      beneficiaries: number | null;
-      impactSummary: string | null;
-      lessonsLearned: string | null;
-      deliverables: Array<string> | null;
-      deliverablesCertified: Array<{
-        _key: string;
-        task: string | null;
-        status: "certified" | "disputed" | "pending" | null;
-        percentageComplete: number | null;
-        weightage: number | null;
-        certifiedBy: string | null;
-        certificationDate: string | null;
-        notes: string | null;
-      }> | null;
-      totalDeliverables: number | null;
-      verificationRecords: Array<{
-        _id: string;
-        field: "budget" | "other" | "phase" | "progress" | "status" | "timeline" | "workforce" | null;
-        conflictType: "numerical" | "political" | "status" | "time" | "workforce" | null;
-        displayTruth: string | null;
-        resolutionState: "escalated" | "partial" | "pending" | "resolved" | null;
-        resolutionNote: string | null;
-        detectedAt: string | null;
-        resolvedAt: string | null;
-        claims: Array<{
-          source: "clo" | "contractor" | "engineer" | "municipality" | "observation" | "pmu" | null;
-          value: string | null;
-          date: string | null;
-          evidence: string | null;
-        }> | null;
-      }>;
-      communityNote: Array<{
-        _key: string;
-        date: string | null;
-        issuedBy: string | null;
-        message: string | null;
-      }> | null;
-      projectUpdates: Array<{
-        _key: string;
-        date: string | null;
+        _type: "adBanner";
         title: string | null;
-        content: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        sponsor: {
+          name: string | null;
+          website: string | null;
+        } | null;
+        sponsorName: string | null;
+        link: string | null;
+        startDate: string | null;
+        endDate: string | null;
+        size: "full" | "half" | null;
+      }
+    | {
+        _key: string;
+        _type: "campaignList";
+        heading: string | null;
+        description: string | null;
+        filterType: "activation" | "ad" | "all" | "csr" | null;
+        filterStatus: "active" | "all" | "completed" | null;
+        limit: number | null;
+        campaigns: Array<{
+          _id: string;
+          _type: "campaign";
+          title: string | null;
+          slug: string | null;
+          campaignType: "activation" | "ad" | "csr" | null;
+          status:
+            "active" | "approved" | "completed" | "draft" | "reported" | null;
+          projectReference: string | null;
+          projectHealth: "amber" | "green" | "red" | null;
+          description: string | null;
+          targetAudience: string | null;
+          tags: Array<string> | null;
+          startDate: string | null;
+          endDate: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          hideCoverImage: boolean | null;
+          link: string | null;
+          videoUrl: string | null;
+          audioFileUrl: string | null;
+          fundingSource: string | null;
+          contractor: string | null;
+          contractNumber: string | null;
+          consultingEngineer: string | null;
+          projectPhase:
+            | "commissioning"
+            | "construction"
+            | "operational"
+            | "planning"
+            | "procurement"
+            | null;
+          localSMMEs: number | null;
+          smmeDirectory: Array<{
             _key: string;
+            name: string | null;
+            service: string | null;
+            owner: string | null;
+            cipcNumber: string | null;
+            taxClearance: "expired" | "none" | "valid" | null;
+            bbbeeLevel: "1" | "2" | "3" | "4" | "eme" | "none" | "qse" | null;
+            ward: string | null;
+            contactPhone: string | null;
+            verified: boolean | null;
+            complianceStatus:
+              "compliant" | "non-compliant" | "partial" | "pending" | null;
+            logoUrl: string | null;
+          }> | null;
+          budget: number | null;
+          beneficiaries: number | null;
+          impactSummary: string | null;
+          lessonsLearned: string | null;
+          deliverables: Array<string> | null;
+          deliverablesCertified: Array<{
+            _key: string;
+            task: string | null;
+            status: "certified" | "disputed" | "pending" | null;
+            percentageComplete: number | null;
+            weightage: number | null;
+            certifiedBy: string | null;
+            certificationDate: string | null;
+            notes: string | null;
+          }> | null;
+          totalDeliverables: number | null;
+          verificationRecords: Array<{
+            _id: string;
+            field:
+              | "budget"
+              | "other"
+              | "phase"
+              | "progress"
+              | "status"
+              | "timeline"
+              | "workforce"
+              | null;
+            conflictType:
+              | "numerical"
+              | "political"
+              | "status"
+              | "time"
+              | "workforce"
+              | null;
+            displayTruth: string | null;
+            resolutionState:
+              "escalated" | "partial" | "pending" | "resolved" | null;
+            resolutionNote: string | null;
+            detectedAt: string | null;
+            resolvedAt: string | null;
+            claims: Array<{
+              source:
+                | "clo"
+                | "contractor"
+                | "engineer"
+                | "municipality"
+                | "observation"
+                | "pmu"
+                | null;
+              value: string | null;
+              date: string | null;
+              evidence: string | null;
+            }> | null;
           }>;
-          style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-          listItem?: "bullet" | "number";
-          markDefs: Array<{
-            customLink?: Link;
-            _type: "customLink";
+          communityNote: Array<{
             _key: string;
-          } | {
-            customLink?: Link;
+            date: string | null;
+            issuedBy: string | null;
+            message: string | null;
+          }> | null;
+          projectUpdates: Array<{
+            _key: string;
+            date: string | null;
+            title: string | null;
+            content: Array<
+              | {
+                  children?: Array<{
+                    marks?: Array<string>;
+                    text?: string;
+                    _type: "span";
+                    _key: string;
+                  }>;
+                  style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                  listItem?: "bullet" | "number";
+                  markDefs: Array<
+                    | {
+                        customLink?: Link;
+                        _type: "customLink";
+                        _key: string;
+                      }
+                    | {
+                        customLink?: Link;
+                        _type: "link";
+                        _key: string;
+                        type: "external" | "internal" | null;
+                        openInNewTab: boolean | null;
+                        external: string | null;
+                        href: string | null;
+                        internal:
+                          | {
+                              _type: "category";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "page";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "person";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "post";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | null;
+                      }
+                  > | null;
+                  level?: number;
+                  _type: "block";
+                  _key: string;
+                }
+              | {
+                  asset?: {
+                    _ref: string;
+                    _type: "reference";
+                    _weak?: boolean;
+                    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                  };
+                  hotspot?: SanityImageHotspot;
+                  crop?: SanityImageCrop;
+                  alt?: string;
+                  _type: "image";
+                  _key: string;
+                  markDefs: null;
+                }
+            > | null;
+            gallery: Array<{
+              _key: string;
+              alt: string | null;
+              caption: string | null;
+              asset: {
+                _id: string;
+                url: string | null;
+              } | null;
+            }> | null;
+            videoUrl: string | null;
+          }> | null;
+          sponsor: {
+            name: string | null;
+            slug: string | null;
+            logo: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+            } | null;
+            logoUrl: string | null;
+            website: string | null;
+            sponsorType:
+              | "business"
+              | "community"
+              | "government"
+              | "individual"
+              | "ngo"
+              | null;
+          } | null;
+          contactPerson: {
+            firstName: string | null;
+            lastName: string | null;
+            role: string | null;
+            slug: string | null;
+          } | null;
+          relatedAreas: Array<{
+            name: string | null;
+            slug: string | null;
+            induna: {
+              firstName: string | null;
+              lastName: string | null;
+              role: string | null;
+            } | null;
+          }> | null;
+          relatedProgram: {
+            title: string | null;
+            slug: string | null;
+          } | null;
+          relatedOpportunities: Array<{
+            _id: string;
+            _type: "opportunity";
+            title: string | null;
+            slug: string | null;
+            opportunityType: "bursary" | "funding" | "job" | "training" | null;
+            description: string | null;
+            organization: string | null;
+            deadline: string | null;
+            link: string | null;
+            featured: boolean | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+          }>;
+          relatedDevelopmentNotices: Array<{
+            _id: string;
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "building"
+              | "eia"
+              | "estate"
+              | "land-use"
+              | "liquidation"
+              | "liquor"
+              | "mining"
+              | "other"
+              | "pto"
+              | "rezoning"
+              | "telecom"
+              | "township"
+              | null;
+            status:
+              "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
+            applicant: string | null;
+            commentDeadline: string | null;
+            publishDate: string | null;
+            location: string | null;
+          }>;
+          relatedNotices: Array<{
+            _id: string;
+            _type: "notice";
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "alert"
+              | "announcement"
+              | "employment"
+              | "meeting"
+              | "opportunity"
+              | "project-update"
+              | "resolution"
+              | "smme"
+              | null;
+            date: string | null;
+            excerpt: string | null;
+            pinned: boolean | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+            relatedCampaign: {
+              title: string | null;
+              slug: string | null;
+            } | null;
+          }>;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "cardGrid";
+        heading: string | null;
+        content: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet" | "number";
+              markDefs: Array<
+                | {
+                    customLink?: Link;
+                    _type: "customLink";
+                    _key: string;
+                  }
+                | {
+                    customLink?: Link;
+                    _type: "link";
+                    _key: string;
+                    type: "external" | "internal" | null;
+                    openInNewTab: boolean | null;
+                    external: string | null;
+                    href: string | null;
+                    internal:
+                      | {
+                          _type: "category";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "page";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "person";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "post";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | null;
+                  }
+              > | null;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+              _key: string;
+              markDefs: null;
+            }
+        > | null;
+        cards: Array<{
+          _type: "card";
+          heading: string | null;
+          content: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "communityMap";
+        heading: string | null;
+        description: string | null;
+        centerLat: number | null;
+        centerLng: number | null;
+        zoom: number | null;
+        filterType:
+          | "accommodation"
+          | "all"
+          | "area"
+          | "business"
+          | "church"
+          | "clinic"
+          | "facility"
+          | "school"
+          | null;
+        listings: Array<{
+          _id: string;
+          _type: "listing";
+          name: string | null;
+          slug: string | null;
+          listingType:
+            | "accommodation"
+            | "area"
+            | "business"
+            | "church"
+            | "clinic"
+            | "facility"
+            | "school"
+            | null;
+          description: string | null;
+          location: string | null;
+          geopoint: Geopoint | null;
+          contactInfo: string | null;
+          whatsappContact: string | null;
+          website: string | null;
+          servicesOffered: Array<string> | null;
+          operatingHours: string | null;
+          verifiedByInduna: "community" | "council" | "induna" | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          imageUrl: string | null;
+          areaName: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "contactForm";
+        heading: string | null;
+        description: string | null;
+        showMap: boolean | null;
+        mapEmbedUrl: string | null;
+      }
+    | {
+        _key: string;
+        _type: "cta";
+        heading: string | null;
+        text: string | null;
+        buttons: Array<{
+          _key: string;
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
             _type: "link";
-            _key: string;
             type: "external" | "internal" | null;
             openInNewTab: boolean | null;
             external: string | null;
             href: string | null;
-            internal: {
-              _type: "category";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "page";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "person";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "post";
-              _id: string;
-              slug: string | null;
-            } | null;
-          }> | null;
-          level?: number;
-          _type: "block";
-          _key: string;
-        } | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-          _key: string;
-          markDefs: null;
-        }> | null;
-        gallery: Array<{
-          _key: string;
-          alt: string | null;
-          caption: string | null;
-          asset: {
-            _id: string;
-            url: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
           } | null;
         }> | null;
-        videoUrl: string | null;
-      }> | null;
-      sponsor: {
-        name: string | null;
-        slug: string | null;
-        logo: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: "image";
-        } | null;
-        logoUrl: string | null;
-        website: string | null;
-        sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      } | null;
-      contactPerson: {
-        firstName: string | null;
-        lastName: string | null;
-        role: string | null;
-        slug: string | null;
-      } | null;
-      relatedAreas: Array<{
-        name: string | null;
-        slug: string | null;
-        induna: {
-          firstName: string | null;
-          lastName: string | null;
-          role: string | null;
-        } | null;
-      }> | null;
-      relatedProgram: {
-        title: string | null;
-        slug: string | null;
-      } | null;
-      relatedOpportunities: Array<{
-        _id: string;
-        _type: "opportunity";
-        title: string | null;
-        slug: string | null;
-        opportunityType: "bursary" | "funding" | "job" | "training" | null;
-        description: string | null;
-        organization: string | null;
-        deadline: string | null;
-        link: string | null;
-        featured: boolean | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-      }>;
-      relatedDevelopmentNotices: Array<{
-        _id: string;
-        title: string | null;
-        slug: string | null;
-        noticeType: "building" | "eia" | "estate" | "land-use" | "liquidation" | "liquor" | "mining" | "other" | "pto" | "rezoning" | "telecom" | "township" | null;
-        status: "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
-        applicant: string | null;
-        commentDeadline: string | null;
-        publishDate: string | null;
-        location: string | null;
-      }>;
-      relatedNotices: Array<{
-        _id: string;
-        _type: "notice";
-        title: string | null;
-        slug: string | null;
-        noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-        date: string | null;
-        excerpt: string | null;
-        pinned: boolean | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-        relatedCampaign: {
-          title: string | null;
-          slug: string | null;
-        } | null;
-      }>;
-    }>;
-  } | {
-    _key: string;
-    _type: "cardGrid";
-    heading: string | null;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
+      }
+    | {
         _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs: Array<{
-        customLink?: Link;
-        _type: "customLink";
-        _key: string;
-      } | {
-        customLink?: Link;
-        _type: "link";
-        _key: string;
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      }> | null;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-      markDefs: null;
-    }> | null;
-    cards: Array<{
-      _type: "card";
-      heading: string | null;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "communityMap";
-    heading: string | null;
-    description: string | null;
-    centerLat: number | null;
-    centerLng: number | null;
-    zoom: number | null;
-    filterType: "accommodation" | "all" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-    listings: Array<{
-      _id: string;
-      _type: "listing";
-      name: string | null;
-      slug: string | null;
-      listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-      description: string | null;
-      location: string | null;
-      geopoint: Geopoint | null;
-      contactInfo: string | null;
-      whatsappContact: string | null;
-      website: string | null;
-      servicesOffered: Array<string> | null;
-      operatingHours: string | null;
-      verifiedByInduna: "community" | "council" | "induna" | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      imageUrl: string | null;
-      areaName: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "contactForm";
-    heading: string | null;
-    description: string | null;
-    showMap: boolean | null;
-    mapEmbedUrl: string | null;
-  } | {
-    _key: string;
-    _type: "cta";
-    heading: string | null;
-    text: string | null;
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "divider";
-    height: number | null;
-  } | {
-    _key: string;
-    _type: "embed";
-    heading: string | null;
-    url: string | null;
-    aspectRatio: "1/1" | "16/9" | "4/3" | null;
-  } | {
-    _key: string;
-    _type: "faq";
-    heading: string | null;
-    items: Array<{
-      _key: string;
-      question: string | null;
-      answer: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "gallery";
-    heading: string | null;
-    description: string | null;
-    images: Array<{
-      _key: string;
-      alt: string | null;
-      caption: string | null;
-      _type: "image";
-      crop: {
-        _type: "sanity.imageCrop";
-        right: number | null;
-        top: number | null;
-        left: number | null;
-        bottom: number | null;
-      } | null;
-      hotspot: {
-        _type: "sanity.imageHotspot";
-        x: number | null;
-        y: number | null;
+        _type: "divider";
         height: number | null;
-        width: number | null;
-      } | null;
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "hero";
-    heading: string | null;
-    text: BlockContent | null;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    };
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "listingGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "accommodation" | "all" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-    limit: number | null;
-    listings: Array<{
-      _id: string;
-      _type: "listing";
-      name: string | null;
-      slug: string | null;
-      listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-      description: string | null;
-      location: string | null;
-      geopoint: Geopoint | null;
-      contactInfo: string | null;
-      whatsappContact: string | null;
-      website: string | null;
-      servicesOffered: Array<string> | null;
-      operatingHours: string | null;
-      verifiedByInduna: "community" | "council" | "induna" | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      imageUrl: string | null;
-      areaName: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "logoGrid";
-    heading: string | null;
-    description: string | null;
-    sponsors: Array<{
-      _id: string;
-      _type: "sponsor";
-      name: string | null;
-      slug: string | null;
-      sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      logo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      } | null;
-      website: string | null;
-      description: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "mediaText";
-    heading: string | null;
-    content?: BlockContent;
-    imagePosition: "left" | "right" | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    } | null;
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-    text: null;
-  } | {
-    _key: string;
-    _type: "noticeList";
-    heading: string | null;
-    numberOfNotices: number | null;
-    filterType: "alert" | "all" | "announcement" | "meeting" | "opportunity" | null;
-    notices: Array<{
-      _id: string;
-      _type: "notice";
-      title: string | null;
-      slug: string | null;
-      noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-      date: string | null;
-      excerpt: string | null;
-      pinned: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      relatedCampaign: {
-        title: string | null;
-        slug: string | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "opportunityList";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "bursary" | "funding" | "job" | "training" | null;
-    limit: number | null;
-    opportunities: Array<{
-      _id: string;
-      _type: "opportunity";
-      title: string | null;
-      slug: string | null;
-      opportunityType: "bursary" | "funding" | "job" | "training" | null;
-      description: string | null;
-      organization: string | null;
-      deadline: string | null;
-      link: string | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "organogram";
-    heading: string | null;
-    description: string | null;
-    inkosi: {
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    } | null;
-    izinduna: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+        _type: "embed";
+        heading: string | null;
+        url: string | null;
+        aspectRatio: "1/1" | "16/9" | "4/3" | null;
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-    council: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+        _type: "faq";
+        heading: string | null;
+        items: Array<{
+          _key: string;
+          question: string | null;
+          answer: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+        }> | null;
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "peopleGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-    limit: number | null;
-    people: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
-        _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "postList";
-    heading: string | null;
-    numberOfPosts: number | null;
-    posts: Array<{
-      _type: "post";
-      _id: string;
-      status: "draft" | "published";
-      title: string | "Untitled";
-      slug: string | null;
-      excerpt: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      categories: Array<{
-        _id: string;
-        _type: "category";
-        title: string | null;
-        slug: string | null;
+        _type: "gallery";
+        heading: string | null;
         description: string | null;
-      }> | null;
-      date: string;
-      author: {
-        _id: string;
-        _type: "person";
-        firstName: string | null;
-        lastName: string | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-        role: string | null;
-        personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-        email: string | null;
-        phone: string | null;
-        organization: string | null;
-        skills: Array<string> | null;
-        biography: BlockContent | null;
-        gallery: Array<{
+        images: Array<{
           _key: string;
           alt: string | null;
           caption: string | null;
-          asset: {
-            _id: string;
-            url: string | null;
-          } | null;
-        }> | null;
-        slug: string | null;
-      } | null;
-      wordCount: number;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-      seo: {
-        _type: "seoMetaFields";
-        metaTitle: string | null;
-        noIndex: boolean | null;
-        seoKeywords: Array<string> | null;
-        metaDescription: string | null;
-        metaImage: {
           _type: "image";
           crop: {
             _type: "sanity.imageCrop";
@@ -4595,16 +4809,618 @@ export type BlogPageQueryResult = {
             metadata?: SanityImageMetadata;
             source?: SanityAssetSourceData;
           } | null;
-        } | null;
-        additionalMetaTags: Array<{
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "hero";
+        heading: string | null;
+        text: BlockContent | null;
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        };
+        buttons: Array<{
           _key: string;
-          _type: "metaTag";
-          metaAttributes: Array<{
-            _type: "metaAttribute";
-            attributeValueString: string | null;
-            attributeType: "image" | "string" | null;
-            attributeKey: string | null;
-            attributeValueImage: {
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
+            _type: "link";
+            type: "external" | "internal" | null;
+            openInNewTab: boolean | null;
+            external: string | null;
+            href: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "listingGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          | "accommodation"
+          | "all"
+          | "area"
+          | "business"
+          | "church"
+          | "clinic"
+          | "facility"
+          | "school"
+          | null;
+        limit: number | null;
+        listings: Array<{
+          _id: string;
+          _type: "listing";
+          name: string | null;
+          slug: string | null;
+          listingType:
+            | "accommodation"
+            | "area"
+            | "business"
+            | "church"
+            | "clinic"
+            | "facility"
+            | "school"
+            | null;
+          description: string | null;
+          location: string | null;
+          geopoint: Geopoint | null;
+          contactInfo: string | null;
+          whatsappContact: string | null;
+          website: string | null;
+          servicesOffered: Array<string> | null;
+          operatingHours: string | null;
+          verifiedByInduna: "community" | "council" | "induna" | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          imageUrl: string | null;
+          areaName: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "logoGrid";
+        heading: string | null;
+        description: string | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string | null;
+          slug: string | null;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "mediaText";
+        heading: string | null;
+        content?: BlockContent;
+        imagePosition: "left" | "right" | null;
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        buttons: Array<{
+          _key: string;
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
+            _type: "link";
+            type: "external" | "internal" | null;
+            openInNewTab: boolean | null;
+            external: string | null;
+            href: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
+          } | null;
+        }> | null;
+        text: null;
+      }
+    | {
+        _key: string;
+        _type: "noticeList";
+        heading: string | null;
+        numberOfNotices: number | null;
+        filterType:
+          "alert" | "all" | "announcement" | "meeting" | "opportunity" | null;
+        notices: Array<{
+          _id: string;
+          _type: "notice";
+          title: string | null;
+          slug: string | null;
+          noticeType:
+            | "alert"
+            | "announcement"
+            | "employment"
+            | "meeting"
+            | "opportunity"
+            | "project-update"
+            | "resolution"
+            | "smme"
+            | null;
+          date: string | null;
+          excerpt: string | null;
+          pinned: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          relatedCampaign: {
+            title: string | null;
+            slug: string | null;
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "opportunityList";
+        heading: string | null;
+        description: string | null;
+        filterType: "all" | "bursary" | "funding" | "job" | "training" | null;
+        limit: number | null;
+        opportunities: Array<{
+          _id: string;
+          _type: "opportunity";
+          title: string | null;
+          slug: string | null;
+          opportunityType: "bursary" | "funding" | "job" | "training" | null;
+          description: string | null;
+          organization: string | null;
+          deadline: string | null;
+          link: string | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "organogram";
+        heading: string | null;
+        description: string | null;
+        inkosi: {
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        } | null;
+        izinduna: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }> | null;
+        council: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "peopleGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          | "all"
+          | "author"
+          | "community"
+          | "council"
+          | "induna"
+          | "inkosi"
+          | "youth"
+          | null;
+        limit: number | null;
+        people: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "postList";
+        heading: string | null;
+        numberOfPosts: number | null;
+        posts: Array<{
+          _type: "post";
+          _id: string;
+          status: "draft" | "published";
+          title: string | "Untitled";
+          slug: string | null;
+          excerpt: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          categories: Array<{
+            _id: string;
+            _type: "category";
+            title: string | null;
+            slug: string | null;
+            description: string | null;
+          }> | null;
+          date: string;
+          author: {
+            _id: string;
+            _type: "person";
+            firstName: string | null;
+            lastName: string | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+            role: string | null;
+            personType:
+              | "author"
+              | "community"
+              | "council"
+              | "induna"
+              | "inkosi"
+              | "youth"
+              | null;
+            email: string | null;
+            phone: string | null;
+            organization: string | null;
+            skills: Array<string> | null;
+            biography: BlockContent | null;
+            gallery: Array<{
+              _key: string;
+              alt: string | null;
+              caption: string | null;
+              asset: {
+                _id: string;
+                url: string | null;
+              } | null;
+            }> | null;
+            slug: string | null;
+          } | null;
+          wordCount: number;
+          content: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+          seo: {
+            _type: "seoMetaFields";
+            metaTitle: string | null;
+            noIndex: boolean | null;
+            seoKeywords: Array<string> | null;
+            metaDescription: string | null;
+            metaImage: {
               _type: "image";
               crop: {
                 _type: "sanity.imageCrop";
@@ -4643,318 +5459,441 @@ export type BlogPageQueryResult = {
                 source?: SanityAssetSourceData;
               } | null;
             } | null;
-          }> | null;
-        }> | null;
-        openGraph: {
-          _type: "openGraph";
-          siteName: string | null;
-          url: string | null;
-          description: string | null;
-          title: string | null;
-          image: {
-            _type: "image";
-            crop: {
-              _type: "sanity.imageCrop";
-              right: number | null;
-              top: number | null;
-              left: number | null;
-              bottom: number | null;
+            additionalMetaTags: Array<{
+              _key: string;
+              _type: "metaTag";
+              metaAttributes: Array<{
+                _type: "metaAttribute";
+                attributeValueString: string | null;
+                attributeType: "image" | "string" | null;
+                attributeKey: string | null;
+                attributeValueImage: {
+                  _type: "image";
+                  crop: {
+                    _type: "sanity.imageCrop";
+                    right: number | null;
+                    top: number | null;
+                    left: number | null;
+                    bottom: number | null;
+                  } | null;
+                  hotspot: {
+                    _type: "sanity.imageHotspot";
+                    x: number | null;
+                    y: number | null;
+                    height: number | null;
+                    width: number | null;
+                  } | null;
+                  asset: {
+                    _id: string;
+                    _type: "sanity.imageAsset";
+                    _createdAt: string;
+                    _updatedAt: string;
+                    _rev: string;
+                    originalFilename?: string;
+                    label?: string;
+                    title?: string;
+                    description?: string;
+                    altText?: string;
+                    sha1hash?: string;
+                    extension?: string;
+                    mimeType?: string;
+                    size?: number;
+                    assetId?: string;
+                    uploadId?: string;
+                    path?: string;
+                    url?: string;
+                    metadata?: SanityImageMetadata;
+                    source?: SanityAssetSourceData;
+                  } | null;
+                } | null;
+              }> | null;
+            }> | null;
+            openGraph: {
+              _type: "openGraph";
+              siteName: string | null;
+              url: string | null;
+              description: string | null;
+              title: string | null;
+              image: {
+                _type: "image";
+                crop: {
+                  _type: "sanity.imageCrop";
+                  right: number | null;
+                  top: number | null;
+                  left: number | null;
+                  bottom: number | null;
+                } | null;
+                hotspot: {
+                  _type: "sanity.imageHotspot";
+                  x: number | null;
+                  y: number | null;
+                  height: number | null;
+                  width: number | null;
+                } | null;
+                asset: {
+                  _id: string;
+                  _type: "sanity.imageAsset";
+                  _createdAt: string;
+                  _updatedAt: string;
+                  _rev: string;
+                  originalFilename?: string;
+                  label?: string;
+                  title?: string;
+                  description?: string;
+                  altText?: string;
+                  sha1hash?: string;
+                  extension?: string;
+                  mimeType?: string;
+                  size?: number;
+                  assetId?: string;
+                  uploadId?: string;
+                  path?: string;
+                  url?: string;
+                  metadata?: SanityImageMetadata;
+                  source?: SanityAssetSourceData;
+                } | null;
+              } | null;
             } | null;
-            hotspot: {
-              _type: "sanity.imageHotspot";
-              x: number | null;
-              y: number | null;
-              height: number | null;
-              width: number | null;
-            } | null;
-            asset: {
-              _id: string;
-              _type: "sanity.imageAsset";
-              _createdAt: string;
-              _updatedAt: string;
-              _rev: string;
-              originalFilename?: string;
-              label?: string;
-              title?: string;
-              description?: string;
-              altText?: string;
-              sha1hash?: string;
-              extension?: string;
-              mimeType?: string;
-              size?: number;
-              assetId?: string;
-              uploadId?: string;
-              path?: string;
-              url?: string;
-              metadata?: SanityImageMetadata;
-              source?: SanityAssetSourceData;
+            twitter: {
+              _type: "twitter";
+              site: string | null;
+              creator: string | null;
+              cardType: string | null;
+              handle: string | null;
             } | null;
           } | null;
-        } | null;
-        twitter: {
-          _type: "twitter";
-          site: string | null;
-          creator: string | null;
-          cardType: string | null;
-          handle: string | null;
-        } | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "process";
-    heading: string | null;
-    description: string | null;
-    steps: Array<{
-      _key: string;
-      title: string | null;
-      description: string | null;
-    }> | null;
-    footnote: string | null;
-  } | {
-    _key: string;
-    _type: "programList";
-    heading: string | null;
-    description: string | null;
-    filterStatus: "active" | "all" | "completed" | "upcoming" | null;
-    limit: number | null;
-    programs: Array<{
-      _id: string;
-      _type: "program";
-      title: string | null;
-      slug: string | null;
-      programType: "community" | "school" | "skills" | "youth-event" | null;
-      status: "active" | "completed" | "upcoming" | null;
-      date: string | null;
-      description: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "quote";
-    text: string | null;
-    author: {
-      firstName: string | null;
-      lastName: string | null;
-      role: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    } | null;
-    authorName: string | null;
-    authorRole: string | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    } | null;
-  } | {
-    _key: string;
-    _type: "recordList";
-    heading: string | null;
-    filterType: "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
-    limit: number | null;
-    records: Array<{
-      _id: string;
-      _type: "record";
-      title: string | null;
-      slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
-      date: string | null;
-      summary: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
-      approvedBy: {
-        firstName: string | null;
-        lastName: string | null;
-        role: string | null;
-      } | null;
-      evidence: Array<{
+        }>;
+      }
+    | {
         _key: string;
-        title: string | null;
-        url: string | null;
-      }> | null;
-      externalUrl: string | null;
-      source: string | null;
-      originNotice: {
-        title: string | null;
-        slug: string | null;
-        noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-      } | null;
-      parentRecord: {
-        title: string | null;
-        slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "richText";
-    heading: string | null;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
+        _type: "process";
+        heading: string | null;
+        description: string | null;
+        steps: Array<{
+          _key: string;
+          title: string | null;
+          description: string | null;
+        }> | null;
+        footnote: string | null;
+      }
+    | {
         _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs: Array<{
-        customLink?: Link;
-        _type: "customLink";
-        _key: string;
-      } | {
-        customLink?: Link;
-        _type: "link";
-        _key: string;
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
+        _type: "programList";
+        heading: string | null;
+        description: string | null;
+        filterStatus: "active" | "all" | "completed" | "upcoming" | null;
+        limit: number | null;
+        programs: Array<{
           _id: string;
+          _type: "program";
+          title: string | null;
           slug: string | null;
-        } | {
-          _type: "page";
+          programType: "community" | "school" | "skills" | "youth-event" | null;
+          status: "active" | "completed" | "upcoming" | null;
+          date: string | null;
+          description: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "quote";
+        text: string | null;
+        author: {
+          firstName: string | null;
+          lastName: string | null;
+          role: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        } | null;
+        authorName: string | null;
+        authorRole: string | null;
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "recordList";
+        heading: string | null;
+        filterType:
+          | "all"
+          | "dispute-resolution"
+          | "external-resource"
+          | "land-allocation"
+          | "minutes"
+          | "policy"
+          | "public-notice"
+          | "report"
+          | "resolution"
+          | null;
+        limit: number | null;
+        records: Array<{
           _id: string;
+          _type: "record";
+          title: string | null;
           slug: string | null;
-        } | {
+          recordType:
+            | "community-decision"
+            | "dispute-resolution"
+            | "external-resource"
+            | "land-allocation"
+            | "minutes"
+            | "policy"
+            | "project-outcome"
+            | "public-notice"
+            | "report"
+            | "resolution"
+            | null;
+          date: string | null;
+          summary: string | null;
+          status: "approved" | "pending" | "rejected" | "resolved" | null;
+          approvedBy: {
+            firstName: string | null;
+            lastName: string | null;
+            role: string | null;
+          } | null;
+          evidence: Array<{
+            _key: string;
+            title: string | null;
+            url: string | null;
+          }> | null;
+          externalUrl: string | null;
+          source: string | null;
+          originNotice: {
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "alert"
+              | "announcement"
+              | "employment"
+              | "meeting"
+              | "opportunity"
+              | "project-update"
+              | "resolution"
+              | "smme"
+              | null;
+          } | null;
+          parentRecord: {
+            title: string | null;
+            slug: string | null;
+            recordType:
+              | "community-decision"
+              | "dispute-resolution"
+              | "external-resource"
+              | "land-allocation"
+              | "minutes"
+              | "policy"
+              | "project-outcome"
+              | "public-notice"
+              | "report"
+              | "resolution"
+              | null;
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "richText";
+        heading: string | null;
+        content: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet" | "number";
+              markDefs: Array<
+                | {
+                    customLink?: Link;
+                    _type: "customLink";
+                    _key: string;
+                  }
+                | {
+                    customLink?: Link;
+                    _type: "link";
+                    _key: string;
+                    type: "external" | "internal" | null;
+                    openInNewTab: boolean | null;
+                    external: string | null;
+                    href: string | null;
+                    internal:
+                      | {
+                          _type: "category";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "page";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "person";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "post";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | null;
+                  }
+              > | null;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+              _key: string;
+              markDefs: null;
+            }
+        > | null;
+      }
+    | {
+        _key: string;
+        _type: "sponsorGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          "all" | "business" | "community" | "government" | "ngo" | null;
+        limit: number | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string | null;
+          slug: string | null;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "stats";
+        heading: string | null;
+        items: Array<{
+          _key: string;
+          value: string | null;
+          label: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "subscribe";
+        heading: string | null;
+        content: BlockContent | null;
+        buttonText: string | null;
+      }
+    | {
+        _key: string;
+        _type: "teamGrid";
+        heading: string | null;
+        description: string | null;
+        members: Array<{
+          _id: string;
           _type: "person";
-          _id: string;
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
           slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      }> | null;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-      markDefs: null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "sponsorGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "business" | "community" | "government" | "ngo" | null;
-    limit: number | null;
-    sponsors: Array<{
-      _id: string;
-      _type: "sponsor";
-      name: string | null;
-      slug: string | null;
-      sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      logo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      } | null;
-      website: string | null;
-      description: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "stats";
-    heading: string | null;
-    items: Array<{
-      _key: string;
-      value: string | null;
-      label: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "subscribe";
-    heading: string | null;
-    content: BlockContent | null;
-    buttonText: string | null;
-  } | {
-    _key: string;
-    _type: "teamGrid";
-    heading: string | null;
-    description: string | null;
-    members: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
-        _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-  }> | null;
+        }> | null;
+      }
+  > | null;
   seo: {
     _type: "seoMetaFields";
     metaTitle: string | null;
@@ -5104,6 +6043,8 @@ export type BlogPageQueryResult = {
     } | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: getPageQuery
 // Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    name,    "slug": slug.current,        pageSections[]{    ...,    _key,    _type,    _type == 'adBanner' => {  _type,  title,  image,  link,  sponsorName,  "sponsor": sponsor->{    name,    website  },  startDate,  endDate,  size},    _type == 'campaignList' => {  _type,  heading,  description,  filterType,  filterStatus,  limit,  "campaigns": *[_type == 'campaign' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    campaignType == ^.filterType  ) && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(startDate desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  projectReference,  projectHealth,  description,  targetAudience,  tags,  startDate,  endDate,  image,  hideCoverImage,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  fundingSource,  contractor,  contractNumber,  consultingEngineer,  projectPhase,  localSMMEs,  smmeDirectory[] {    _key,    name,    service,    owner,    cipcNumber,    taxClearance,    bbbeeLevel,    ward,    contactPhone,    verified,    complianceStatus,    "logoUrl": logo.asset->url  },  budget,  beneficiaries,  impactSummary,  lessonsLearned,  deliverables,  deliverablesCertified[] {    _key,    task,    status,    percentageComplete,    weightage,    certifiedBy,    certificationDate,    notes  },  totalDeliverables,  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {    _id,    field,    conflictType,    displayTruth,    resolutionState,    resolutionNote,    detectedAt,    resolvedAt,    claims[] {      source,      value,      date,      evidence    }  },  communityNote[] {    _key,    date,    issuedBy,    message  },  projectUpdates[] {    _key,    date,    title,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    },    videoUrl  },  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  },  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {    _id,    title,    "slug": slug.current,    noticeType,    status,    applicant,    commentDeadline,    publishDate,    location  },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },  }},    _type == 'cardGrid' => {    _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  cards[]{      _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  },},    _type == 'communityMap' => {  _type,  heading,  description,  centerLat,  centerLng,  zoom,  filterType,  "listings": *[_type == 'listing' && defined(geopoint) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,  }},    _type == 'contactForm' => {  _type,  heading,  description,  showMap,  mapEmbedUrl},    _type == 'cta' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'divider' => {  _type,  height},    _type == 'embed' => {  _type,  heading,  url,  aspectRatio},    _type == 'faq' => {  _type,  heading,  items[] {    _key,    question,    answer[]{ ...,   markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  }, }  }},    _type == 'gallery' => {  _type,  heading,  description,  images[] {    _key,    alt,    caption,      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  }},    _type == 'hero' => {  _type,  heading,  text,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'listingGrid' => {  _type,  heading,  description,  filterType,  limit,  "listings": *[_type == 'listing' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    listingType == ^.filterType  )] | order(featured desc, name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,  }},    _type == 'logoGrid' => {  _type,  heading,  description,  "sponsors": sponsors[]->{  _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,}},    _type == 'mediaText' => {  _type,  heading,  text,  image,  imagePosition,    buttons[]{      _key,  _type,  variant,  text,  link {      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },},    _type == 'noticeList' => {  _type,  heading,  numberOfNotices,  filterType,  "notices": *[_type == 'notice' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    noticeType == ^.filterType  )] | order(pinned desc, date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  }},    _type == 'opportunityList' => {  _type,  heading,  description,  filterType,  limit,  "opportunities": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    opportunityType == ^.filterType  )] | order(featured desc, deadline asc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  }},    _type == 'organogram' => {  _type,  heading,  description,  "inkosi": inkosi->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "izinduna": izinduna[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "council": council[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}},    _type == 'postList' => {    _type,    heading,    numberOfPosts,    "posts": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {          _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },    }},    _type == 'process' => {  _type,  heading,  description,  steps[] {    _key,    title,    description  },  footnote},    _type == 'programList' => {  _type,  heading,  description,  filterStatus,  limit,  "programs": *[_type == 'program' && select(    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,    status == ^.filterStatus  )] | order(date desc) [0...12] {      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,  }},    _type == 'peopleGrid' => {  _type,  heading,  description,  filterType,  limit,  "people": *[_type == 'person' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    personType == ^.filterType  )] | order(firstName asc) [0...12] {      _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,  }},    _type == 'quote' => {  _type,  text,  "author": author->{    firstName,    lastName,    role,    image  },  authorName,  authorRole,  image},    _type == 'recordList' => {  _type,  heading,  filterType,  limit,  "records": *[_type == 'record' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    recordType == ^.filterType  )] | order(date desc) [0...10] {      _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  evidence[]{ _key, title, "url": asset->url },  externalUrl,  source,  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },  }},    _type == 'richText' => {  _type,  heading,    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },},    _type == 'sponsorGrid' => {  _type,  heading,  description,  filterType,  limit,  "sponsors": *[_type == 'sponsor' && select(    ^.filterType == 'all' || !defined(^.filterType) => true,    sponsorType == ^.filterType  )] | order(name asc) [0...12] {      _id,  _type,  name,  "slug": slug.current,  sponsorType,  logo,  website,  description,  }},    _type == 'stats' => {  _type,  heading,  items[] {    _key,    value,    label  }},    _type == 'subscribe' => {  _type,  heading,  content,  buttonText},    _type == 'teamGrid' => {  _type,  heading,  description,  "members": members[]->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,}}  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },  }
 export type GetPageQueryResult = {
@@ -5111,1125 +6052,717 @@ export type GetPageQueryResult = {
   _type: "page";
   name: string | null;
   slug: string | null;
-  pageSections: Array<{
-    _key: string;
-    _type: "adBanner";
-    title: string | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    } | null;
-    sponsor: {
-      name: string | null;
-      website: string | null;
-    } | null;
-    sponsorName: string | null;
-    link: string | null;
-    startDate: string | null;
-    endDate: string | null;
-    size: "full" | "half" | null;
-  } | {
-    _key: string;
-    _type: "campaignList";
-    heading: string | null;
-    description: string | null;
-    filterType: "activation" | "ad" | "all" | "csr" | null;
-    filterStatus: "active" | "all" | "completed" | null;
-    limit: number | null;
-    campaigns: Array<{
-      _id: string;
-      _type: "campaign";
-      title: string | null;
-      slug: string | null;
-      campaignType: "activation" | "ad" | "csr" | null;
-      status: "active" | "approved" | "completed" | "draft" | "reported" | null;
-      projectReference: string | null;
-      projectHealth: "amber" | "green" | "red" | null;
-      description: string | null;
-      targetAudience: string | null;
-      tags: Array<string> | null;
-      startDate: string | null;
-      endDate: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      hideCoverImage: boolean | null;
-      link: string | null;
-      videoUrl: string | null;
-      audioFileUrl: string | null;
-      fundingSource: string | null;
-      contractor: string | null;
-      contractNumber: string | null;
-      consultingEngineer: string | null;
-      projectPhase: "commissioning" | "construction" | "operational" | "planning" | "procurement" | null;
-      localSMMEs: number | null;
-      smmeDirectory: Array<{
+  pageSections: Array<
+    | {
         _key: string;
-        name: string | null;
-        service: string | null;
-        owner: string | null;
-        cipcNumber: string | null;
-        taxClearance: "expired" | "none" | "valid" | null;
-        bbbeeLevel: "1" | "2" | "3" | "4" | "eme" | "none" | "qse" | null;
-        ward: string | null;
-        contactPhone: string | null;
-        verified: boolean | null;
-        complianceStatus: "compliant" | "non-compliant" | "partial" | "pending" | null;
-        logoUrl: string | null;
-      }> | null;
-      budget: number | null;
-      beneficiaries: number | null;
-      impactSummary: string | null;
-      lessonsLearned: string | null;
-      deliverables: Array<string> | null;
-      deliverablesCertified: Array<{
-        _key: string;
-        task: string | null;
-        status: "certified" | "disputed" | "pending" | null;
-        percentageComplete: number | null;
-        weightage: number | null;
-        certifiedBy: string | null;
-        certificationDate: string | null;
-        notes: string | null;
-      }> | null;
-      totalDeliverables: number | null;
-      verificationRecords: Array<{
-        _id: string;
-        field: "budget" | "other" | "phase" | "progress" | "status" | "timeline" | "workforce" | null;
-        conflictType: "numerical" | "political" | "status" | "time" | "workforce" | null;
-        displayTruth: string | null;
-        resolutionState: "escalated" | "partial" | "pending" | "resolved" | null;
-        resolutionNote: string | null;
-        detectedAt: string | null;
-        resolvedAt: string | null;
-        claims: Array<{
-          source: "clo" | "contractor" | "engineer" | "municipality" | "observation" | "pmu" | null;
-          value: string | null;
-          date: string | null;
-          evidence: string | null;
-        }> | null;
-      }>;
-      communityNote: Array<{
-        _key: string;
-        date: string | null;
-        issuedBy: string | null;
-        message: string | null;
-      }> | null;
-      projectUpdates: Array<{
-        _key: string;
-        date: string | null;
+        _type: "adBanner";
         title: string | null;
-        content: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        sponsor: {
+          name: string | null;
+          website: string | null;
+        } | null;
+        sponsorName: string | null;
+        link: string | null;
+        startDate: string | null;
+        endDate: string | null;
+        size: "full" | "half" | null;
+      }
+    | {
+        _key: string;
+        _type: "campaignList";
+        heading: string | null;
+        description: string | null;
+        filterType: "activation" | "ad" | "all" | "csr" | null;
+        filterStatus: "active" | "all" | "completed" | null;
+        limit: number | null;
+        campaigns: Array<{
+          _id: string;
+          _type: "campaign";
+          title: string | null;
+          slug: string | null;
+          campaignType: "activation" | "ad" | "csr" | null;
+          status:
+            "active" | "approved" | "completed" | "draft" | "reported" | null;
+          projectReference: string | null;
+          projectHealth: "amber" | "green" | "red" | null;
+          description: string | null;
+          targetAudience: string | null;
+          tags: Array<string> | null;
+          startDate: string | null;
+          endDate: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          hideCoverImage: boolean | null;
+          link: string | null;
+          videoUrl: string | null;
+          audioFileUrl: string | null;
+          fundingSource: string | null;
+          contractor: string | null;
+          contractNumber: string | null;
+          consultingEngineer: string | null;
+          projectPhase:
+            | "commissioning"
+            | "construction"
+            | "operational"
+            | "planning"
+            | "procurement"
+            | null;
+          localSMMEs: number | null;
+          smmeDirectory: Array<{
             _key: string;
+            name: string | null;
+            service: string | null;
+            owner: string | null;
+            cipcNumber: string | null;
+            taxClearance: "expired" | "none" | "valid" | null;
+            bbbeeLevel: "1" | "2" | "3" | "4" | "eme" | "none" | "qse" | null;
+            ward: string | null;
+            contactPhone: string | null;
+            verified: boolean | null;
+            complianceStatus:
+              "compliant" | "non-compliant" | "partial" | "pending" | null;
+            logoUrl: string | null;
+          }> | null;
+          budget: number | null;
+          beneficiaries: number | null;
+          impactSummary: string | null;
+          lessonsLearned: string | null;
+          deliverables: Array<string> | null;
+          deliverablesCertified: Array<{
+            _key: string;
+            task: string | null;
+            status: "certified" | "disputed" | "pending" | null;
+            percentageComplete: number | null;
+            weightage: number | null;
+            certifiedBy: string | null;
+            certificationDate: string | null;
+            notes: string | null;
+          }> | null;
+          totalDeliverables: number | null;
+          verificationRecords: Array<{
+            _id: string;
+            field:
+              | "budget"
+              | "other"
+              | "phase"
+              | "progress"
+              | "status"
+              | "timeline"
+              | "workforce"
+              | null;
+            conflictType:
+              | "numerical"
+              | "political"
+              | "status"
+              | "time"
+              | "workforce"
+              | null;
+            displayTruth: string | null;
+            resolutionState:
+              "escalated" | "partial" | "pending" | "resolved" | null;
+            resolutionNote: string | null;
+            detectedAt: string | null;
+            resolvedAt: string | null;
+            claims: Array<{
+              source:
+                | "clo"
+                | "contractor"
+                | "engineer"
+                | "municipality"
+                | "observation"
+                | "pmu"
+                | null;
+              value: string | null;
+              date: string | null;
+              evidence: string | null;
+            }> | null;
           }>;
-          style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-          listItem?: "bullet" | "number";
-          markDefs: Array<{
-            customLink?: Link;
-            _type: "customLink";
+          communityNote: Array<{
             _key: string;
-          } | {
-            customLink?: Link;
+            date: string | null;
+            issuedBy: string | null;
+            message: string | null;
+          }> | null;
+          projectUpdates: Array<{
+            _key: string;
+            date: string | null;
+            title: string | null;
+            content: Array<
+              | {
+                  children?: Array<{
+                    marks?: Array<string>;
+                    text?: string;
+                    _type: "span";
+                    _key: string;
+                  }>;
+                  style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                  listItem?: "bullet" | "number";
+                  markDefs: Array<
+                    | {
+                        customLink?: Link;
+                        _type: "customLink";
+                        _key: string;
+                      }
+                    | {
+                        customLink?: Link;
+                        _type: "link";
+                        _key: string;
+                        type: "external" | "internal" | null;
+                        openInNewTab: boolean | null;
+                        external: string | null;
+                        href: string | null;
+                        internal:
+                          | {
+                              _type: "category";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "page";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "person";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | {
+                              _type: "post";
+                              _id: string;
+                              slug: string | null;
+                            }
+                          | null;
+                      }
+                  > | null;
+                  level?: number;
+                  _type: "block";
+                  _key: string;
+                }
+              | {
+                  asset?: {
+                    _ref: string;
+                    _type: "reference";
+                    _weak?: boolean;
+                    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                  };
+                  hotspot?: SanityImageHotspot;
+                  crop?: SanityImageCrop;
+                  alt?: string;
+                  _type: "image";
+                  _key: string;
+                  markDefs: null;
+                }
+            > | null;
+            gallery: Array<{
+              _key: string;
+              alt: string | null;
+              caption: string | null;
+              asset: {
+                _id: string;
+                url: string | null;
+              } | null;
+            }> | null;
+            videoUrl: string | null;
+          }> | null;
+          sponsor: {
+            name: string | null;
+            slug: string | null;
+            logo: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+            } | null;
+            logoUrl: string | null;
+            website: string | null;
+            sponsorType:
+              | "business"
+              | "community"
+              | "government"
+              | "individual"
+              | "ngo"
+              | null;
+          } | null;
+          contactPerson: {
+            firstName: string | null;
+            lastName: string | null;
+            role: string | null;
+            slug: string | null;
+          } | null;
+          relatedAreas: Array<{
+            name: string | null;
+            slug: string | null;
+            induna: {
+              firstName: string | null;
+              lastName: string | null;
+              role: string | null;
+            } | null;
+          }> | null;
+          relatedProgram: {
+            title: string | null;
+            slug: string | null;
+          } | null;
+          relatedOpportunities: Array<{
+            _id: string;
+            _type: "opportunity";
+            title: string | null;
+            slug: string | null;
+            opportunityType: "bursary" | "funding" | "job" | "training" | null;
+            description: string | null;
+            organization: string | null;
+            deadline: string | null;
+            link: string | null;
+            featured: boolean | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+          }>;
+          relatedDevelopmentNotices: Array<{
+            _id: string;
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "building"
+              | "eia"
+              | "estate"
+              | "land-use"
+              | "liquidation"
+              | "liquor"
+              | "mining"
+              | "other"
+              | "pto"
+              | "rezoning"
+              | "telecom"
+              | "township"
+              | null;
+            status:
+              "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
+            applicant: string | null;
+            commentDeadline: string | null;
+            publishDate: string | null;
+            location: string | null;
+          }>;
+          relatedNotices: Array<{
+            _id: string;
+            _type: "notice";
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "alert"
+              | "announcement"
+              | "employment"
+              | "meeting"
+              | "opportunity"
+              | "project-update"
+              | "resolution"
+              | "smme"
+              | null;
+            date: string | null;
+            excerpt: string | null;
+            pinned: boolean | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+            relatedCampaign: {
+              title: string | null;
+              slug: string | null;
+            } | null;
+          }>;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "cardGrid";
+        heading: string | null;
+        content: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet" | "number";
+              markDefs: Array<
+                | {
+                    customLink?: Link;
+                    _type: "customLink";
+                    _key: string;
+                  }
+                | {
+                    customLink?: Link;
+                    _type: "link";
+                    _key: string;
+                    type: "external" | "internal" | null;
+                    openInNewTab: boolean | null;
+                    external: string | null;
+                    href: string | null;
+                    internal:
+                      | {
+                          _type: "category";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "page";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "person";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "post";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | null;
+                  }
+              > | null;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+              _key: string;
+              markDefs: null;
+            }
+        > | null;
+        cards: Array<{
+          _type: "card";
+          heading: string | null;
+          content: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "communityMap";
+        heading: string | null;
+        description: string | null;
+        centerLat: number | null;
+        centerLng: number | null;
+        zoom: number | null;
+        filterType:
+          | "accommodation"
+          | "all"
+          | "area"
+          | "business"
+          | "church"
+          | "clinic"
+          | "facility"
+          | "school"
+          | null;
+        listings: Array<{
+          _id: string;
+          _type: "listing";
+          name: string | null;
+          slug: string | null;
+          listingType:
+            | "accommodation"
+            | "area"
+            | "business"
+            | "church"
+            | "clinic"
+            | "facility"
+            | "school"
+            | null;
+          description: string | null;
+          location: string | null;
+          geopoint: Geopoint | null;
+          contactInfo: string | null;
+          whatsappContact: string | null;
+          website: string | null;
+          servicesOffered: Array<string> | null;
+          operatingHours: string | null;
+          verifiedByInduna: "community" | "council" | "induna" | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          imageUrl: string | null;
+          areaName: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "contactForm";
+        heading: string | null;
+        description: string | null;
+        showMap: boolean | null;
+        mapEmbedUrl: string | null;
+      }
+    | {
+        _key: string;
+        _type: "cta";
+        heading: string | null;
+        text: string | null;
+        buttons: Array<{
+          _key: string;
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
             _type: "link";
-            _key: string;
             type: "external" | "internal" | null;
             openInNewTab: boolean | null;
             external: string | null;
             href: string | null;
-            internal: {
-              _type: "category";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "page";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "person";
-              _id: string;
-              slug: string | null;
-            } | {
-              _type: "post";
-              _id: string;
-              slug: string | null;
-            } | null;
-          }> | null;
-          level?: number;
-          _type: "block";
-          _key: string;
-        } | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-          _key: string;
-          markDefs: null;
-        }> | null;
-        gallery: Array<{
-          _key: string;
-          alt: string | null;
-          caption: string | null;
-          asset: {
-            _id: string;
-            url: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
           } | null;
         }> | null;
-        videoUrl: string | null;
-      }> | null;
-      sponsor: {
-        name: string | null;
-        slug: string | null;
-        logo: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: "image";
-        } | null;
-        logoUrl: string | null;
-        website: string | null;
-        sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      } | null;
-      contactPerson: {
-        firstName: string | null;
-        lastName: string | null;
-        role: string | null;
-        slug: string | null;
-      } | null;
-      relatedAreas: Array<{
-        name: string | null;
-        slug: string | null;
-        induna: {
-          firstName: string | null;
-          lastName: string | null;
-          role: string | null;
-        } | null;
-      }> | null;
-      relatedProgram: {
-        title: string | null;
-        slug: string | null;
-      } | null;
-      relatedOpportunities: Array<{
-        _id: string;
-        _type: "opportunity";
-        title: string | null;
-        slug: string | null;
-        opportunityType: "bursary" | "funding" | "job" | "training" | null;
-        description: string | null;
-        organization: string | null;
-        deadline: string | null;
-        link: string | null;
-        featured: boolean | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-      }>;
-      relatedDevelopmentNotices: Array<{
-        _id: string;
-        title: string | null;
-        slug: string | null;
-        noticeType: "building" | "eia" | "estate" | "land-use" | "liquidation" | "liquor" | "mining" | "other" | "pto" | "rezoning" | "telecom" | "township" | null;
-        status: "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
-        applicant: string | null;
-        commentDeadline: string | null;
-        publishDate: string | null;
-        location: string | null;
-      }>;
-      relatedNotices: Array<{
-        _id: string;
-        _type: "notice";
-        title: string | null;
-        slug: string | null;
-        noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-        date: string | null;
-        excerpt: string | null;
-        pinned: boolean | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-        relatedCampaign: {
-          title: string | null;
-          slug: string | null;
-        } | null;
-      }>;
-    }>;
-  } | {
-    _key: string;
-    _type: "cardGrid";
-    heading: string | null;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
+      }
+    | {
         _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs: Array<{
-        customLink?: Link;
-        _type: "customLink";
-        _key: string;
-      } | {
-        customLink?: Link;
-        _type: "link";
-        _key: string;
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      }> | null;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-      markDefs: null;
-    }> | null;
-    cards: Array<{
-      _type: "card";
-      heading: string | null;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "communityMap";
-    heading: string | null;
-    description: string | null;
-    centerLat: number | null;
-    centerLng: number | null;
-    zoom: number | null;
-    filterType: "accommodation" | "all" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-    listings: Array<{
-      _id: string;
-      _type: "listing";
-      name: string | null;
-      slug: string | null;
-      listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-      description: string | null;
-      location: string | null;
-      geopoint: Geopoint | null;
-      contactInfo: string | null;
-      whatsappContact: string | null;
-      website: string | null;
-      servicesOffered: Array<string> | null;
-      operatingHours: string | null;
-      verifiedByInduna: "community" | "council" | "induna" | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      imageUrl: string | null;
-      areaName: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "contactForm";
-    heading: string | null;
-    description: string | null;
-    showMap: boolean | null;
-    mapEmbedUrl: string | null;
-  } | {
-    _key: string;
-    _type: "cta";
-    heading: string | null;
-    text: string | null;
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "divider";
-    height: number | null;
-  } | {
-    _key: string;
-    _type: "embed";
-    heading: string | null;
-    url: string | null;
-    aspectRatio: "1/1" | "16/9" | "4/3" | null;
-  } | {
-    _key: string;
-    _type: "faq";
-    heading: string | null;
-    items: Array<{
-      _key: string;
-      question: string | null;
-      answer: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "gallery";
-    heading: string | null;
-    description: string | null;
-    images: Array<{
-      _key: string;
-      alt: string | null;
-      caption: string | null;
-      _type: "image";
-      crop: {
-        _type: "sanity.imageCrop";
-        right: number | null;
-        top: number | null;
-        left: number | null;
-        bottom: number | null;
-      } | null;
-      hotspot: {
-        _type: "sanity.imageHotspot";
-        x: number | null;
-        y: number | null;
+        _type: "divider";
         height: number | null;
-        width: number | null;
-      } | null;
-      asset: {
-        _id: string;
-        _type: "sanity.imageAsset";
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash?: string;
-        extension?: string;
-        mimeType?: string;
-        size?: number;
-        assetId?: string;
-        uploadId?: string;
-        path?: string;
-        url?: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "hero";
-    heading: string | null;
-    text: BlockContent | null;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    };
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "listingGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "accommodation" | "all" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-    limit: number | null;
-    listings: Array<{
-      _id: string;
-      _type: "listing";
-      name: string | null;
-      slug: string | null;
-      listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
-      description: string | null;
-      location: string | null;
-      geopoint: Geopoint | null;
-      contactInfo: string | null;
-      whatsappContact: string | null;
-      website: string | null;
-      servicesOffered: Array<string> | null;
-      operatingHours: string | null;
-      verifiedByInduna: "community" | "council" | "induna" | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      imageUrl: string | null;
-      areaName: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "logoGrid";
-    heading: string | null;
-    description: string | null;
-    sponsors: Array<{
-      _id: string;
-      _type: "sponsor";
-      name: string | null;
-      slug: string | null;
-      sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      logo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      } | null;
-      website: string | null;
-      description: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "mediaText";
-    heading: string | null;
-    content?: BlockContent;
-    imagePosition: "left" | "right" | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    } | null;
-    buttons: Array<{
-      _key: string;
-      _type: "button";
-      variant: "default" | "link" | "outline" | "secondary" | null;
-      text: string | null;
-      link: {
-        _type: "link";
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      } | null;
-    }> | null;
-    text: null;
-  } | {
-    _key: string;
-    _type: "noticeList";
-    heading: string | null;
-    numberOfNotices: number | null;
-    filterType: "alert" | "all" | "announcement" | "meeting" | "opportunity" | null;
-    notices: Array<{
-      _id: string;
-      _type: "notice";
-      title: string | null;
-      slug: string | null;
-      noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-      date: string | null;
-      excerpt: string | null;
-      pinned: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      relatedCampaign: {
-        title: string | null;
-        slug: string | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "opportunityList";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "bursary" | "funding" | "job" | "training" | null;
-    limit: number | null;
-    opportunities: Array<{
-      _id: string;
-      _type: "opportunity";
-      title: string | null;
-      slug: string | null;
-      opportunityType: "bursary" | "funding" | "job" | "training" | null;
-      description: string | null;
-      organization: string | null;
-      deadline: string | null;
-      link: string | null;
-      featured: boolean | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "organogram";
-    heading: string | null;
-    description: string | null;
-    inkosi: {
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    } | null;
-    izinduna: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+        _type: "embed";
+        heading: string | null;
+        url: string | null;
+        aspectRatio: "1/1" | "16/9" | "4/3" | null;
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-    council: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
+        _type: "faq";
+        heading: string | null;
+        items: Array<{
+          _key: string;
+          question: string | null;
+          answer: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+        }> | null;
+      }
+    | {
         _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "peopleGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-    limit: number | null;
-    people: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
-        _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "postList";
-    heading: string | null;
-    numberOfPosts: number | null;
-    posts: Array<{
-      _type: "post";
-      _id: string;
-      status: "draft" | "published";
-      title: string | "Untitled";
-      slug: string | null;
-      excerpt: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      categories: Array<{
-        _id: string;
-        _type: "category";
-        title: string | null;
-        slug: string | null;
+        _type: "gallery";
+        heading: string | null;
         description: string | null;
-      }> | null;
-      date: string;
-      author: {
-        _id: string;
-        _type: "person";
-        firstName: string | null;
-        lastName: string | null;
-        image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt?: string;
-          _type: "image";
-        } | null;
-        role: string | null;
-        personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-        email: string | null;
-        phone: string | null;
-        organization: string | null;
-        skills: Array<string> | null;
-        biography: BlockContent | null;
-        gallery: Array<{
+        images: Array<{
           _key: string;
           alt: string | null;
           caption: string | null;
-          asset: {
-            _id: string;
-            url: string | null;
-          } | null;
-        }> | null;
-        slug: string | null;
-      } | null;
-      wordCount: number;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
-      seo: {
-        _type: "seoMetaFields";
-        metaTitle: string | null;
-        noIndex: boolean | null;
-        seoKeywords: Array<string> | null;
-        metaDescription: string | null;
-        metaImage: {
           _type: "image";
           crop: {
             _type: "sanity.imageCrop";
@@ -6267,16 +6800,618 @@ export type GetPageQueryResult = {
             metadata?: SanityImageMetadata;
             source?: SanityAssetSourceData;
           } | null;
-        } | null;
-        additionalMetaTags: Array<{
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "hero";
+        heading: string | null;
+        text: BlockContent | null;
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        };
+        buttons: Array<{
           _key: string;
-          _type: "metaTag";
-          metaAttributes: Array<{
-            _type: "metaAttribute";
-            attributeValueString: string | null;
-            attributeType: "image" | "string" | null;
-            attributeKey: string | null;
-            attributeValueImage: {
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
+            _type: "link";
+            type: "external" | "internal" | null;
+            openInNewTab: boolean | null;
+            external: string | null;
+            href: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "listingGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          | "accommodation"
+          | "all"
+          | "area"
+          | "business"
+          | "church"
+          | "clinic"
+          | "facility"
+          | "school"
+          | null;
+        limit: number | null;
+        listings: Array<{
+          _id: string;
+          _type: "listing";
+          name: string | null;
+          slug: string | null;
+          listingType:
+            | "accommodation"
+            | "area"
+            | "business"
+            | "church"
+            | "clinic"
+            | "facility"
+            | "school"
+            | null;
+          description: string | null;
+          location: string | null;
+          geopoint: Geopoint | null;
+          contactInfo: string | null;
+          whatsappContact: string | null;
+          website: string | null;
+          servicesOffered: Array<string> | null;
+          operatingHours: string | null;
+          verifiedByInduna: "community" | "council" | "induna" | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          imageUrl: string | null;
+          areaName: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "logoGrid";
+        heading: string | null;
+        description: string | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string | null;
+          slug: string | null;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "mediaText";
+        heading: string | null;
+        content?: BlockContent;
+        imagePosition: "left" | "right" | null;
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        buttons: Array<{
+          _key: string;
+          _type: "button";
+          variant: "default" | "link" | "outline" | "secondary" | null;
+          text: string | null;
+          link: {
+            _type: "link";
+            type: "external" | "internal" | null;
+            openInNewTab: boolean | null;
+            external: string | null;
+            href: string | null;
+            internal:
+              | {
+                  _type: "category";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "page";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "person";
+                  _id: string;
+                  slug: string | null;
+                }
+              | {
+                  _type: "post";
+                  _id: string;
+                  slug: string | null;
+                }
+              | null;
+          } | null;
+        }> | null;
+        text: null;
+      }
+    | {
+        _key: string;
+        _type: "noticeList";
+        heading: string | null;
+        numberOfNotices: number | null;
+        filterType:
+          "alert" | "all" | "announcement" | "meeting" | "opportunity" | null;
+        notices: Array<{
+          _id: string;
+          _type: "notice";
+          title: string | null;
+          slug: string | null;
+          noticeType:
+            | "alert"
+            | "announcement"
+            | "employment"
+            | "meeting"
+            | "opportunity"
+            | "project-update"
+            | "resolution"
+            | "smme"
+            | null;
+          date: string | null;
+          excerpt: string | null;
+          pinned: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          relatedCampaign: {
+            title: string | null;
+            slug: string | null;
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "opportunityList";
+        heading: string | null;
+        description: string | null;
+        filterType: "all" | "bursary" | "funding" | "job" | "training" | null;
+        limit: number | null;
+        opportunities: Array<{
+          _id: string;
+          _type: "opportunity";
+          title: string | null;
+          slug: string | null;
+          opportunityType: "bursary" | "funding" | "job" | "training" | null;
+          description: string | null;
+          organization: string | null;
+          deadline: string | null;
+          link: string | null;
+          featured: boolean | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "organogram";
+        heading: string | null;
+        description: string | null;
+        inkosi: {
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        } | null;
+        izinduna: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }> | null;
+        council: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "peopleGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          | "all"
+          | "author"
+          | "community"
+          | "council"
+          | "induna"
+          | "inkosi"
+          | "youth"
+          | null;
+        limit: number | null;
+        people: Array<{
+          _id: string;
+          _type: "person";
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
+          slug: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "postList";
+        heading: string | null;
+        numberOfPosts: number | null;
+        posts: Array<{
+          _type: "post";
+          _id: string;
+          status: "draft" | "published";
+          title: string | "Untitled";
+          slug: string | null;
+          excerpt: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          categories: Array<{
+            _id: string;
+            _type: "category";
+            title: string | null;
+            slug: string | null;
+            description: string | null;
+          }> | null;
+          date: string;
+          author: {
+            _id: string;
+            _type: "person";
+            firstName: string | null;
+            lastName: string | null;
+            image: {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+            } | null;
+            role: string | null;
+            personType:
+              | "author"
+              | "community"
+              | "council"
+              | "induna"
+              | "inkosi"
+              | "youth"
+              | null;
+            email: string | null;
+            phone: string | null;
+            organization: string | null;
+            skills: Array<string> | null;
+            biography: BlockContent | null;
+            gallery: Array<{
+              _key: string;
+              alt: string | null;
+              caption: string | null;
+              asset: {
+                _id: string;
+                url: string | null;
+              } | null;
+            }> | null;
+            slug: string | null;
+          } | null;
+          wordCount: number;
+          content: Array<
+            | {
+                children?: Array<{
+                  marks?: Array<string>;
+                  text?: string;
+                  _type: "span";
+                  _key: string;
+                }>;
+                style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+                listItem?: "bullet" | "number";
+                markDefs: Array<
+                  | {
+                      customLink?: Link;
+                      _type: "customLink";
+                      _key: string;
+                    }
+                  | {
+                      customLink?: Link;
+                      _type: "link";
+                      _key: string;
+                      type: "external" | "internal" | null;
+                      openInNewTab: boolean | null;
+                      external: string | null;
+                      href: string | null;
+                      internal:
+                        | {
+                            _type: "category";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "page";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "person";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | {
+                            _type: "post";
+                            _id: string;
+                            slug: string | null;
+                          }
+                        | null;
+                    }
+                > | null;
+                level?: number;
+                _type: "block";
+                _key: string;
+              }
+            | {
+                asset?: {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                };
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt?: string;
+                _type: "image";
+                _key: string;
+                markDefs: null;
+              }
+          > | null;
+          seo: {
+            _type: "seoMetaFields";
+            metaTitle: string | null;
+            noIndex: boolean | null;
+            seoKeywords: Array<string> | null;
+            metaDescription: string | null;
+            metaImage: {
               _type: "image";
               crop: {
                 _type: "sanity.imageCrop";
@@ -6315,318 +7450,441 @@ export type GetPageQueryResult = {
                 source?: SanityAssetSourceData;
               } | null;
             } | null;
-          }> | null;
-        }> | null;
-        openGraph: {
-          _type: "openGraph";
-          siteName: string | null;
-          url: string | null;
-          description: string | null;
-          title: string | null;
-          image: {
-            _type: "image";
-            crop: {
-              _type: "sanity.imageCrop";
-              right: number | null;
-              top: number | null;
-              left: number | null;
-              bottom: number | null;
+            additionalMetaTags: Array<{
+              _key: string;
+              _type: "metaTag";
+              metaAttributes: Array<{
+                _type: "metaAttribute";
+                attributeValueString: string | null;
+                attributeType: "image" | "string" | null;
+                attributeKey: string | null;
+                attributeValueImage: {
+                  _type: "image";
+                  crop: {
+                    _type: "sanity.imageCrop";
+                    right: number | null;
+                    top: number | null;
+                    left: number | null;
+                    bottom: number | null;
+                  } | null;
+                  hotspot: {
+                    _type: "sanity.imageHotspot";
+                    x: number | null;
+                    y: number | null;
+                    height: number | null;
+                    width: number | null;
+                  } | null;
+                  asset: {
+                    _id: string;
+                    _type: "sanity.imageAsset";
+                    _createdAt: string;
+                    _updatedAt: string;
+                    _rev: string;
+                    originalFilename?: string;
+                    label?: string;
+                    title?: string;
+                    description?: string;
+                    altText?: string;
+                    sha1hash?: string;
+                    extension?: string;
+                    mimeType?: string;
+                    size?: number;
+                    assetId?: string;
+                    uploadId?: string;
+                    path?: string;
+                    url?: string;
+                    metadata?: SanityImageMetadata;
+                    source?: SanityAssetSourceData;
+                  } | null;
+                } | null;
+              }> | null;
+            }> | null;
+            openGraph: {
+              _type: "openGraph";
+              siteName: string | null;
+              url: string | null;
+              description: string | null;
+              title: string | null;
+              image: {
+                _type: "image";
+                crop: {
+                  _type: "sanity.imageCrop";
+                  right: number | null;
+                  top: number | null;
+                  left: number | null;
+                  bottom: number | null;
+                } | null;
+                hotspot: {
+                  _type: "sanity.imageHotspot";
+                  x: number | null;
+                  y: number | null;
+                  height: number | null;
+                  width: number | null;
+                } | null;
+                asset: {
+                  _id: string;
+                  _type: "sanity.imageAsset";
+                  _createdAt: string;
+                  _updatedAt: string;
+                  _rev: string;
+                  originalFilename?: string;
+                  label?: string;
+                  title?: string;
+                  description?: string;
+                  altText?: string;
+                  sha1hash?: string;
+                  extension?: string;
+                  mimeType?: string;
+                  size?: number;
+                  assetId?: string;
+                  uploadId?: string;
+                  path?: string;
+                  url?: string;
+                  metadata?: SanityImageMetadata;
+                  source?: SanityAssetSourceData;
+                } | null;
+              } | null;
             } | null;
-            hotspot: {
-              _type: "sanity.imageHotspot";
-              x: number | null;
-              y: number | null;
-              height: number | null;
-              width: number | null;
-            } | null;
-            asset: {
-              _id: string;
-              _type: "sanity.imageAsset";
-              _createdAt: string;
-              _updatedAt: string;
-              _rev: string;
-              originalFilename?: string;
-              label?: string;
-              title?: string;
-              description?: string;
-              altText?: string;
-              sha1hash?: string;
-              extension?: string;
-              mimeType?: string;
-              size?: number;
-              assetId?: string;
-              uploadId?: string;
-              path?: string;
-              url?: string;
-              metadata?: SanityImageMetadata;
-              source?: SanityAssetSourceData;
+            twitter: {
+              _type: "twitter";
+              site: string | null;
+              creator: string | null;
+              cardType: string | null;
+              handle: string | null;
             } | null;
           } | null;
-        } | null;
-        twitter: {
-          _type: "twitter";
-          site: string | null;
-          creator: string | null;
-          cardType: string | null;
-          handle: string | null;
-        } | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "process";
-    heading: string | null;
-    description: string | null;
-    steps: Array<{
-      _key: string;
-      title: string | null;
-      description: string | null;
-    }> | null;
-    footnote: string | null;
-  } | {
-    _key: string;
-    _type: "programList";
-    heading: string | null;
-    description: string | null;
-    filterStatus: "active" | "all" | "completed" | "upcoming" | null;
-    limit: number | null;
-    programs: Array<{
-      _id: string;
-      _type: "program";
-      title: string | null;
-      slug: string | null;
-      programType: "community" | "school" | "skills" | "youth-event" | null;
-      status: "active" | "completed" | "upcoming" | null;
-      date: string | null;
-      description: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "quote";
-    text: string | null;
-    author: {
-      firstName: string | null;
-      lastName: string | null;
-      role: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-    } | null;
-    authorName: string | null;
-    authorRole: string | null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    } | null;
-  } | {
-    _key: string;
-    _type: "recordList";
-    heading: string | null;
-    filterType: "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
-    limit: number | null;
-    records: Array<{
-      _id: string;
-      _type: "record";
-      title: string | null;
-      slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
-      date: string | null;
-      summary: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
-      approvedBy: {
-        firstName: string | null;
-        lastName: string | null;
-        role: string | null;
-      } | null;
-      evidence: Array<{
+        }>;
+      }
+    | {
         _key: string;
-        title: string | null;
-        url: string | null;
-      }> | null;
-      externalUrl: string | null;
-      source: string | null;
-      originNotice: {
-        title: string | null;
-        slug: string | null;
-        noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
-      } | null;
-      parentRecord: {
-        title: string | null;
-        slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
-      } | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "richText";
-    heading: string | null;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
+        _type: "process";
+        heading: string | null;
+        description: string | null;
+        steps: Array<{
+          _key: string;
+          title: string | null;
+          description: string | null;
+        }> | null;
+        footnote: string | null;
+      }
+    | {
         _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs: Array<{
-        customLink?: Link;
-        _type: "customLink";
-        _key: string;
-      } | {
-        customLink?: Link;
-        _type: "link";
-        _key: string;
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
+        _type: "programList";
+        heading: string | null;
+        description: string | null;
+        filterStatus: "active" | "all" | "completed" | "upcoming" | null;
+        limit: number | null;
+        programs: Array<{
           _id: string;
+          _type: "program";
+          title: string | null;
           slug: string | null;
-        } | {
-          _type: "page";
+          programType: "community" | "school" | "skills" | "youth-event" | null;
+          status: "active" | "completed" | "upcoming" | null;
+          date: string | null;
+          description: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "quote";
+        text: string | null;
+        author: {
+          firstName: string | null;
+          lastName: string | null;
+          role: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        } | null;
+        authorName: string | null;
+        authorRole: string | null;
+        image: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "recordList";
+        heading: string | null;
+        filterType:
+          | "all"
+          | "dispute-resolution"
+          | "external-resource"
+          | "land-allocation"
+          | "minutes"
+          | "policy"
+          | "public-notice"
+          | "report"
+          | "resolution"
+          | null;
+        limit: number | null;
+        records: Array<{
           _id: string;
+          _type: "record";
+          title: string | null;
           slug: string | null;
-        } | {
+          recordType:
+            | "community-decision"
+            | "dispute-resolution"
+            | "external-resource"
+            | "land-allocation"
+            | "minutes"
+            | "policy"
+            | "project-outcome"
+            | "public-notice"
+            | "report"
+            | "resolution"
+            | null;
+          date: string | null;
+          summary: string | null;
+          status: "approved" | "pending" | "rejected" | "resolved" | null;
+          approvedBy: {
+            firstName: string | null;
+            lastName: string | null;
+            role: string | null;
+          } | null;
+          evidence: Array<{
+            _key: string;
+            title: string | null;
+            url: string | null;
+          }> | null;
+          externalUrl: string | null;
+          source: string | null;
+          originNotice: {
+            title: string | null;
+            slug: string | null;
+            noticeType:
+              | "alert"
+              | "announcement"
+              | "employment"
+              | "meeting"
+              | "opportunity"
+              | "project-update"
+              | "resolution"
+              | "smme"
+              | null;
+          } | null;
+          parentRecord: {
+            title: string | null;
+            slug: string | null;
+            recordType:
+              | "community-decision"
+              | "dispute-resolution"
+              | "external-resource"
+              | "land-allocation"
+              | "minutes"
+              | "policy"
+              | "project-outcome"
+              | "public-notice"
+              | "report"
+              | "resolution"
+              | null;
+          } | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "richText";
+        heading: string | null;
+        content: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet" | "number";
+              markDefs: Array<
+                | {
+                    customLink?: Link;
+                    _type: "customLink";
+                    _key: string;
+                  }
+                | {
+                    customLink?: Link;
+                    _type: "link";
+                    _key: string;
+                    type: "external" | "internal" | null;
+                    openInNewTab: boolean | null;
+                    external: string | null;
+                    href: string | null;
+                    internal:
+                      | {
+                          _type: "category";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "page";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "person";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | {
+                          _type: "post";
+                          _id: string;
+                          slug: string | null;
+                        }
+                      | null;
+                  }
+              > | null;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              alt?: string;
+              _type: "image";
+              _key: string;
+              markDefs: null;
+            }
+        > | null;
+      }
+    | {
+        _key: string;
+        _type: "sponsorGrid";
+        heading: string | null;
+        description: string | null;
+        filterType:
+          "all" | "business" | "community" | "government" | "ngo" | null;
+        limit: number | null;
+        sponsors: Array<{
+          _id: string;
+          _type: "sponsor";
+          name: string | null;
+          slug: string | null;
+          sponsorType:
+            | "business"
+            | "community"
+            | "government"
+            | "individual"
+            | "ngo"
+            | null;
+          logo: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          } | null;
+          website: string | null;
+          description: string | null;
+        }>;
+      }
+    | {
+        _key: string;
+        _type: "stats";
+        heading: string | null;
+        items: Array<{
+          _key: string;
+          value: string | null;
+          label: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "subscribe";
+        heading: string | null;
+        content: BlockContent | null;
+        buttonText: string | null;
+      }
+    | {
+        _key: string;
+        _type: "teamGrid";
+        heading: string | null;
+        description: string | null;
+        members: Array<{
+          _id: string;
           _type: "person";
-          _id: string;
+          firstName: string | null;
+          lastName: string | null;
+          image: {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+          role: string | null;
+          personType:
+            | "author"
+            | "community"
+            | "council"
+            | "induna"
+            | "inkosi"
+            | "youth"
+            | null;
+          email: string | null;
+          phone: string | null;
+          organization: string | null;
+          skills: Array<string> | null;
+          biography: BlockContent | null;
+          gallery: Array<{
+            _key: string;
+            alt: string | null;
+            caption: string | null;
+            asset: {
+              _id: string;
+              url: string | null;
+            } | null;
+          }> | null;
           slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      }> | null;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-      markDefs: null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "sponsorGrid";
-    heading: string | null;
-    description: string | null;
-    filterType: "all" | "business" | "community" | "government" | "ngo" | null;
-    limit: number | null;
-    sponsors: Array<{
-      _id: string;
-      _type: "sponsor";
-      name: string | null;
-      slug: string | null;
-      sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
-      logo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      } | null;
-      website: string | null;
-      description: string | null;
-    }>;
-  } | {
-    _key: string;
-    _type: "stats";
-    heading: string | null;
-    items: Array<{
-      _key: string;
-      value: string | null;
-      label: string | null;
-    }> | null;
-  } | {
-    _key: string;
-    _type: "subscribe";
-    heading: string | null;
-    content: BlockContent | null;
-    buttonText: string | null;
-  } | {
-    _key: string;
-    _type: "teamGrid";
-    heading: string | null;
-    description: string | null;
-    members: Array<{
-      _id: string;
-      _type: "person";
-      firstName: string | null;
-      lastName: string | null;
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-      } | null;
-      role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
-      email: string | null;
-      phone: string | null;
-      organization: string | null;
-      skills: Array<string> | null;
-      biography: BlockContent | null;
-      gallery: Array<{
-        _key: string;
-        alt: string | null;
-        caption: string | null;
-        asset: {
-          _id: string;
-          url: string | null;
-        } | null;
-      }> | null;
-      slug: string | null;
-    }> | null;
-  }> | null;
+        }> | null;
+      }
+  > | null;
   seo: {
     _type: "seoMetaFields";
     metaTitle: string | null;
@@ -6776,21 +8034,30 @@ export type GetPageQueryResult = {
     } | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: getSitemapQuery
 // Query: *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program", "campaign", "record", "developmentNotice"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{    "href": select(      _type == "page" => "/" + slug.current,      _type == "post" => "/blog/" + slug.current,      _type == "category" => "/category/" + slug.current,      _type == "person" => "/people/" + slug.current,      _type == "listing" && listingType == "area" => "/areas/" + slug.current,      _type == "listing" && listingType != "area" => "/directory/" + slug.current,      _type == "notice" => "/notices/" + slug.current,      _type == "opportunity" => "/opportunities/" + slug.current,      _type == "program" => "/programs/" + slug.current,      _type == "campaign" => "/campaigns/" + slug.current,      _type == "record" => "/records/" + slug.current,      _type == "developmentNotice" => "/development-notices/" + slug.current,      _type == "blogPage" => "/blog",      _type == "homePage" => "/",      slug.current    ),    _updatedAt  }
-export type GetSitemapQueryResult = Array<{
-  href: "/";
-  _updatedAt: string;
-} | {
-  href: "/blog";
-  _updatedAt: string;
-} | {
-  href: string | null;
-  _updatedAt: string;
-} | {
-  href: string | null;
-  _updatedAt: string;
-}>;
+export type GetSitemapQueryResult = Array<
+  | {
+      href: "/";
+      _updatedAt: string;
+    }
+  | {
+      href: "/blog";
+      _updatedAt: string;
+    }
+  | {
+      href: string | null;
+      _updatedAt: string;
+    }
+  | {
+      href: string | null;
+      _updatedAt: string;
+    }
+>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: postQuery
 // Query: *[_type == "post" && slug.current == $slug] [0] {        _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    content[]{    ...,      markDefs[]{    ...,      ...customLink{      _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  },  },  },  },  seo {      _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }  },  }
 export type PostQueryResult = {
@@ -6838,7 +8105,8 @@ export type PostQueryResult = {
       _type: "image";
     } | null;
     role: string | null;
-    personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
+    personType:
+      "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
     email: string | null;
     phone: string | null;
     organization: string | null;
@@ -6856,62 +8124,73 @@ export type PostQueryResult = {
     slug: string | null;
   } | null;
   wordCount: number;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs: Array<{
-      customLink?: Link;
-      _type: "customLink";
-      _key: string;
-    } | {
-      customLink?: Link;
-      _type: "link";
-      _key: string;
-      type: "external" | "internal" | null;
-      openInNewTab: boolean | null;
-      external: string | null;
-      href: string | null;
-      internal: {
-        _type: "category";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "page";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "person";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "post";
-        _id: string;
-        slug: string | null;
-      } | null;
-    }> | null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-    _key: string;
-    markDefs: null;
-  }> | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<
+          | {
+              customLink?: Link;
+              _type: "customLink";
+              _key: string;
+            }
+          | {
+              customLink?: Link;
+              _type: "link";
+              _key: string;
+              type: "external" | "internal" | null;
+              openInNewTab: boolean | null;
+              external: string | null;
+              href: string | null;
+              internal:
+                | {
+                    _type: "category";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "page";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "person";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "post";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | null;
+            }
+        > | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
   seo: {
     _type: "seoMetaFields";
     metaTitle: string | null;
@@ -7061,6 +8340,8 @@ export type PostQueryResult = {
     } | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: categoryQuery
 // Query: *[_type == "category" && slug.current == $slug] [0] {      _id,  _type,  title,  "slug": slug.current,  description,  }
 export type CategoryQueryResult = {
@@ -7070,6 +8351,8 @@ export type CategoryQueryResult = {
   slug: string | null;
   description: string | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: personQuery
 // Query: *[_type == "person" && slug.current == $slug] [0] {      _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,  }
 export type PersonQueryResult = {
@@ -7090,7 +8373,8 @@ export type PersonQueryResult = {
     _type: "image";
   } | null;
   role: string | null;
-  personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
+  personType:
+    "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
   email: string | null;
   phone: string | null;
   organization: string | null;
@@ -7107,15 +8391,23 @@ export type PersonQueryResult = {
   }> | null;
   slug: string | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)][0..$limit].slug.current
 export type PostPagesSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: categorySlugs
 // Query: *[_type == "category" && defined(slug.current)][0..$limit].slug.current
 export type CategorySlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: personSlugs
 // Query: *[_type == "person" && defined(slug.current)][0..$limit].slug.current
 export type PersonSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: areaDetailQuery
 // Query: *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{    _id,    name,    "slug": slug.current,    description,    location,    geopoint,    image,    "induna": induna->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},    "relatedListings": relatedListings[]->{  _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,},    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },    },    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,    },    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,    },    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  recordType,  date,  summary,  status,  "approvedBy": approvedBy->{ firstName, lastName, role },  evidence[]{ _key, title, "url": asset->url },  externalUrl,  source,  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },    },    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {        _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  projectReference,  projectHealth,  description,  targetAudience,  tags,  startDate,  endDate,  image,  hideCoverImage,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  fundingSource,  contractor,  contractNumber,  consultingEngineer,  projectPhase,  localSMMEs,  smmeDirectory[] {    _key,    name,    service,    owner,    cipcNumber,    taxClearance,    bbbeeLevel,    ward,    contactPhone,    verified,    complianceStatus,    "logoUrl": logo.asset->url  },  budget,  beneficiaries,  impactSummary,  lessonsLearned,  deliverables,  deliverablesCertified[] {    _key,    task,    status,    percentageComplete,    weightage,    certifiedBy,    certificationDate,    notes  },  totalDeliverables,  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {    _id,    field,    conflictType,    displayTruth,    resolutionState,    resolutionNote,    detectedAt,    resolvedAt,    claims[] {      source,      value,      date,      evidence    }  },  communityNote[] {    _key,    date,    issuedBy,    message  },  projectUpdates[] {    _key,    date,    title,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    },    videoUrl  },  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  },  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {    _id,    title,    "slug": slug.current,    noticeType,    status,    applicant,    commentDeadline,    publishDate,    location  },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    },    "developmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {      _id,      title,      "slug": slug.current,      noticeType,      status,      applicant,      commentDeadline,      publishDate,      location    }  }
 export type AreaDetailQueryResult = {
@@ -7155,7 +8447,8 @@ export type AreaDetailQueryResult = {
       _type: "image";
     } | null;
     role: string | null;
-    personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
+    personType:
+      "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
     email: string | null;
     phone: string | null;
     organization: string | null;
@@ -7177,7 +8470,15 @@ export type AreaDetailQueryResult = {
     _type: "listing";
     name: string | null;
     slug: string | null;
-    listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
+    listingType:
+      | "accommodation"
+      | "area"
+      | "business"
+      | "church"
+      | "clinic"
+      | "facility"
+      | "school"
+      | null;
     description: string | null;
     location: string | null;
     geopoint: Geopoint | null;
@@ -7208,7 +8509,16 @@ export type AreaDetailQueryResult = {
     _type: "notice";
     title: string | null;
     slug: string | null;
-    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    noticeType:
+      | "alert"
+      | "announcement"
+      | "employment"
+      | "meeting"
+      | "opportunity"
+      | "project-update"
+      | "resolution"
+      | "smme"
+      | null;
     date: string | null;
     excerpt: string | null;
     pinned: boolean | null;
@@ -7280,7 +8590,18 @@ export type AreaDetailQueryResult = {
     _type: "record";
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType:
+      | "community-decision"
+      | "dispute-resolution"
+      | "external-resource"
+      | "land-allocation"
+      | "minutes"
+      | "policy"
+      | "project-outcome"
+      | "public-notice"
+      | "report"
+      | "resolution"
+      | null;
     date: string | null;
     summary: string | null;
     status: "approved" | "pending" | "rejected" | "resolved" | null;
@@ -7299,12 +8620,32 @@ export type AreaDetailQueryResult = {
     originNotice: {
       title: string | null;
       slug: string | null;
-      noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+      noticeType:
+        | "alert"
+        | "announcement"
+        | "employment"
+        | "meeting"
+        | "opportunity"
+        | "project-update"
+        | "resolution"
+        | "smme"
+        | null;
     } | null;
     parentRecord: {
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType:
+        | "community-decision"
+        | "dispute-resolution"
+        | "external-resource"
+        | "land-allocation"
+        | "minutes"
+        | "policy"
+        | "project-outcome"
+        | "public-notice"
+        | "report"
+        | "resolution"
+        | null;
     } | null;
   }>;
   campaigns: Array<{
@@ -7341,7 +8682,13 @@ export type AreaDetailQueryResult = {
     contractor: string | null;
     contractNumber: string | null;
     consultingEngineer: string | null;
-    projectPhase: "commissioning" | "construction" | "operational" | "planning" | "procurement" | null;
+    projectPhase:
+      | "commissioning"
+      | "construction"
+      | "operational"
+      | "planning"
+      | "procurement"
+      | null;
     localSMMEs: number | null;
     smmeDirectory: Array<{
       _key: string;
@@ -7354,7 +8701,8 @@ export type AreaDetailQueryResult = {
       ward: string | null;
       contactPhone: string | null;
       verified: boolean | null;
-      complianceStatus: "compliant" | "non-compliant" | "partial" | "pending" | null;
+      complianceStatus:
+        "compliant" | "non-compliant" | "partial" | "pending" | null;
       logoUrl: string | null;
     }> | null;
     budget: number | null;
@@ -7375,15 +8723,31 @@ export type AreaDetailQueryResult = {
     totalDeliverables: number | null;
     verificationRecords: Array<{
       _id: string;
-      field: "budget" | "other" | "phase" | "progress" | "status" | "timeline" | "workforce" | null;
-      conflictType: "numerical" | "political" | "status" | "time" | "workforce" | null;
+      field:
+        | "budget"
+        | "other"
+        | "phase"
+        | "progress"
+        | "status"
+        | "timeline"
+        | "workforce"
+        | null;
+      conflictType:
+        "numerical" | "political" | "status" | "time" | "workforce" | null;
       displayTruth: string | null;
       resolutionState: "escalated" | "partial" | "pending" | "resolved" | null;
       resolutionNote: string | null;
       detectedAt: string | null;
       resolvedAt: string | null;
       claims: Array<{
-        source: "clo" | "contractor" | "engineer" | "municipality" | "observation" | "pmu" | null;
+        source:
+          | "clo"
+          | "contractor"
+          | "engineer"
+          | "municipality"
+          | "observation"
+          | "pmu"
+          | null;
         value: string | null;
         date: string | null;
         evidence: string | null;
@@ -7399,62 +8763,73 @@ export type AreaDetailQueryResult = {
       _key: string;
       date: string | null;
       title: string | null;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-        listItem?: "bullet" | "number";
-        markDefs: Array<{
-          customLink?: Link;
-          _type: "customLink";
-          _key: string;
-        } | {
-          customLink?: Link;
-          _type: "link";
-          _key: string;
-          type: "external" | "internal" | null;
-          openInNewTab: boolean | null;
-          external: string | null;
-          href: string | null;
-          internal: {
-            _type: "category";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "page";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "person";
-            _id: string;
-            slug: string | null;
-          } | {
-            _type: "post";
-            _id: string;
-            slug: string | null;
-          } | null;
-        }> | null;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-        markDefs: null;
-      }> | null;
+      content: Array<
+        | {
+            children?: Array<{
+              marks?: Array<string>;
+              text?: string;
+              _type: "span";
+              _key: string;
+            }>;
+            style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+            listItem?: "bullet" | "number";
+            markDefs: Array<
+              | {
+                  customLink?: Link;
+                  _type: "customLink";
+                  _key: string;
+                }
+              | {
+                  customLink?: Link;
+                  _type: "link";
+                  _key: string;
+                  type: "external" | "internal" | null;
+                  openInNewTab: boolean | null;
+                  external: string | null;
+                  href: string | null;
+                  internal:
+                    | {
+                        _type: "category";
+                        _id: string;
+                        slug: string | null;
+                      }
+                    | {
+                        _type: "page";
+                        _id: string;
+                        slug: string | null;
+                      }
+                    | {
+                        _type: "person";
+                        _id: string;
+                        slug: string | null;
+                      }
+                    | {
+                        _type: "post";
+                        _id: string;
+                        slug: string | null;
+                      }
+                    | null;
+                }
+            > | null;
+            level?: number;
+            _type: "block";
+            _key: string;
+          }
+        | {
+            asset?: {
+              _ref: string;
+              _type: "reference";
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            };
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+            _key: string;
+            markDefs: null;
+          }
+      > | null;
       gallery: Array<{
         _key: string;
         alt: string | null;
@@ -7482,7 +8857,8 @@ export type AreaDetailQueryResult = {
       } | null;
       logoUrl: string | null;
       website: string | null;
-      sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
+      sponsorType:
+        "business" | "community" | "government" | "individual" | "ngo" | null;
     } | null;
     contactPerson: {
       firstName: string | null;
@@ -7531,7 +8907,20 @@ export type AreaDetailQueryResult = {
       _id: string;
       title: string | null;
       slug: string | null;
-      noticeType: "building" | "eia" | "estate" | "land-use" | "liquidation" | "liquor" | "mining" | "other" | "pto" | "rezoning" | "telecom" | "township" | null;
+      noticeType:
+        | "building"
+        | "eia"
+        | "estate"
+        | "land-use"
+        | "liquidation"
+        | "liquor"
+        | "mining"
+        | "other"
+        | "pto"
+        | "rezoning"
+        | "telecom"
+        | "township"
+        | null;
       status: "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
       applicant: string | null;
       commentDeadline: string | null;
@@ -7543,7 +8932,16 @@ export type AreaDetailQueryResult = {
       _type: "notice";
       title: string | null;
       slug: string | null;
-      noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+      noticeType:
+        | "alert"
+        | "announcement"
+        | "employment"
+        | "meeting"
+        | "opportunity"
+        | "project-update"
+        | "resolution"
+        | "smme"
+        | null;
       date: string | null;
       excerpt: string | null;
       pinned: boolean | null;
@@ -7569,7 +8967,20 @@ export type AreaDetailQueryResult = {
     _id: string;
     title: string | null;
     slug: string | null;
-    noticeType: "building" | "eia" | "estate" | "land-use" | "liquidation" | "liquor" | "mining" | "other" | "pto" | "rezoning" | "telecom" | "township" | null;
+    noticeType:
+      | "building"
+      | "eia"
+      | "estate"
+      | "land-use"
+      | "liquidation"
+      | "liquor"
+      | "mining"
+      | "other"
+      | "pto"
+      | "rezoning"
+      | "telecom"
+      | "township"
+      | null;
     status: "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
     applicant: string | null;
     commentDeadline: string | null;
@@ -7577,9 +8988,40 @@ export type AreaDetailQueryResult = {
     location: string | null;
   }>;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: areaSlugs
 // Query: *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current
 export type AreaSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
+// Variable: areaListPageQuery
+// Query: *[_type == "listing" && listingType == "area" && defined(slug.current)] | order(name asc) {    _id,    name,    "slug": slug.current,    description,    location,    image,    "induna": induna->{ firstName, lastName }  }
+export type AreaListPageQueryResult = Array<{
+  _id: string;
+  name: string | null;
+  slug: string | null;
+  description: string | null;
+  location: string | null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  induna: {
+    firstName: string | null;
+    lastName: string | null;
+  } | null;
+}>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: listingDetailQuery
 // Query: *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{      _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    images[] {      _key,      alt,      caption,      asset->{ _id, url }    }  }
 export type ListingDetailQueryResult = {
@@ -7587,7 +9029,15 @@ export type ListingDetailQueryResult = {
   _type: "listing";
   name: string | null;
   slug: string | null;
-  listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
+  listingType:
+    | "accommodation"
+    | "area"
+    | "business"
+    | "church"
+    | "clinic"
+    | "facility"
+    | "school"
+    | null;
   description: string | null;
   location: string | null;
   geopoint: Geopoint | null;
@@ -7612,62 +9062,73 @@ export type ListingDetailQueryResult = {
   } | null;
   imageUrl: string | null;
   areaName: string | null;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs: Array<{
-      customLink?: Link;
-      _type: "customLink";
-      _key: string;
-    } | {
-      customLink?: Link;
-      _type: "link";
-      _key: string;
-      type: "external" | "internal" | null;
-      openInNewTab: boolean | null;
-      external: string | null;
-      href: string | null;
-      internal: {
-        _type: "category";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "page";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "person";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "post";
-        _id: string;
-        slug: string | null;
-      } | null;
-    }> | null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-    _key: string;
-    markDefs: null;
-  }> | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<
+          | {
+              customLink?: Link;
+              _type: "customLink";
+              _key: string;
+            }
+          | {
+              customLink?: Link;
+              _type: "link";
+              _key: string;
+              type: "external" | "internal" | null;
+              openInNewTab: boolean | null;
+              external: string | null;
+              href: string | null;
+              internal:
+                | {
+                    _type: "category";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "page";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "person";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "post";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | null;
+            }
+        > | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
   images: Array<{
     _key: string;
     alt: string | null;
@@ -7678,9 +9139,13 @@ export type ListingDetailQueryResult = {
     } | null;
   }> | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: listingSlugs
 // Query: *[_type == "listing" && listingType != "area" && defined(slug.current)][0..$limit].slug.current
 export type ListingSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: programDetailQuery
 // Query: *[_type == "program" && slug.current == $slug][0]{      _id,  _type,  title,  "slug": slug.current,  programType,  status,  date,  description,  image,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    "relatedArea": relatedArea->{ name, "slug": slug.current }  }
 export type ProgramDetailQueryResult = {
@@ -7704,77 +9169,101 @@ export type ProgramDetailQueryResult = {
     alt?: string;
     _type: "image";
   } | null;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs: Array<{
-      customLink?: Link;
-      _type: "customLink";
-      _key: string;
-    } | {
-      customLink?: Link;
-      _type: "link";
-      _key: string;
-      type: "external" | "internal" | null;
-      openInNewTab: boolean | null;
-      external: string | null;
-      href: string | null;
-      internal: {
-        _type: "category";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "page";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "person";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "post";
-        _id: string;
-        slug: string | null;
-      } | null;
-    }> | null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-    _key: string;
-    markDefs: null;
-  }> | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<
+          | {
+              customLink?: Link;
+              _type: "customLink";
+              _key: string;
+            }
+          | {
+              customLink?: Link;
+              _type: "link";
+              _key: string;
+              type: "external" | "internal" | null;
+              openInNewTab: boolean | null;
+              external: string | null;
+              href: string | null;
+              internal:
+                | {
+                    _type: "category";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "page";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "person";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "post";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | null;
+            }
+        > | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
   relatedArea: {
     name: string | null;
     slug: string | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: programSlugs
 // Query: *[_type == "program" && defined(slug.current)][0..$limit].slug.current
 export type ProgramSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: noticeDetailQuery
-// Query: *[_type == "notice" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    noticeType,    date,    excerpt,    image,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    pinned,    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status },    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date    }  }
+// Query: *[_type == "notice" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    noticeType,    date,    excerpt,    image,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    pinned,    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status },    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date, status,      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status,        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status,          "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {            _id, title, "slug": slug.current, recordType, date, status          }        }      }    }  }
 export type NoticeDetailQueryResult = {
   _id: string;
   title: string | null;
   slug: string | null;
-  noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+  noticeType:
+    | "alert"
+    | "announcement"
+    | "employment"
+    | "meeting"
+    | "opportunity"
+    | "project-update"
+    | "resolution"
+    | "smme"
+    | null;
   date: string | null;
   excerpt: string | null;
   image: {
@@ -7789,62 +9278,73 @@ export type NoticeDetailQueryResult = {
     alt?: string;
     _type: "image";
   } | null;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs: Array<{
-      customLink?: Link;
-      _type: "customLink";
-      _key: string;
-    } | {
-      customLink?: Link;
-      _type: "link";
-      _key: string;
-      type: "external" | "internal" | null;
-      openInNewTab: boolean | null;
-      external: string | null;
-      href: string | null;
-      internal: {
-        _type: "category";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "page";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "person";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "post";
-        _id: string;
-        slug: string | null;
-      } | null;
-    }> | null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-    _key: string;
-    markDefs: null;
-  }> | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<
+          | {
+              customLink?: Link;
+              _type: "customLink";
+              _key: string;
+            }
+          | {
+              customLink?: Link;
+              _type: "link";
+              _key: string;
+              type: "external" | "internal" | null;
+              openInNewTab: boolean | null;
+              external: string | null;
+              href: string | null;
+              internal:
+                | {
+                    _type: "category";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "page";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "person";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "post";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | null;
+            }
+        > | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
   pinned: boolean | null;
   relatedArea: {
     name: string | null;
@@ -7860,13 +9360,86 @@ export type NoticeDetailQueryResult = {
     _id: string;
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType:
+      | "community-decision"
+      | "dispute-resolution"
+      | "external-resource"
+      | "land-allocation"
+      | "minutes"
+      | "policy"
+      | "project-outcome"
+      | "public-notice"
+      | "report"
+      | "resolution"
+      | null;
     date: string | null;
+    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    childRecords: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      recordType:
+        | "community-decision"
+        | "dispute-resolution"
+        | "external-resource"
+        | "land-allocation"
+        | "minutes"
+        | "policy"
+        | "project-outcome"
+        | "public-notice"
+        | "report"
+        | "resolution"
+        | null;
+      date: string | null;
+      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      childRecords: Array<{
+        _id: string;
+        title: string | null;
+        slug: string | null;
+        recordType:
+          | "community-decision"
+          | "dispute-resolution"
+          | "external-resource"
+          | "land-allocation"
+          | "minutes"
+          | "policy"
+          | "project-outcome"
+          | "public-notice"
+          | "report"
+          | "resolution"
+          | null;
+        date: string | null;
+        status: "approved" | "pending" | "rejected" | "resolved" | null;
+        childRecords: Array<{
+          _id: string;
+          title: string | null;
+          slug: string | null;
+          recordType:
+            | "community-decision"
+            | "dispute-resolution"
+            | "external-resource"
+            | "land-allocation"
+            | "minutes"
+            | "policy"
+            | "project-outcome"
+            | "public-notice"
+            | "report"
+            | "resolution"
+            | null;
+          date: string | null;
+          status: "approved" | "pending" | "rejected" | "resolved" | null;
+        }>;
+      }>;
+    }>;
   }>;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: noticeSlugs
 // Query: *[_type == "notice" && defined(slug.current)][0..$limit].slug.current
 export type NoticeSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: opportunityDetailQuery
 // Query: *[_type == "opportunity" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    opportunityType,    description,    organization,    deadline,    link,    featured,    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current }  }
 export type OpportunityDetailQueryResult = {
@@ -7888,9 +9461,13 @@ export type OpportunityDetailQueryResult = {
     slug: string | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: opportunitySlugs
 // Query: *[_type == "opportunity" && defined(slug.current)][0..$limit].slug.current
 export type OpportunitySlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: campaignDetailQuery
 // Query: *[_type == "campaign" && slug.current == $slug][0]{      _id,  _type,  title,  "slug": slug.current,  campaignType,  status,  projectReference,  projectHealth,  description,  targetAudience,  tags,  startDate,  endDate,  image,  hideCoverImage,  link,  videoUrl,  "audioFileUrl": audioFile.asset->url,  fundingSource,  contractor,  contractNumber,  consultingEngineer,  projectPhase,  localSMMEs,  smmeDirectory[] {    _key,    name,    service,    owner,    cipcNumber,    taxClearance,    bbbeeLevel,    ward,    contactPhone,    verified,    complianceStatus,    "logoUrl": logo.asset->url  },  budget,  beneficiaries,  impactSummary,  lessonsLearned,  deliverables,  deliverablesCertified[] {    _key,    task,    status,    percentageComplete,    weightage,    certifiedBy,    certificationDate,    notes  },  totalDeliverables,  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {    _id,    field,    conflictType,    displayTruth,    resolutionState,    resolutionNote,    detectedAt,    resolvedAt,    claims[] {      source,      value,      date,      evidence    }  },  communityNote[] {    _key,    date,    issuedBy,    message  },  projectUpdates[] {    _key,    date,    title,    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    },    videoUrl  },  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },  "relatedProgram": relatedProgram->{ title, "slug": slug.current },  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  opportunityType,  description,  organization,  deadline,  link,  featured,  image,  },  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {    _id,    title,    "slug": slug.current,    noticeType,    status,    applicant,    commentDeadline,    publishDate,    location  },  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {      _id,  _type,  title,  "slug": slug.current,  noticeType,  date,  excerpt,  pinned,  image,  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },  },    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    gallery[] {      _key,      alt,      caption,      asset->{ _id, url }    },    progressLog[] {      _key,      date,      update    },    "stakeholderLogos": stakeholderLogos[] {      _key,      name,      "url": asset->url    },    documents[] {      _key,      title,      "url": asset->url    },    "relatedListings": relatedListings[]->{  _id,  _type,  name,  "slug": slug.current,  listingType,  description,  location,  geopoint,  contactInfo,  whatsappContact,  website,  servicesOffered,  operatingHours,  verifiedByInduna,  featured,  image,  "imageUrl": image.asset->url,  "areaName": relatedArea->name,},    seo {        _type,  metaTitle,  noIndex,  seoKeywords,  metaDescription,  metaImage{      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  additionalMetaTags[]{      _key,  _type,  metaAttributes[] {      _type,  attributeValueString,  attributeType,  attributeKey,  attributeValueImage {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  },  openGraph {      _type,  siteName,  url,  description,  title,  image {      _type,  crop {    _type,    right,    top,    left,    bottom  },  hotspot {    _type,    x,    y,    height,    width,  },  asset->{...},  },  },  twitter {      _type,  site,  creator,  cardType,  handle,  }    }  }
 export type CampaignDetailQueryResult = {
@@ -7927,7 +9504,13 @@ export type CampaignDetailQueryResult = {
   contractor: string | null;
   contractNumber: string | null;
   consultingEngineer: string | null;
-  projectPhase: "commissioning" | "construction" | "operational" | "planning" | "procurement" | null;
+  projectPhase:
+    | "commissioning"
+    | "construction"
+    | "operational"
+    | "planning"
+    | "procurement"
+    | null;
   localSMMEs: number | null;
   smmeDirectory: Array<{
     _key: string;
@@ -7940,7 +9523,8 @@ export type CampaignDetailQueryResult = {
     ward: string | null;
     contactPhone: string | null;
     verified: boolean | null;
-    complianceStatus: "compliant" | "non-compliant" | "partial" | "pending" | null;
+    complianceStatus:
+      "compliant" | "non-compliant" | "partial" | "pending" | null;
     logoUrl: string | null;
   }> | null;
   budget: number | null;
@@ -7961,15 +9545,31 @@ export type CampaignDetailQueryResult = {
   totalDeliverables: number | null;
   verificationRecords: Array<{
     _id: string;
-    field: "budget" | "other" | "phase" | "progress" | "status" | "timeline" | "workforce" | null;
-    conflictType: "numerical" | "political" | "status" | "time" | "workforce" | null;
+    field:
+      | "budget"
+      | "other"
+      | "phase"
+      | "progress"
+      | "status"
+      | "timeline"
+      | "workforce"
+      | null;
+    conflictType:
+      "numerical" | "political" | "status" | "time" | "workforce" | null;
     displayTruth: string | null;
     resolutionState: "escalated" | "partial" | "pending" | "resolved" | null;
     resolutionNote: string | null;
     detectedAt: string | null;
     resolvedAt: string | null;
     claims: Array<{
-      source: "clo" | "contractor" | "engineer" | "municipality" | "observation" | "pmu" | null;
+      source:
+        | "clo"
+        | "contractor"
+        | "engineer"
+        | "municipality"
+        | "observation"
+        | "pmu"
+        | null;
       value: string | null;
       date: string | null;
       evidence: string | null;
@@ -7985,62 +9585,73 @@ export type CampaignDetailQueryResult = {
     _key: string;
     date: string | null;
     title: string | null;
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs: Array<{
-        customLink?: Link;
-        _type: "customLink";
-        _key: string;
-      } | {
-        customLink?: Link;
-        _type: "link";
-        _key: string;
-        type: "external" | "internal" | null;
-        openInNewTab: boolean | null;
-        external: string | null;
-        href: string | null;
-        internal: {
-          _type: "category";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "page";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "person";
-          _id: string;
-          slug: string | null;
-        } | {
-          _type: "post";
-          _id: string;
-          slug: string | null;
-        } | null;
-      }> | null;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-      markDefs: null;
-    }> | null;
+    content: Array<
+      | {
+          children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: "span";
+            _key: string;
+          }>;
+          style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+          listItem?: "bullet" | "number";
+          markDefs: Array<
+            | {
+                customLink?: Link;
+                _type: "customLink";
+                _key: string;
+              }
+            | {
+                customLink?: Link;
+                _type: "link";
+                _key: string;
+                type: "external" | "internal" | null;
+                openInNewTab: boolean | null;
+                external: string | null;
+                href: string | null;
+                internal:
+                  | {
+                      _type: "category";
+                      _id: string;
+                      slug: string | null;
+                    }
+                  | {
+                      _type: "page";
+                      _id: string;
+                      slug: string | null;
+                    }
+                  | {
+                      _type: "person";
+                      _id: string;
+                      slug: string | null;
+                    }
+                  | {
+                      _type: "post";
+                      _id: string;
+                      slug: string | null;
+                    }
+                  | null;
+              }
+          > | null;
+          level?: number;
+          _type: "block";
+          _key: string;
+        }
+      | {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+          _key: string;
+          markDefs: null;
+        }
+    > | null;
     gallery: Array<{
       _key: string;
       alt: string | null;
@@ -8068,7 +9679,8 @@ export type CampaignDetailQueryResult = {
     } | null;
     logoUrl: string | null;
     website: string | null;
-    sponsorType: "business" | "community" | "government" | "individual" | "ngo" | null;
+    sponsorType:
+      "business" | "community" | "government" | "individual" | "ngo" | null;
   } | null;
   contactPerson: {
     firstName: string | null;
@@ -8117,7 +9729,20 @@ export type CampaignDetailQueryResult = {
     _id: string;
     title: string | null;
     slug: string | null;
-    noticeType: "building" | "eia" | "estate" | "land-use" | "liquidation" | "liquor" | "mining" | "other" | "pto" | "rezoning" | "telecom" | "township" | null;
+    noticeType:
+      | "building"
+      | "eia"
+      | "estate"
+      | "land-use"
+      | "liquidation"
+      | "liquor"
+      | "mining"
+      | "other"
+      | "pto"
+      | "rezoning"
+      | "telecom"
+      | "township"
+      | null;
     status: "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
     applicant: string | null;
     commentDeadline: string | null;
@@ -8129,7 +9754,16 @@ export type CampaignDetailQueryResult = {
     _type: "notice";
     title: string | null;
     slug: string | null;
-    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    noticeType:
+      | "alert"
+      | "announcement"
+      | "employment"
+      | "meeting"
+      | "opportunity"
+      | "project-update"
+      | "resolution"
+      | "smme"
+      | null;
     date: string | null;
     excerpt: string | null;
     pinned: boolean | null;
@@ -8150,62 +9784,73 @@ export type CampaignDetailQueryResult = {
       slug: string | null;
     } | null;
   }>;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs: Array<{
-      customLink?: Link;
-      _type: "customLink";
-      _key: string;
-    } | {
-      customLink?: Link;
-      _type: "link";
-      _key: string;
-      type: "external" | "internal" | null;
-      openInNewTab: boolean | null;
-      external: string | null;
-      href: string | null;
-      internal: {
-        _type: "category";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "page";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "person";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "post";
-        _id: string;
-        slug: string | null;
-      } | null;
-    }> | null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-    _key: string;
-    markDefs: null;
-  }> | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<
+          | {
+              customLink?: Link;
+              _type: "customLink";
+              _key: string;
+            }
+          | {
+              customLink?: Link;
+              _type: "link";
+              _key: string;
+              type: "external" | "internal" | null;
+              openInNewTab: boolean | null;
+              external: string | null;
+              href: string | null;
+              internal:
+                | {
+                    _type: "category";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "page";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "person";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "post";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | null;
+            }
+        > | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
   gallery: Array<{
     _key: string;
     alt: string | null;
@@ -8235,7 +9880,15 @@ export type CampaignDetailQueryResult = {
     _type: "listing";
     name: string | null;
     slug: string | null;
-    listingType: "accommodation" | "area" | "business" | "church" | "clinic" | "facility" | "school" | null;
+    listingType:
+      | "accommodation"
+      | "area"
+      | "business"
+      | "church"
+      | "clinic"
+      | "facility"
+      | "school"
+      | null;
     description: string | null;
     location: string | null;
     geopoint: Geopoint | null;
@@ -8410,16 +10063,31 @@ export type CampaignDetailQueryResult = {
     } | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: campaignSlugs
 // Query: *[_type == "campaign" && defined(slug.current)][0..$limit].slug.current
 export type CampaignSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: recordDetailQuery
-// Query: *[_type == "record" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    recordType,    date,    summary,    status,    "approvedBy": approvedBy->{ firstName, lastName, role, "slug": slug.current },    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    evidence[]{ _key, title, "url": asset->url },    externalUrl,    source,    verificationNote,    "originNotice": originNotice->{ title, "slug": slug.current, noticeType },    "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },    "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date    },    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }  }
+// Query: *[_type == "record" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    recordType,    date,    summary,    status,    "approvedBy": approvedBy->{ firstName, lastName, role, "slug": slug.current },    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    evidence[]{ _key, title, "url": asset->url },    externalUrl,    source,    verificationNote,    "originNotice": originNotice->{ title, "slug": slug.current, noticeType },    "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },    "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date, status,      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status,        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status        }      }    },    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }  }
 export type RecordDetailQueryResult = {
   _id: string;
   title: string | null;
   slug: string | null;
-  recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+  recordType:
+    | "community-decision"
+    | "dispute-resolution"
+    | "external-resource"
+    | "land-allocation"
+    | "minutes"
+    | "policy"
+    | "project-outcome"
+    | "public-notice"
+    | "report"
+    | "resolution"
+    | null;
   date: string | null;
   summary: string | null;
   status: "approved" | "pending" | "rejected" | "resolved" | null;
@@ -8429,62 +10097,73 @@ export type RecordDetailQueryResult = {
     role: string | null;
     slug: string | null;
   } | null;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs: Array<{
-      customLink?: Link;
-      _type: "customLink";
-      _key: string;
-    } | {
-      customLink?: Link;
-      _type: "link";
-      _key: string;
-      type: "external" | "internal" | null;
-      openInNewTab: boolean | null;
-      external: string | null;
-      href: string | null;
-      internal: {
-        _type: "category";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "page";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "person";
-        _id: string;
-        slug: string | null;
-      } | {
-        _type: "post";
-        _id: string;
-        slug: string | null;
-      } | null;
-    }> | null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-    _key: string;
-    markDefs: null;
-  }> | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<
+          | {
+              customLink?: Link;
+              _type: "customLink";
+              _key: string;
+            }
+          | {
+              customLink?: Link;
+              _type: "link";
+              _key: string;
+              type: "external" | "internal" | null;
+              openInNewTab: boolean | null;
+              external: string | null;
+              href: string | null;
+              internal:
+                | {
+                    _type: "category";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "page";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "person";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | {
+                    _type: "post";
+                    _id: string;
+                    slug: string | null;
+                  }
+                | null;
+            }
+        > | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
   evidence: Array<{
     _key: string;
     title: string | null;
@@ -8496,19 +10175,89 @@ export type RecordDetailQueryResult = {
   originNotice: {
     title: string | null;
     slug: string | null;
-    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    noticeType:
+      | "alert"
+      | "announcement"
+      | "employment"
+      | "meeting"
+      | "opportunity"
+      | "project-update"
+      | "resolution"
+      | "smme"
+      | null;
   } | null;
   parentRecord: {
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType:
+      | "community-decision"
+      | "dispute-resolution"
+      | "external-resource"
+      | "land-allocation"
+      | "minutes"
+      | "policy"
+      | "project-outcome"
+      | "public-notice"
+      | "report"
+      | "resolution"
+      | null;
   } | null;
   childRecords: Array<{
     _id: string;
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType:
+      | "community-decision"
+      | "dispute-resolution"
+      | "external-resource"
+      | "land-allocation"
+      | "minutes"
+      | "policy"
+      | "project-outcome"
+      | "public-notice"
+      | "report"
+      | "resolution"
+      | null;
     date: string | null;
+    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    childRecords: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      recordType:
+        | "community-decision"
+        | "dispute-resolution"
+        | "external-resource"
+        | "land-allocation"
+        | "minutes"
+        | "policy"
+        | "project-outcome"
+        | "public-notice"
+        | "report"
+        | "resolution"
+        | null;
+      date: string | null;
+      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      childRecords: Array<{
+        _id: string;
+        title: string | null;
+        slug: string | null;
+        recordType:
+          | "community-decision"
+          | "dispute-resolution"
+          | "external-resource"
+          | "land-allocation"
+          | "minutes"
+          | "policy"
+          | "project-outcome"
+          | "public-notice"
+          | "report"
+          | "resolution"
+          | null;
+        date: string | null;
+        status: "approved" | "pending" | "rejected" | "resolved" | null;
+      }>;
+    }>;
   }>;
   relatedArea: {
     name: string | null;
@@ -8521,15 +10270,51 @@ export type RecordDetailQueryResult = {
     status: "active" | "approved" | "completed" | "draft" | "reported" | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: recordSlugs
 // Query: *[_type == "record" && defined(slug.current)][0..$limit].slug.current
 export type RecordSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
+// Variable: recordListPageQuery
+// Query: *[_type == "record" && defined(slug.current)] | order(date desc) {    _id,    title,    "slug": slug.current,    recordType,    date,    summary,    status,    "relatedArea": relatedArea->{ name, "slug": slug.current }  }
+export type RecordListPageQueryResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  recordType:
+    | "community-decision"
+    | "dispute-resolution"
+    | "external-resource"
+    | "land-allocation"
+    | "minutes"
+    | "policy"
+    | "project-outcome"
+    | "public-notice"
+    | "report"
+    | "resolution"
+    | null;
+  date: string | null;
+  summary: string | null;
+  status: "approved" | "pending" | "rejected" | "resolved" | null;
+  relatedArea: {
+    name: string | null;
+    slug: string | null;
+  } | null;
+}>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: devNoticeSlugs
 // Query: *[_type == "developmentNotice" && defined(slug.current)][0..$limit].slug.current
 export type DevNoticeSlugsResult = Array<string | null>;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: latestContentQuery
 // Query: *[_type in ["notice", "developmentNotice", "opportunity", "program", "campaign"] && !(_id in path("drafts.**"))] | order(_updatedAt desc) [0]._updatedAt
 export type LatestContentQueryResult = string | null;
+
+// Source: src/lib/sanity/queries/queries.ts
 // Variable: postsArchiveQuery
 // Query: {    "allResults": *[      _type == "post"      &&      (        !defined( $filters.categorySlug ) || references(*[_type == "category" && slug.current == $filters.categorySlug]._id)      )      &&      (        !defined( $filters.personSlug ) || references(*[_type == "person" && slug.current == $filters.personSlug]._id)      )      //      // Add more filter here if needed      //      // The filter value should be passed as a property of the $filter parameter      //      // (      //   !defined( $filters.anotherFilter ) || fieldname == $filters.anotherFilter)      // )    ] | order(_createdAt desc, _id desc)  }  {    "total": count(allResults),    "results": allResults[$from..$to] {        _type,  _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  image,  "categories": categories[]->{  _id,  _type,  title,  "slug": slug.current,  description,},  "date": coalesce(date, _updatedAt),  "author": author->{  _id,  _type,  firstName,  lastName,  image,  role,  personType,  email,  phone,  organization,  skills,  biography,  gallery[] {    _key,    alt,    caption,    asset->{ _id, url }  },  "slug": slug.current,},  "wordCount": count(string::split(coalesce(pt::text(content), ''), " ")),    }  }
 export type PostsArchiveQueryResult = {
@@ -8579,7 +10364,14 @@ export type PostsArchiveQueryResult = {
         _type: "image";
       } | null;
       role: string | null;
-      personType: "author" | "community" | "council" | "induna" | "inkosi" | "youth" | null;
+      personType:
+        | "author"
+        | "community"
+        | "council"
+        | "induna"
+        | "inkosi"
+        | "youth"
+        | null;
       email: string | null;
       phone: string | null;
       organization: string | null;
@@ -8604,33 +10396,35 @@ export type PostsArchiveQueryResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"settings\"][0]{\n  title,\n  description,\n  primaryColor,\n  secondaryColor,\n  contactEmail,\n  contactPhone,\n  address,\n  socialLinks,\n  gtmId,\n  webhookUrl,\n  \n  menu[]{\n    \n  _type,\n  _key,\n  text,\n  type,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n    childMenu[]{\n      \n  _type,\n  _key,\n  text,\n  type,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n    }\n  }\n\n}": SettingsQueryResult;
-    "*[_type == \"homePage\"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == 'adBanner' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  \"sponsor\": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == 'campaignList' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  \"campaigns\": *[_type == 'campaign' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  \"audioFileUrl\": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    \"logoUrl\": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  \"verificationRecords\": *[_type == \"conflictLog\" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  \"sponsor\": sponsor->{ name, \"slug\": slug.current, logo, \"logoUrl\": logo.asset->url, website, sponsorType },\n  \"contactPerson\": contactPerson->{ firstName, lastName, role, \"slug\": slug.current },\n  \"relatedAreas\": relatedAreas[]->{ name, \"slug\": slug.current, \"induna\": induna->{ firstName, lastName, role } },\n  \"relatedProgram\": relatedProgram->{ title, \"slug\": slug.current },\n  \"relatedOpportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  \"relatedDevelopmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  \"relatedNotices\": *[_type == \"notice\" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  },\n\n  }\n},\n    _type == 'cardGrid' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == 'communityMap' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  \"listings\": *[_type == 'listing' && defined(geopoint) && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n\n  }\n},\n    _type == 'contactForm' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == 'cta' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'divider' => {\n  _type,\n  height\n},\n    _type == 'embed' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == 'faq' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == 'gallery' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == 'hero' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'listingGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"listings\": *[_type == 'listing' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n\n  }\n},\n    _type == 'logoGrid' => {\n  _type,\n  heading,\n  description,\n  \"sponsors\": sponsors[]->{\n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == 'mediaText' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'noticeList' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  \"notices\": *[_type == 'notice' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  }\n},\n    _type == 'opportunityList' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"opportunities\": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  }\n},\n    _type == 'organogram' => {\n  _type,\n  heading,\n  description,\n  \"inkosi\": inkosi->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"izinduna\": izinduna[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"council\": council[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n}\n},\n    _type == 'postList' => {\n    _type,\n    heading,\n    numberOfPosts,\n    \"posts\": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  image,\n  \"categories\": categories[]->{\n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  description,\n},\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"wordCount\": count(string::split(coalesce(pt::text(content), ''), \" \")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == 'process' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == 'programList' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  \"programs\": *[_type == 'program' && select(\n    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == 'peopleGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"people\": *[_type == 'person' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n\n  }\n},\n    _type == 'quote' => {\n  _type,\n  text,\n  \"author\": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == 'recordList' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  \"records\": *[_type == 'record' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  \"approvedBy\": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, \"url\": asset->url },\n  externalUrl,\n  source,\n  \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n  \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n\n  }\n},\n    _type == 'richText' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == 'sponsorGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"sponsors\": *[_type == 'sponsor' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == 'stats' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == 'subscribe' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == 'teamGrid' => {\n  _type,\n  heading,\n  description,\n  \"members\": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}": HomePageQueryResult;
-    "*[_type == \"blogPage\"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == 'adBanner' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  \"sponsor\": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == 'campaignList' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  \"campaigns\": *[_type == 'campaign' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  \"audioFileUrl\": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    \"logoUrl\": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  \"verificationRecords\": *[_type == \"conflictLog\" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  \"sponsor\": sponsor->{ name, \"slug\": slug.current, logo, \"logoUrl\": logo.asset->url, website, sponsorType },\n  \"contactPerson\": contactPerson->{ firstName, lastName, role, \"slug\": slug.current },\n  \"relatedAreas\": relatedAreas[]->{ name, \"slug\": slug.current, \"induna\": induna->{ firstName, lastName, role } },\n  \"relatedProgram\": relatedProgram->{ title, \"slug\": slug.current },\n  \"relatedOpportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  \"relatedDevelopmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  \"relatedNotices\": *[_type == \"notice\" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  },\n\n  }\n},\n    _type == 'cardGrid' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == 'communityMap' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  \"listings\": *[_type == 'listing' && defined(geopoint) && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n\n  }\n},\n    _type == 'contactForm' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == 'cta' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'divider' => {\n  _type,\n  height\n},\n    _type == 'embed' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == 'faq' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == 'gallery' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == 'hero' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'listingGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"listings\": *[_type == 'listing' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n\n  }\n},\n    _type == 'logoGrid' => {\n  _type,\n  heading,\n  description,\n  \"sponsors\": sponsors[]->{\n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == 'mediaText' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'noticeList' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  \"notices\": *[_type == 'notice' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  }\n},\n    _type == 'opportunityList' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"opportunities\": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  }\n},\n    _type == 'organogram' => {\n  _type,\n  heading,\n  description,\n  \"inkosi\": inkosi->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"izinduna\": izinduna[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"council\": council[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n}\n},\n    _type == 'postList' => {\n    _type,\n    heading,\n    numberOfPosts,\n    \"posts\": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  image,\n  \"categories\": categories[]->{\n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  description,\n},\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"wordCount\": count(string::split(coalesce(pt::text(content), ''), \" \")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == 'process' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == 'programList' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  \"programs\": *[_type == 'program' && select(\n    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == 'peopleGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"people\": *[_type == 'person' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n\n  }\n},\n    _type == 'quote' => {\n  _type,\n  text,\n  \"author\": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == 'recordList' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  \"records\": *[_type == 'record' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  \"approvedBy\": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, \"url\": asset->url },\n  externalUrl,\n  source,\n  \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n  \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n\n  }\n},\n    _type == 'richText' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == 'sponsorGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"sponsors\": *[_type == 'sponsor' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == 'stats' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == 'subscribe' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == 'teamGrid' => {\n  _type,\n  heading,\n  description,\n  \"members\": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}": BlogPageQueryResult;
-    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    \"slug\": slug.current,\n    \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == 'adBanner' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  \"sponsor\": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == 'campaignList' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  \"campaigns\": *[_type == 'campaign' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  \"audioFileUrl\": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    \"logoUrl\": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  \"verificationRecords\": *[_type == \"conflictLog\" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  \"sponsor\": sponsor->{ name, \"slug\": slug.current, logo, \"logoUrl\": logo.asset->url, website, sponsorType },\n  \"contactPerson\": contactPerson->{ firstName, lastName, role, \"slug\": slug.current },\n  \"relatedAreas\": relatedAreas[]->{ name, \"slug\": slug.current, \"induna\": induna->{ firstName, lastName, role } },\n  \"relatedProgram\": relatedProgram->{ title, \"slug\": slug.current },\n  \"relatedOpportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  \"relatedDevelopmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  \"relatedNotices\": *[_type == \"notice\" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  },\n\n  }\n},\n    _type == 'cardGrid' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == 'communityMap' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  \"listings\": *[_type == 'listing' && defined(geopoint) && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n\n  }\n},\n    _type == 'contactForm' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == 'cta' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'divider' => {\n  _type,\n  height\n},\n    _type == 'embed' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == 'faq' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == 'gallery' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == 'hero' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'listingGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"listings\": *[_type == 'listing' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n\n  }\n},\n    _type == 'logoGrid' => {\n  _type,\n  heading,\n  description,\n  \"sponsors\": sponsors[]->{\n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == 'mediaText' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == 'noticeList' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  \"notices\": *[_type == 'notice' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  }\n},\n    _type == 'opportunityList' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"opportunities\": *[_type == 'opportunity' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  }\n},\n    _type == 'organogram' => {\n  _type,\n  heading,\n  description,\n  \"inkosi\": inkosi->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"izinduna\": izinduna[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"council\": council[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n}\n},\n    _type == 'postList' => {\n    _type,\n    heading,\n    numberOfPosts,\n    \"posts\": *[_type == 'post'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  image,\n  \"categories\": categories[]->{\n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  description,\n},\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"wordCount\": count(string::split(coalesce(pt::text(content), ''), \" \")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == 'process' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == 'programList' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  \"programs\": *[_type == 'program' && select(\n    ^.filterStatus == 'all' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == 'peopleGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"people\": *[_type == 'person' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n\n  }\n},\n    _type == 'quote' => {\n  _type,\n  text,\n  \"author\": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == 'recordList' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  \"records\": *[_type == 'record' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  \"approvedBy\": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, \"url\": asset->url },\n  externalUrl,\n  source,\n  \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n  \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n\n  }\n},\n    _type == 'richText' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == 'sponsorGrid' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  \"sponsors\": *[_type == 'sponsor' && select(\n    ^.filterType == 'all' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == 'stats' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == 'subscribe' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == 'teamGrid' => {\n  _type,\n  heading,\n  description,\n  \"members\": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n  }\n": GetPageQueryResult;
-    "\n  *[((_type in [\"page\", \"post\", \"category\", \"person\", \"notice\", \"opportunity\", \"listing\", \"program\", \"campaign\", \"record\", \"developmentNotice\"] && defined(slug.current) && !(_id in path(\"drafts.**\"))) || (_type in [\"homePage\", \"blogPage\"])) && seo.noIndex != true]{\n    \"href\": select(\n      _type == \"page\" => \"/\" + slug.current,\n      _type == \"post\" => \"/blog/\" + slug.current,\n      _type == \"category\" => \"/category/\" + slug.current,\n      _type == \"person\" => \"/people/\" + slug.current,\n      _type == \"listing\" && listingType == \"area\" => \"/areas/\" + slug.current,\n      _type == \"listing\" && listingType != \"area\" => \"/directory/\" + slug.current,\n      _type == \"notice\" => \"/notices/\" + slug.current,\n      _type == \"opportunity\" => \"/opportunities/\" + slug.current,\n      _type == \"program\" => \"/programs/\" + slug.current,\n      _type == \"campaign\" => \"/campaigns/\" + slug.current,\n      _type == \"record\" => \"/records/\" + slug.current,\n      _type == \"developmentNotice\" => \"/development-notices/\" + slug.current,\n      _type == \"blogPage\" => \"/blog\",\n      _type == \"homePage\" => \"/\",\n      slug.current\n    ),\n    _updatedAt\n  }\n": GetSitemapQueryResult;
-    "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    \n  \n  _type,\n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  image,\n  \"categories\": categories[]->{\n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  description,\n},\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"wordCount\": count(string::split(coalesce(pt::text(content), ''), \" \")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n  }\n": PostQueryResult;
-    "\n  *[_type == \"category\" && slug.current == $slug] [0] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  description,\n\n  }\n": CategoryQueryResult;
-    "\n  *[_type == \"person\" && slug.current == $slug] [0] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n\n  }\n": PersonQueryResult;
-    "\n  *[_type == \"post\" && defined(slug.current)][0..$limit].slug.current\n": PostPagesSlugsResult;
-    "\n  *[_type == \"category\" && defined(slug.current)][0..$limit].slug.current\n": CategorySlugsResult;
-    "\n  *[_type == \"person\" && defined(slug.current)][0..$limit].slug.current\n": PersonSlugsResult;
-    "\n  *[_type == \"listing\" && listingType == \"area\" && slug.current == $slug][0]{\n    _id,\n    name,\n    \"slug\": slug.current,\n    description,\n    location,\n    geopoint,\n    image,\n    \"induna\": induna->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n    \"relatedListings\": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n},\n    \"notices\": *[_type == \"notice\" && references(^._id)] | order(pinned desc, date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n    },\n    \"programs\": *[_type == \"program\" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    },\n    \"opportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n    },\n    \"records\": *[_type == \"record\" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  \"approvedBy\": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, \"url\": asset->url },\n  externalUrl,\n  source,\n  \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n  \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n\n    },\n    \"campaigns\": *[_type == \"campaign\" && references(^._id) && status in [\"active\", \"completed\"]] | order(startDate desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  \"audioFileUrl\": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    \"logoUrl\": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  \"verificationRecords\": *[_type == \"conflictLog\" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  \"sponsor\": sponsor->{ name, \"slug\": slug.current, logo, \"logoUrl\": logo.asset->url, website, sponsorType },\n  \"contactPerson\": contactPerson->{ firstName, lastName, role, \"slug\": slug.current },\n  \"relatedAreas\": relatedAreas[]->{ name, \"slug\": slug.current, \"induna\": induna->{ firstName, lastName, role } },\n  \"relatedProgram\": relatedProgram->{ title, \"slug\": slug.current },\n  \"relatedOpportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  \"relatedDevelopmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  \"relatedNotices\": *[_type == \"notice\" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  },\n\n    },\n    \"developmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n      _id,\n      title,\n      \"slug\": slug.current,\n      noticeType,\n      status,\n      applicant,\n      commentDeadline,\n      publishDate,\n      location\n    }\n  }\n": AreaDetailQueryResult;
-    "\n  *[_type == \"listing\" && listingType == \"area\" && defined(slug.current)][0..$limit].slug.current\n": AreaSlugsResult;
-    "\n  *[_type == \"listing\" && listingType != \"area\" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    images[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    }\n  }\n": ListingDetailQueryResult;
-    "\n  *[_type == \"listing\" && listingType != \"area\" && defined(slug.current)][0..$limit].slug.current\n": ListingSlugsResult;
-    "\n  *[_type == \"program\" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current }\n  }\n": ProgramDetailQueryResult;
-    "\n  *[_type == \"program\" && defined(slug.current)][0..$limit].slug.current\n": ProgramSlugsResult;
-    "\n  *[_type == \"notice\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    date,\n    excerpt,\n    image,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    pinned,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current, campaignType, status },\n    \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date\n    }\n  }\n": NoticeDetailQueryResult;
-    "\n  *[_type == \"notice\" && defined(slug.current)][0..$limit].slug.current\n": NoticeSlugsResult;
-    "\n  *[_type == \"opportunity\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    opportunityType,\n    description,\n    organization,\n    deadline,\n    link,\n    featured,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current }\n  }\n": OpportunityDetailQueryResult;
-    "\n  *[_type == \"opportunity\" && defined(slug.current)][0..$limit].slug.current\n": OpportunitySlugsResult;
-    "\n  *[_type == \"campaign\" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  \"audioFileUrl\": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    \"logoUrl\": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  \"verificationRecords\": *[_type == \"conflictLog\" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  \"sponsor\": sponsor->{ name, \"slug\": slug.current, logo, \"logoUrl\": logo.asset->url, website, sponsorType },\n  \"contactPerson\": contactPerson->{ firstName, lastName, role, \"slug\": slug.current },\n  \"relatedAreas\": relatedAreas[]->{ name, \"slug\": slug.current, \"induna\": induna->{ firstName, lastName, role } },\n  \"relatedProgram\": relatedProgram->{ title, \"slug\": slug.current },\n  \"relatedOpportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  \"relatedDevelopmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  \"relatedNotices\": *[_type == \"notice\" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  },\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    progressLog[] {\n      _key,\n      date,\n      update\n    },\n    \"stakeholderLogos\": stakeholderLogos[] {\n      _key,\n      name,\n      \"url\": asset->url\n    },\n    documents[] {\n      _key,\n      title,\n      \"url\": asset->url\n    },\n    \"relatedListings\": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n},\n    seo {\n      \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n    }\n  }\n": CampaignDetailQueryResult;
-    "\n  *[_type == \"campaign\" && defined(slug.current)][0..$limit].slug.current\n": CampaignSlugsResult;
-    "\n  *[_type == \"record\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    \"approvedBy\": approvedBy->{ firstName, lastName, role, \"slug\": slug.current },\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    evidence[]{ _key, title, \"url\": asset->url },\n    externalUrl,\n    source,\n    verificationNote,\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n    \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n    \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date\n    },\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current, campaignType, status }\n  }\n": RecordDetailQueryResult;
-    "\n  *[_type == \"record\" && defined(slug.current)][0..$limit].slug.current\n": RecordSlugsResult;
-    "\n  *[_type == \"developmentNotice\" && defined(slug.current)][0..$limit].slug.current\n": DevNoticeSlugsResult;
-    "\n  *[_type in [\"notice\", \"developmentNotice\", \"opportunity\", \"program\", \"campaign\"] && !(_id in path(\"drafts.**\"))] | order(_updatedAt desc) [0]._updatedAt\n": LatestContentQueryResult;
-    "\n  {\n    \"allResults\": *[\n      _type == \"post\"\n      &&\n      (\n        !defined( $filters.categorySlug ) || references(*[_type == \"category\" && slug.current == $filters.categorySlug]._id)\n      )\n      &&\n      (\n        !defined( $filters.personSlug ) || references(*[_type == \"person\" && slug.current == $filters.personSlug]._id)\n      )\n      //\n      // Add more filter here if needed\n      //\n      // The filter value should be passed as a property of the $filter parameter\n      //\n      // (\n      //   !defined( $filters.anotherFilter ) || fieldname == $filters.anotherFilter)\n      // )\n    ] | order(_createdAt desc, _id desc)\n  }\n  {\n    \"total\": count(allResults),\n    \"results\": allResults[$from..$to] {\n      \n  _type,\n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  image,\n  \"categories\": categories[]->{\n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  description,\n},\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"wordCount\": count(string::split(coalesce(pt::text(content), ''), \" \")),\n\n    }\n  }\n": PostsArchiveQueryResult;
+    '*[_type == "settings"][0]{\n  title,\n  description,\n  primaryColor,\n  secondaryColor,\n  contactEmail,\n  contactPhone,\n  address,\n  socialLinks,\n  gtmId,\n  webhookUrl,\n  \n  menu[]{\n    \n  _type,\n  _key,\n  text,\n  type,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n    childMenu[]{\n      \n  _type,\n  _key,\n  text,\n  type,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n    }\n  }\n\n}': SettingsQueryResult;
+    '*[_type == "homePage"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    "logoUrl": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    "slug": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  }\n},\n    _type == \'organogram\' => {\n  _type,\n  heading,\n  description,\n  "inkosi": inkosi->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "izinduna": izinduna[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "council": council[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'peopleGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "people": *[_type == \'person\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, "url": asset->url },\n  externalUrl,\n  source,\n  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },\n  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'sponsorGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "sponsors": *[_type == \'sponsor\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}': HomePageQueryResult;
+    '*[_type == "blogPage"][0]{\n  _id,\n  _type,\n  ...,\n  \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    "logoUrl": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    "slug": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  }\n},\n    _type == \'organogram\' => {\n  _type,\n  heading,\n  description,\n  "inkosi": inkosi->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "izinduna": izinduna[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "council": council[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'peopleGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "people": *[_type == \'person\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, "url": asset->url },\n  externalUrl,\n  source,\n  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },\n  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'sponsorGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "sponsors": *[_type == \'sponsor\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n}': BlogPageQueryResult;
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    "slug": slug.current,\n    \n  \n  pageSections[]{\n    ...,\n    _key,\n    _type,\n    _type == \'adBanner\' => {\n  _type,\n  title,\n  image,\n  link,\n  sponsorName,\n  "sponsor": sponsor->{\n    name,\n    website\n  },\n  startDate,\n  endDate,\n  size\n},\n    _type == \'campaignList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  filterStatus,\n  limit,\n  "campaigns": *[_type == \'campaign\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    campaignType == ^.filterType\n  ) && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(startDate desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    "logoUrl": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    "slug": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n  }\n},\n    _type == \'cardGrid\' => {\n  \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  cards[]{\n    \n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n\n  },\n},\n    _type == \'communityMap\' => {\n  _type,\n  heading,\n  description,\n  centerLat,\n  centerLng,\n  zoom,\n  filterType,\n  "listings": *[_type == \'listing\' && defined(geopoint) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'contactForm\' => {\n  _type,\n  heading,\n  description,\n  showMap,\n  mapEmbedUrl\n},\n    _type == \'cta\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'divider\' => {\n  _type,\n  height\n},\n    _type == \'embed\' => {\n  _type,\n  heading,\n  url,\n  aspectRatio\n},\n    _type == \'faq\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    question,\n    answer[]{ ..., \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n }\n  }\n},\n    _type == \'gallery\' => {\n  _type,\n  heading,\n  description,\n  images[] {\n    _key,\n    alt,\n    caption,\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  }\n},\n    _type == \'hero\' => {\n  _type,\n  heading,\n  text,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'listingGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "listings": *[_type == \'listing\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    listingType == ^.filterType\n  )] | order(featured desc, name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n\n  }\n},\n    _type == \'logoGrid\' => {\n  _type,\n  heading,\n  description,\n  "sponsors": sponsors[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n}\n},\n    _type == \'mediaText\' => {\n  _type,\n  heading,\n  text,\n  image,\n  imagePosition,\n  \n  buttons[]{\n    \n  _key,\n  _type,\n  variant,\n  text,\n  link {\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n},\n    _type == \'noticeList\' => {\n  _type,\n  heading,\n  numberOfNotices,\n  filterType,\n  "notices": *[_type == \'notice\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    noticeType == ^.filterType\n  )] | order(pinned desc, date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  }\n},\n    _type == \'opportunityList\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "opportunities": *[_type == \'opportunity\' && (deadline > now() || !defined(deadline)) && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    opportunityType == ^.filterType\n  )] | order(featured desc, deadline asc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  }\n},\n    _type == \'organogram\' => {\n  _type,\n  heading,\n  description,\n  "inkosi": inkosi->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "izinduna": izinduna[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "council": council[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n},\n    _type == \'postList\' => {\n    _type,\n    heading,\n    numberOfPosts,\n    "posts": *[_type == \'post\'] | order(_createdAt desc, _id desc) [0...10] {\n      \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n    }\n},\n    _type == \'process\' => {\n  _type,\n  heading,\n  description,\n  steps[] {\n    _key,\n    title,\n    description\n  },\n  footnote\n},\n    _type == \'programList\' => {\n  _type,\n  heading,\n  description,\n  filterStatus,\n  limit,\n  "programs": *[_type == \'program\' && select(\n    ^.filterStatus == \'all\' || !defined(^.filterStatus) => true,\n    status == ^.filterStatus\n  )] | order(date desc) [0...12] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n  }\n},\n    _type == \'peopleGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "people": *[_type == \'person\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    personType == ^.filterType\n  )] | order(firstName asc) [0...12] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n\n  }\n},\n    _type == \'quote\' => {\n  _type,\n  text,\n  "author": author->{\n    firstName,\n    lastName,\n    role,\n    image\n  },\n  authorName,\n  authorRole,\n  image\n},\n    _type == \'recordList\' => {\n  _type,\n  heading,\n  filterType,\n  limit,\n  "records": *[_type == \'record\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    recordType == ^.filterType\n  )] | order(date desc) [0...10] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, "url": asset->url },\n  externalUrl,\n  source,\n  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },\n  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },\n\n  }\n},\n    _type == \'richText\' => {\n  _type,\n  heading,\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n},\n    _type == \'sponsorGrid\' => {\n  _type,\n  heading,\n  description,\n  filterType,\n  limit,\n  "sponsors": *[_type == \'sponsor\' && select(\n    ^.filterType == \'all\' || !defined(^.filterType) => true,\n    sponsorType == ^.filterType\n  )] | order(name asc) [0...12] {\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  sponsorType,\n  logo,\n  website,\n  description,\n\n  }\n},\n    _type == \'stats\' => {\n  _type,\n  heading,\n  items[] {\n    _key,\n    value,\n    label\n  }\n},\n    _type == \'subscribe\' => {\n  _type,\n  heading,\n  content,\n  buttonText\n},\n    _type == \'teamGrid\' => {\n  _type,\n  heading,\n  description,\n  "members": members[]->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n}\n}\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n  }\n': GetPageQueryResult;
+    '\n  *[((_type in ["page", "post", "category", "person", "notice", "opportunity", "listing", "program", "campaign", "record", "developmentNotice"] && defined(slug.current) && !(_id in path("drafts.**"))) || (_type in ["homePage", "blogPage"])) && seo.noIndex != true]{\n    "href": select(\n      _type == "page" => "/" + slug.current,\n      _type == "post" => "/blog/" + slug.current,\n      _type == "category" => "/category/" + slug.current,\n      _type == "person" => "/people/" + slug.current,\n      _type == "listing" && listingType == "area" => "/areas/" + slug.current,\n      _type == "listing" && listingType != "area" => "/directory/" + slug.current,\n      _type == "notice" => "/notices/" + slug.current,\n      _type == "opportunity" => "/opportunities/" + slug.current,\n      _type == "program" => "/programs/" + slug.current,\n      _type == "campaign" => "/campaigns/" + slug.current,\n      _type == "record" => "/records/" + slug.current,\n      _type == "developmentNotice" => "/development-notices/" + slug.current,\n      _type == "blogPage" => "/blog",\n      _type == "homePage" => "/",\n      slug.current\n    ),\n    _updatedAt\n  }\n': GetSitemapQueryResult;
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    \n  \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n  \n  content[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n\n  },\n\n  },\n\n  },\n\n  seo {\n    \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n  },\n\n  }\n': PostQueryResult;
+    '\n  *[_type == "category" && slug.current == $slug] [0] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n\n  }\n': CategoryQueryResult;
+    '\n  *[_type == "person" && slug.current == $slug] [0] {\n    \n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n\n  }\n': PersonQueryResult;
+    '\n  *[_type == "post" && defined(slug.current)][0..$limit].slug.current\n': PostPagesSlugsResult;
+    '\n  *[_type == "category" && defined(slug.current)][0..$limit].slug.current\n': CategorySlugsResult;
+    '\n  *[_type == "person" && defined(slug.current)][0..$limit].slug.current\n': PersonSlugsResult;
+    '\n  *[_type == "listing" && listingType == "area" && slug.current == $slug][0]{\n    _id,\n    name,\n    "slug": slug.current,\n    description,\n    location,\n    geopoint,\n    image,\n    "induna": induna->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n    "relatedListings": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n},\n    "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n    },\n    "programs": *[_type == "program" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    },\n    "opportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n    },\n    "records": *[_type == "record" && references(^._id)] | order(date desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  recordType,\n  date,\n  summary,\n  status,\n  "approvedBy": approvedBy->{ firstName, lastName, role },\n  evidence[]{ _key, title, "url": asset->url },\n  externalUrl,\n  source,\n  "originNotice": originNotice->{ title, "slug": slug.current, noticeType },\n  "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },\n\n    },\n    "campaigns": *[_type == "campaign" && references(^._id) && status in ["active", "completed"]] | order(startDate desc) [0...5] {\n      \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    "logoUrl": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    "slug": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    },\n    "developmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {\n      _id,\n      title,\n      "slug": slug.current,\n      noticeType,\n      status,\n      applicant,\n      commentDeadline,\n      publishDate,\n      location\n    }\n  }\n': AreaDetailQueryResult;
+    '\n  *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current\n': AreaSlugsResult;
+    '\n  *[_type == "listing" && listingType == "area" && defined(slug.current)] | order(name asc) {\n    _id,\n    name,\n    "slug": slug.current,\n    description,\n    location,\n    image,\n    "induna": induna->{ firstName, lastName }\n  }\n': AreaListPageQueryResult;
+    '\n  *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    images[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    }\n  }\n': ListingDetailQueryResult;
+    '\n  *[_type == "listing" && listingType != "area" && defined(slug.current)][0..$limit].slug.current\n': ListingSlugsResult;
+    '\n  *[_type == "program" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  programType,\n  status,\n  date,\n  description,\n  image,\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    "relatedArea": relatedArea->{ name, "slug": slug.current }\n  }\n': ProgramDetailQueryResult;
+    '\n  *[_type == "program" && defined(slug.current)][0..$limit].slug.current\n': ProgramSlugsResult;
+    '\n  *[_type == "notice" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    noticeType,\n    date,\n    excerpt,\n    image,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    pinned,\n    "relatedArea": relatedArea->{ name, "slug": slug.current },\n    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status },\n    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, "slug": slug.current, recordType, date, status,\n      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, "slug": slug.current, recordType, date, status,\n        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, "slug": slug.current, recordType, date, status,\n          "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {\n            _id, title, "slug": slug.current, recordType, date, status\n          }\n        }\n      }\n    }\n  }\n': NoticeDetailQueryResult;
+    '\n  *[_type == "notice" && defined(slug.current)][0..$limit].slug.current\n': NoticeSlugsResult;
+    '\n  *[_type == "opportunity" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    opportunityType,\n    description,\n    organization,\n    deadline,\n    link,\n    featured,\n    "relatedArea": relatedArea->{ name, "slug": slug.current },\n    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current }\n  }\n': OpportunityDetailQueryResult;
+    '\n  *[_type == "opportunity" && defined(slug.current)][0..$limit].slug.current\n': OpportunitySlugsResult;
+    '\n  *[_type == "campaign" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  "audioFileUrl": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    "logoUrl": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  "verificationRecords": *[_type == "conflictLog" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  "sponsor": sponsor->{ name, "slug": slug.current, logo, "logoUrl": logo.asset->url, website, sponsorType },\n  "contactPerson": contactPerson->{ firstName, lastName, role, "slug": slug.current },\n  "relatedAreas": relatedAreas[]->{ name, "slug": slug.current, "induna": induna->{ firstName, lastName, role } },\n  "relatedProgram": relatedProgram->{ title, "slug": slug.current },\n  "relatedOpportunities": *[_type == "opportunity" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  "relatedDevelopmentNotices": *[_type == "developmentNotice" && references(^._id) && status in ["open", "closed"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    "slug": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  "relatedNotices": *[_type == "notice" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  "relatedCampaign": relatedCampaign->{ title, "slug": slug.current },\n\n  },\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    progressLog[] {\n      _key,\n      date,\n      update\n    },\n    "stakeholderLogos": stakeholderLogos[] {\n      _key,\n      name,\n      "url": asset->url\n    },\n    documents[] {\n      _key,\n      title,\n      "url": asset->url\n    },\n    "relatedListings": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  "slug": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  "imageUrl": image.asset->url,\n  "areaName": relatedArea->name,\n},\n    seo {\n      \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n    }\n  }\n': CampaignDetailQueryResult;
+    '\n  *[_type == "campaign" && defined(slug.current)][0..$limit].slug.current\n': CampaignSlugsResult;
+    '\n  *[_type == "record" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    "approvedBy": approvedBy->{ firstName, lastName, role, "slug": slug.current },\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    "slug": slug.current\n  },\n } } },\n    evidence[]{ _key, title, "url": asset->url },\n    externalUrl,\n    source,\n    verificationNote,\n    "originNotice": originNotice->{ title, "slug": slug.current, noticeType },\n    "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },\n    "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {\n      _id, title, "slug": slug.current, recordType, date, status,\n      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, "slug": slug.current, recordType, date, status,\n        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, "slug": slug.current, recordType, date, status\n        }\n      }\n    },\n    "relatedArea": relatedArea->{ name, "slug": slug.current },\n    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }\n  }\n': RecordDetailQueryResult;
+    '\n  *[_type == "record" && defined(slug.current)][0..$limit].slug.current\n': RecordSlugsResult;
+    '\n  *[_type == "record" && defined(slug.current)] | order(date desc) {\n    _id,\n    title,\n    "slug": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    "relatedArea": relatedArea->{ name, "slug": slug.current }\n  }\n': RecordListPageQueryResult;
+    '\n  *[_type == "developmentNotice" && defined(slug.current)][0..$limit].slug.current\n': DevNoticeSlugsResult;
+    '\n  *[_type in ["notice", "developmentNotice", "opportunity", "program", "campaign"] && !(_id in path("drafts.**"))] | order(_updatedAt desc) [0]._updatedAt\n': LatestContentQueryResult;
+    '\n  {\n    "allResults": *[\n      _type == "post"\n      &&\n      (\n        !defined( $filters.categorySlug ) || references(*[_type == "category" && slug.current == $filters.categorySlug]._id)\n      )\n      &&\n      (\n        !defined( $filters.personSlug ) || references(*[_type == "person" && slug.current == $filters.personSlug]._id)\n      )\n      //\n      // Add more filter here if needed\n      //\n      // The filter value should be passed as a property of the $filter parameter\n      //\n      // (\n      //   !defined( $filters.anotherFilter ) || fieldname == $filters.anotherFilter)\n      // )\n    ] | order(_createdAt desc, _id desc)\n  }\n  {\n    "total": count(allResults),\n    "results": allResults[$from..$to] {\n      \n  _type,\n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  image,\n  "categories": categories[]->{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  description,\n},\n  "date": coalesce(date, _updatedAt),\n  "author": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  "slug": slug.current,\n},\n  "wordCount": count(string::split(coalesce(pt::text(content), \'\'), " ")),\n\n    }\n  }\n': PostsArchiveQueryResult;
   }
 }

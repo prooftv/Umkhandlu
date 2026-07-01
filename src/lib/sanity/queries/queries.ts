@@ -151,6 +151,18 @@ export const areaSlugs = defineQuery(`
   *[_type == "listing" && listingType == "area" && defined(slug.current)][0..$limit].slug.current
 `);
 
+export const areaListPageQuery = defineQuery(`
+  *[_type == "listing" && listingType == "area" && defined(slug.current)] | order(name asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    description,
+    location,
+    image,
+    "induna": induna->{ firstName, lastName }
+  }
+`);
+
 export const listingDetailQuery = defineQuery(`
   *[_type == "listing" && listingType != "area" && slug.current == $slug][0]{
     ${listingFragment}

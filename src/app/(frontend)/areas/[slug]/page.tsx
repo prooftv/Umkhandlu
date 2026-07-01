@@ -463,7 +463,7 @@ export default async function AreaPage(props: Props) {
   return (
     <div className="container mx-auto py-12">
       <Breadcrumbs
-        items={[{ label: 'Areas', href: '/' }, { label: area.name || '' }]}
+        items={[{ label: 'Areas', href: '/areas' }, { label: area.name || '' }]}
       />
 
       {/* Hero */}
