@@ -71,47 +71,50 @@ function RecordRow({
 }) {
   const hasEvidence = record.evidence && record.evidence.length > 0;
   return (
-    <div className={depth > 0 ? 'pl-4' : ''}>
-      <p className="py-1 text-sm leading-snug">
-        <span className="text-xs text-gray-400 mr-1">
-          {typeLabels[record.recordType || ''] || record.recordType}
-        </span>
-        <span className="font-semibold text-gray-900">{record.title}</span>
-        {record.status && (
-          <span className="text-xs text-gray-500 ml-1">
-            · {cap(record.status)}
-          </span>
-        )}
-        <span className="text-xs text-gray-400 ml-1">· {fmt(record.date)}</span>
-      </p>
-      {(record.summary || record.verificationNote || hasEvidence) && (
-        <div className="pl-2 mb-1 space-y-0.5">
-          {record.summary && (
-            <p className="text-xs text-gray-500">{record.summary}</p>
-          )}
-          {record.verificationNote && (
-            <p className="text-xs text-amber-700 italic">
-              ✓ {record.verificationNote}
+    <div style={{ marginLeft: depth * 20 }}>
+      <div className="border-l-2 border-amber-200 pl-3 py-2 mb-1">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5">
+              {typeLabels[record.recordType || ''] || record.recordType}
             </p>
-          )}
-          {hasEvidence && (
-            <p className="text-xs text-blue-700">
-              {record.evidence?.map((e, i) => (
-                <span key={e._key}>
-                  {i > 0 && ' · '}
-                  {e.url ? (
-                    <a href={e.url} target="_blank" rel="noopener noreferrer">
-                      📎 {e.title}
-                    </a>
-                  ) : (
-                    <>📎 {e.title}</>
-                  )}
-                </span>
-              ))}
+            <p className="text-sm font-semibold text-gray-900">
+              {record.title}
             </p>
-          )}
+            {record.summary && (
+              <p className="text-xs text-gray-500 mt-0.5">{record.summary}</p>
+            )}
+            {record.verificationNote && (
+              <p className="text-xs text-amber-700 mt-0.5 italic">
+                ✓ {record.verificationNote}
+              </p>
+            )}
+            {hasEvidence && (
+              <div className="mt-1 flex flex-wrap gap-2">
+                {record.evidence?.map((e) => (
+                  <span key={e._key} className="text-xs text-blue-700">
+                    {e.url ? (
+                      <a href={e.url} target="_blank" rel="noopener noreferrer">
+                        📎 {e.title}
+                      </a>
+                    ) : (
+                      <>📎 {e.title}</>
+                    )}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="text-right shrink-0">
+            {record.status && (
+              <span className="text-xs text-gray-500 block">
+                {cap(record.status)}
+              </span>
+            )}
+            <span className="text-xs text-gray-400">{fmt(record.date)}</span>
+          </div>
         </div>
-      )}
+      </div>
       {record.childRecords?.map((child) => (
         <RecordRow
           key={child._id}
@@ -126,7 +129,7 @@ function RecordRow({
 function RecordSection({ records }: { records: LineageRecord[] }) {
   if (!records.length) return null;
   return (
-    <div className="border-l-2 border-amber-100 pl-3 mt-2">
+    <div className="space-y-0 mt-3">
       {records.map((r) => (
         <RecordRow key={r._id} record={r} depth={0} />
       ))}

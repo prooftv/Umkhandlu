@@ -145,41 +145,29 @@ type ChildRecord = {
   childRecords?: ChildRecord[] | null;
 };
 
-function RecordChildNode({
-  child,
-  depth = 0,
-}: {
-  child: ChildRecord;
-  depth?: number;
-}) {
+function RecordChildNode({ child }: { child: ChildRecord }) {
   return (
-    <div className={depth > 0 ? 'pl-4' : ''}>
-      <p className="py-1 text-sm leading-snug">
-        <span className="text-xs text-gray-400 mr-1">
-          {typeLabels[child.recordType ?? ''] || child.recordType}
-        </span>
+    <li>
+      <div className="border-l-2 border-amber-200 pl-3 py-1.5">
         <Link
           href={`/records/${child.slug}`}
-          className="text-primary hover:underline font-medium"
+          className="text-sm font-medium text-primary hover:underline block"
         >
           {child.title}
         </Link>
-        {child.status && (
-          <span className="text-xs text-gray-400 ml-1">· {child.status}</span>
-        )}
-      </p>
+        <p className="text-xs text-gray-400">
+          {typeLabels[child.recordType ?? ''] || child.recordType}
+          {child.status && ` · ${child.status}`}
+        </p>
+      </div>
       {child.childRecords && child.childRecords.length > 0 && (
-        <div>
+        <ul className="ml-5 mt-1 space-y-1">
           {child.childRecords.map((grandchild) => (
-            <RecordChildNode
-              key={grandchild._id}
-              child={grandchild}
-              depth={depth + 1}
-            />
+            <RecordChildNode key={grandchild._id} child={grandchild} />
           ))}
-        </div>
+        </ul>
       )}
-    </div>
+    </li>
   );
 }
 
@@ -196,38 +184,34 @@ function RecordLineage({ record }: { record: RecordData }) {
       <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
         Governance Lineage
       </p>
-      {(hasOrigin || hasParent) && (
-        <div className="mb-3 space-y-1 text-sm">
-          {record.originNotice && (
-            <p>
-              <span className="text-xs text-gray-400 mr-1">Origin Notice</span>
-              <Link
-                href={`/notices/${record.originNotice.slug}`}
-                className="text-primary hover:underline font-medium"
-              >
-                {record.originNotice.title}
-              </Link>
-            </p>
-          )}
-          {record.parentRecord && (
-            <p>
-              <span className="text-xs text-gray-400 mr-1">Produced From</span>
-              <Link
-                href={`/records/${record.parentRecord.slug}`}
-                className="text-primary hover:underline font-medium"
-              >
-                {record.parentRecord.title}
-              </Link>
-            </p>
-          )}
+      {record.originNotice && (
+        <div className="flex justify-between items-baseline mb-3">
+          <span className="text-xs text-gray-400">Origin Notice</span>
+          <Link
+            href={`/notices/${record.originNotice.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            {record.originNotice.title}
+          </Link>
+        </div>
+      )}
+      {record.parentRecord && (
+        <div className="flex justify-between items-baseline mb-3">
+          <span className="text-xs text-gray-400">Produced From</span>
+          <Link
+            href={`/records/${record.parentRecord.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            {record.parentRecord.title}
+          </Link>
         </div>
       )}
       {hasChildren && (
-        <div className="border-l-2 border-amber-100 pl-3">
+        <ul className="mt-3 space-y-1">
           {record.childRecords?.map((child) => (
             <RecordChildNode key={child._id} child={child as ChildRecord} />
           ))}
-        </div>
+        </ul>
       )}
       {hasVerification && (
         <p className="mt-4 text-xs text-gray-400 italic">
