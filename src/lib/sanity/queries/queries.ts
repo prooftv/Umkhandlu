@@ -210,13 +210,13 @@ export const noticeDetailQuery = defineQuery(`
       _id, title, "slug": slug.current, noticeType, date
     },
     "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
-      _id, title, "slug": slug.current, recordType, date, status,
+      _id, title, "slug": slug.current, recordType, date, status, verificationNote,
       "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-        _id, title, "slug": slug.current, recordType, date, status,
+        _id, title, "slug": slug.current, recordType, date, status, verificationNote,
         "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-          _id, title, "slug": slug.current, recordType, date, status,
+          _id, title, "slug": slug.current, recordType, date, status, verificationNote,
           "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-            _id, title, "slug": slug.current, recordType, date, status
+            _id, title, "slug": slug.current, recordType, date, status, verificationNote
           }
         }
       }

@@ -148,7 +148,7 @@ type ChildRecord = {
 
 function RecordChildNode({ child }: { child: ChildRecord }) {
   return (
-    <li>
+    <li className="list-none">
       <div className="border-l-2 border-amber-200 pl-3 py-1.5">
         <Link
           href={`/records/${child.slug}`}
@@ -162,7 +162,7 @@ function RecordChildNode({ child }: { child: ChildRecord }) {
         </p>
       </div>
       {child.childRecords && child.childRecords.length > 0 && (
-        <ul className="ml-5 mt-1 space-y-1">
+        <ul className="ml-4 border-l-2 border-gray-100 space-y-0">
           {child.childRecords.map((grandchild) => (
             <RecordChildNode key={grandchild._id} child={grandchild} />
           ))}

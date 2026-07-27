@@ -52,6 +52,7 @@ type AuditRecord = {
   recordType: string | null;
   date: string | null;
   status: string | null;
+  verificationNote?: string | null;
   childRecords?: AuditRecord[] | null;
 };
 
@@ -64,26 +65,29 @@ function AuditNode({
 }) {
   const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
-    <div style={{ marginLeft: depth * 20 }}>
-      <div className="flex items-start gap-3 py-2 border-l-2 border-amber-200 pl-3 mb-1">
-        <div className="flex-1 min-w-0">
-          <Link
-            href={`/records/${record.slug}`}
-            className="text-sm font-medium text-primary hover:underline block"
-          >
-            {record.title}
-          </Link>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {typeLabels[record.recordType || ''] || record.recordType}
-            {record.status &&
-              ` · ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
-            {record.date &&
-              ` · ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+    <div>
+      <div className="border-l-2 border-amber-200 pl-3 py-2">
+        <Link
+          href={`/records/${record.slug}`}
+          className="text-sm font-medium text-primary hover:underline block"
+        >
+          {record.title}
+        </Link>
+        <p className="text-xs text-gray-400 mt-0.5">
+          {typeLabels[record.recordType || ''] || record.recordType}
+          {record.status &&
+            ` · ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
+          {record.date &&
+            ` · ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+        </p>
+        {record.verificationNote && (
+          <p className="text-xs text-amber-700 italic mt-0.5">
+            ✓ {record.verificationNote}
           </p>
-        </div>
+        )}
       </div>
       {hasChildren && (
-        <div>
+        <div className="ml-4 border-l-2 border-gray-100 pl-0 mt-0">
           {record.childRecords?.map((child) => (
             <AuditNode key={child._id} record={child} depth={depth + 1} />
           ))}
