@@ -4,7 +4,7 @@
 
 ## Community Self-Determination Architecture
 
-**Version:** 3.3
+**Version:** 4.0
 **Status:** Production-Ready
 **Repository:** github.com/prooftv/Umkhandlu
 
@@ -19,6 +19,34 @@ It is **community-scale institutional memory** — the public record of what was
 Digital invisibility is a form of dependency. If communities cannot publish themselves, document themselves, coordinate themselves, or represent themselves digitally — then outsiders become the primary narrators of their governance, their economy, their development, and their identity.
 
 Umkhandlu reverses that.
+
+### Institutional Trust vs Cryptographic Trust
+
+Umkhandlu is built on institutional trust, not cryptographic trust. These are two different models that solve two different problems.
+
+Blockchain assumes there is no trusted authority. Mathematics becomes the authority. Umkhandlu assumes something different: that communities have recognised authorities, that those authorities deliberate and decide, and that the record of those decisions — properly preserved and publicly accessible — is what makes governance accountable.
+
+The innovation is not the database. The database merely stores the governance model.
+
+```
+Community
+  ↓
+Recognised Authority
+  ↓
+Recorded Decision
+  ↓
+Evidence
+  ↓
+Public Verification
+```
+
+Truth comes from governance process and evidence — not from consensus algorithms.
+
+### Federated, Not Centralised
+
+Umkhandlu is institutionally distributed and technically federated. Each traditional council operates as its own governance node with its own records, its own authority, and its own institutional memory. Unami provides the infrastructure. Governance remains local.
+
+This is closer to a federated governance network than to a single central database. The architecture resembles email more than blockchain — each node is sovereign, the protocol is shared.
 
 ### What Self-Determination Means Here
 
@@ -152,6 +180,18 @@ Seven layers:
 | **Output** | Interfaces people actually use | Website, Maps, WhatsApp, Reports, PDF Certificates, Data Export |
 
 The system layer is the core. Document types are not content — they are state containers. The page builder is not a layout tool — it is a view renderer. The CMS is not a publishing platform — it is a control panel for governance operations.
+
+### Five-Layer Institutional Memory Architecture
+
+| Layer | What it contains | Nature |
+|---|---|---|
+| **Layer 1 — Community Communication** | Public notices, announcements, meetings, alerts | Primary record |
+| **Layer 2 — Governance Records** | Minutes, resolutions, policies, reports, infrastructure records | Primary record |
+| **Layer 3 — Evidence Preservation** | Attachments, public comments, conflict logs, development notices | Primary record |
+| **Layer 4 — Institutional Memory** | Record lineage, parent/child relationships, decision provenance, governance history | Primary record |
+| **Layer 5 — Governance Evidence** | Proof certificates, lineage certificates, governance audit packages, public verification outputs | Derived output |
+
+Layers 1–4 are inputs and primary records. Layer 5 is derived output — the system reasoning about its own records to produce structured, verifiable evidence. Layer 5 outputs are never edited directly. They are regenerated from the underlying records. Full specification: [TCRS.md §17](./TCRS.md).
 
 Umkhandlu ensures that traditional councils own, control, and structure their own community data — rather than relying on external platforms or fragmented systems. All data is controlled and published by the council. The platform does not store personal applicant data or replace official council records.
 
@@ -1331,6 +1371,8 @@ The answer is always: **Public Record → Participation → Evidence → Traceab
 
 This is not a feature list. It is the operating model of community-scale institutional memory.
 
+The shift this enables: instead of asking *"Where is the document?"*, Umkhandlu enables people to ask *"What is the complete history of this decision?"* The Governance Record Lineage is the mechanism that answers that question. That is what transforms a document repository into a genuine institutional memory framework.
+
 ### Next Architectural Milestone: Institutional Records Layer
 
 The `record` document type exists but is underutilised. It should become the backbone of permanent community memory:
@@ -1449,7 +1491,11 @@ This turns the operator role into a contractable, auditable, scalable governance
 
 ### Internal (The Truth)
 
-> "We didn't build a website. We built community-scale institutional memory — the public record of what was promised, what was decided, what was notified, and what was delivered. Progress is measured by what's been certified, not what's been claimed. The system records, preserves, organises, presents — and never decides."
+> "We didn't build a website. We built community-scale institutional memory — the public record of what was promised, what was decided, what was notified, and what was delivered."
+
+> "The system is institutionally distributed and technically federated. Each council is a sovereign governance node. Unami provides the infrastructure. Governance remains local."
+
+> "Progress is measured by what's been certified, not what's been claimed. The system records, preserves, organises, presents — and never decides."
 
 ---
 

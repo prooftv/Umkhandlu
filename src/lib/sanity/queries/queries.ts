@@ -231,6 +231,7 @@ export const noticeSlugs = defineQuery(`
 export const noticeLineageQuery = defineQuery(`
   *[_type == "notice" && slug.current == $slug][0]{
     _id,
+    _rev,
     title,
     "slug": slug.current,
     noticeType,

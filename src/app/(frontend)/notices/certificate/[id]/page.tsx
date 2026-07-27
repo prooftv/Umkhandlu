@@ -13,6 +13,7 @@ type Props = {
 const certificateQuery = defineQuery(`
   *[_type == "developmentNotice" && _id == $id][0]{
     _id,
+    _rev,
     title,
     noticeType,
     legalMandate,
@@ -72,6 +73,7 @@ export default async function CertificatePage(props: Props) {
         status={notice.status}
         documents={notice.documents}
         publicUrl={publicUrl}
+        revisionId={notice._rev}
       />
       <div className="text-center mt-6 no-print">
         <PrintButton />

@@ -21,6 +21,7 @@ type Props = {
 const devNoticeQuery = defineQuery(`
   *[_type == "developmentNotice" && slug.current == $slug][0]{
     _id,
+    _rev,
     title,
     "slug": slug.current,
     noticeType,

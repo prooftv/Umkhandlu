@@ -223,6 +223,11 @@ export default async function NoticeLineagePage(props: Props) {
           <div className="text-right text-xs text-gray-400">
             <p>Generated: {generatedAt}</p>
             <p className="mt-1 font-mono break-all">{publicUrl}</p>
+            {notice._rev && (
+              <p className="mt-1 font-mono text-[10px] text-gray-300 break-all">
+                rev: {notice._rev}
+              </p>
+            )}
           </div>
         </div>
 
@@ -322,6 +327,11 @@ export default async function NoticeLineagePage(props: Props) {
           Governance Record Lineage is auto-generated from institutional
           references between notices and records. No manual assembly.
         </p>
+        {notice._rev && (
+          <p className="mt-2 font-mono text-[10px] break-all">
+            Document revision at time of generation: {notice._rev}
+          </p>
+        )}
       </div>
 
       {/* No-print bottom button */}

@@ -13,6 +13,7 @@ type Props = {
   status?: string | null;
   documents?: { title: string }[];
   publicUrl: string;
+  revisionId?: string | null;
 };
 
 const typeLabels: Record<string, string> = {
@@ -128,6 +129,9 @@ export default function ProofOfPublication(props: Props) {
             {props.status && (
               <Row label="Status" value={props.status.toUpperCase()} />
             )}
+            {props.revisionId && (
+              <Row label="Document Revision" value={props.revisionId} mono />
+            )}
           </tbody>
         </table>
       </section>
@@ -180,13 +184,25 @@ export default function ProofOfPublication(props: Props) {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({
+  label,
+  value,
+  mono = false,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
   return (
     <tr>
       <td className="py-1.5 pr-4 text-gray-500 font-medium align-top whitespace-nowrap">
         {label}:
       </td>
-      <td className="py-1.5 text-gray-900 font-semibold break-all">{value}</td>
+      <td
+        className={`py-1.5 text-gray-900 font-semibold break-all${mono ? ' font-mono text-xs' : ''}`}
+      >
+        {value}
+      </td>
     </tr>
   );
 }
