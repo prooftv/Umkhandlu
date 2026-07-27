@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
@@ -179,6 +180,73 @@ export default async function NoticePage(props: Props) {
 
   const originNotice = notice.originNotice as OriginNotice | null;
   const followUpNotices = notice.followUpNotices as FollowUpNotice[] | null;
+  const lineageCount =
+    (notice.producedRecords?.length ?? 0) + (followUpNotices?.length ?? 0);
+
+  const noticeTab = (
+    <>
+      {notice.excerpt && (
+        <p className="text-xl text-gray-600 mb-8">{notice.excerpt}</p>
+      )}
+      {notice.content && (
+        <CustomPortableText value={notice.content as PortableTextBlock[]} />
+      )}
+      {originNotice && (
+        <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+          <p className="text-xs text-blue-600 uppercase tracking-widest font-semibold mb-1">
+            Part of a series
+          </p>
+          <Link
+            href={`/notices/${originNotice.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            ← {originNotice.title}
+          </Link>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {originNotice.noticeType}
+            {originNotice.date &&
+              ` · ${new Date(originNotice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+          </p>
+        </div>
+      )}
+      {notice.relatedCampaign && (
+        <div className="mt-6 p-4 bg-gray-50 rounded-xl">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
+            Related Campaign
+          </p>
+          <Link
+            href={`/campaigns/${notice.relatedCampaign.slug}`}
+            className="text-lg font-semibold hover:text-primary transition-colors"
+          >
+            {notice.relatedCampaign.title} →
+          </Link>
+          <div className="flex items-center gap-2 mt-1">
+            <Badge variant="outline">
+              {notice.relatedCampaign.campaignType}
+            </Badge>
+            <Badge variant="secondary">{notice.relatedCampaign.status}</Badge>
+          </div>
+        </div>
+      )}
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <ShareWhatsApp title={notice.title || ''} />
+      </div>
+    </>
+  );
+
+  const lineageTab = (
+    <>
+      <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
+      <div className="mt-6">
+        <Link
+          href={`/notices/lineage/${slug}`}
+          className="text-sm text-primary font-medium hover:underline"
+        >
+          🖸 Print Lineage Certificate →
+        </Link>
+      </div>
+    </>
+  );
 
   return (
     <div className="container mx-auto max-w-3xl py-12">
@@ -212,69 +280,13 @@ export default async function NoticePage(props: Props) {
             <span className="text-sm text-primary">📌 Pinned</span>
           )}
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">{notice.title}</h1>
+        <h1 className="text-3xl md:text-5xl font-bold mb-6">{notice.title}</h1>
       </div>
-
-      {notice.excerpt && (
-        <p className="text-xl text-gray-600 mb-8">{notice.excerpt}</p>
-      )}
-
-      {notice.content && (
-        <CustomPortableText value={notice.content as PortableTextBlock[]} />
-      )}
-
-      {/* Follow-up series context — below content */}
-      {originNotice && (
-        <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-          <p className="text-xs text-blue-600 uppercase tracking-widest font-semibold mb-1">
-            Part of a series
-          </p>
-          <Link
-            href={`/notices/${originNotice.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            ← {originNotice.title}
-          </Link>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {originNotice.noticeType}
-            {originNotice.date &&
-              ` · ${new Date(originNotice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-          </p>
-        </div>
-      )}
-
-      {notice.relatedCampaign && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
-            Related Campaign
-          </p>
-          <Link
-            href={`/campaigns/${notice.relatedCampaign.slug}`}
-            className="text-lg font-semibold hover:text-primary transition-colors"
-          >
-            {notice.relatedCampaign.title} →
-          </Link>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant="outline">
-              {notice.relatedCampaign.campaignType}
-            </Badge>
-            <Badge variant="secondary">{notice.relatedCampaign.status}</Badge>
-          </div>
-        </div>
-      )}
-
-      {/* Lineage — always at bottom */}
-      <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
-
-      <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
-        <ShareWhatsApp title={notice.title || ''} />
-        <Link
-          href={`/notices/lineage/${slug}`}
-          className="text-sm text-primary font-medium hover:underline no-print"
-        >
-          🖨 Print Lineage Certificate →
-        </Link>
-      </div>
+      <LineageTabs
+        noticeTab={noticeTab}
+        lineageTab={lineageTab}
+        lineageCount={lineageCount}
+      />
     </div>
   );
 }

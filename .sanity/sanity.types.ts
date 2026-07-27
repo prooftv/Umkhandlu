@@ -8667,6 +8667,75 @@ export type RecordListPageQueryResult = Array<{
     slug: string | null;
   } | null;
 }>;
+// Variable: recordsArchiveQuery
+// Query: {    "allResults": *[_type == "record" && defined(slug.current)] | order(date desc)  } {    "total": count(allResults),    "results": allResults[$from..$to] {      _id,      title,      "slug": slug.current,      recordType,      date,      summary,      status,      "relatedArea": relatedArea->{ name, "slug": slug.current }    }  }
+export type RecordsArchiveQueryResult = {
+  total: number;
+  results: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    date: string | null;
+    summary: string | null;
+    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    relatedArea: {
+      name: string | null;
+      slug: string | null;
+    } | null;
+  }>;
+};
+// Variable: noticesArchiveQuery
+// Query: {    "allResults": *[_type == "notice" && defined(slug.current)] | order(pinned desc, date desc)  } {    "total": count(allResults),    "results": allResults[$from..$to] {      _id,      title,      "slug": slug.current,      noticeType,      date,      excerpt,      image,      pinned,      "relatedArea": relatedArea->{ name, "slug": slug.current }    }  }
+export type NoticesArchiveQueryResult = {
+  total: number;
+  results: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    date: string | null;
+    excerpt: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+    pinned: boolean | null;
+    relatedArea: {
+      name: string | null;
+      slug: string | null;
+    } | null;
+  }>;
+};
+// Variable: devNoticesArchiveQuery
+// Query: {    "allResults": *[_type == "developmentNotice" && defined(slug.current)] | order(commentDeadline desc)  } {    "total": count(allResults),    "results": allResults[$from..$to] {      _id,      title,      "slug": slug.current,      noticeType,      status,      applicant,      referenceNumber,      location,      commentDeadline,      legalMandate,      "relatedArea": relatedArea->{ name, "slug": slug.current }    }  }
+export type DevNoticesArchiveQueryResult = {
+  total: number;
+  results: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    noticeType: "building" | "eia" | "estate" | "land-use" | "liquidation" | "liquor" | "mining" | "other" | "pto" | "rezoning" | "telecom" | "township" | null;
+    status: "approved" | "closed" | "open" | "rejected" | "withdrawn" | null;
+    applicant: string | null;
+    referenceNumber: string | null;
+    location: string | null;
+    commentDeadline: string | null;
+    legalMandate: string | null;
+    relatedArea: {
+      name: string | null;
+      slug: string | null;
+    } | null;
+  }>;
+};
 // Variable: devNoticeSlugs
 // Query: *[_type == "developmentNotice" && defined(slug.current)][0..$limit].slug.current
 export type DevNoticeSlugsResult = Array<string | null>;
@@ -8775,6 +8844,9 @@ declare module "@sanity/client" {
     "\n  *[_type == \"record\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    \"approvedBy\": approvedBy->{ firstName, lastName, role, \"slug\": slug.current },\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    evidence[]{ _key, title, \"url\": asset->url },\n    externalUrl,\n    source,\n    verificationNote,\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n    \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n    \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status,\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status,\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status\n        }\n      }\n    },\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current, campaignType, status }\n  }\n": RecordDetailQueryResult;
     "\n  *[_type == \"record\" && defined(slug.current)][0..$limit].slug.current\n": RecordSlugsResult;
     "\n  *[_type == \"record\" && defined(slug.current)] | order(date desc) {\n    _id,\n    title,\n    \"slug\": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current }\n  }\n": RecordListPageQueryResult;
+    "\n  {\n    \"allResults\": *[_type == \"record\" && defined(slug.current)] | order(date desc)\n  } {\n    \"total\": count(allResults),\n    \"results\": allResults[$from..$to] {\n      _id,\n      title,\n      \"slug\": slug.current,\n      recordType,\n      date,\n      summary,\n      status,\n      \"relatedArea\": relatedArea->{ name, \"slug\": slug.current }\n    }\n  }\n": RecordsArchiveQueryResult;
+    "\n  {\n    \"allResults\": *[_type == \"notice\" && defined(slug.current)] | order(pinned desc, date desc)\n  } {\n    \"total\": count(allResults),\n    \"results\": allResults[$from..$to] {\n      _id,\n      title,\n      \"slug\": slug.current,\n      noticeType,\n      date,\n      excerpt,\n      image,\n      pinned,\n      \"relatedArea\": relatedArea->{ name, \"slug\": slug.current }\n    }\n  }\n": NoticesArchiveQueryResult;
+    "\n  {\n    \"allResults\": *[_type == \"developmentNotice\" && defined(slug.current)] | order(commentDeadline desc)\n  } {\n    \"total\": count(allResults),\n    \"results\": allResults[$from..$to] {\n      _id,\n      title,\n      \"slug\": slug.current,\n      noticeType,\n      status,\n      applicant,\n      referenceNumber,\n      location,\n      commentDeadline,\n      legalMandate,\n      \"relatedArea\": relatedArea->{ name, \"slug\": slug.current }\n    }\n  }\n": DevNoticesArchiveQueryResult;
     "\n  *[_type == \"developmentNotice\" && defined(slug.current)][0..$limit].slug.current\n": DevNoticeSlugsResult;
     "\n  *[_type in [\"notice\", \"developmentNotice\", \"opportunity\", \"program\", \"campaign\"] && !(_id in path(\"drafts.**\"))] | order(_updatedAt desc) [0]._updatedAt\n": LatestContentQueryResult;
     "\n  {\n    \"allResults\": *[\n      _type == \"post\"\n      &&\n      (\n        !defined( $filters.categorySlug ) || references(*[_type == \"category\" && slug.current == $filters.categorySlug]._id)\n      )\n      &&\n      (\n        !defined( $filters.personSlug ) || references(*[_type == \"person\" && slug.current == $filters.personSlug]._id)\n      )\n      //\n      // Add more filter here if needed\n      //\n      // The filter value should be passed as a property of the $filter parameter\n      //\n      // (\n      //   !defined( $filters.anotherFilter ) || fieldname == $filters.anotherFilter)\n      // )\n    ] | order(_createdAt desc, _id desc)\n  }\n  {\n    \"total\": count(allResults),\n    \"results\": allResults[$from..$to] {\n      \n  _type,\n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  image,\n  \"categories\": categories[]->{\n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  description,\n},\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\n  _id,\n  _type,\n  firstName,\n  lastName,\n  image,\n  role,\n  personType,\n  email,\n  phone,\n  organization,\n  skills,\n  biography,\n  gallery[] {\n    _key,\n    alt,\n    caption,\n    asset->{ _id, url }\n  },\n  \"slug\": slug.current,\n},\n  \"wordCount\": count(string::split(coalesce(pt::text(content), ''), \" \")),\n\n    }\n  }\n": PostsArchiveQueryResult;

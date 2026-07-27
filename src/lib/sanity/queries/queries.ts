@@ -368,6 +368,64 @@ export const recordListPageQuery = defineQuery(`
   }
 `);
 
+export const recordsArchiveQuery = defineQuery(`
+  {
+    "allResults": *[_type == "record" && defined(slug.current)] | order(date desc)
+  } {
+    "total": count(allResults),
+    "results": allResults[$from..$to] {
+      _id,
+      title,
+      "slug": slug.current,
+      recordType,
+      date,
+      summary,
+      status,
+      "relatedArea": relatedArea->{ name, "slug": slug.current }
+    }
+  }
+`);
+
+export const noticesArchiveQuery = defineQuery(`
+  {
+    "allResults": *[_type == "notice" && defined(slug.current)] | order(pinned desc, date desc)
+  } {
+    "total": count(allResults),
+    "results": allResults[$from..$to] {
+      _id,
+      title,
+      "slug": slug.current,
+      noticeType,
+      date,
+      excerpt,
+      image,
+      pinned,
+      "relatedArea": relatedArea->{ name, "slug": slug.current }
+    }
+  }
+`);
+
+export const devNoticesArchiveQuery = defineQuery(`
+  {
+    "allResults": *[_type == "developmentNotice" && defined(slug.current)] | order(commentDeadline desc)
+  } {
+    "total": count(allResults),
+    "results": allResults[$from..$to] {
+      _id,
+      title,
+      "slug": slug.current,
+      noticeType,
+      status,
+      applicant,
+      referenceNumber,
+      location,
+      commentDeadline,
+      legalMandate,
+      "relatedArea": relatedArea->{ name, "slug": slug.current }
+    }
+  }
+`);
+
 export const devNoticeSlugs = defineQuery(`
   *[_type == "developmentNotice" && defined(slug.current)][0..$limit].slug.current
 `);

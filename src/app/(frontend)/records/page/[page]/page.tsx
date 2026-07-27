@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArchivePagination } from '@/components/modules/ArchivePagination';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
@@ -8,11 +9,16 @@ import { paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { recordsArchiveQuery } from '@/lib/sanity/queries/queries';
 
-export const metadata: Metadata = {
-  title: 'Documents & Records',
-  description:
-    'Governance records, resolutions, minutes, and institutional documents.',
-};
+type Props = { params: Promise<{ page: string }> };
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { page } = await props.params;
+  return { title: `Documents & Records — Page ${page}` };
+}
+
+export async function generateStaticParams() {
+  return [];
+}
 
 const typeLabels: Record<string, string> = {
   minutes: 'Minutes',
@@ -87,36 +93,45 @@ function RecordRow({ record }: { record: RecordItem }) {
   );
 }
 
-export default async function RecordsPage() {
+export default async function RecordsPageN(props: Props) {
+  const { page } = await props.params;
+  const pageNumber = parseInt(page, 10);
+  if (!pageNumber || pageNumber < 2) notFound();
+
   const { data } = await sanityFetch({
     query: recordsArchiveQuery,
-    params: { from: 0, to: RECORDS_PER_PAGE - 1 },
+    params: {
+      from: (pageNumber - 1) * RECORDS_PER_PAGE,
+      to: pageNumber * RECORDS_PER_PAGE - 1,
+    },
   });
 
   const paginated = paginatedData(
     data ?? { total: 0, results: [] },
-    1,
+    pageNumber,
     RECORDS_PER_PAGE
   );
+  if (pageNumber > paginated.totalPages) notFound();
 
   return (
     <div className="container mx-auto max-w-3xl py-12">
-      <Breadcrumbs items={[{ label: 'Documents & Records' }]} />
+      <Breadcrumbs
+        items={[
+          { label: 'Documents & Records', href: '/records' },
+          { label: `Page ${pageNumber}` },
+        ]}
+      />
       <h1 className="text-3xl md:text-4xl font-bold mb-8">
         Documents & Records
       </h1>
-      {!paginated.data.results || paginated.data.results.length === 0 ? (
-        <p className="text-gray-500">No records yet.</p>
-      ) : (
-        <div className="space-y-3">
-          {paginated.data.results.map((record) => (
-            <RecordRow key={record._id} record={record} />
-          ))}
-        </div>
-      )}
+      <div className="space-y-3">
+        {paginated.data.results.map((record) => (
+          <RecordRow key={record._id} record={record} />
+        ))}
+      </div>
       <ArchivePagination
         totalPages={paginated.totalPages}
-        currentPage={1}
+        currentPage={pageNumber}
         linkBase="/records"
       />
     </div>

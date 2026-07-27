@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArchivePagination } from '@/components/modules/ArchivePagination';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
@@ -8,12 +9,16 @@ import { paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { devNoticesArchiveQuery } from '@/lib/sanity/queries/queries';
 
-export const metadata: Metadata = {
-  title: 'Development & Statutory Notices',
-  description:
-    'Public participation notices — EIA, SPLUMA, liquor licensing, mining permits, deceased estates, and more.',
-  alternates: { canonical: '/development-notices' },
-};
+type Props = { params: Promise<{ page: string }> };
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { page } = await props.params;
+  return { title: `Development & Statutory Notices — Page ${page}` };
+}
+
+export async function generateStaticParams() {
+  return [];
+}
 
 const typeLabels: Record<string, string> = {
   eia: 'Environmental Impact Assessment',
@@ -87,34 +92,40 @@ function NoticeCard({ notice }: { notice: NoticeItem }) {
   );
 }
 
-export default async function DevelopmentNoticesPage() {
+export default async function DevelopmentNoticesPageN(props: Props) {
+  const { page } = await props.params;
+  const pageNumber = parseInt(page, 10);
+  if (!pageNumber || pageNumber < 2) notFound();
+
   const { data } = await sanityFetch({
     query: devNoticesArchiveQuery,
-    params: { from: 0, to: DEV_NOTICES_PER_PAGE - 1 },
+    params: {
+      from: (pageNumber - 1) * DEV_NOTICES_PER_PAGE,
+      to: pageNumber * DEV_NOTICES_PER_PAGE - 1,
+    },
   });
 
   const paginated = paginatedData(
     data ?? { total: 0, results: [] },
-    1,
+    pageNumber,
     DEV_NOTICES_PER_PAGE
   );
+  if (pageNumber > paginated.totalPages) notFound();
+
   const open = paginated.data.results.filter((n) => n.status === 'open');
   const closed = paginated.data.results.filter((n) => n.status !== 'open');
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
       <Breadcrumbs
-        items={[{ label: 'Home', href: '/' }, { label: 'Development Notices' }]}
+        items={[
+          { label: 'Development Notices', href: '/development-notices' },
+          { label: `Page ${pageNumber}` },
+        ]}
       />
-      <header className="mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">
-          Development & Statutory Notices
-        </h1>
-        <p className="text-gray-600 max-w-2xl">
-          Public participation notices for developments within the traditional
-          authority area. Submit comments or objections before the deadline.
-        </p>
-      </header>
+      <h1 className="text-3xl md:text-4xl font-bold mb-8">
+        Development & Statutory Notices
+      </h1>
       {open.length > 0 && (
         <section className="mb-12">
           <h2 className="text-xl font-bold mb-4">
@@ -139,12 +150,9 @@ export default async function DevelopmentNoticesPage() {
           </div>
         </section>
       )}
-      {paginated.data.results.length === 0 && (
-        <p className="text-gray-500">No development notices published yet.</p>
-      )}
       <ArchivePagination
         totalPages={paginated.totalPages}
-        currentPage={1}
+        currentPage={pageNumber}
         linkBase="/development-notices"
       />
     </div>

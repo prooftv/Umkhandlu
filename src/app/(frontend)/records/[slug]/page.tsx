@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
@@ -290,6 +291,26 @@ export default async function RecordPage(props: Props) {
 
   if (!record) notFound();
 
+  const lineageCount =
+    (record.childRecords?.length ?? 0) +
+    (record.originNotice ? 1 : 0) +
+    (record.parentRecord ? 1 : 0);
+
+  const recordTab = (
+    <>
+      <RecordMeta record={record} />
+      <RecordEvidence record={record} />
+      {record.content && (
+        <div className="mb-8 prose max-w-none">
+          <CustomPortableText value={record.content as PortableTextBlock[]} />
+        </div>
+      )}
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <ShareWhatsApp title={record.title || ''} />
+      </div>
+    </>
+  );
+
   return (
     <div className="container mx-auto max-w-3xl py-12">
       <Breadcrumbs
@@ -298,22 +319,12 @@ export default async function RecordPage(props: Props) {
           { label: record.title || '' },
         ]}
       />
-
       <RecordHeader record={record} />
-      <RecordMeta record={record} />
-      <RecordEvidence record={record} />
-
-      {record.content && (
-        <div className="mb-8 prose max-w-none">
-          <CustomPortableText value={record.content as PortableTextBlock[]} />
-        </div>
-      )}
-
-      <RecordLineage record={record} />
-
-      <div className="mt-8 pt-6 border-t border-gray-100">
-        <ShareWhatsApp title={record.title || ''} />
-      </div>
+      <LineageTabs
+        noticeTab={recordTab}
+        lineageTab={<RecordLineage record={record} />}
+        lineageCount={lineageCount}
+      />
     </div>
   );
 }
