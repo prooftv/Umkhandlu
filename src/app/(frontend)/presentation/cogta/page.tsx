@@ -75,6 +75,61 @@ Induna   Induna    (Vacant)   Acting
 ↕ Isigodi persist regardless of headman status
 ↕ All governance records accumulate at the council level`}
         </CodeBlock>
+        <h3 className="text-lg font-bold mt-6 mb-3">Five-Layer Architecture</h3>
+        <p>Every governance event moves through five layers:</p>
+        <div className="overflow-x-auto my-4">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b-2 border-gray-200">
+                <th className="text-left py-2 pr-4">Layer</th>
+                <th className="text-left py-2 pr-4">Contains</th>
+                <th className="text-left py-2">Nature</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700">
+              <TableRow
+                cells={[
+                  '1 — Community Communication',
+                  'Notices, meetings, alerts',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '2 — Governance Records',
+                  'Minutes, resolutions, policies',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '3 — Evidence Preservation',
+                  'Attachments, comments, conflict logs',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '4 — Institutional Memory',
+                  'Record lineage, decision provenance',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '5 — Governance Evidence',
+                  'Certificates, audit packages',
+                  'Derived output',
+                ]}
+              />
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-gray-500 mb-6">
+          Layer 5 outputs are never edited directly. They are regenerated from
+          the underlying records. If the records change, the output changes.
+          That is the integrity mechanism.
+        </p>
         <h3 className="text-lg font-bold mt-6 mb-3">Why This Matters</h3>
         <ul className="space-y-3 text-gray-700">
           <li>

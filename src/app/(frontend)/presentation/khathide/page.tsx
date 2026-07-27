@@ -286,6 +286,16 @@ Permanent Institutional Memory`}
           council meeting, every community decision, every infrastructure
           project.
         </p>
+        <p className="text-sm text-gray-500 mt-4">
+          The system is built on institutional trust — the same trust mechanisms
+          traditional governance has always relied on: recognised authority,
+          witnesses, minutes, resolutions, and public participation. Umkhandlu
+          digitises those mechanisms. It does not replace them.
+        </p>
+        <p className="text-sm text-gray-500 mt-2">
+          Each Traditional Council is a sovereign governance node. The platform
+          is shared infrastructure. Governance remains local.
+        </p>
       </CollapsibleChapter>
 
       <footer className="mt-16 pt-8 border-t border-gray-200 text-center">

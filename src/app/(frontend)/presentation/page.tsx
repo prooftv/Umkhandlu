@@ -60,6 +60,12 @@ export default function PresentationPage() {
           decides. Progress is measured by what has been certified, not what has
           been claimed.
         </p>
+        <p className="text-sm text-gray-500 mt-2">
+          Umkhandlu is built on institutional trust, not cryptographic trust.
+          Traditional governance has always relied on recognised authority,
+          witnesses, minutes, resolutions, and public participation. Those are
+          institutional trust mechanisms. Umkhandlu digitises them.
+        </p>
       </CollapsibleChapter>
 
       {/* Chapter 2 */}
@@ -205,7 +211,7 @@ export default function PresentationPage() {
             title="Technical Campaign Ledgers"
             path="/campaigns/[slug]"
             items={[
-              'Immutable project data',
+              'Append-only project data',
               'Funding allocations (WSIG, MIG, RBIG)',
               'Contractor metadata',
               'Milestone progress tracking',
@@ -368,26 +374,40 @@ export default function PresentationPage() {
         <CodeBlock>
           {`UMKHANDLU — Community-Scale Institutional Memory
 │
-├── Community Participation Layer
-├── Infrastructure Visibility Layer
-├── Development Coordination Layer
-├── Opportunity & Programme Layer
-├── Council Oversight Layer
-├── Public Notice & Compliance Layer
-├── Governance Audit & Evidence Layer
+├── Layer 1 — Community Communication
+│       Public notices, announcements, meetings, alerts
 │
-└── Governance Record Lineage (spans all layers)
-        Notice → Record → Record → Record → ...
-        Every governance process, regardless of layer,
-        produces traceable institutional lineage.
-        The memory backbone of the operating system.`}
+├── Layer 2 — Governance Records
+│       Minutes, resolutions, policies, reports, infrastructure records
+│
+├── Layer 3 — Evidence Preservation
+│       Attachments, public comments, conflict logs, development notices
+│
+├── Layer 4 — Institutional Memory
+│       Record lineage, parent/child relationships, decision provenance
+│       governance history, origin traceability
+│
+└── Layer 5 — Governance Evidence (derived output)
+        Proof of publication certificates, lineage certificates,
+        governance audit packages, public verification outputs
+
+Layers 1–4: primary records — inputs and institutional memory
+Layer 5:    derived output — the system reasoning about its own
+            records to produce structured, verifiable evidence
+            Layer 5 outputs are never edited — only regenerated`}
         </CodeBlock>
+        <p className="text-sm text-gray-500 mt-2">
+          The system is institutionally distributed and technically federated.
+          Each Traditional Council is a sovereign governance node with its own
+          records, authority, and institutional memory. Unami provides the
+          infrastructure. Governance remains local.
+        </p>
         <h3 className="text-lg font-bold mt-6 mb-3">Platform Capabilities</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
           <Stat value="13" label="Document Types" />
           <Stat value="27" label="Page Builder Sections" />
           <Stat value="18" label="Frontend Routes" />
-          <Stat value="7" label="System Layers" />
+          <Stat value="5" label="Architecture Layers" />
         </div>
         <h3 className="text-lg font-bold mt-6 mb-3">Data Export</h3>
         <p>

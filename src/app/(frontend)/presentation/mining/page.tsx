@@ -57,6 +57,12 @@ export default function MiningPresentation() {
           traceable governance lineage that communities, Traditional Councils,
           municipalities, and regulators can independently verify.
         </p>
+        <p className="text-sm text-gray-500 mt-4">
+          Umkhandlu is built on institutional trust — the same mechanisms
+          governance has always relied on: recognised authority, witnesses,
+          minutes, resolutions, and public participation. The innovation is not
+          the database. The database merely stores the governance model.
+        </p>
       </CollapsibleChapter>
 
       <CollapsibleChapter
@@ -167,6 +173,64 @@ Permanent Institutional Memory`}
           the governance lineage extends automatically. No manual assembly. No
           retrospective documentation. The system follows governance as it
           happens.
+        </p>
+        <h3 className="text-lg font-bold mt-6 mb-3">Five-Layer Architecture</h3>
+        <p>
+          Every governance interaction moves through five layers — from
+          community communication through to verifiable governance evidence:
+        </p>
+        <div className="overflow-x-auto my-4">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b-2 border-gray-200">
+                <th className="text-left py-2 pr-4">Layer</th>
+                <th className="text-left py-2 pr-4">Contains</th>
+                <th className="text-left py-2">Nature</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700">
+              <TableRow
+                cells={[
+                  '1 — Community Communication',
+                  'Notices, meetings, alerts',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '2 — Governance Records',
+                  'Minutes, resolutions, policies',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '3 — Evidence Preservation',
+                  'Attachments, comments, conflict logs',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '4 — Institutional Memory',
+                  'Record lineage, decision provenance',
+                  'Primary record',
+                ]}
+              />
+              <TableRow
+                cells={[
+                  '5 — Governance Evidence',
+                  'Certificates, audit packages',
+                  'Derived output',
+                ]}
+              />
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-gray-500">
+          Layer 5 outputs — proof of publication certificates, lineage
+          certificates, governance audit packages — are derived automatically
+          from the underlying records. They are never edited directly.
         </p>
       </CollapsibleChapter>
 
