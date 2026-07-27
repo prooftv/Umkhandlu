@@ -47,7 +47,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return paths.map((path) => ({
       url: new URL(path.href ?? '/', baseUrl).toString(),
       lastModified: new Date(path._updatedAt),
-      changeFrequency: path.href === '/' ? 'daily' : 'weekly',
+      changeFrequency: (path.href === '/'
+        ? 'daily'
+        : path.href?.startsWith('/development-notices/')
+          ? 'weekly'
+          : path.href?.startsWith('/notices/')
+            ? 'weekly'
+            : 'weekly') as 'daily' | 'weekly',
       priority: getPriority(path.href ?? '/'),
     }));
   } catch (error) {

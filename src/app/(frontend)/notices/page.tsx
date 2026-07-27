@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   description:
     'Meeting notices, announcements, resolutions, and community alerts.',
   alternates: { canonical: '/notices' },
+  openGraph: {
+    title: 'Community Notices',
+    description:
+      'Meeting notices, announcements, resolutions, and community alerts.',
+    type: 'website',
+  },
 };
 
 export default async function NoticesPage() {

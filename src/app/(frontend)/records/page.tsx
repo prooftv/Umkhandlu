@@ -12,6 +12,13 @@ export const metadata: Metadata = {
   title: 'Documents & Records',
   description:
     'Governance records, resolutions, minutes, and institutional documents.',
+  alternates: { canonical: '/records' },
+  openGraph: {
+    title: 'Documents & Records',
+    description:
+      'Governance records, resolutions, minutes, and institutional documents.',
+    type: 'website',
+  },
 };
 
 const typeLabels: Record<string, string> = {

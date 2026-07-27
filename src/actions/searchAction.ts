@@ -9,6 +9,10 @@ export type SearchResult = {
   slug: string | null;
   excerpt: string | null;
   listingType: string | null;
+  noticeType: string | null;
+  recordType: string | null;
+  opportunityType: string | null;
+  status: string | null;
 };
 
 export async function searchAction(query: string): Promise<SearchResult[]> {
@@ -21,7 +25,7 @@ export async function searchAction(query: string): Promise<SearchResult[]> {
       _type in [
         "page", "post", "person", "listing", "notice",
         "opportunity", "program", "record", "campaign",
-        "sponsor", "category"
+        "developmentNotice", "sponsor", "category"
       ] &&
       (
         title match $q ||
@@ -35,15 +39,21 @@ export async function searchAction(query: string): Promise<SearchResult[]> {
         organization match $q ||
         role match $q ||
         location match $q ||
-        source match $q
+        source match $q ||
+        applicant match $q ||
+        legalMandate match $q
       )
-    ] | order(_type asc) [0...20] {
+    ] | order(_type asc, _updatedAt desc) [0...30] {
       _id,
       _type,
       "title": coalesce(title, name, firstName + " " + lastName),
       "slug": slug.current,
-      "excerpt": coalesce(excerpt, description, summary),
-      "listingType": listingType
+      "excerpt": coalesce(excerpt, description, summary, applicant),
+      "listingType": listingType,
+      "noticeType": noticeType,
+      "recordType": recordType,
+      "opportunityType": opportunityType,
+      "status": status
     }`,
     { q: `${q}*` }
   );

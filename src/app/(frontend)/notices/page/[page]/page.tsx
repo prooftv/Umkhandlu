@@ -13,7 +13,14 @@ type Props = { params: Promise<{ page: string }> };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { page } = await props.params;
-  return { title: `Community Notices — Page ${page}` };
+  const pageNumber = parseInt(page, 10);
+  return {
+    title: `Community Notices — Page ${pageNumber}`,
+    alternates: {
+      canonical: `/notices/page/${pageNumber}`,
+    },
+    robots: pageNumber > 1 ? { index: false, follow: true } : undefined,
+  };
 }
 
 export async function generateStaticParams() {

@@ -272,6 +272,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     title: data.title,
     description: data.summary || undefined,
     alternates: { canonical: `/records/${slug}` },
+    openGraph: {
+      title: data.title ?? undefined,
+      description: data.summary ?? undefined,
+      type: 'article',
+      publishedTime: data.date ?? undefined,
+      url: `/records/${slug}`,
+    },
   };
 }
 

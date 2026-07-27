@@ -13,7 +13,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/Sheet';
 import { useLocale } from '@/lib/i18n/LocaleContext';
-import { cn } from '@/lib/utils';
 
 const TYPE_LABELS: Record<string, string> = {
   page: 'Page',
@@ -25,13 +24,29 @@ const TYPE_LABELS: Record<string, string> = {
   program: 'Program',
   record: 'Record',
   campaign: 'Campaign',
+  developmentNotice: 'Dev Notice',
   sponsor: 'Partner',
   category: 'Category',
 };
 
+const TYPE_COLOURS: Record<string, string> = {
+  notice: 'bg-amber-100 text-amber-700',
+  developmentNotice: 'bg-red-100 text-red-700',
+  record: 'bg-blue-100 text-blue-700',
+  opportunity: 'bg-green-100 text-green-700',
+  program: 'bg-purple-100 text-purple-700',
+  campaign: 'bg-teal-100 text-teal-700',
+  person: 'bg-pink-100 text-pink-700',
+  listing: 'bg-orange-100 text-orange-700',
+  post: 'bg-indigo-100 text-indigo-700',
+  page: 'bg-gray-100 text-gray-600',
+  sponsor: 'bg-gray-100 text-gray-600',
+  category: 'bg-gray-100 text-gray-600',
+};
+
 function getResultHref(result: SearchResult): string {
   const { _type, slug, listingType } = result;
-  if (!slug) return '/';
+  if (!slug) return '#';
   switch (_type) {
     case 'page':
       return `/${slug}`;
@@ -43,6 +58,8 @@ function getResultHref(result: SearchResult): string {
       return listingType === 'area' ? `/areas/${slug}` : `/directory/${slug}`;
     case 'notice':
       return `/notices/${slug}`;
+    case 'developmentNotice':
+      return `/development-notices/${slug}`;
     case 'opportunity':
       return `/opportunities/${slug}`;
     case 'program':
@@ -50,12 +67,22 @@ function getResultHref(result: SearchResult): string {
     case 'campaign':
       return `/campaigns/${slug}`;
     case 'record':
+      return `/records/${slug}`;
     case 'sponsor':
+      return `/directory`;
     case 'category':
-      return '/';
+      return `/blog`;
     default:
-      return '/';
+      return '#';
   }
+}
+
+function getSubLabel(result: SearchResult): string | null {
+  if (result.noticeType) return result.noticeType;
+  if (result.recordType) return result.recordType;
+  if (result.opportunityType) return result.opportunityType;
+  if (result.status) return result.status;
+  return null;
 }
 
 export default function SearchDialog() {
@@ -104,6 +131,31 @@ export default function SearchDialog() {
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
+
+  // Group results by type
+  const grouped = results.reduce<Record<string, SearchResult[]>>((acc, r) => {
+    if (!acc[r._type]) acc[r._type] = [];
+    acc[r._type].push(r);
+    return acc;
+  }, {});
+
+  const groupOrder = [
+    'notice',
+    'developmentNotice',
+    'record',
+    'opportunity',
+    'program',
+    'campaign',
+    'listing',
+    'person',
+    'post',
+    'page',
+    'sponsor',
+    'category',
+  ];
+  const sortedGroups = Object.keys(grouped).sort(
+    (a, b) => groupOrder.indexOf(a) - groupOrder.indexOf(b)
+  );
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -157,36 +209,48 @@ export default function SearchDialog() {
               </p>
             )}
             {!loading && results.length > 0 && (
-              <ul className="divide-y divide-gray-100">
-                {results.map((result) => (
-                  <li key={result._id}>
-                    <Link
-                      href={getResultHref(result)}
-                      onClick={() => setOpen(false)}
-                      className="block py-3 px-2 hover:bg-gray-50 rounded-md"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            'text-xs font-medium px-2 py-0.5 rounded-full',
-                            'bg-gray-100 text-gray-600'
-                          )}
-                        >
-                          {TYPE_LABELS[result._type] || result._type}
-                        </span>
-                        <span className="font-medium text-sm">
-                          {result.title}
-                        </span>
-                      </div>
-                      {result.excerpt && (
-                        <p className="text-xs text-gray-500 mt-1 line-clamp-1 pl-2">
-                          {result.excerpt}
-                        </p>
-                      )}
-                    </Link>
-                  </li>
+              <div className="space-y-4">
+                {sortedGroups.map((type) => (
+                  <div key={type}>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1 px-2">
+                      {TYPE_LABELS[type] || type}
+                    </p>
+                    <ul className="divide-y divide-gray-50">
+                      {grouped[type].map((result) => {
+                        const subLabel = getSubLabel(result);
+                        const href = getResultHref(result);
+                        return (
+                          <li key={result._id}>
+                            <Link
+                              href={href}
+                              onClick={() => setOpen(false)}
+                              className="flex items-start gap-3 py-2.5 px-2 hover:bg-gray-50 rounded-md"
+                            >
+                              <span
+                                className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 mt-0.5 ${TYPE_COLOURS[result._type] ?? 'bg-gray-100 text-gray-600'}`}
+                              >
+                                {subLabel ??
+                                  TYPE_LABELS[result._type] ??
+                                  result._type}
+                              </span>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium text-gray-900 leading-snug">
+                                  {result.title}
+                                </p>
+                                {result.excerpt && (
+                                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
+                                    {result.excerpt}
+                                  </p>
+                                )}
+                              </div>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         </div>
