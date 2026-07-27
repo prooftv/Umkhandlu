@@ -202,36 +202,63 @@ function RecordLineage({
       <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
         Governance Lineage
       </p>
-      {record.originNotice && (
-        <div className="flex justify-between items-baseline mb-3">
-          <span className="text-xs text-gray-400">Origin Notice</span>
-          <VisitedLink href={`/notices/${record.originNotice.slug}`}>
-            {record.originNotice.title}
-          </VisitedLink>
-        </div>
-      )}
-      {record.parentRecord && (
-        <div className="flex justify-between items-baseline mb-3">
-          <span className="text-xs text-gray-400">Produced From</span>
-          <VisitedLink
-            href={`/records/${record.parentRecord.slug}`}
-            isCurrent={record.parentRecord.slug === currentSlug}
-          >
-            {record.parentRecord.title}
-          </VisitedLink>
-        </div>
-      )}
-      {hasChildren && (
-        <ul className="mt-3 space-y-1">
-          {record.childRecords?.map((child) => (
-            <RecordChildNode
-              key={child._id}
-              child={child as ChildRecord}
-              currentSlug={currentSlug}
-            />
-          ))}
-        </ul>
-      )}
+      <div className="flex flex-col gap-0">
+        {record.originNotice && (
+          <div className="flex flex-col">
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
+              Origin Notice
+            </span>
+            <VisitedLink href={`/notices/${record.originNotice.slug}`}>
+              {record.originNotice.title}
+            </VisitedLink>
+            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+              ↓
+            </span>
+          </div>
+        )}
+        {record.parentRecord && (
+          <div className="flex flex-col">
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
+              Produced From
+            </span>
+            <VisitedLink
+              href={`/records/${record.parentRecord.slug}`}
+              isCurrent={record.parentRecord.slug === currentSlug}
+            >
+              {record.parentRecord.title}
+            </VisitedLink>
+            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+              ↓
+            </span>
+          </div>
+        )}
+        {(hasOrigin || hasParent) && (
+          <div className="flex flex-col">
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
+              This Record
+            </span>
+            <span className="text-sm font-medium text-gray-900">
+              {record.title}
+            </span>
+          </div>
+        )}
+        {hasChildren && (
+          <>
+            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+              ↓
+            </span>
+            <ul className="space-y-1">
+              {record.childRecords?.map((child) => (
+                <RecordChildNode
+                  key={child._id}
+                  child={child as ChildRecord}
+                  currentSlug={currentSlug}
+                />
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
       {hasVerification && (
         <p className="mt-4 text-xs text-gray-400 italic">
           Verification: {record.verificationNote}
