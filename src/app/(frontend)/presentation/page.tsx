@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CollapsibleChapter from '@/components/modules/CollapsibleChapter';
 import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
@@ -27,7 +28,11 @@ export default function PresentationPage() {
       </header>
 
       {/* Chapter 1 */}
-      <Chapter number="1" title="The Philosophy of Digital Self-Determination">
+      <CollapsibleChapter
+        number="1"
+        title="The Philosophy of Digital Self-Determination"
+        defaultOpen
+      >
         <p>
           For decades, traditional communities across South Africa have been
           treated as passive spectators in major public and private
@@ -55,10 +60,13 @@ export default function PresentationPage() {
           decides. Progress is measured by what has been certified, not what has
           been claimed.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
       {/* Chapter 2 */}
-      <Chapter number="2" title="The Project Initiative & Technical KPI Layer">
+      <CollapsibleChapter
+        number="2"
+        title="The Project Initiative & Technical KPI Layer"
+      >
         <p>
           When a multi-million Rand public infrastructure investment — such as
           the Buffalo River Abstraction Works project — enters a traditional
@@ -119,10 +127,13 @@ export default function PresentationPage() {
             through to permanent institutional memory.
           </li>
         </ul>
-      </Chapter>
+      </CollapsibleChapter>
 
       {/* Chapter 3 */}
-      <Chapter number="3" title="The Evidence Layer (Verification Records)">
+      <CollapsibleChapter
+        number="3"
+        title="The Evidence Layer (Verification Records)"
+      >
         <p>
           At the heart of the operating system is the{' '}
           <strong>Governance Audit & Evidence Preservation Layer</strong>. This
@@ -181,10 +192,10 @@ export default function PresentationPage() {
             authority.
           </li>
         </ul>
-      </Chapter>
+      </CollapsibleChapter>
 
       {/* Chapter 4 */}
-      <Chapter number="4" title="The Compliance & Notice Pipeline">
+      <CollapsibleChapter number="4" title="The Compliance & Notice Pipeline">
         <p>
           Umkhandlu rigorously separates Technical Infrastructure KPIs from
           Social Opportunity Communications and Statutory Compliance Notices:
@@ -316,10 +327,10 @@ export default function PresentationPage() {
             the public system
           </li>
         </ul>
-      </Chapter>
+      </CollapsibleChapter>
 
       {/* Chapter 5 */}
-      <Chapter number="5" title="Stakeholder Interface & Onboarding">
+      <CollapsibleChapter number="5" title="Stakeholder Interface & Onboarding">
         <div className="space-y-8">
           <StakeholderCard
             icon="👑"
@@ -350,10 +361,10 @@ export default function PresentationPage() {
             utility="Publish EIA, SPLUMA, estate, and liquidation notices at a fraction of print media cost. Receive a formal Proof of Publication certificate — court-submittable, timestamped, with permanent archive."
           />
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
       {/* Chapter 6 */}
-      <Chapter number="6" title="System Architecture">
+      <CollapsibleChapter number="6" title="System Architecture">
         <CodeBlock>
           {`UMKHANDLU — Community-Scale Institutional Memory
 │
@@ -410,9 +421,7 @@ Filters: ?status=active  ?type=csr`}</CodeBlock>
    → childRecords[] (same structure, nested)
 
 Filter by area: ?area=kwagudlucingo`}</CodeBlock>
-      </Chapter>
-
-      {/* Footer */}
+      </CollapsibleChapter>
       <footer className="mt-16 pt-8 border-t border-gray-200 text-center">
         <p className="text-sm text-gray-500 mb-4">
           Built and operated by <strong>Unami Foundation</strong>
@@ -435,7 +444,7 @@ Filter by area: ?area=kwagudlucingo`}</CodeBlock>
 
 // ─── Presentation components ──────────────────────────────────────────────────
 
-function Chapter({
+function _Chapter({
   number,
   title,
   children,

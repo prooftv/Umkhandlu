@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CollapsibleChapter from '@/components/modules/CollapsibleChapter';
 import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function KhathidePresentation() {
         <SectionNarrator sectionId="khathide-hero" />
       </header>
 
-      <Chapter number="1" title="What Umkhandlu Is">
+      <CollapsibleChapter number="1" title="What Umkhandlu Is" defaultOpen>
         <p>
           Umkhandlu is the digital operating system for your Traditional
           Council. It is not a website. It is an institutional memory system
@@ -43,9 +44,12 @@ export default function KhathidePresentation() {
           It is gifted to the council by the Unami Foundation at no cost. The
           council owns its data. The council controls its content.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="2" title="Why the Traditional Council — Not the Induna">
+      <CollapsibleChapter
+        number="2"
+        title="Why the Traditional Council — Not the Induna"
+      >
         <p>
           Individual Izinduna manage operational areas. But governance processes
           cross boundaries, leadership changes, and some areas may not yet have
@@ -73,9 +77,9 @@ Induna  Induna   (Vacant)  Induna`}
           petition are all recorded in the system under Khathide Traditional
           Council.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="3" title="The Governance Lifecycle">
+      <CollapsibleChapter number="3" title="The Governance Lifecycle">
         <p>
           Every governance action follows a natural flow. Umkhandlu captures
           this flow without asking anyone to do extra work:
@@ -139,9 +143,12 @@ Permanent Institutional Memory`}
           own headman?&quot; — the answer is not a memory. It is a traceable
           chain from community concern to COGTA recognition.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="4" title="What the Platform Does for the Council">
+      <CollapsibleChapter
+        number="4"
+        title="What the Platform Does for the Council"
+      >
         <div className="grid md:grid-cols-2 gap-4 my-6">
           <Card
             title="Community Notices"
@@ -205,9 +212,9 @@ Permanent Institutional Memory`}
             ]}
           />
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="5" title="Who Uses It">
+      <CollapsibleChapter number="5" title="Who Uses It">
         <div className="space-y-4 my-6">
           <Role
             title="Inkosi & Council Administration"
@@ -230,9 +237,9 @@ Permanent Institutional Memory`}
             description="Submit statutory notices, track project compliance, export data for reporting. Transparent interface with the council."
           />
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="6" title="What the Council Needs to Do">
+      <CollapsibleChapter number="6" title="What the Council Needs to Do">
         <p>Nothing technical. The council&apos;s role is governance:</p>
         <ol className="space-y-3 text-gray-700 mt-4 list-decimal list-inside">
           <li>
@@ -257,9 +264,12 @@ Permanent Institutional Memory`}
           controlled from the CMS. No code changes required for any council
           activity.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="7" title="The Institutional Memory Proposition">
+      <CollapsibleChapter
+        number="7"
+        title="The Institutional Memory Proposition"
+      >
         <Blockquote>
           Umkhandlu does not create governance. It follows governance. Every
           meeting, resolution, petition, and decision becomes a permanent,
@@ -276,7 +286,7 @@ Permanent Institutional Memory`}
           council meeting, every community decision, every infrastructure
           project.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
       <footer className="mt-16 pt-8 border-t border-gray-200 text-center">
         <p className="text-sm text-gray-500 mb-4">
@@ -298,7 +308,7 @@ Permanent Institutional Memory`}
   );
 }
 
-function Chapter({
+function _Chapter({
   number,
   title,
   children,

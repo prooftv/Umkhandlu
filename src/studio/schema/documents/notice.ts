@@ -111,6 +111,14 @@ export default defineType({
       to: [{ type: 'campaign' }],
       description: 'Link to a campaign if this notice supports one.',
     }),
+    defineField({
+      name: 'originNotice',
+      title: 'Follow-up to (Origin Notice)',
+      type: 'reference',
+      to: [{ type: 'notice' }],
+      description:
+        'If this is a follow-up meeting, link the original notice here.',
+    }),
   ],
   orderings: [
     {

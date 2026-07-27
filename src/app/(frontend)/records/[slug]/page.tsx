@@ -303,7 +303,10 @@ export default async function RecordPage(props: Props) {
   return (
     <div className="container mx-auto max-w-3xl py-12">
       <Breadcrumbs
-        items={[{ label: 'Records', href: '/' }, { label: record.title || '' }]}
+        items={[
+          { label: 'Records', href: '/records' },
+          { label: record.title || '' },
+        ]}
       />
 
       <RecordHeader record={record} />

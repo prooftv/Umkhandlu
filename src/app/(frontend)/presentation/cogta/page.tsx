@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CollapsibleChapter from '@/components/modules/CollapsibleChapter';
 import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
@@ -28,7 +29,11 @@ export default function CogtaPresentation() {
         <SectionNarrator sectionId="cogta-hero" />
       </header>
 
-      <Chapter number="1" title="The Problem Umkhandlu Addresses">
+      <CollapsibleChapter
+        number="1"
+        title="The Problem Umkhandlu Addresses"
+        defaultOpen
+      >
         <p>
           Traditional Councils produce governance — meetings, resolutions,
           petitions, land allocations, dispute resolutions — but these
@@ -47,9 +52,9 @@ export default function CogtaPresentation() {
           generate evidence. That evidence becomes permanent institutional
           memory.
         </Blockquote>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="2" title="Institutional Architecture">
+      <CollapsibleChapter number="2" title="Institutional Architecture">
         <p>
           The platform is deployed at the Traditional Council level — not at the
           Induna/headman level. This ensures institutional resilience across
@@ -86,9 +91,9 @@ Induna   Induna    (Vacant)   Acting
             dispute outcome.
           </li>
         </ul>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="3" title="The Governance Lifecycle">
+      <CollapsibleChapter number="3" title="The Governance Lifecycle">
         <p>
           Umkhandlu captures the natural information flow of traditional
           governance without imposing external administrative processes:
@@ -147,9 +152,9 @@ Permanent Institutional Memory`}
           repository. Any record can be traced back to its originating community
           concern.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="4" title="Governance Record Lineage">
+      <CollapsibleChapter number="4" title="Governance Record Lineage">
         <p>
           Every governance process in Umkhandlu produces an auto-generated audit
           trail. The trail is not manually assembled — it builds itself from the
@@ -349,9 +354,12 @@ Permanent Institutional Memory`}
           Record → Record produces an audit trail. The system does not need to
           know what kind of process it is — it follows the references.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="5" title="Document Types & Governance Records">
+      <CollapsibleChapter
+        number="5"
+        title="Document Types & Governance Records"
+      >
         <div className="overflow-x-auto my-6">
           <table className="w-full text-sm border-collapse">
             <thead>
@@ -427,9 +435,9 @@ Permanent Institutional Memory`}
           references. Records are publicly accessible — no login required for
           viewing.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="6" title="Additional Platform Capabilities">
+      <CollapsibleChapter number="6" title="Additional Platform Capabilities">
         <div className="grid md:grid-cols-2 gap-4 my-6">
           <Card
             title="Statutory Compliance"
@@ -501,9 +509,9 @@ Example output:
   ]
 }`}
         </CodeBlock>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="7" title="Deployment Model">
+      <CollapsibleChapter number="7" title="Deployment Model">
         <p>
           One codebase serves any Traditional Council. To deploy for a new
           council:
@@ -532,9 +540,9 @@ Example output:
           Traditional Councils with minimal per-council effort. The system
           scales through content, not code.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="8" title="What This Means for COGTA">
+      <CollapsibleChapter number="8" title="What This Means for COGTA">
         <div className="space-y-4 my-6">
           <Benefit
             title="Structured Governance Evidence"
@@ -569,9 +577,9 @@ Example output:
             description="The Unami Foundation operates the platform on behalf of the council. The council's only obligation is to produce governance — which it already does. The system follows."
           />
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="9" title="Current Status">
+      <CollapsibleChapter number="9" title="Current Status">
         <div className="overflow-x-auto my-6">
           <table className="w-full text-sm border-collapse">
             <thead>
@@ -612,7 +620,7 @@ Example output:
             </tbody>
           </table>
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
       <footer className="mt-16 pt-8 border-t border-gray-200 text-center">
         <p className="text-sm text-gray-500 mb-4">
@@ -640,7 +648,7 @@ Example output:
   );
 }
 
-function Chapter({
+function _Chapter({
   number,
   title,
   children,

@@ -15,6 +15,21 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+type FollowUpNotice = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  noticeType: string | null;
+  date: string | null;
+};
+
+type OriginNotice = {
+  title: string | null;
+  slug: string | null;
+  noticeType: string | null;
+  date: string | null;
+};
+
 const typeLabels: Record<string, string> = {
   minutes: 'Meeting Minutes',
   resolution: 'Resolution',
@@ -84,6 +99,80 @@ function AuditNode({
   );
 }
 
+function NoticeLineage({
+  notice,
+  followUpNotices,
+}: {
+  notice: {
+    title: string | null;
+    noticeType: string | null;
+    date: string | null;
+    producedRecords?: AuditRecord[] | null;
+  };
+  followUpNotices: FollowUpNotice[] | null;
+}) {
+  const hasLineage =
+    (notice.producedRecords && notice.producedRecords.length > 0) ||
+    (followUpNotices && followUpNotices.length > 0);
+
+  if (!hasLineage) return null;
+
+  return (
+    <div className="mt-8 p-5 bg-amber-50 border border-amber-100 rounded-xl">
+      <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-5">
+        Governance Record Lineage
+      </p>
+      <div className="mb-4">
+        <p className="text-sm font-medium text-amber-800">📢 {notice.title}</p>
+        <p className="text-xs text-gray-400 mt-0.5">
+          {notice.noticeType &&
+            `${notice.noticeType.charAt(0).toUpperCase()}${notice.noticeType.slice(1)}`}
+          {notice.date &&
+            ` • ${new Date(notice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+        </p>
+      </div>
+      {notice.producedRecords && notice.producedRecords.length > 0 && (
+        <div className="border-l border-amber-200 ml-2 pl-0 space-y-0">
+          {notice.producedRecords.map((record, i) => (
+            <AuditNode
+              key={record._id}
+              record={record}
+              isLast={
+                i === (notice.producedRecords?.length ?? 0) - 1 &&
+                !(followUpNotices && followUpNotices.length > 0)
+              }
+            />
+          ))}
+        </div>
+      )}
+      {followUpNotices && followUpNotices.length > 0 && (
+        <div className="border-l border-amber-200 ml-2 pl-0 mt-0 space-y-0">
+          {followUpNotices.map((fu, i) => (
+            <div key={fu._id} className="relative pl-6">
+              <span className="absolute left-0 top-0 text-gray-300 text-xs font-mono select-none">
+                {i === (followUpNotices?.length ?? 0) - 1 ? '└──' : '├──'}
+              </span>
+              <div className="pb-2">
+                <Link
+                  href={`/notices/${fu.slug}`}
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  📢 {fu.title}
+                </Link>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Follow-up Meeting
+                  {fu.date &&
+                    ` • ${new Date(fu.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const { data } = await sanityFetch({
@@ -115,6 +204,9 @@ export default async function NoticePage(props: Props) {
   });
 
   if (!notice) notFound();
+
+  const originNotice = notice.originNotice as OriginNotice | null;
+  const followUpNotices = notice.followUpNotices as FollowUpNotice[] | null;
 
   return (
     <div className="container mx-auto max-w-3xl py-12">
@@ -150,6 +242,26 @@ export default async function NoticePage(props: Props) {
         )}
       </div>
 
+      {/* Follow-up banner — this notice is a follow-up to another */}
+      {originNotice && (
+        <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+          <p className="text-xs text-blue-700 uppercase tracking-wide font-semibold mb-1">
+            Follow-up to
+          </p>
+          <Link
+            href={`/notices/${originNotice.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            📢 {originNotice.title}
+          </Link>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {originNotice.noticeType}
+            {originNotice.date &&
+              ` • ${new Date(originNotice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+          </p>
+        </div>
+      )}
+
       {notice.excerpt && (
         <p className="text-xl text-gray-600 mb-8">{notice.excerpt}</p>
       )}
@@ -178,37 +290,8 @@ export default async function NoticePage(props: Props) {
         </div>
       )}
 
-      {notice.producedRecords && notice.producedRecords.length > 0 && (
-        <div className="mt-8 p-5 bg-amber-50 border border-amber-100 rounded-xl">
-          <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-5">
-            Governance Record Lineage
-          </p>
-
-          {/* Origin notice */}
-          <div className="mb-4">
-            <p className="text-sm font-medium text-amber-800">
-              📢 {notice.title}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {notice.noticeType &&
-                `${notice.noticeType.charAt(0).toUpperCase()}${notice.noticeType.slice(1)}`}
-              {notice.date &&
-                ` • ${new Date(notice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-            </p>
-          </div>
-
-          {/* Produced records tree */}
-          <div className="border-l border-amber-200 ml-2 pl-0 space-y-0">
-            {notice.producedRecords.map((record, i) => (
-              <AuditNode
-                key={record._id}
-                record={record}
-                isLast={i === (notice.producedRecords?.length ?? 0) - 1}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Lineage */}
+      <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
 
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={notice.title || ''} />

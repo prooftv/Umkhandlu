@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CollapsibleChapter from '@/components/modules/CollapsibleChapter';
 import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export const metadata: Metadata = {
@@ -29,7 +30,11 @@ export default function MiningPresentation() {
         <SectionNarrator sectionId="mining-hero" />
       </header>
 
-      <Chapter number="1" title="The Community Governance Challenge">
+      <CollapsibleChapter
+        number="1"
+        title="The Community Governance Challenge"
+        defaultOpen
+      >
         <p>
           Mining operations generate governance interactions with communities at
           every stage — from exploration through to closure. Community
@@ -52,9 +57,12 @@ export default function MiningPresentation() {
           traceable governance lineage that communities, Traditional Councils,
           municipalities, and regulators can independently verify.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="2" title="Where Mining Meets Traditional Governance">
+      <CollapsibleChapter
+        number="2"
+        title="Where Mining Meets Traditional Governance"
+      >
         <p>
           Mining companies do not operate in isolation. Every significant
           community interaction involves multiple governance stakeholders:
@@ -107,9 +115,9 @@ Community   Municipality   COGTA    Regulators`}
             Creates permanent evidence of consultation, commitment, and delivery
           </li>
         </ul>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="3" title="Governance Record Lineage">
+      <CollapsibleChapter number="3" title="Governance Record Lineage">
         <p>
           Every community governance interaction follows the same information
           transformation pattern — regardless of whether the stakeholder is a
@@ -160,9 +168,9 @@ Permanent Institutional Memory`}
           retrospective documentation. The system follows governance as it
           happens.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="4" title="Mining Use Cases">
+      <CollapsibleChapter number="4" title="Mining Use Cases">
         <div className="space-y-6 my-6">
           <UseCase
             title="Community Consultation"
@@ -237,9 +245,9 @@ Permanent Institutional Memory`}
             ]}
           />
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="5" title="Stakeholder Architecture">
+      <CollapsibleChapter number="5" title="Stakeholder Architecture">
         <p>
           Umkhandlu serves multiple stakeholders through a single platform. Each
           stakeholder interacts with the system according to their governance
@@ -277,9 +285,9 @@ Permanent Institutional Memory`}
             description="Statutory notice publication, proof of publication certificates, public participation evidence, compliance records."
           />
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="6" title="What Already Exists">
+      <CollapsibleChapter number="6" title="What Already Exists">
         <p>
           Umkhandlu is not a concept. It is a production platform currently
           deployed and recording live governance processes:
@@ -348,9 +356,9 @@ Permanent Institutional Memory`}
             </tbody>
           </table>
         </div>
-      </Chapter>
+      </CollapsibleChapter>
 
-      <Chapter number="7" title="Invitation">
+      <CollapsibleChapter number="7" title="Invitation">
         <Blockquote>
           Mining companies already generate governance interactions with
           communities — consultations, commitments, infrastructure, procurement,
@@ -370,7 +378,7 @@ Permanent Institutional Memory`}
           operations and communities are preserved as permanent, traceable
           institutional records — accessible to all parties, indefinitely.
         </p>
-      </Chapter>
+      </CollapsibleChapter>
 
       <footer className="mt-16 pt-8 border-t border-gray-200 text-center">
         <p className="text-sm text-gray-500 mb-4">
@@ -392,7 +400,7 @@ Permanent Institutional Memory`}
   );
 }
 
-function Chapter({
+function _Chapter({
   number,
   title,
   children,

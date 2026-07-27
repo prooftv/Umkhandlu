@@ -153,266 +153,6 @@
     },
   },
   {
-    name: 'sanity.imageMetadata',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'sanity.imageMetadata',
-          },
-        },
-        location: {
-          type: 'objectAttribute',
-          value: {
-            type: 'inline',
-            name: 'geopoint',
-          },
-          optional: true,
-        },
-        dimensions: {
-          type: 'objectAttribute',
-          value: {
-            type: 'inline',
-            name: 'sanity.imageDimensions',
-          },
-          optional: true,
-        },
-        palette: {
-          type: 'objectAttribute',
-          value: {
-            type: 'inline',
-            name: 'sanity.imagePalette',
-          },
-          optional: true,
-        },
-        lqip: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        blurHash: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        hasAlpha: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-        isOpaque: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
-    name: 'sanity.imageHotspot',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'sanity.imageHotspot',
-          },
-        },
-        x: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        y: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        height: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        width: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
-    name: 'sanity.imageCrop',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'sanity.imageCrop',
-          },
-        },
-        top: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        bottom: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        left: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        right: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
-    name: 'geopoint',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'geopoint',
-          },
-        },
-        lat: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        lng: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-        alt: {
-          type: 'objectAttribute',
-          value: {
-            type: 'number',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
-    name: 'slug',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'slug',
-          },
-        },
-        current: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        source: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
-    name: 'sanity.assetSourceData',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'sanity.assetSourceData',
-          },
-        },
-        name: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        id: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        url: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
     name: 'twitter',
     type: 'type',
     value: {
@@ -457,168 +197,6 @@
     },
   },
   {
-    type: 'type',
-    name: 'sanity.imageAsset.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'sanity.imageAsset',
-    },
-  },
-  {
-    name: 'seoMetaFields',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'seoMetaFields',
-          },
-        },
-        noIndex: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-        metaTitle: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        metaDescription: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        metaImage: {
-          type: 'objectAttribute',
-          value: {
-            type: 'object',
-            attributes: {
-              asset: {
-                type: 'objectAttribute',
-                value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
-                },
-                optional: true,
-              },
-              hotspot: {
-                type: 'objectAttribute',
-                value: {
-                  type: 'inline',
-                  name: 'sanity.imageHotspot',
-                },
-                optional: true,
-              },
-              crop: {
-                type: 'objectAttribute',
-                value: {
-                  type: 'inline',
-                  name: 'sanity.imageCrop',
-                },
-                optional: true,
-              },
-              alt: {
-                type: 'objectAttribute',
-                value: {
-                  type: 'string',
-                },
-                optional: true,
-              },
-              _type: {
-                type: 'objectAttribute',
-                value: {
-                  type: 'string',
-                  value: 'image',
-                },
-              },
-            },
-          },
-          optional: true,
-        },
-        seoKeywords: {
-          type: 'objectAttribute',
-          value: {
-            type: 'array',
-            of: {
-              type: 'string',
-            },
-          },
-          optional: true,
-        },
-        openGraph: {
-          type: 'objectAttribute',
-          value: {
-            type: 'inline',
-            name: 'openGraph',
-          },
-          optional: true,
-        },
-        additionalMetaTags: {
-          type: 'objectAttribute',
-          value: {
-            type: 'array',
-            of: {
-              type: 'object',
-              attributes: {
-                _key: {
-                  type: 'objectAttribute',
-                  value: {
-                    type: 'string',
-                  },
-                },
-              },
-              rest: {
-                type: 'inline',
-                name: 'metaTag',
-              },
-            },
-          },
-          optional: true,
-        },
-        twitter: {
-          type: 'objectAttribute',
-          value: {
-            type: 'inline',
-            name: 'twitter',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
     name: 'openGraph',
     type: 'type',
     value: {
@@ -646,8 +224,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -792,8 +392,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -954,205 +576,6 @@
           value: {
             type: 'inline',
             name: 'link',
-          },
-          optional: true,
-        },
-      },
-    },
-  },
-  {
-    type: 'type',
-    name: 'post.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'post',
-    },
-  },
-  {
-    type: 'type',
-    name: 'page.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'page',
-    },
-  },
-  {
-    type: 'type',
-    name: 'category.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'category',
-    },
-  },
-  {
-    type: 'type',
-    name: 'person.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'person',
-    },
-  },
-  {
-    name: 'link',
-    type: 'type',
-    value: {
-      type: 'object',
-      attributes: {
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'link',
-          },
-        },
-        type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'union',
-            of: [
-              {
-                type: 'string',
-                value: 'internal',
-              },
-              {
-                type: 'string',
-                value: 'external',
-              },
-            ],
-          },
-          optional: true,
-        },
-        openInNewTab: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-        external: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        href: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-          optional: true,
-        },
-        internal: {
-          type: 'objectAttribute',
-          value: {
-            type: 'union',
-            of: [
-              {
-                type: 'inline',
-                name: 'post.reference',
-              },
-              {
-                type: 'inline',
-                name: 'page.reference',
-              },
-              {
-                type: 'inline',
-                name: 'category.reference',
-              },
-              {
-                type: 'inline',
-                name: 'person.reference',
-              },
-            ],
           },
           optional: true,
         },
@@ -1334,8 +757,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -1420,16 +865,38 @@
             of: {
               type: 'object',
               attributes: {
-                _key: {
+                _ref: {
                   type: 'objectAttribute',
                   value: {
                     type: 'string',
                   },
                 },
+                _type: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                    value: 'reference',
+                  },
+                },
+                _weak: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'boolean',
+                  },
+                  optional: true,
+                },
               },
+              dereferencesTo: 'person',
               rest: {
-                type: 'inline',
-                name: 'person.reference',
+                type: 'object',
+                attributes: {
+                  _key: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                },
               },
             },
           },
@@ -1731,8 +1198,30 @@
         author: {
           type: 'objectAttribute',
           value: {
-            type: 'inline',
-            name: 'person.reference',
+            type: 'object',
+            attributes: {
+              _ref: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                },
+              },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
+            },
+            dereferencesTo: 'person',
           },
           optional: true,
         },
@@ -1758,8 +1247,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -2033,8 +1544,30 @@
         inkosi: {
           type: 'objectAttribute',
           value: {
-            type: 'inline',
-            name: 'person.reference',
+            type: 'object',
+            attributes: {
+              _ref: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                },
+              },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
+            },
+            dereferencesTo: 'person',
           },
           optional: true,
         },
@@ -2045,16 +1578,38 @@
             of: {
               type: 'object',
               attributes: {
-                _key: {
+                _ref: {
                   type: 'objectAttribute',
                   value: {
                     type: 'string',
                   },
                 },
+                _type: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                    value: 'reference',
+                  },
+                },
+                _weak: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'boolean',
+                  },
+                  optional: true,
+                },
               },
+              dereferencesTo: 'person',
               rest: {
-                type: 'inline',
-                name: 'person.reference',
+                type: 'object',
+                attributes: {
+                  _key: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                },
               },
             },
           },
@@ -2067,16 +1622,38 @@
             of: {
               type: 'object',
               attributes: {
-                _key: {
+                _ref: {
                   type: 'objectAttribute',
                   value: {
                     type: 'string',
                   },
                 },
+                _type: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                    value: 'reference',
+                  },
+                },
+                _weak: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'boolean',
+                  },
+                  optional: true,
+                },
               },
+              dereferencesTo: 'person',
               rest: {
-                type: 'inline',
-                name: 'person.reference',
+                type: 'object',
+                attributes: {
+                  _key: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                },
               },
             },
           },
@@ -2211,36 +1788,6 @@
     },
   },
   {
-    type: 'type',
-    name: 'sponsor.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'sponsor',
-    },
-  },
-  {
     name: 'logoGrid',
     type: 'type',
     value: {
@@ -2274,16 +1821,38 @@
             of: {
               type: 'object',
               attributes: {
-                _key: {
+                _ref: {
                   type: 'objectAttribute',
                   value: {
                     type: 'string',
                   },
                 },
+                _type: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                    value: 'reference',
+                  },
+                },
+                _weak: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'boolean',
+                  },
+                  optional: true,
+                },
               },
+              dereferencesTo: 'sponsor',
               rest: {
-                type: 'inline',
-                name: 'sponsor.reference',
+                type: 'object',
+                attributes: {
+                  _key: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                },
               },
             },
           },
@@ -2407,8 +1976,30 @@
                 asset: {
                   type: 'objectAttribute',
                   value: {
-                    type: 'inline',
-                    name: 'sanity.imageAsset.reference',
+                    type: 'object',
+                    attributes: {
+                      _ref: {
+                        type: 'objectAttribute',
+                        value: {
+                          type: 'string',
+                        },
+                      },
+                      _type: {
+                        type: 'objectAttribute',
+                        value: {
+                          type: 'string',
+                          value: 'reference',
+                        },
+                      },
+                      _weak: {
+                        type: 'objectAttribute',
+                        value: {
+                          type: 'boolean',
+                        },
+                        optional: true,
+                      },
+                    },
+                    dereferencesTo: 'sanity.imageAsset',
                   },
                   optional: true,
                 },
@@ -2837,8 +2428,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -2937,8 +2550,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -3256,8 +2891,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -3298,8 +2955,30 @@
         sponsor: {
           type: 'objectAttribute',
           value: {
-            type: 'inline',
-            name: 'sponsor.reference',
+            type: 'object',
+            attributes: {
+              _ref: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                },
+              },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
+            },
+            dereferencesTo: 'sponsor',
           },
           optional: true,
         },
@@ -3352,66 +3031,6 @@
     },
   },
   {
-    type: 'type',
-    name: 'campaign.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'campaign',
-    },
-  },
-  {
-    type: 'type',
-    name: 'sanity.fileAsset.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'sanity.fileAsset',
-    },
-  },
-  {
     name: 'conflictLog',
     type: 'document',
     attributes: {
@@ -3449,8 +3068,30 @@
       campaign: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'campaign.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'campaign',
         },
         optional: true,
       },
@@ -3591,8 +3232,30 @@
                       asset: {
                         type: 'objectAttribute',
                         value: {
-                          type: 'inline',
-                          name: 'sanity.fileAsset.reference',
+                          type: 'object',
+                          attributes: {
+                            _ref: {
+                              type: 'objectAttribute',
+                              value: {
+                                type: 'string',
+                              },
+                            },
+                            _type: {
+                              type: 'objectAttribute',
+                              value: {
+                                type: 'string',
+                                value: 'reference',
+                              },
+                            },
+                            _weak: {
+                              type: 'objectAttribute',
+                              value: {
+                                type: 'boolean',
+                              },
+                              optional: true,
+                            },
+                          },
+                          dereferencesTo: 'sanity.fileAsset',
                         },
                         optional: true,
                       },
@@ -3724,96 +3387,6 @@
         },
         optional: true,
       },
-    },
-  },
-  {
-    type: 'type',
-    name: 'notice.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'notice',
-    },
-  },
-  {
-    type: 'type',
-    name: 'record.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'record',
-    },
-  },
-  {
-    type: 'type',
-    name: 'listing.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'listing',
     },
   },
   {
@@ -3976,8 +3549,30 @@
       approvedBy: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'person.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'person',
         },
         optional: true,
       },
@@ -3992,16 +3587,60 @@
       originNotice: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'notice.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'notice',
         },
         optional: true,
       },
       parentRecord: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'record.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'record',
         },
         optional: true,
       },
@@ -4015,8 +3654,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.fileAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.fileAsset',
                 },
                 optional: true,
               },
@@ -4067,16 +3728,60 @@
       relatedArea: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'listing.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'listing',
         },
         optional: true,
       },
       relatedCampaign: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'campaign.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'campaign',
         },
         optional: true,
       },
@@ -4207,8 +3912,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -4249,16 +3976,60 @@
       relatedArea: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'listing.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'listing',
         },
         optional: true,
       },
       relatedCampaign: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'campaign.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'campaign',
         },
         optional: true,
       },
@@ -4392,8 +4163,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -4448,16 +4241,90 @@
       relatedArea: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'listing.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'listing',
         },
         optional: true,
       },
       relatedCampaign: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'campaign.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'campaign',
+        },
+        optional: true,
+      },
+      originNotice: {
+        type: 'objectAttribute',
+        value: {
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'notice',
         },
         optional: true,
       },
@@ -4735,8 +4602,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -4784,8 +4673,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.fileAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.fileAsset',
                 },
                 optional: true,
               },
@@ -4822,49 +4733,63 @@
       relatedArea: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'listing.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'listing',
         },
         optional: true,
       },
       relatedCampaign: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'campaign.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'campaign',
         },
         optional: true,
       },
-    },
-  },
-  {
-    type: 'type',
-    name: 'program.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'program',
     },
   },
   {
@@ -4998,16 +4923,60 @@
       sponsor: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'sponsor.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'sponsor',
         },
         optional: true,
       },
       contactPerson: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'person.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'person',
         },
         optional: true,
       },
@@ -5246,8 +5215,30 @@
                     asset: {
                       type: 'objectAttribute',
                       value: {
-                        type: 'inline',
-                        name: 'sanity.imageAsset.reference',
+                        type: 'object',
+                        attributes: {
+                          _ref: {
+                            type: 'objectAttribute',
+                            value: {
+                              type: 'string',
+                            },
+                          },
+                          _type: {
+                            type: 'objectAttribute',
+                            value: {
+                              type: 'string',
+                              value: 'reference',
+                            },
+                          },
+                          _weak: {
+                            type: 'objectAttribute',
+                            value: {
+                              type: 'boolean',
+                            },
+                            optional: true,
+                          },
+                        },
+                        dereferencesTo: 'sanity.imageAsset',
                       },
                       optional: true,
                     },
@@ -5399,8 +5390,30 @@
                       asset: {
                         type: 'objectAttribute',
                         value: {
-                          type: 'inline',
-                          name: 'sanity.imageAsset.reference',
+                          type: 'object',
+                          attributes: {
+                            _ref: {
+                              type: 'objectAttribute',
+                              value: {
+                                type: 'string',
+                              },
+                            },
+                            _type: {
+                              type: 'objectAttribute',
+                              value: {
+                                type: 'string',
+                                value: 'reference',
+                              },
+                            },
+                            _weak: {
+                              type: 'objectAttribute',
+                              value: {
+                                type: 'boolean',
+                              },
+                              optional: true,
+                            },
+                          },
+                          dereferencesTo: 'sanity.imageAsset',
                         },
                         optional: true,
                       },
@@ -5641,16 +5654,38 @@
           of: {
             type: 'object',
             attributes: {
-              _key: {
+              _ref: {
                 type: 'objectAttribute',
                 value: {
                   type: 'string',
                 },
               },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
             },
+            dereferencesTo: 'listing',
             rest: {
-              type: 'inline',
-              name: 'listing.reference',
+              type: 'object',
+              attributes: {
+                _key: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                  },
+                },
+              },
             },
           },
         },
@@ -5663,16 +5698,38 @@
           of: {
             type: 'object',
             attributes: {
-              _key: {
+              _ref: {
                 type: 'objectAttribute',
                 value: {
                   type: 'string',
                 },
               },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
             },
+            dereferencesTo: 'listing',
             rest: {
-              type: 'inline',
-              name: 'listing.reference',
+              type: 'object',
+              attributes: {
+                _key: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                  },
+                },
+              },
             },
           },
         },
@@ -5681,8 +5738,30 @@
       relatedProgram: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'program.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'program',
         },
         optional: true,
       },
@@ -5701,8 +5780,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -5757,8 +5858,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -5816,8 +5939,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -5865,8 +6010,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -5938,8 +6105,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.fileAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.fileAsset',
               },
               optional: true,
             },
@@ -5964,8 +6153,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.fileAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.fileAsset',
                 },
                 optional: true,
               },
@@ -6252,8 +6463,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -6322,8 +6555,30 @@
       relatedArea: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'listing.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'listing',
         },
         optional: true,
       },
@@ -6416,8 +6671,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -6669,8 +6946,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -6725,8 +7024,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -6786,16 +7107,60 @@
       relatedArea: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'listing.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'listing',
         },
         optional: true,
       },
       induna: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'person.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'person',
         },
         optional: true,
       },
@@ -6806,16 +7171,38 @@
           of: {
             type: 'object',
             attributes: {
-              _key: {
+              _ref: {
                 type: 'objectAttribute',
                 value: {
                   type: 'string',
                 },
               },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
             },
+            dereferencesTo: 'listing',
             rest: {
-              type: 'inline',
-              name: 'listing.reference',
+              type: 'object',
+              attributes: {
+                _key: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                  },
+                },
+              },
             },
           },
         },
@@ -6960,6 +7347,43 @@
     },
   },
   {
+    name: 'geopoint',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'geopoint',
+          },
+        },
+        lat: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        lng: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        alt: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+      },
+    },
+  },
+  {
     name: 'category',
     type: 'document',
     attributes: {
@@ -7076,8 +7500,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -7137,16 +7583,38 @@
           of: {
             type: 'object',
             attributes: {
-              _key: {
+              _ref: {
                 type: 'objectAttribute',
                 value: {
                   type: 'string',
                 },
               },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
             },
+            dereferencesTo: 'category',
             rest: {
-              type: 'inline',
-              name: 'category.reference',
+              type: 'object',
+              attributes: {
+                _key: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                  },
+                },
+              },
             },
           },
         },
@@ -7162,8 +7630,30 @@
       author: {
         type: 'objectAttribute',
         value: {
-          type: 'inline',
-          name: 'person.reference',
+          type: 'object',
+          attributes: {
+            _ref: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+              },
+            },
+            _type: {
+              type: 'objectAttribute',
+              value: {
+                type: 'string',
+                value: 'reference',
+              },
+            },
+            _weak: {
+              type: 'objectAttribute',
+              value: {
+                type: 'boolean',
+              },
+              optional: true,
+            },
+          },
+          dereferencesTo: 'person',
         },
         optional: true,
       },
@@ -7242,8 +7732,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -7384,8 +7896,30 @@
               asset: {
                 type: 'objectAttribute',
                 value: {
-                  type: 'inline',
-                  name: 'sanity.imageAsset.reference',
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
                 },
                 optional: true,
               },
@@ -7933,6 +8467,36 @@
           name: 'seoMetaFields',
         },
         optional: true,
+      },
+    },
+  },
+  {
+    name: 'slug',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'slug',
+          },
+        },
+        current: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        source: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
       },
     },
   },
@@ -8905,6 +9469,327 @@
     },
   },
   {
+    name: 'seoMetaFields',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'seoMetaFields',
+          },
+        },
+        noIndex: {
+          type: 'objectAttribute',
+          value: {
+            type: 'boolean',
+          },
+          optional: true,
+        },
+        metaTitle: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        metaDescription: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        metaImage: {
+          type: 'objectAttribute',
+          value: {
+            type: 'object',
+            attributes: {
+              asset: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'object',
+                  attributes: {
+                    _ref: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                    _type: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'string',
+                        value: 'reference',
+                      },
+                    },
+                    _weak: {
+                      type: 'objectAttribute',
+                      value: {
+                        type: 'boolean',
+                      },
+                      optional: true,
+                    },
+                  },
+                  dereferencesTo: 'sanity.imageAsset',
+                },
+                optional: true,
+              },
+              hotspot: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'inline',
+                  name: 'sanity.imageHotspot',
+                },
+                optional: true,
+              },
+              crop: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'inline',
+                  name: 'sanity.imageCrop',
+                },
+                optional: true,
+              },
+              alt: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                },
+                optional: true,
+              },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'image',
+                },
+              },
+            },
+          },
+          optional: true,
+        },
+        seoKeywords: {
+          type: 'objectAttribute',
+          value: {
+            type: 'array',
+            of: {
+              type: 'string',
+            },
+          },
+          optional: true,
+        },
+        openGraph: {
+          type: 'objectAttribute',
+          value: {
+            type: 'inline',
+            name: 'openGraph',
+          },
+          optional: true,
+        },
+        additionalMetaTags: {
+          type: 'objectAttribute',
+          value: {
+            type: 'array',
+            of: {
+              type: 'object',
+              attributes: {
+                _key: {
+                  type: 'objectAttribute',
+                  value: {
+                    type: 'string',
+                  },
+                },
+              },
+              rest: {
+                type: 'inline',
+                name: 'metaTag',
+              },
+            },
+          },
+          optional: true,
+        },
+        twitter: {
+          type: 'objectAttribute',
+          value: {
+            type: 'inline',
+            name: 'twitter',
+          },
+          optional: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'link',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'link',
+          },
+        },
+        type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'union',
+            of: [
+              {
+                type: 'string',
+                value: 'internal',
+              },
+              {
+                type: 'string',
+                value: 'external',
+              },
+            ],
+          },
+          optional: true,
+        },
+        openInNewTab: {
+          type: 'objectAttribute',
+          value: {
+            type: 'boolean',
+          },
+          optional: true,
+        },
+        external: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        href: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        internal: {
+          type: 'objectAttribute',
+          value: {
+            type: 'union',
+            of: [
+              {
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'post',
+              },
+              {
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'page',
+              },
+              {
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'category',
+              },
+              {
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'person',
+              },
+            ],
+          },
+          optional: true,
+        },
+      },
+    },
+  },
+  {
     name: 'settings',
     type: 'document',
     attributes: {
@@ -8983,8 +9868,30 @@
             asset: {
               type: 'objectAttribute',
               value: {
-                type: 'inline',
-                name: 'sanity.imageAsset.reference',
+                type: 'object',
+                attributes: {
+                  _ref: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                    },
+                  },
+                  _type: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'string',
+                      value: 'reference',
+                    },
+                  },
+                  _weak: {
+                    type: 'objectAttribute',
+                    value: {
+                      type: 'boolean',
+                    },
+                    optional: true,
+                  },
+                },
+                dereferencesTo: 'sanity.imageAsset',
               },
               optional: true,
             },
@@ -9146,6 +10053,94 @@
     },
   },
   {
+    name: 'sanity.imageCrop',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'sanity.imageCrop',
+          },
+        },
+        top: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        bottom: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        left: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        right: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'sanity.imageHotspot',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'sanity.imageHotspot',
+          },
+        },
+        x: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        y: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        height: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+        width: {
+          type: 'objectAttribute',
+          value: {
+            type: 'number',
+          },
+          optional: true,
+        },
+      },
+    },
+  },
+  {
     name: 'sanity.imageAsset',
     type: 'document',
     attributes: {
@@ -9286,6 +10281,111 @@
           name: 'sanity.assetSourceData',
         },
         optional: true,
+      },
+    },
+  },
+  {
+    name: 'sanity.assetSourceData',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'sanity.assetSourceData',
+          },
+        },
+        name: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        id: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        url: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'sanity.imageMetadata',
+    type: 'type',
+    value: {
+      type: 'object',
+      attributes: {
+        _type: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+            value: 'sanity.imageMetadata',
+          },
+        },
+        location: {
+          type: 'objectAttribute',
+          value: {
+            type: 'inline',
+            name: 'geopoint',
+          },
+          optional: true,
+        },
+        dimensions: {
+          type: 'objectAttribute',
+          value: {
+            type: 'inline',
+            name: 'sanity.imageDimensions',
+          },
+          optional: true,
+        },
+        palette: {
+          type: 'objectAttribute',
+          value: {
+            type: 'inline',
+            name: 'sanity.imagePalette',
+          },
+          optional: true,
+        },
+        lqip: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        blurHash: {
+          type: 'objectAttribute',
+          value: {
+            type: 'string',
+          },
+          optional: true,
+        },
+        hasAlpha: {
+          type: 'objectAttribute',
+          value: {
+            type: 'boolean',
+          },
+          optional: true,
+        },
+        isOpaque: {
+          type: 'objectAttribute',
+          value: {
+            type: 'boolean',
+          },
+          optional: true,
+        },
       },
     },
   },
@@ -9470,36 +10570,6 @@
     },
   },
   {
-    type: 'type',
-    name: 'assist.instruction.context.reference',
-    value: {
-      type: 'object',
-      attributes: {
-        _ref: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-          },
-        },
-        _type: {
-          type: 'objectAttribute',
-          value: {
-            type: 'string',
-            value: 'reference',
-          },
-        },
-        _weak: {
-          type: 'objectAttribute',
-          value: {
-            type: 'boolean',
-          },
-          optional: true,
-        },
-      },
-      dereferencesTo: 'assist.instruction.context',
-    },
-  },
-  {
     name: 'sanity.assist.instruction.context',
     type: 'type',
     value: {
@@ -9515,8 +10585,30 @@
         reference: {
           type: 'objectAttribute',
           value: {
-            type: 'inline',
-            name: 'assist.instruction.context.reference',
+            type: 'object',
+            attributes: {
+              _ref: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                },
+              },
+              _type: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'string',
+                  value: 'reference',
+                },
+              },
+              _weak: {
+                type: 'objectAttribute',
+                value: {
+                  type: 'boolean',
+                },
+                optional: true,
+              },
+            },
+            dereferencesTo: 'assist.instruction.context',
           },
           optional: true,
         },

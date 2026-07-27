@@ -205,6 +205,10 @@ export const noticeDetailQuery = defineQuery(`
     pinned,
     "relatedArea": relatedArea->{ name, "slug": slug.current },
     "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status },
+    "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },
+    "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {
+      _id, title, "slug": slug.current, noticeType, date
+    },
     "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
       _id, title, "slug": slug.current, recordType, date, status,
       "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
