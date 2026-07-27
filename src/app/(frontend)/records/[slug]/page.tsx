@@ -81,17 +81,9 @@ function RecordMeta({ record }: { record: RecordData }) {
   const hasApproval = record.approvedBy;
   const hasArea = record.relatedArea;
   const hasCampaign = record.relatedCampaign;
-  const hasVerification = record.verificationNote;
   const hasSource = record.source;
 
-  if (
-    !hasApproval &&
-    !hasArea &&
-    !hasCampaign &&
-    !hasVerification &&
-    !hasSource
-  )
-    return null;
+  if (!hasApproval && !hasArea && !hasCampaign && !hasSource) return null;
 
   return (
     <div className="bg-gray-50 rounded-xl p-6 mb-8 space-y-3">
@@ -116,7 +108,7 @@ function RecordMeta({ record }: { record: RecordData }) {
             href={`/areas/${record.relatedArea.slug}`}
             className="text-sm font-medium text-primary hover:underline"
           >
-            🏘️ {record.relatedArea.name}
+            {record.relatedArea.name}
           </Link>
         </div>
       )}
@@ -127,7 +119,7 @@ function RecordMeta({ record }: { record: RecordData }) {
             href={`/campaigns/${record.relatedCampaign.slug}`}
             className="text-sm font-medium text-primary hover:underline"
           >
-            💚 {record.relatedCampaign.title}
+            {record.relatedCampaign.title}
           </Link>
         </div>
       )}
@@ -137,14 +129,6 @@ function RecordMeta({ record }: { record: RecordData }) {
           <span className="text-sm font-medium text-gray-900">
             {record.source}
           </span>
-        </div>
-      )}
-      {record.verificationNote && (
-        <div className="pt-2 border-t border-gray-200">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-            Verification
-          </p>
-          <p className="text-sm text-gray-700">{record.verificationNote}</p>
         </div>
       )}
     </div>
@@ -161,25 +145,37 @@ type ChildRecord = {
   childRecords?: ChildRecord[] | null;
 };
 
-function RecordChildNode({ child }: { child: ChildRecord }) {
+function RecordChildNode({
+  child,
+  depth = 0,
+}: {
+  child: ChildRecord;
+  depth?: number;
+}) {
   return (
-    <div>
-      <div className="border-l-2 border-amber-200 pl-3 py-1.5">
+    <div className={depth > 0 ? 'pl-4' : ''}>
+      <p className="py-1 text-sm leading-snug">
+        <span className="text-xs text-gray-400 mr-1">
+          {typeLabels[child.recordType ?? ''] || child.recordType}
+        </span>
         <Link
           href={`/records/${child.slug}`}
-          className="text-sm text-primary hover:underline block"
+          className="text-primary hover:underline font-medium"
         >
           {child.title}
         </Link>
-        <p className="text-xs text-gray-400">
-          {typeLabels[child.recordType ?? ''] || child.recordType}
-          {child.status && ` · ${child.status}`}
-        </p>
-      </div>
+        {child.status && (
+          <span className="text-xs text-gray-400 ml-1">· {child.status}</span>
+        )}
+      </p>
       {child.childRecords && child.childRecords.length > 0 && (
-        <div className="ml-5 mt-1 space-y-1">
+        <div>
           {child.childRecords.map((grandchild) => (
-            <RecordChildNode key={grandchild._id} child={grandchild} />
+            <RecordChildNode
+              key={grandchild._id}
+              child={grandchild}
+              depth={depth + 1}
+            />
           ))}
         </div>
       )}
@@ -191,43 +187,52 @@ function RecordLineage({ record }: { record: RecordData }) {
   const hasOrigin = record.originNotice;
   const hasParent = record.parentRecord;
   const hasChildren = record.childRecords && record.childRecords.length > 0;
+  const hasVerification = record.verificationNote;
 
-  if (!hasOrigin && !hasParent && !hasChildren) return null;
+  if (!hasOrigin && !hasParent && !hasChildren && !hasVerification) return null;
 
   return (
     <div className="mt-10 pt-8 border-t border-gray-100 mb-8">
       <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
         Governance Lineage
       </p>
-      {record.originNotice && (
-        <div className="flex justify-between items-baseline mb-3">
-          <span className="text-xs text-gray-400">Origin Notice</span>
-          <Link
-            href={`/notices/${record.originNotice.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            {record.originNotice.title}
-          </Link>
+      {(hasOrigin || hasParent) && (
+        <div className="mb-3 space-y-1 text-sm">
+          {record.originNotice && (
+            <p>
+              <span className="text-xs text-gray-400 mr-1">Origin Notice</span>
+              <Link
+                href={`/notices/${record.originNotice.slug}`}
+                className="text-primary hover:underline font-medium"
+              >
+                {record.originNotice.title}
+              </Link>
+            </p>
+          )}
+          {record.parentRecord && (
+            <p>
+              <span className="text-xs text-gray-400 mr-1">Produced From</span>
+              <Link
+                href={`/records/${record.parentRecord.slug}`}
+                className="text-primary hover:underline font-medium"
+              >
+                {record.parentRecord.title}
+              </Link>
+            </p>
+          )}
         </div>
       )}
-      {record.parentRecord && (
-        <div className="flex justify-between items-baseline mb-3">
-          <span className="text-xs text-gray-400">Produced From</span>
-          <Link
-            href={`/records/${record.parentRecord.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            {record.parentRecord.title}
-          </Link>
-        </div>
-      )}
-      {record.childRecords && record.childRecords.length > 0 && (
-        <div className="mt-3 space-y-1">
-          <p className="text-xs text-gray-400 mb-2">Produced Records</p>
-          {record.childRecords.map((child) => (
+      {hasChildren && (
+        <div className="border-l-2 border-amber-100 pl-3">
+          {record.childRecords?.map((child) => (
             <RecordChildNode key={child._id} child={child as ChildRecord} />
           ))}
         </div>
+      )}
+      {hasVerification && (
+        <p className="mt-4 text-xs text-gray-400 italic">
+          Verification: {record.verificationNote}
+        </p>
       )}
     </div>
   );

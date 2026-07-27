@@ -61,33 +61,38 @@ function AuditNode({
   record: AuditRecord;
   depth?: number;
 }) {
-  const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
-    <div style={{ marginLeft: depth * 20 }}>
-      <div className="flex items-start gap-3 py-2 border-l-2 border-amber-200 pl-3 mb-1">
-        <div className="flex-1 min-w-0">
-          <Link
-            href={`/records/${record.slug}`}
-            className="text-sm font-medium text-primary hover:underline block"
-          >
-            {record.title}
-          </Link>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {typeLabels[record.recordType || ''] || record.recordType}
-            {record.status &&
-              ` · ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
-            {record.date &&
-              ` · ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-          </p>
-        </div>
-      </div>
-      {hasChildren && (
-        <div className="space-y-0">
-          {record.childRecords?.map((child) => (
-            <AuditNode key={child._id} record={child} depth={depth + 1} />
-          ))}
-        </div>
-      )}
+    <div className={depth > 0 ? 'pl-4' : ''}>
+      <p className="py-1 text-sm leading-snug">
+        <span className="text-xs text-gray-400 mr-1">
+          {typeLabels[record.recordType || ''] || record.recordType}
+        </span>
+        <Link
+          href={`/records/${record.slug}`}
+          className="text-primary hover:underline font-medium"
+        >
+          {record.title}
+        </Link>
+        {record.status && (
+          <span className="text-xs text-gray-400 ml-1">
+            · {record.status.charAt(0).toUpperCase()}
+            {record.status.slice(1)}
+          </span>
+        )}
+        {record.date && (
+          <span className="text-xs text-gray-400 ml-1">
+            ·{' '}
+            {new Date(record.date).toLocaleDateString('en-ZA', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            })}
+          </span>
+        )}
+      </p>
+      {record.childRecords?.map((child) => (
+        <AuditNode key={child._id} record={child} depth={depth + 1} />
+      ))}
     </div>
   );
 }
@@ -112,32 +117,38 @@ function NoticeLineage({
 
   return (
     <div className="mt-10 pt-8 border-t border-gray-100">
-      <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
+      <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-3">
         Governance Record Lineage
       </p>
       {notice.producedRecords && notice.producedRecords.length > 0 && (
-        <div className="space-y-1 mb-4">
+        <div className="border-l-2 border-amber-100 pl-3 mb-4">
           {notice.producedRecords.map((record) => (
             <AuditNode key={record._id} record={record} depth={0} />
           ))}
         </div>
       )}
       {followUpNotices && followUpNotices.length > 0 && (
-        <div className="space-y-2 mt-4">
+        <div className="border-l-2 border-blue-100 pl-3">
           {followUpNotices.map((fu) => (
-            <div key={fu._id} className="border-l-2 border-blue-200 pl-3 py-2">
+            <p key={fu._id} className="py-1 text-sm leading-snug">
+              <span className="text-xs text-gray-400 mr-1">Follow-up</span>
               <Link
                 href={`/notices/${fu.slug}`}
-                className="text-sm font-medium text-primary hover:underline block"
+                className="text-primary hover:underline font-medium"
               >
                 {fu.title}
               </Link>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Follow-up meeting
-                {fu.date &&
-                  ` · ${new Date(fu.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-              </p>
-            </div>
+              {fu.date && (
+                <span className="text-xs text-gray-400 ml-1">
+                  ·{' '}
+                  {new Date(fu.date).toLocaleDateString('en-ZA', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </span>
+              )}
+            </p>
           ))}
         </div>
       )}
