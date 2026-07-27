@@ -128,27 +128,62 @@ function NoticeLineage({
       <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
         Governance Record Lineage
       </p>
-      {notice.producedRecords && notice.producedRecords.length > 0 && (
-        <div className="space-y-1 mb-4">
-          {notice.producedRecords.map((record) => (
-            <AuditNode key={record._id} record={record} depth={0} />
-          ))}
+      <div className="flex flex-col gap-0">
+        <div className="flex flex-col">
+          <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
+            This Notice
+          </span>
+          <span className="text-sm font-medium text-gray-900">
+            {notice.title}
+          </span>
         </div>
-      )}
-      {followUpNotices && followUpNotices.length > 0 && (
-        <div className="space-y-2 mt-4">
-          {followUpNotices.map((fu) => (
-            <div key={fu._id} className="border-l-2 border-blue-200 pl-3 py-2">
-              <VisitedLink href={`/notices/${fu.slug}`}>{fu.title}</VisitedLink>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Follow-up meeting
-                {fu.date &&
-                  ` · ${new Date(fu.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-              </p>
+        {notice.producedRecords && notice.producedRecords.length > 0 && (
+          <>
+            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+              ↓
+            </span>
+            <div className="flex flex-col">
+              <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
+                Produced Records
+              </span>
+              <div className="space-y-1">
+                {notice.producedRecords.map((record) => (
+                  <AuditNode key={record._id} record={record} depth={0} />
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+          </>
+        )}
+        {followUpNotices && followUpNotices.length > 0 && (
+          <>
+            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+              ↓
+            </span>
+            <div className="flex flex-col">
+              <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
+                Follow-up Notices
+              </span>
+              <div className="space-y-1">
+                {followUpNotices.map((fu) => (
+                  <div
+                    key={fu._id}
+                    className="border-l-2 border-blue-200 pl-3 py-2"
+                  >
+                    <VisitedLink href={`/notices/${fu.slug}`}>
+                      {fu.title}
+                    </VisitedLink>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      Follow-up meeting
+                      {fu.date &&
+                        ` · ${new Date(fu.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
