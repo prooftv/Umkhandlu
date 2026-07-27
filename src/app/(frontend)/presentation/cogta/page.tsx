@@ -284,47 +284,57 @@ Permanent Institutional Memory`}
           Izazi High School to petition for recognition as a separate Isigodi.
           The platform automatically generated this audit trail:
         </p>
-        <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 my-6">
+        <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 my-6 text-sm text-gray-700">
           <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-3">
             Governance Record Lineage
           </p>
-          <div className="space-y-1 text-sm text-gray-700">
-            <div className="flex items-center gap-2 font-medium text-amber-800">
-              <span>📢</span>
-              <span>
-                Community Meeting — KwaGudlucingo Governance, Community Safety &
-                Infrastructure
+          <div className="flex flex-col gap-0">
+            <div className="flex flex-col">
+              <span className="text-[10px] text-amber-600 uppercase tracking-widest mb-0.5">
+                This Notice
+              </span>
+              <span className="font-medium text-amber-800">
+                📢 Community Meeting — KwaGudlucingo Governance, Community
+                Safety & Infrastructure
               </span>
             </div>
-            <div className="ml-4 border-l-2 border-amber-200 pl-3 space-y-1 mt-1">
-              <div>
-                <span className="font-medium">📄 Minutes</span>
-                <span className="text-gray-400 ml-1">
-                  — minutes — 27/06/2026
-                </span>
-              </div>
-              <div className="ml-4 border-l-2 border-amber-100 pl-3 space-y-1">
+            <span className="text-amber-300 text-sm leading-none my-1 ml-1">
+              ↓
+            </span>
+            <div className="flex flex-col">
+              <span className="text-[10px] text-amber-600 uppercase tracking-widest mb-1">
+                Produced Records
+              </span>
+              <div className="border-l-2 border-amber-200 pl-3 space-y-2">
                 <div>
-                  <span className="font-medium">
-                    📄 Resolution — Petition for Recognition
-                  </span>
-                  <span className="text-gray-400 ml-1">
-                    — community-decision — adopted
-                  </span>
-                </div>
-                <div>
-                  <span className="font-medium">
-                    📄 Resolution — Community Safety Whistle Alert
-                  </span>
-                  <span className="text-gray-400 ml-1">
-                    — community-decision — adopted
-                  </span>
-                </div>
-                <div>
-                  <span className="font-medium">
-                    📄 Infrastructure Record — Apollo Street Lighting
-                  </span>
-                  <span className="text-gray-400 ml-1">— report — open</span>
+                  <span className="font-medium">📄 Minutes</span>
+                  <span className="text-gray-400 ml-1">— 27/06/2026</span>
+                  <div className="border-l-2 border-amber-100 pl-3 mt-1 space-y-1">
+                    <div>
+                      <span className="font-medium">
+                        📄 Resolution — Petition for Recognition
+                      </span>
+                      <span className="text-gray-400 ml-1">
+                        — community-decision · adopted
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-medium">
+                        📄 Resolution — Community Safety Whistle Alert
+                      </span>
+                      <span className="text-gray-400 ml-1">
+                        — community-decision · adopted
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-medium">
+                        📄 Infrastructure Record — Apollo Street Lighting
+                      </span>
+                      <span className="text-gray-400 ml-1">
+                        — report · open
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
