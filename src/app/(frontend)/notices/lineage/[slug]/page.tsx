@@ -65,108 +65,75 @@ function cap(s: string | null) {
 function RecordRow({
   record,
   depth = 0,
-  isLast = false,
 }: {
   record: LineageRecord;
   depth?: number;
-  isLast?: boolean;
 }) {
-  const hasChildren = record.childRecords && record.childRecords.length > 0;
   const hasEvidence = record.evidence && record.evidence.length > 0;
-  const indent = depth * 20;
-
   return (
-    <>
-      <tr className="border-b border-gray-100">
-        <td
-          className="py-2 pr-3 align-top"
-          style={{ paddingLeft: `${indent + 8}px` }}
-        >
-          <span className="text-gray-300 font-mono text-xs mr-1 select-none">
-            {isLast ? '└' : '├'}
-          </span>
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            {typeLabels[record.recordType || ''] || record.recordType}
-          </span>
-        </td>
-        <td className="py-2 pr-3 align-top">
-          <p className="text-sm font-semibold text-gray-900">{record.title}</p>
-          {record.summary && (
-            <p className="text-xs text-gray-500 mt-0.5">{record.summary}</p>
-          )}
-          {record.verificationNote && (
-            <p className="text-xs text-amber-700 mt-0.5 italic">
-              ✓ {record.verificationNote}
+    <div style={{ marginLeft: depth * 20 }}>
+      <div className="border-l-2 border-amber-200 pl-3 py-2 mb-1">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5">
+              {typeLabels[record.recordType || ''] || record.recordType}
             </p>
-          )}
-          {hasEvidence && (
-            <div className="mt-1 space-y-0.5">
-              {record.evidence?.map((e) => (
-                <p key={e._key} className="text-xs text-blue-700">
-                  📎{' '}
-                  {e.url ? (
-                    <a href={e.url} target="_blank" rel="noopener noreferrer">
-                      {e.title}
-                    </a>
-                  ) : (
-                    e.title
-                  )}
-                </p>
-              ))}
-            </div>
-          )}
-        </td>
-        <td className="py-2 pr-3 align-top text-xs text-gray-500 whitespace-nowrap">
-          {cap(record.status)}
-        </td>
-        <td className="py-2 align-top text-xs text-gray-500 whitespace-nowrap">
-          {fmt(record.date)}
-        </td>
-      </tr>
-      {hasChildren &&
-        record.childRecords?.map((child, i) => (
-          <RecordRow
-            key={child._id}
-            record={child as LineageRecord}
-            depth={depth + 1}
-            isLast={i === (record.childRecords?.length ?? 0) - 1}
-          />
-        ))}
-    </>
+            <p className="text-sm font-semibold text-gray-900">
+              {record.title}
+            </p>
+            {record.summary && (
+              <p className="text-xs text-gray-500 mt-0.5">{record.summary}</p>
+            )}
+            {record.verificationNote && (
+              <p className="text-xs text-amber-700 mt-0.5 italic">
+                ✓ {record.verificationNote}
+              </p>
+            )}
+            {hasEvidence && (
+              <div className="mt-1 flex flex-wrap gap-2">
+                {record.evidence?.map((e) => (
+                  <span key={e._key} className="text-xs text-blue-700">
+                    {e.url ? (
+                      <a href={e.url} target="_blank" rel="noopener noreferrer">
+                        📎 {e.title}
+                      </a>
+                    ) : (
+                      <>📎 {e.title}</>
+                    )}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="text-right shrink-0">
+            {record.status && (
+              <span className="text-xs text-gray-500 block">
+                {cap(record.status)}
+              </span>
+            )}
+            <span className="text-xs text-gray-400">{fmt(record.date)}</span>
+          </div>
+        </div>
+      </div>
+      {record.childRecords?.map((child) => (
+        <RecordRow
+          key={child._id}
+          record={child as LineageRecord}
+          depth={depth + 1}
+        />
+      ))}
+    </div>
   );
 }
 
-function RecordTable({ records }: { records: LineageRecord[] }) {
+function RecordSection({ records }: { records: LineageRecord[] }) {
   if (!records.length) return null;
   return (
-    <table className="w-full text-sm border-collapse mt-3">
-      <thead>
-        <tr className="border-b-2 border-gray-200">
-          <th className="text-left py-1.5 pr-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-36">
-            Type
-          </th>
-          <th className="text-left py-1.5 pr-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-            Record
-          </th>
-          <th className="text-left py-1.5 pr-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-24">
-            Status
-          </th>
-          <th className="text-left py-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">
-            Date
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {records.map((r, i) => (
-          <RecordRow
-            key={r._id}
-            record={r}
-            depth={0}
-            isLast={i === records.length - 1}
-          />
-        ))}
-      </tbody>
-    </table>
+    <div className="space-y-0 mt-3">
+      {records.map((r) => (
+        <RecordRow key={r._id} record={r} depth={0} />
+      ))}
+    </div>
   );
 }
 
@@ -313,11 +280,10 @@ export default async function NoticeLineagePage(props: Props) {
       {/* Records produced directly from this notice */}
       {producedRecords.length > 0 && (
         <section className="mb-6">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-gray-700 mb-2 flex items-center gap-2">
-            <span className="text-amber-600">📢</span> Records Produced by This
-            Notice
+          <h3 className="text-sm font-bold uppercase tracking-wide text-gray-700 mb-2">
+            Records Produced by This Notice
           </h3>
-          <RecordTable records={producedRecords} />
+          <RecordSection records={producedRecords} />
         </section>
       )}
 
@@ -330,11 +296,11 @@ export default async function NoticeLineagePage(props: Props) {
             </p>
             <h3 className="text-sm font-bold text-gray-900">{fu.title}</h3>
             <p className="text-xs text-gray-500">
-              {cap(fu.noticeType)} • {fmt(fu.date)}
+              {cap(fu.noticeType)} · {fmt(fu.date)}
             </p>
           </div>
           {fu.producedRecords && fu.producedRecords.length > 0 && (
-            <RecordTable records={fu.producedRecords as LineageRecord[]} />
+            <RecordSection records={fu.producedRecords as LineageRecord[]} />
           )}
         </section>
       ))}

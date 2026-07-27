@@ -56,42 +56,35 @@ type AuditRecord = {
 
 function AuditNode({
   record,
-  isLast,
+  depth = 0,
 }: {
   record: AuditRecord;
-  isLast: boolean;
+  depth?: number;
 }) {
   const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
-    <div className="relative pl-6">
-      <span className="absolute left-0 top-0 text-gray-300 text-xs font-mono select-none">
-        {isLast ? '└──' : '├──'}
-      </span>
-      <div className="pb-2">
-        <Link
-          href={`/records/${record.slug}`}
-          className="text-sm font-medium text-primary hover:underline"
-        >
-          📄 {record.title}
-        </Link>
-        <p className="text-xs text-gray-400 mt-0.5">
-          {typeLabels[record.recordType || ''] || record.recordType}
-          {record.status &&
-            ` • ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
-          {record.date &&
-            ` • ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-        </p>
+    <div style={{ marginLeft: depth * 20 }}>
+      <div className="flex items-start gap-3 py-2 border-l-2 border-amber-200 pl-3 mb-1">
+        <div className="flex-1 min-w-0">
+          <Link
+            href={`/records/${record.slug}`}
+            className="text-sm font-medium text-primary hover:underline block"
+          >
+            {record.title}
+          </Link>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {typeLabels[record.recordType || ''] || record.recordType}
+            {record.status &&
+              ` · ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
+            {record.date &&
+              ` · ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+          </p>
+        </div>
       </div>
       {hasChildren && (
-        <div
-          className={`${isLast ? '' : 'border-l border-gray-200'} ml-0 space-y-0`}
-        >
-          {record.childRecords?.map((child, i) => (
-            <AuditNode
-              key={child._id}
-              record={child}
-              isLast={i === (record.childRecords?.length ?? 0) - 1}
-            />
+        <div className="space-y-0">
+          {record.childRecords?.map((child) => (
+            <AuditNode key={child._id} record={child} depth={depth + 1} />
           ))}
         </div>
       )}
@@ -118,53 +111,32 @@ function NoticeLineage({
   if (!hasLineage) return null;
 
   return (
-    <div className="mt-8 p-5 bg-amber-50 border border-amber-100 rounded-xl">
-      <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-5">
+    <div className="mt-10 pt-8 border-t border-gray-100">
+      <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
         Governance Record Lineage
       </p>
-      <div className="mb-4">
-        <p className="text-sm font-medium text-amber-800">📢 {notice.title}</p>
-        <p className="text-xs text-gray-400 mt-0.5">
-          {notice.noticeType &&
-            `${notice.noticeType.charAt(0).toUpperCase()}${notice.noticeType.slice(1)}`}
-          {notice.date &&
-            ` • ${new Date(notice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-        </p>
-      </div>
       {notice.producedRecords && notice.producedRecords.length > 0 && (
-        <div className="border-l border-amber-200 ml-2 pl-0 space-y-0">
-          {notice.producedRecords.map((record, i) => (
-            <AuditNode
-              key={record._id}
-              record={record}
-              isLast={
-                i === (notice.producedRecords?.length ?? 0) - 1 &&
-                !(followUpNotices && followUpNotices.length > 0)
-              }
-            />
+        <div className="space-y-1 mb-4">
+          {notice.producedRecords.map((record) => (
+            <AuditNode key={record._id} record={record} depth={0} />
           ))}
         </div>
       )}
       {followUpNotices && followUpNotices.length > 0 && (
-        <div className="border-l border-amber-200 ml-2 pl-0 mt-0 space-y-0">
-          {followUpNotices.map((fu, i) => (
-            <div key={fu._id} className="relative pl-6">
-              <span className="absolute left-0 top-0 text-gray-300 text-xs font-mono select-none">
-                {i === (followUpNotices?.length ?? 0) - 1 ? '└──' : '├──'}
-              </span>
-              <div className="pb-2">
-                <Link
-                  href={`/notices/${fu.slug}`}
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  📢 {fu.title}
-                </Link>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Follow-up Meeting
-                  {fu.date &&
-                    ` • ${new Date(fu.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-                </p>
-              </div>
+        <div className="space-y-2 mt-4">
+          {followUpNotices.map((fu) => (
+            <div key={fu._id} className="border-l-2 border-blue-200 pl-3 py-2">
+              <Link
+                href={`/notices/${fu.slug}`}
+                className="text-sm font-medium text-primary hover:underline block"
+              >
+                {fu.title}
+              </Link>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Follow-up meeting
+                {fu.date &&
+                  ` · ${new Date(fu.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+              </p>
             </div>
           ))}
         </div>
@@ -217,50 +189,31 @@ export default async function NoticePage(props: Props) {
         ]}
       />
       <div className="mb-6">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
           <Badge>{notice.noticeType}</Badge>
           {notice.date && (
             <time dateTime={notice.date} className="text-sm text-gray-500">
-              {new Date(notice.date).toLocaleDateString()}
+              {new Date(notice.date).toLocaleDateString('en-ZA', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
             </time>
+          )}
+          {notice.relatedArea && (
+            <Link
+              href={`/areas/${notice.relatedArea.slug}`}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              📍 {notice.relatedArea.name}
+            </Link>
           )}
           {notice.pinned && (
             <span className="text-sm text-primary">📌 Pinned</span>
           )}
         </div>
         <h1 className="text-3xl md:text-5xl font-bold mb-4">{notice.title}</h1>
-        {notice.relatedArea && (
-          <p className="text-gray-500">
-            📍{' '}
-            <Link
-              href={`/areas/${notice.relatedArea.slug}`}
-              className="underline hover:text-gray-700"
-            >
-              {notice.relatedArea.name}
-            </Link>
-          </p>
-        )}
       </div>
-
-      {/* Follow-up banner — this notice is a follow-up to another */}
-      {originNotice && (
-        <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-          <p className="text-xs text-blue-700 uppercase tracking-wide font-semibold mb-1">
-            Follow-up to
-          </p>
-          <Link
-            href={`/notices/${originNotice.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            📢 {originNotice.title}
-          </Link>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {originNotice.noticeType}
-            {originNotice.date &&
-              ` • ${new Date(originNotice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-          </p>
-        </div>
-      )}
 
       {notice.excerpt && (
         <p className="text-xl text-gray-600 mb-8">{notice.excerpt}</p>
@@ -270,8 +223,28 @@ export default async function NoticePage(props: Props) {
         <CustomPortableText value={notice.content as PortableTextBlock[]} />
       )}
 
+      {/* Follow-up series context — below content */}
+      {originNotice && (
+        <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+          <p className="text-xs text-blue-600 uppercase tracking-widest font-semibold mb-1">
+            Part of a series
+          </p>
+          <Link
+            href={`/notices/${originNotice.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            ← {originNotice.title}
+          </Link>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {originNotice.noticeType}
+            {originNotice.date &&
+              ` · ${new Date(originNotice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+          </p>
+        </div>
+      )}
+
       {notice.relatedCampaign && (
-        <div className="mt-8 p-4 bg-gray-50 rounded-xl">
+        <div className="mt-6 p-4 bg-gray-50 rounded-xl">
           <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
             Related Campaign
           </p>
@@ -290,7 +263,7 @@ export default async function NoticePage(props: Props) {
         </div>
       )}
 
-      {/* Lineage */}
+      {/* Lineage — always at bottom */}
       <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
 
       <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">

@@ -163,24 +163,27 @@ type ChildRecord = {
 
 function RecordChildNode({ child }: { child: ChildRecord }) {
   return (
-    <li>
-      <Link
-        href={`/records/${child.slug}`}
-        className="text-sm text-primary hover:underline"
-      >
-        {typeLabels[child.recordType ?? ''] || child.recordType} → {child.title}
-      </Link>
-      {child.status && (
-        <span className="text-xs text-gray-400 ml-1">— {child.status}</span>
-      )}
+    <div>
+      <div className="border-l-2 border-amber-200 pl-3 py-1.5">
+        <Link
+          href={`/records/${child.slug}`}
+          className="text-sm text-primary hover:underline block"
+        >
+          {child.title}
+        </Link>
+        <p className="text-xs text-gray-400">
+          {typeLabels[child.recordType ?? ''] || child.recordType}
+          {child.status && ` · ${child.status}`}
+        </p>
+      </div>
       {child.childRecords && child.childRecords.length > 0 && (
-        <ul className="ml-4 mt-1 space-y-1 border-l border-amber-100 pl-3">
+        <div className="ml-5 mt-1 space-y-1">
           {child.childRecords.map((grandchild) => (
             <RecordChildNode key={grandchild._id} child={grandchild} />
           ))}
-        </ul>
+        </div>
       )}
-    </li>
+    </div>
   );
 }
 
@@ -192,40 +195,38 @@ function RecordLineage({ record }: { record: RecordData }) {
   if (!hasOrigin && !hasParent && !hasChildren) return null;
 
   return (
-    <div className="bg-amber-50 border border-amber-100 rounded-xl p-6 mb-8 space-y-3">
-      <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-2">
+    <div className="mt-10 pt-8 border-t border-gray-100 mb-8">
+      <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
         Governance Lineage
       </p>
       {record.originNotice && (
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm text-gray-500">Origin Notice</span>
+        <div className="flex justify-between items-baseline mb-3">
+          <span className="text-xs text-gray-400">Origin Notice</span>
           <Link
             href={`/notices/${record.originNotice.slug}`}
             className="text-sm font-medium text-primary hover:underline"
           >
-            📢 {record.originNotice.title}
+            {record.originNotice.title}
           </Link>
         </div>
       )}
       {record.parentRecord && (
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm text-gray-500">Produced From</span>
+        <div className="flex justify-between items-baseline mb-3">
+          <span className="text-xs text-gray-400">Produced From</span>
           <Link
             href={`/records/${record.parentRecord.slug}`}
             className="text-sm font-medium text-primary hover:underline"
           >
-            📄 {record.parentRecord.title}
+            {record.parentRecord.title}
           </Link>
         </div>
       )}
       {record.childRecords && record.childRecords.length > 0 && (
-        <div className="pt-2 border-t border-amber-200">
-          <p className="text-xs text-gray-500 mb-2">Produced Records</p>
-          <ul className="space-y-1">
-            {record.childRecords.map((child) => (
-              <RecordChildNode key={child._id} child={child as ChildRecord} />
-            ))}
-          </ul>
+        <div className="mt-3 space-y-1">
+          <p className="text-xs text-gray-400 mb-2">Produced Records</p>
+          {record.childRecords.map((child) => (
+            <RecordChildNode key={child._id} child={child as ChildRecord} />
+          ))}
         </div>
       )}
     </div>
@@ -310,7 +311,6 @@ export default async function RecordPage(props: Props) {
       />
 
       <RecordHeader record={record} />
-      <RecordLineage record={record} />
       <RecordMeta record={record} />
       <RecordEvidence record={record} />
 
@@ -319,6 +319,8 @@ export default async function RecordPage(props: Props) {
           <CustomPortableText value={record.content as PortableTextBlock[]} />
         </div>
       )}
+
+      <RecordLineage record={record} />
 
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={record.title || ''} />
