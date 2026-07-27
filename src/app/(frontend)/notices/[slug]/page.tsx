@@ -6,6 +6,7 @@ import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
+import VisitedLink from '@/components/modules/VisitedLink';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
@@ -59,20 +60,22 @@ type AuditRecord = {
 function AuditNode({
   record,
   depth = 0,
+  currentSlug,
 }: {
   record: AuditRecord;
   depth?: number;
+  currentSlug?: string;
 }) {
   const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
     <div>
       <div className="border-l-2 border-amber-200 pl-3 py-2">
-        <Link
+        <VisitedLink
           href={`/records/${record.slug}`}
-          className="text-sm font-medium text-primary hover:underline block"
+          isCurrent={record.slug === currentSlug}
         >
           {record.title}
-        </Link>
+        </VisitedLink>
         <p className="text-xs text-gray-400 mt-0.5">
           {typeLabels[record.recordType || ''] || record.recordType}
           {record.status &&
@@ -89,7 +92,12 @@ function AuditNode({
       {hasChildren && (
         <div className="ml-4 border-l-2 border-gray-100 pl-0 mt-0">
           {record.childRecords?.map((child) => (
-            <AuditNode key={child._id} record={child} depth={depth + 1} />
+            <AuditNode
+              key={child._id}
+              record={child}
+              depth={depth + 1}
+              currentSlug={currentSlug}
+            />
           ))}
         </div>
       )}
@@ -131,12 +139,7 @@ function NoticeLineage({
         <div className="space-y-2 mt-4">
           {followUpNotices.map((fu) => (
             <div key={fu._id} className="border-l-2 border-blue-200 pl-3 py-2">
-              <Link
-                href={`/notices/${fu.slug}`}
-                className="text-sm font-medium text-primary hover:underline block"
-              >
-                {fu.title}
-              </Link>
+              <VisitedLink href={`/notices/${fu.slug}`}>{fu.title}</VisitedLink>
               <p className="text-xs text-gray-400 mt-0.5">
                 Follow-up meeting
                 {fu.date &&

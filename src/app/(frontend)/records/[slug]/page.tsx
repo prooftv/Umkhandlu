@@ -6,6 +6,7 @@ import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
+import VisitedLink from '@/components/modules/VisitedLink';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
@@ -146,16 +147,22 @@ type ChildRecord = {
   childRecords?: ChildRecord[] | null;
 };
 
-function RecordChildNode({ child }: { child: ChildRecord }) {
+function RecordChildNode({
+  child,
+  currentSlug,
+}: {
+  child: ChildRecord;
+  currentSlug: string;
+}) {
   return (
     <li className="list-none">
       <div className="border-l-2 border-amber-200 pl-3 py-1.5">
-        <Link
+        <VisitedLink
           href={`/records/${child.slug}`}
-          className="text-sm font-medium text-primary hover:underline block"
+          isCurrent={child.slug === currentSlug}
         >
           {child.title}
-        </Link>
+        </VisitedLink>
         <p className="text-xs text-gray-400">
           {typeLabels[child.recordType ?? ''] || child.recordType}
           {child.status && ` · ${child.status}`}
@@ -164,7 +171,11 @@ function RecordChildNode({ child }: { child: ChildRecord }) {
       {child.childRecords && child.childRecords.length > 0 && (
         <ul className="ml-4 border-l-2 border-gray-100 space-y-0">
           {child.childRecords.map((grandchild) => (
-            <RecordChildNode key={grandchild._id} child={grandchild} />
+            <RecordChildNode
+              key={grandchild._id}
+              child={grandchild}
+              currentSlug={currentSlug}
+            />
           ))}
         </ul>
       )}
@@ -172,7 +183,13 @@ function RecordChildNode({ child }: { child: ChildRecord }) {
   );
 }
 
-function RecordLineage({ record }: { record: RecordData }) {
+function RecordLineage({
+  record,
+  currentSlug,
+}: {
+  record: RecordData;
+  currentSlug: string;
+}) {
   const hasOrigin = record.originNotice;
   const hasParent = record.parentRecord;
   const hasChildren = record.childRecords && record.childRecords.length > 0;
@@ -188,29 +205,30 @@ function RecordLineage({ record }: { record: RecordData }) {
       {record.originNotice && (
         <div className="flex justify-between items-baseline mb-3">
           <span className="text-xs text-gray-400">Origin Notice</span>
-          <Link
-            href={`/notices/${record.originNotice.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
+          <VisitedLink href={`/notices/${record.originNotice.slug}`}>
             {record.originNotice.title}
-          </Link>
+          </VisitedLink>
         </div>
       )}
       {record.parentRecord && (
         <div className="flex justify-between items-baseline mb-3">
           <span className="text-xs text-gray-400">Produced From</span>
-          <Link
+          <VisitedLink
             href={`/records/${record.parentRecord.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
+            isCurrent={record.parentRecord.slug === currentSlug}
           >
             {record.parentRecord.title}
-          </Link>
+          </VisitedLink>
         </div>
       )}
       {hasChildren && (
         <ul className="mt-3 space-y-1">
           {record.childRecords?.map((child) => (
-            <RecordChildNode key={child._id} child={child as ChildRecord} />
+            <RecordChildNode
+              key={child._id}
+              child={child as ChildRecord}
+              currentSlug={currentSlug}
+            />
           ))}
         </ul>
       )}
@@ -329,7 +347,7 @@ export default async function RecordPage(props: Props) {
       <RecordHeader record={record} />
       <LineageTabs
         noticeTab={recordTab}
-        lineageTab={<RecordLineage record={record} />}
+        lineageTab={<RecordLineage record={record} currentSlug={slug} />}
         lineageCount={lineageCount}
       />
     </div>
