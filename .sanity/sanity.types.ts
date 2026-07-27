@@ -7919,6 +7919,65 @@ export type NoticeDetailQueryResult = {
 // Variable: noticeSlugs
 // Query: *[_type == "notice" && defined(slug.current)][0..$limit].slug.current
 export type NoticeSlugsResult = Array<string | null>;
+// Variable: noticeLineageQuery
+// Query: *[_type == "notice" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    noticeType,    date,    excerpt,    "relatedArea": relatedArea->{ name, "slug": slug.current },    "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },    "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, noticeType, date,      "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,        evidence[]{ _key, title, "url": asset->url },        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status, summary,          evidence[]{ _key, title, "url": asset->url }        }      }    },    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,      evidence[]{ _key, title, "url": asset->url },      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status, summary,        evidence[]{ _key, title, "url": asset->url },        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status, summary,          evidence[]{ _key, title, "url": asset->url }        }      }    }  }
+export type NoticeLineageQueryResult = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+  date: string | null;
+  excerpt: string | null;
+  relatedArea: {
+    name: string | null;
+    slug: string | null;
+  } | null;
+  originNotice: null;
+  followUpNotices: Array<never>;
+  producedRecords: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    date: string | null;
+    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    summary: string | null;
+    verificationNote: string | null;
+    evidence: Array<{
+      _key: string;
+      title: string | null;
+      url: string | null;
+    }> | null;
+    childRecords: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      date: string | null;
+      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      summary: string | null;
+      evidence: Array<{
+        _key: string;
+        title: string | null;
+        url: string | null;
+      }> | null;
+      childRecords: Array<{
+        _id: string;
+        title: string | null;
+        slug: string | null;
+        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        date: string | null;
+        status: "approved" | "pending" | "rejected" | "resolved" | null;
+        summary: string | null;
+        evidence: Array<{
+          _key: string;
+          title: string | null;
+          url: string | null;
+        }> | null;
+      }>;
+    }>;
+  }>;
+} | null;
 // Variable: opportunityDetailQuery
 // Query: *[_type == "opportunity" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    opportunityType,    description,    organization,    deadline,    link,    featured,    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current }  }
 export type OpportunityDetailQueryResult = {
@@ -8708,6 +8767,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"program\" && defined(slug.current)][0..$limit].slug.current\n": ProgramSlugsResult;
     "\n  *[_type == \"notice\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    date,\n    excerpt,\n    image,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    pinned,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current, campaignType, status },\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType, date },\n    \"followUpNotices\": *[_type == \"notice\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, noticeType, date\n    },\n    \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status,\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status,\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status,\n          \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n            _id, title, \"slug\": slug.current, recordType, date, status\n          }\n        }\n      }\n    }\n  }\n": NoticeDetailQueryResult;
     "\n  *[_type == \"notice\" && defined(slug.current)][0..$limit].slug.current\n": NoticeSlugsResult;
+    "\n  *[_type == \"notice\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    date,\n    excerpt,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType, date },\n    \"followUpNotices\": *[_type == \"notice\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, noticeType, date,\n      \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, summary, verificationNote,\n        evidence[]{ _key, title, \"url\": asset->url },\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, summary,\n          evidence[]{ _key, title, \"url\": asset->url }\n        }\n      }\n    },\n    \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status, summary, verificationNote,\n      evidence[]{ _key, title, \"url\": asset->url },\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, summary,\n        evidence[]{ _key, title, \"url\": asset->url },\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, summary,\n          evidence[]{ _key, title, \"url\": asset->url }\n        }\n      }\n    }\n  }\n": NoticeLineageQueryResult;
     "\n  *[_type == \"opportunity\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    opportunityType,\n    description,\n    organization,\n    deadline,\n    link,\n    featured,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current }\n  }\n": OpportunityDetailQueryResult;
     "\n  *[_type == \"opportunity\" && defined(slug.current)][0..$limit].slug.current\n": OpportunitySlugsResult;
     "\n  *[_type == \"campaign\" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  \"audioFileUrl\": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    \"logoUrl\": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  \"verificationRecords\": *[_type == \"conflictLog\" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  \"sponsor\": sponsor->{ name, \"slug\": slug.current, logo, \"logoUrl\": logo.asset->url, website, sponsorType },\n  \"contactPerson\": contactPerson->{ firstName, lastName, role, \"slug\": slug.current },\n  \"relatedAreas\": relatedAreas[]->{ name, \"slug\": slug.current, \"induna\": induna->{ firstName, lastName, role } },\n  \"relatedProgram\": relatedProgram->{ title, \"slug\": slug.current },\n  \"relatedOpportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  \"relatedDevelopmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  \"relatedNotices\": *[_type == \"notice\" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  },\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    progressLog[] {\n      _key,\n      date,\n      update\n    },\n    \"stakeholderLogos\": stakeholderLogos[] {\n      _key,\n      name,\n      \"url\": asset->url\n    },\n    documents[] {\n      _key,\n      title,\n      \"url\": asset->url\n    },\n    \"relatedListings\": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n},\n    seo {\n      \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n    }\n  }\n": CampaignDetailQueryResult;

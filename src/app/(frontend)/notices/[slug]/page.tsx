@@ -293,8 +293,14 @@ export default async function NoticePage(props: Props) {
       {/* Lineage */}
       <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
 
-      <div className="mt-8 pt-6 border-t border-gray-100">
+      <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
         <ShareWhatsApp title={notice.title || ''} />
+        <Link
+          href={`/notices/lineage/${slug}`}
+          className="text-sm text-primary font-medium hover:underline no-print"
+        >
+          🖨 Print Lineage Certificate →
+        </Link>
       </div>
     </div>
   );

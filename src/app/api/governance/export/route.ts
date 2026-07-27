@@ -8,6 +8,18 @@ const lineageQuery = `*[_type == "notice" && defined(slug.current)] | order(date
   noticeType,
   date,
   "relatedArea": relatedArea->{ name, "slug": slug.current },
+  "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },
+  "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {
+    _id, title, "slug": slug.current, noticeType, date,
+    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
+      _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,
+      evidence[]{ title, "url": asset->url },
+      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
+        _id, title, "slug": slug.current, recordType, date, status, summary,
+        evidence[]{ title, "url": asset->url }
+      }
+    }
+  },
   "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
     _id,
     title,
@@ -60,6 +72,18 @@ const filteredLineageQuery = `*[_type == "notice" && defined(slug.current) && re
   noticeType,
   date,
   "relatedArea": relatedArea->{ name, "slug": slug.current },
+  "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },
+  "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {
+    _id, title, "slug": slug.current, noticeType, date,
+    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
+      _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,
+      evidence[]{ title, "url": asset->url },
+      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
+        _id, title, "slug": slug.current, recordType, date, status, summary,
+        evidence[]{ title, "url": asset->url }
+      }
+    }
+  },
   "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {
     _id,
     title,
@@ -106,8 +130,9 @@ export async function GET(request: NextRequest) {
     : await client.fetch(lineageQuery);
 
   const withLineage = data.filter(
-    (notice: { producedRecords?: unknown[] }) =>
-      notice.producedRecords && notice.producedRecords.length > 0
+    (notice: { producedRecords?: unknown[]; followUpNotices?: unknown[] }) =>
+      (notice.producedRecords && notice.producedRecords.length > 0) ||
+      (notice.followUpNotices && notice.followUpNotices.length > 0)
   );
 
   return NextResponse.json({
