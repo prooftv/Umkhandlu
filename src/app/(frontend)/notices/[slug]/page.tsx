@@ -69,7 +69,7 @@ function AuditNode({
   const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
     <div>
-      <div className="border-l-2 border-amber-200 pl-3 py-2">
+      <div className="py-1">
         <VisitedLink
           href={`/records/${record.slug}`}
           isCurrent={record.slug === currentSlug}
@@ -90,16 +90,21 @@ function AuditNode({
         )}
       </div>
       {hasChildren && (
-        <div className="ml-4 border-l-2 border-gray-100 pl-0 mt-0">
-          {record.childRecords?.map((child) => (
-            <AuditNode
-              key={child._id}
-              record={child}
-              depth={depth + 1}
-              currentSlug={currentSlug}
-            />
-          ))}
-        </div>
+        <>
+          <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+            ↓
+          </span>
+          <div className="ml-3 border-l border-gray-100 pl-3">
+            {record.childRecords?.map((child) => (
+              <AuditNode
+                key={child._id}
+                record={child}
+                depth={depth + 1}
+                currentSlug={currentSlug}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

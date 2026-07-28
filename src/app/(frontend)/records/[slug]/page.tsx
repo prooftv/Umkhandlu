@@ -154,9 +154,10 @@ function RecordChildNode({
   child: ChildRecord;
   currentSlug: string;
 }) {
+  const hasChildren = child.childRecords && child.childRecords.length > 0;
   return (
     <li className="list-none">
-      <div className="border-l-2 border-amber-200 pl-3 py-1.5">
+      <div className="py-1">
         <VisitedLink
           href={`/records/${child.slug}`}
           isCurrent={child.slug === currentSlug}
@@ -168,16 +169,21 @@ function RecordChildNode({
           {child.status && ` · ${child.status}`}
         </p>
       </div>
-      {child.childRecords && child.childRecords.length > 0 && (
-        <ul className="ml-4 border-l-2 border-gray-100 space-y-0">
-          {child.childRecords.map((grandchild) => (
-            <RecordChildNode
-              key={grandchild._id}
-              child={grandchild}
-              currentSlug={currentSlug}
-            />
-          ))}
-        </ul>
+      {hasChildren && (
+        <>
+          <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+            ↓
+          </span>
+          <ul className="ml-3 border-l border-gray-100 pl-3 space-y-0">
+            {child.childRecords?.map((grandchild) => (
+              <RecordChildNode
+                key={grandchild._id}
+                child={grandchild}
+                currentSlug={currentSlug}
+              />
+            ))}
+          </ul>
+        </>
       )}
     </li>
   );
@@ -247,15 +253,20 @@ function RecordLineage({
             <span className="text-gray-300 text-sm leading-none my-1 ml-1">
               ↓
             </span>
-            <ul className="space-y-1">
-              {record.childRecords?.map((child) => (
-                <RecordChildNode
-                  key={child._id}
-                  child={child as ChildRecord}
-                  currentSlug={currentSlug}
-                />
-              ))}
-            </ul>
+            <div className="flex flex-col">
+              <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
+                Produced Records
+              </span>
+              <ul className="border-l-2 border-amber-100 pl-3 space-y-2">
+                {record.childRecords?.map((child) => (
+                  <RecordChildNode
+                    key={child._id}
+                    child={child as ChildRecord}
+                    currentSlug={currentSlug}
+                  />
+                ))}
+              </ul>
+            </div>
           </>
         )}
       </div>
