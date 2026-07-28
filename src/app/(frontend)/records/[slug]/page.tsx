@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
-import { LineageAncestor, LineageList } from '@/components/modules/LineageNode';
+import { LineageChain } from '@/components/modules/LineageNode';
 import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
@@ -148,73 +148,39 @@ function RecordLineage({
 }) {
   const hasOrigin = record.originNotice;
   const hasParent = record.parentRecord;
-  const hasChildren = record.childRecords && record.childRecords.length > 0;
+  const hasChildren = (record.childRecords?.length ?? 0) > 0;
   const hasVerification = record.verificationNote;
 
   if (!hasOrigin && !hasParent && !hasChildren && !hasVerification) return null;
 
-  const children = (record.childRecords ?? []) as LR[];
+  const ancestors: { label: string; href: string; title: string | null }[] = [];
+  if (record.originNotice) {
+    ancestors.push({
+      label: 'Origin Notice',
+      href: `/notices/${record.originNotice.slug}`,
+      title: record.originNotice.title,
+    });
+  }
+  if (record.parentRecord) {
+    ancestors.push({
+      label: 'Produced From',
+      href: `/records/${record.parentRecord.slug}`,
+      title: record.parentRecord.title,
+    });
+  }
 
   return (
     <div className="mt-10 pt-8 border-t border-gray-100 mb-8">
       <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
         Governance Lineage
       </p>
-      <div className="flex flex-col gap-0">
-        {record.originNotice && (
-          <>
-            <LineageAncestor
-              label="Origin Notice"
-              href={`/notices/${record.originNotice.slug}`}
-              title={record.originNotice.title}
-            />
-            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
-              ↓
-            </div>
-          </>
-        )}
-        {record.parentRecord && (
-          <>
-            <LineageAncestor
-              label="Produced From"
-              href={`/records/${record.parentRecord.slug}`}
-              title={record.parentRecord.title}
-              isCurrent={record.parentRecord.slug === currentSlug}
-            />
-            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
-              ↓
-            </div>
-          </>
-        )}
-        {(hasOrigin || hasParent) && (
-          <div className="flex flex-col mb-1 border-l-2 border-amber-300 pl-3 py-1">
-            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
-              This Record
-            </span>
-            <span className="text-sm font-semibold text-gray-900">
-              {record.title}
-            </span>
-          </div>
-        )}
-        {hasChildren && (
-          <>
-            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
-              ↓
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
-                Produced Records
-              </span>
-              <LineageList records={children} currentSlug={currentSlug} />
-            </div>
-          </>
-        )}
-      </div>
-      {hasVerification && (
-        <p className="mt-4 text-xs text-gray-400 italic">
-          Verification: {record.verificationNote}
-        </p>
-      )}
+      <LineageChain
+        ancestors={ancestors}
+        current={{ label: 'This Record', title: record.title }}
+        records={(record.childRecords ?? []) as LR[]}
+        verificationNote={record.verificationNote}
+        currentSlug={currentSlug}
+      />
     </div>
   );
 }
