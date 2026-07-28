@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SectionNarrator from '@/components/modules/SectionNarrator';
 
 export default function CollapsibleChapter({
   number,
@@ -14,6 +15,7 @@ export default function CollapsibleChapter({
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const sectionId = `chapter-${number}`;
 
   return (
     <section className="mb-4 border border-gray-200 rounded-xl overflow-hidden">
@@ -24,7 +26,7 @@ export default function CollapsibleChapter({
       >
         <div className="flex items-center gap-3">
           <span className="text-xs font-bold text-primary uppercase tracking-wide shrink-0">
-            {number}
+            Chapter {number}
           </span>
           <span className="font-bold text-gray-900">{title}</span>
         </div>
@@ -33,7 +35,10 @@ export default function CollapsibleChapter({
         </span>
       </button>
       {open && (
-        <div className="px-6 py-6 prose prose-gray max-w-none">{children}</div>
+        <div id={sectionId} className="px-6 py-6 prose prose-gray max-w-none">
+          <SectionNarrator sectionId={sectionId} />
+          {children}
+        </div>
       )}
     </section>
   );
