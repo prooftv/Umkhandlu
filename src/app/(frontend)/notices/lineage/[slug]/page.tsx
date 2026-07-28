@@ -62,17 +62,12 @@ function cap(s: string | null) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function RecordRow({
-  record,
-  depth = 0,
-}: {
-  record: LineageRecord;
-  depth?: number;
-}) {
+function RecordRow({ record }: { record: LineageRecord }) {
   const hasEvidence = record.evidence && record.evidence.length > 0;
+  const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
-    <div style={{ marginLeft: depth * 20 }}>
-      <div className="border-l-2 border-amber-200 pl-3 py-2 mb-1">
+    <div>
+      <div className="py-1.5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5">
@@ -115,13 +110,18 @@ function RecordRow({
           </div>
         </div>
       </div>
-      {record.childRecords?.map((child) => (
-        <RecordRow
-          key={child._id}
-          record={child as LineageRecord}
-          depth={depth + 1}
-        />
-      ))}
+      {hasChildren && (
+        <>
+          <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+            ↓
+          </span>
+          <div className="ml-3 border-l border-gray-100 pl-3 space-y-0">
+            {record.childRecords?.map((child) => (
+              <RecordRow key={child._id} record={child as LineageRecord} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -129,9 +129,9 @@ function RecordRow({
 function RecordSection({ records }: { records: LineageRecord[] }) {
   if (!records.length) return null;
   return (
-    <div className="space-y-0 mt-3">
+    <div className="border-l-2 border-amber-100 pl-3 space-y-2 mt-3">
       {records.map((r) => (
-        <RecordRow key={r._id} record={r} depth={0} />
+        <RecordRow key={r._id} record={r} />
       ))}
     </div>
   );

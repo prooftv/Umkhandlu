@@ -309,7 +309,10 @@ Permanent Institutional Memory`}
                 <div>
                   <span className="font-medium">📄 Minutes</span>
                   <span className="text-gray-400 ml-1">— 27/06/2026</span>
-                  <div className="border-l-2 border-amber-100 pl-3 mt-1 space-y-1">
+                  <span className="text-gray-300 text-sm leading-none block my-1 ml-1">
+                    ↓
+                  </span>
+                  <div className="ml-3 border-l border-gray-100 pl-3 space-y-1">
                     <div>
                       <span className="font-medium">
                         📄 Resolution — Petition for Recognition
