@@ -149,41 +149,44 @@ type ChildRecord = {
 
 function RecordChildNode({
   child,
+  prefix,
   currentSlug,
 }: {
   child: ChildRecord;
+  prefix: string;
   currentSlug: string;
 }) {
   const hasChildren = child.childRecords && child.childRecords.length > 0;
   return (
     <li className="list-none">
       <div className="py-1">
-        <VisitedLink
-          href={`/records/${child.slug}`}
-          isCurrent={child.slug === currentSlug}
-        >
-          {child.title}
-        </VisitedLink>
-        <p className="text-xs text-gray-400">
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-[10px] font-bold text-gray-300 shrink-0 tabular-nums">
+            {prefix}
+          </span>
+          <VisitedLink
+            href={`/records/${child.slug}`}
+            isCurrent={child.slug === currentSlug}
+          >
+            {child.title}
+          </VisitedLink>
+        </div>
+        <p className="text-xs text-gray-400 ml-5">
           {typeLabels[child.recordType ?? ''] || child.recordType}
           {child.status && ` · ${child.status}`}
         </p>
       </div>
       {hasChildren && (
-        <>
-          <span className="text-gray-300 text-sm leading-none my-1 ml-1">
-            ↓
-          </span>
-          <ul className="ml-3 border-l border-gray-100 pl-3 space-y-0">
-            {child.childRecords?.map((grandchild) => (
-              <RecordChildNode
-                key={grandchild._id}
-                child={grandchild}
-                currentSlug={currentSlug}
-              />
-            ))}
-          </ul>
-        </>
+        <ul className="ml-5 border-l border-gray-100 pl-3 space-y-0">
+          {child.childRecords?.map((grandchild, i) => (
+            <RecordChildNode
+              key={grandchild._id}
+              child={grandchild}
+              prefix={`${prefix}.${i + 1}`}
+              currentSlug={currentSlug}
+            />
+          ))}
+        </ul>
       )}
     </li>
   );
@@ -258,10 +261,11 @@ function RecordLineage({
                 Produced Records
               </span>
               <ul className="border-l-2 border-amber-100 pl-3 space-y-2">
-                {record.childRecords?.map((child) => (
+                {record.childRecords?.map((child, i) => (
                   <RecordChildNode
                     key={child._id}
                     child={child as ChildRecord}
+                    prefix={`${i + 1}`}
                     currentSlug={currentSlug}
                   />
                 ))}

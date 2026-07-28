@@ -62,7 +62,13 @@ function cap(s: string | null) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function RecordRow({ record }: { record: LineageRecord }) {
+function RecordRow({
+  record,
+  prefix,
+}: {
+  record: LineageRecord;
+  prefix: string;
+}) {
   const hasEvidence = record.evidence && record.evidence.length > 0;
   const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
@@ -116,8 +122,12 @@ function RecordRow({ record }: { record: LineageRecord }) {
             ↓
           </span>
           <div className="ml-3 border-l border-gray-100 pl-3 space-y-0">
-            {record.childRecords?.map((child) => (
-              <RecordRow key={child._id} record={child as LineageRecord} />
+            {record.childRecords?.map((child, i) => (
+              <RecordRow
+                key={child._id}
+                record={child as LineageRecord}
+                prefix={`${prefix}.${i + 1}`}
+              />
             ))}
           </div>
         </>
@@ -130,8 +140,8 @@ function RecordSection({ records }: { records: LineageRecord[] }) {
   if (!records.length) return null;
   return (
     <div className="border-l-2 border-amber-100 pl-3 space-y-2 mt-3">
-      {records.map((r) => (
-        <RecordRow key={r._id} record={r} />
+      {records.map((r, i) => (
+        <RecordRow key={r._id} record={r} prefix={`${i + 1}`} />
       ))}
     </div>
   );

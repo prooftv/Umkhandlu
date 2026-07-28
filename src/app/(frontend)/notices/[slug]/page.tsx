@@ -59,24 +59,29 @@ type AuditRecord = {
 
 function AuditNode({
   record,
-  depth = 0,
+  prefix,
   currentSlug,
 }: {
   record: AuditRecord;
-  depth?: number;
+  prefix: string;
   currentSlug?: string;
 }) {
   const hasChildren = record.childRecords && record.childRecords.length > 0;
   return (
     <div>
       <div className="py-1">
-        <VisitedLink
-          href={`/records/${record.slug}`}
-          isCurrent={record.slug === currentSlug}
-        >
-          {record.title}
-        </VisitedLink>
-        <p className="text-xs text-gray-400 mt-0.5">
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-[10px] font-bold text-gray-300 shrink-0 tabular-nums">
+            {prefix}
+          </span>
+          <VisitedLink
+            href={`/records/${record.slug}`}
+            isCurrent={record.slug === currentSlug}
+          >
+            {record.title}
+          </VisitedLink>
+        </div>
+        <p className="text-xs text-gray-400 mt-0.5 ml-5">
           {typeLabels[record.recordType || ''] || record.recordType}
           {record.status &&
             ` · ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
@@ -84,27 +89,22 @@ function AuditNode({
             ` · ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
         </p>
         {record.verificationNote && (
-          <p className="text-xs text-amber-700 italic mt-0.5">
+          <p className="text-xs text-amber-700 italic mt-0.5 ml-5">
             ✓ {record.verificationNote}
           </p>
         )}
       </div>
       {hasChildren && (
-        <>
-          <span className="text-gray-300 text-sm leading-none my-1 ml-1">
-            ↓
-          </span>
-          <div className="ml-3 border-l border-gray-100 pl-3">
-            {record.childRecords?.map((child) => (
-              <AuditNode
-                key={child._id}
-                record={child}
-                depth={depth + 1}
-                currentSlug={currentSlug}
-              />
-            ))}
-          </div>
-        </>
+        <div className="ml-5 border-l border-gray-100 pl-3">
+          {record.childRecords?.map((child, i) => (
+            <AuditNode
+              key={child._id}
+              record={child}
+              prefix={`${prefix}.${i + 1}`}
+              currentSlug={currentSlug}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
@@ -152,8 +152,13 @@ function NoticeLineage({
                 Produced Records
               </span>
               <div className="space-y-1">
-                {notice.producedRecords.map((record) => (
-                  <AuditNode key={record._id} record={record} depth={0} />
+                {notice.producedRecords.map((record, i) => (
+                  <AuditNode
+                    key={record._id}
+                    record={record}
+                    prefix={`${i + 1}`}
+                    currentSlug={undefined}
+                  />
                 ))}
               </div>
             </div>
