@@ -41,21 +41,7 @@ function fmt(date: string | null) {
   });
 }
 
-/** A single record row with optional nested children */
-export function LineageNode({
-  record,
-  depth = 0,
-  prefix,
-  currentSlug,
-  showEvidence = false,
-}: {
-  record: LineageRecord;
-  depth?: number;
-  prefix: string;
-  currentSlug?: string;
-  showEvidence?: boolean;
-}) {
-  const hasChildren = (record.childRecords?.length ?? 0) > 0;
+function RecordMeta({ record }: { record: LineageRecord }) {
   const meta = [
     typeLabels[record.recordType ?? ''] || record.recordType,
     record.status
@@ -65,11 +51,28 @@ export function LineageNode({
   ]
     .filter(Boolean)
     .join(' · ');
+  if (!meta) return null;
+  return <p className="text-xs text-gray-500 mt-0.5">{meta}</p>;
+}
+
+/** One record row + its nested children */
+function RecordRow({
+  record,
+  prefix,
+  currentSlug,
+  showEvidence,
+}: {
+  record: LineageRecord;
+  prefix: string;
+  currentSlug?: string;
+  showEvidence?: boolean;
+}) {
+  const hasChildren = (record.childRecords?.length ?? 0) > 0;
 
   return (
-    <div className={depth > 0 ? 'border-l-2 border-amber-400 pl-3 mt-1' : ''}>
-      <div className="flex items-start gap-2 py-1">
-        <span className="text-xs font-mono font-bold text-amber-500 shrink-0 pt-0.5 min-w-[2.5rem] text-right">
+    <div>
+      <div className="flex items-start gap-2 py-1.5">
+        <span className="text-xs font-mono font-bold text-amber-500 shrink-0 min-w-[2rem] text-right pt-0.5">
           {prefix}
         </span>
         <div className="flex-1 min-w-0">
@@ -79,15 +82,15 @@ export function LineageNode({
           >
             {record.title}
           </VisitedLink>
-          {meta && <p className="text-xs text-gray-500 mt-0.5">{meta}</p>}
+          <RecordMeta record={record} />
           {record.verificationNote && (
             <p className="text-xs text-amber-700 italic mt-0.5">
               ✓ {record.verificationNote}
             </p>
           )}
-          {showEvidence && record.evidence && record.evidence.length > 0 && (
+          {showEvidence && (record.evidence?.length ?? 0) > 0 && (
             <div className="mt-1 flex flex-wrap gap-2">
-              {record.evidence.map((e) => (
+              {record.evidence?.map((e) => (
                 <span key={e._key} className="text-xs text-blue-700">
                   {e.url ? (
                     <a href={e.url} target="_blank" rel="noopener noreferrer">
@@ -103,12 +106,11 @@ export function LineageNode({
         </div>
       </div>
       {hasChildren && (
-        <div className="ml-6">
+        <div className="ml-8 border-l-2 border-amber-300 pl-3">
           {record.childRecords?.map((child, i) => (
-            <LineageNode
+            <RecordRow
               key={child._id}
               record={child}
-              depth={depth + 1}
               prefix={`${prefix}.${i + 1}`}
               currentSlug={currentSlug}
               showEvidence={showEvidence}
@@ -120,7 +122,7 @@ export function LineageNode({
   );
 }
 
-/** Flat list of top-level records, each numbered */
+/** Numbered list of top-level records with nested children */
 export function LineageList({
   records,
   currentSlug,
@@ -134,10 +136,9 @@ export function LineageList({
   return (
     <div>
       {records.map((r, i) => (
-        <LineageNode
+        <RecordRow
           key={r._id}
           record={r}
-          depth={0}
           prefix={`${i + 1}`}
           currentSlug={currentSlug}
           showEvidence={showEvidence}
@@ -148,8 +149,9 @@ export function LineageList({
 }
 
 /**
- * Full vertical chain: ancestors (notices/records above) → current node → children.
- * All rendered as one continuous tree with a single left border rail.
+ * Full vertical chain rendered as one continuous tree.
+ * ancestors → current (highlighted) → produced records (numbered, nested)
+ * All rows share the same left rail.
  */
 export function LineageChain({
   ancestors,
@@ -165,20 +167,20 @@ export function LineageChain({
   currentSlug?: string;
 }) {
   return (
-    <div className="border-l-2 border-amber-400 pl-4 space-y-0">
-      {/* Ancestors */}
+    <div className="border-l-2 border-amber-400 pl-4">
+      {/* Ancestor rows */}
       {ancestors.map((a) => (
-        <div key={a.href} className="py-1">
-          <p className="text-[10px] text-gray-400 uppercase tracking-widest leading-none mb-0.5">
+        <div key={a.href} className="py-1.5">
+          <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-widest leading-none mb-1">
             {a.label}
           </p>
           <VisitedLink href={a.href}>{a.title}</VisitedLink>
         </div>
       ))}
 
-      {/* Current node — highlighted */}
-      <div className="py-1 border-l-2 border-amber-500 -ml-4 pl-3 bg-amber-50/50">
-        <p className="text-[10px] text-gray-400 uppercase tracking-widest leading-none mb-0.5">
+      {/* Current node — visually distinct */}
+      <div className="my-1 -ml-4 border-l-4 border-amber-500 pl-3 py-1.5 bg-amber-50">
+        <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-widest leading-none mb-1">
           {current.label}
         </p>
         <span className="text-sm font-semibold text-gray-900">
@@ -186,13 +188,17 @@ export function LineageChain({
         </span>
       </div>
 
-      {/* Children */}
+      {/* Produced records */}
       {records && records.length > 0 && (
         <div className="pt-1">
-          <p className="text-[10px] text-gray-400 uppercase tracking-widest leading-none mb-1">
+          <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-widest leading-none mb-1">
             Produced Records
           </p>
-          <LineageList records={records} currentSlug={currentSlug} />
+          <LineageList
+            records={records}
+            currentSlug={currentSlug}
+            showEvidence={false}
+          />
         </div>
       )}
 
@@ -205,7 +211,7 @@ export function LineageChain({
   );
 }
 
-/** Single ancestor row used standalone (kept for lineage certificate page) */
+/** Standalone ancestor row — used by lineage certificate page */
 export function LineageAncestor({
   label,
   href,
@@ -218,10 +224,10 @@ export function LineageAncestor({
   isCurrent?: boolean;
 }) {
   return (
-    <div className="flex flex-col py-1">
-      <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
+    <div className="py-1.5">
+      <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-widest leading-none mb-1">
         {label}
-      </span>
+      </p>
       <VisitedLink href={href} isCurrent={isCurrent}>
         {title}
       </VisitedLink>
