@@ -41,25 +41,6 @@ function fmt(date: string | null) {
   });
 }
 
-function NodeLabel({ prefix, type }: { prefix: string; type: string | null }) {
-  return (
-    <p className="text-xs text-gray-400 mt-0.5">
-      <span className="font-bold text-gray-300 tabular-nums mr-1.5">
-        {prefix}
-      </span>
-      {typeLabels[type ?? ''] || type}
-    </p>
-  );
-}
-
-function Connector() {
-  return (
-    <div className="text-gray-200 text-xs leading-none my-1 ml-1 select-none">
-      ↓
-    </div>
-  );
-}
-
 export function LineageNode({
   record,
   prefix,
@@ -72,61 +53,67 @@ export function LineageNode({
   showEvidence?: boolean;
 }) {
   const hasChildren = (record.childRecords?.length ?? 0) > 0;
+  const meta = [
+    typeLabels[record.recordType ?? ''] || record.recordType,
+    record.status
+      ? record.status.charAt(0).toUpperCase() + record.status.slice(1)
+      : null,
+    fmt(record.date),
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
   return (
-    <div>
-      <NodeLabel prefix={prefix} type={record.recordType} />
-      <div className="flex items-baseline gap-1.5">
-        <VisitedLink
-          href={`/records/${record.slug}`}
-          isCurrent={record.slug === currentSlug}
-        >
-          {record.title}
-        </VisitedLink>
-      </div>
-      {record.date && (
-        <p className="text-xs text-gray-400 ml-0">{fmt(record.date)}</p>
-      )}
-      {record.status && (
-        <p className="text-xs text-gray-400">
-          {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
-        </p>
-      )}
-      {record.verificationNote && (
-        <p className="text-xs text-amber-700 italic mt-0.5">
-          ✓ {record.verificationNote}
-        </p>
-      )}
-      {showEvidence && record.evidence && record.evidence.length > 0 && (
-        <div className="mt-1 flex flex-wrap gap-2">
-          {record.evidence.map((e) => (
-            <span key={e._key} className="text-xs text-blue-700">
-              {e.url ? (
-                <a href={e.url} target="_blank" rel="noopener noreferrer">
-                  📎 {e.title}
-                </a>
-              ) : (
-                <>📎 {e.title}</>
-              )}
-            </span>
-          ))}
-        </div>
-      )}
-      {hasChildren && (
-        <div className="ml-3 border-l border-gray-100 pl-3 mt-1">
-          {record.childRecords?.map((child, i) => (
-            <div key={child._id}>
-              {i > 0 && <Connector />}
-              <LineageNode
-                record={child}
-                prefix={`${prefix}.${i + 1}`}
-                currentSlug={currentSlug}
-                showEvidence={showEvidence}
-              />
+    <div className="py-1">
+      {/* prefix + link on same line */}
+      <div className="flex items-start gap-2">
+        <span className="text-xs font-mono font-bold text-amber-500 shrink-0 pt-0.5 min-w-[2rem] text-right">
+          {prefix}
+        </span>
+        <div className="flex-1 min-w-0">
+          <VisitedLink
+            href={`/records/${record.slug}`}
+            isCurrent={record.slug === currentSlug}
+          >
+            {record.title}
+          </VisitedLink>
+          {meta && <p className="text-xs text-gray-400 mt-0.5">{meta}</p>}
+          {record.verificationNote && (
+            <p className="text-xs text-amber-700 italic mt-0.5">
+              ✓ {record.verificationNote}
+            </p>
+          )}
+          {showEvidence && record.evidence && record.evidence.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-2">
+              {record.evidence.map((e) => (
+                <span key={e._key} className="text-xs text-blue-700">
+                  {e.url ? (
+                    <a href={e.url} target="_blank" rel="noopener noreferrer">
+                      📎 {e.title}
+                    </a>
+                  ) : (
+                    <>📎 {e.title}</>
+                  )}
+                </span>
+              ))}
             </div>
-          ))}
+          )}
+          {/* children indented under this node */}
+          {hasChildren && (
+            <div className="mt-2 ml-1 border-l-2 border-amber-200 pl-3 space-y-0">
+              {record.childRecords?.map((child, i) => (
+                <LineageNode
+                  key={child._id}
+                  record={child}
+                  prefix={`${prefix}.${i + 1}`}
+                  currentSlug={currentSlug}
+                  showEvidence={showEvidence}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -142,17 +129,15 @@ export function LineageList({
 }) {
   if (!records.length) return null;
   return (
-    <div className="border-l-2 border-amber-100 pl-3 space-y-0">
+    <div className="space-y-0">
       {records.map((r, i) => (
-        <div key={r._id}>
-          {i > 0 && <Connector />}
-          <LineageNode
-            record={r}
-            prefix={`${i + 1}`}
-            currentSlug={currentSlug}
-            showEvidence={showEvidence}
-          />
-        </div>
+        <LineageNode
+          key={r._id}
+          record={r}
+          prefix={`${i + 1}`}
+          currentSlug={currentSlug}
+          showEvidence={showEvidence}
+        />
       ))}
     </div>
   );

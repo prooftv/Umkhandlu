@@ -339,11 +339,11 @@ export const recordDetailQuery = defineQuery(`
     "originNotice": originNotice->{ title, "slug": slug.current, noticeType },
     "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },
     "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-      _id, title, "slug": slug.current, recordType, date, status,
+      _id, title, "slug": slug.current, recordType, date, status, verificationNote,
       "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-        _id, title, "slug": slug.current, recordType, date, status,
+        _id, title, "slug": slug.current, recordType, date, status, verificationNote,
         "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {
-          _id, title, "slug": slug.current, recordType, date, status
+          _id, title, "slug": slug.current, recordType, date, status, verificationNote
         }
       }
     },
