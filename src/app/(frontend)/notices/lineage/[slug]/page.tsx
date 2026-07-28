@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { LineageRecord as LR } from '@/components/modules/LineageNode';
+import { LineageList } from '@/components/modules/LineageNode';
 import PrintButton from '@/components/modules/PrintButton';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { noticeLineageQuery } from '@/lib/sanity/queries/queries';
@@ -10,43 +12,13 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-type EvidenceItem = { _key: string; title: string | null; url: string | null };
-
-type LineageRecord = {
-  _id: string;
-  title: string | null;
-  slug: string | null;
-  recordType: string | null;
-  date: string | null;
-  status: string | null;
-  summary: string | null;
-  verificationNote?: string | null;
-  evidence?: EvidenceItem[] | null;
-  childRecords?: LineageRecord[] | null;
-};
-
 type FollowUpNotice = {
   _id: string;
   title: string | null;
   slug: string | null;
   noticeType: string | null;
   date: string | null;
-  producedRecords?: LineageRecord[] | null;
-};
-
-const typeLabels: Record<string, string> = {
-  agenda: 'Agenda',
-  minutes: 'Meeting Minutes',
-  resolution: 'Resolution',
-  'land-allocation': 'Land Allocation',
-  'dispute-resolution': 'Dispute Resolution',
-  'public-notice': 'Public Notice',
-  policy: 'Policy',
-  report: 'Report',
-  'infrastructure-concern': 'Infrastructure Concern',
-  'project-outcome': 'Project Outcome',
-  'community-decision': 'Community Decision',
-  'external-resource': 'External Resource',
+  producedRecords?: LR[] | null;
 };
 
 function fmt(date: string | null) {
@@ -61,91 +33,6 @@ function fmt(date: string | null) {
 function cap(s: string | null) {
   if (!s) return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function RecordRow({
-  record,
-  prefix,
-}: {
-  record: LineageRecord;
-  prefix: string;
-}) {
-  const hasEvidence = record.evidence && record.evidence.length > 0;
-  const hasChildren = record.childRecords && record.childRecords.length > 0;
-  return (
-    <div>
-      <div className="py-1.5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5">
-              {typeLabels[record.recordType || ''] || record.recordType}
-            </p>
-            <p className="text-sm font-semibold text-gray-900">
-              {record.title}
-            </p>
-            {record.summary && (
-              <p className="text-xs text-gray-500 mt-0.5">{record.summary}</p>
-            )}
-            {record.verificationNote && (
-              <p className="text-xs text-amber-700 mt-0.5 italic">
-                ✓ {record.verificationNote}
-              </p>
-            )}
-            {hasEvidence && (
-              <div className="mt-1 flex flex-wrap gap-2">
-                {record.evidence?.map((e) => (
-                  <span key={e._key} className="text-xs text-blue-700">
-                    {e.url ? (
-                      <a href={e.url} target="_blank" rel="noopener noreferrer">
-                        📎 {e.title}
-                      </a>
-                    ) : (
-                      <>📎 {e.title}</>
-                    )}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="text-right shrink-0">
-            {record.status && (
-              <span className="text-xs text-gray-500 block">
-                {cap(record.status)}
-              </span>
-            )}
-            <span className="text-xs text-gray-400">{fmt(record.date)}</span>
-          </div>
-        </div>
-      </div>
-      {hasChildren && (
-        <>
-          <span className="text-gray-300 text-sm leading-none my-1 ml-1">
-            ↓
-          </span>
-          <div className="ml-3 border-l border-gray-100 pl-3 space-y-0">
-            {record.childRecords?.map((child, i) => (
-              <RecordRow
-                key={child._id}
-                record={child as LineageRecord}
-                prefix={`${prefix}.${i + 1}`}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-function RecordSection({ records }: { records: LineageRecord[] }) {
-  if (!records.length) return null;
-  return (
-    <div className="border-l-2 border-amber-100 pl-3 space-y-2 mt-3">
-      {records.map((r, i) => (
-        <RecordRow key={r._id} record={r} prefix={`${i + 1}`} />
-      ))}
-    </div>
-  );
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -179,7 +66,7 @@ export default async function NoticeLineagePage(props: Props) {
     year: 'numeric',
   });
 
-  const producedRecords = (notice.producedRecords ?? []) as LineageRecord[];
+  const producedRecords = (notice.producedRecords ?? []) as LR[];
   const followUpNotices = (notice.followUpNotices ?? []) as FollowUpNotice[];
   const originNotice = notice.originNotice as {
     title: string | null;
@@ -191,16 +78,14 @@ export default async function NoticeLineagePage(props: Props) {
   const totalRecords =
     countRecords(producedRecords) +
     followUpNotices.reduce(
-      (acc, fu) =>
-        acc + countRecords((fu.producedRecords ?? []) as LineageRecord[]),
+      (acc, fu) => acc + countRecords((fu.producedRecords ?? []) as LR[]),
       0
     );
 
   const totalEvidence =
     countEvidence(producedRecords) +
     followUpNotices.reduce(
-      (acc, fu) =>
-        acc + countEvidence((fu.producedRecords ?? []) as LineageRecord[]),
+      (acc, fu) => acc + countEvidence((fu.producedRecords ?? []) as LR[]),
       0
     );
 
@@ -299,7 +184,7 @@ export default async function NoticeLineagePage(props: Props) {
           <h3 className="text-sm font-bold uppercase tracking-wide text-gray-700 mb-2">
             Records Produced by This Notice
           </h3>
-          <RecordSection records={producedRecords} />
+          <LineageList records={producedRecords} showEvidence />
         </section>
       )}
 
@@ -316,7 +201,7 @@ export default async function NoticeLineagePage(props: Props) {
             </p>
           </div>
           {fu.producedRecords && fu.producedRecords.length > 0 && (
-            <RecordSection records={fu.producedRecords as LineageRecord[]} />
+            <LineageList records={fu.producedRecords as LR[]} showEvidence />
           )}
         </section>
       ))}
@@ -353,20 +238,19 @@ export default async function NoticeLineagePage(props: Props) {
   );
 }
 
-function countRecords(records: LineageRecord[]): number {
+function countRecords(records: LR[]): number {
   return records.reduce(
-    (acc, r) =>
-      acc + 1 + countRecords((r.childRecords ?? []) as LineageRecord[]),
+    (acc, r) => acc + 1 + countRecords((r.childRecords ?? []) as LR[]),
     0
   );
 }
 
-function countEvidence(records: LineageRecord[]): number {
+function countEvidence(records: LR[]): number {
   return records.reduce(
     (acc, r) =>
       acc +
       (r.evidence?.length ?? 0) +
-      countEvidence((r.childRecords ?? []) as LineageRecord[]),
+      countEvidence((r.childRecords ?? []) as LR[]),
     0
   );
 }

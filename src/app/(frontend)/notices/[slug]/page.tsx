@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import type { LineageRecord as LR } from '@/components/modules/LineageNode';
+import { LineageList } from '@/components/modules/LineageNode';
 import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
@@ -32,85 +34,6 @@ type OriginNotice = {
   date: string | null;
 };
 
-const typeLabels: Record<string, string> = {
-  agenda: 'Agenda',
-  minutes: 'Meeting Minutes',
-  resolution: 'Resolution',
-  'land-allocation': 'Land Allocation',
-  'dispute-resolution': 'Dispute Resolution',
-  'public-notice': 'Public Notice',
-  policy: 'Policy',
-  report: 'Report',
-  'infrastructure-concern': 'Infrastructure Concern',
-  'project-outcome': 'Project Outcome',
-  'community-decision': 'Community Decision',
-  'external-resource': 'External Resource',
-};
-
-type AuditRecord = {
-  _id: string;
-  title: string | null;
-  slug: string | null;
-  recordType: string | null;
-  date: string | null;
-  status: string | null;
-  verificationNote?: string | null;
-  childRecords?: AuditRecord[] | null;
-};
-
-function AuditNode({
-  record,
-  prefix,
-  currentSlug,
-}: {
-  record: AuditRecord;
-  prefix: string;
-  currentSlug?: string;
-}) {
-  const hasChildren = record.childRecords && record.childRecords.length > 0;
-  return (
-    <div>
-      <div className="py-1">
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-[10px] font-bold text-gray-300 shrink-0 tabular-nums">
-            {prefix}
-          </span>
-          <VisitedLink
-            href={`/records/${record.slug}`}
-            isCurrent={record.slug === currentSlug}
-          >
-            {record.title}
-          </VisitedLink>
-        </div>
-        <p className="text-xs text-gray-400 mt-0.5 ml-5">
-          {typeLabels[record.recordType || ''] || record.recordType}
-          {record.status &&
-            ` · ${record.status.charAt(0).toUpperCase()}${record.status.slice(1)}`}
-          {record.date &&
-            ` · ${new Date(record.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-        </p>
-        {record.verificationNote && (
-          <p className="text-xs text-amber-700 italic mt-0.5 ml-5">
-            ✓ {record.verificationNote}
-          </p>
-        )}
-      </div>
-      {hasChildren && (
-        <div className="ml-5 border-l border-gray-100 pl-3">
-          {record.childRecords?.map((child, i) => (
-            <AuditNode
-              key={child._id}
-              record={child}
-              prefix={`${prefix}.${i + 1}`}
-              currentSlug={currentSlug}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function NoticeLineage({
   notice,
   followUpNotices,
@@ -119,7 +42,7 @@ function NoticeLineage({
     title: string | null;
     noticeType: string | null;
     date: string | null;
-    producedRecords?: AuditRecord[] | null;
+    producedRecords?: LR[] | null;
   };
   followUpNotices: FollowUpNotice[] | null;
 }) {
@@ -135,7 +58,7 @@ function NoticeLineage({
         Governance Record Lineage
       </p>
       <div className="flex flex-col gap-0">
-        <div className="flex flex-col">
+        <div className="flex flex-col mb-1">
           <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
             This Notice
           </span>
@@ -145,31 +68,22 @@ function NoticeLineage({
         </div>
         {notice.producedRecords && notice.producedRecords.length > 0 && (
           <>
-            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
               ↓
-            </span>
+            </div>
             <div className="flex flex-col">
               <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
                 Produced Records
               </span>
-              <div className="space-y-1">
-                {notice.producedRecords.map((record, i) => (
-                  <AuditNode
-                    key={record._id}
-                    record={record}
-                    prefix={`${i + 1}`}
-                    currentSlug={undefined}
-                  />
-                ))}
-              </div>
+              <LineageList records={notice.producedRecords} />
             </div>
           </>
         )}
         {followUpNotices && followUpNotices.length > 0 && (
           <>
-            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
               ↓
-            </span>
+            </div>
             <div className="flex flex-col">
               <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
                 Follow-up Notices

@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import type { LineageRecord as LR } from '@/components/modules/LineageNode';
+import { LineageAncestor, LineageList } from '@/components/modules/LineageNode';
 import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
-import VisitedLink from '@/components/modules/VisitedLink';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
@@ -21,6 +22,15 @@ type RecordData = NonNullable<
   Awaited<ReturnType<typeof sanityFetch<typeof recordDetailQuery>>>['data']
 >;
 
+const statusLabels: Record<string, { label: string; variant: string }> = {
+  adopted: { label: '✓ Adopted', variant: 'default' },
+  approved: { label: '✓ Approved', variant: 'default' },
+  pending: { label: '⏳ Pending', variant: 'secondary' },
+  open: { label: '◯ Open', variant: 'secondary' },
+  rejected: { label: '✗ Rejected', variant: 'destructive' },
+  resolved: { label: '✓ Resolved', variant: 'default' },
+};
+
 const typeLabels: Record<string, string> = {
   agenda: 'Agenda',
   minutes: 'Meeting Minutes',
@@ -34,15 +44,6 @@ const typeLabels: Record<string, string> = {
   'project-outcome': 'Project Outcome',
   'community-decision': 'Community Decision',
   'external-resource': 'External Resource',
-};
-
-const statusLabels: Record<string, { label: string; variant: string }> = {
-  adopted: { label: '✓ Adopted', variant: 'default' },
-  approved: { label: '✓ Approved', variant: 'default' },
-  pending: { label: '⏳ Pending', variant: 'secondary' },
-  open: { label: '◯ Open', variant: 'secondary' },
-  rejected: { label: '✗ Rejected', variant: 'destructive' },
-  resolved: { label: '✓ Resolved', variant: 'default' },
 };
 
 function RecordHeader({ record }: { record: RecordData }) {
@@ -138,61 +139,6 @@ function RecordMeta({ record }: { record: RecordData }) {
   );
 }
 
-type ChildRecord = {
-  _id: string;
-  title: string | null;
-  slug: string | null;
-  recordType: string | null;
-  date: string | null;
-  status: string | null;
-  childRecords?: ChildRecord[] | null;
-};
-
-function RecordChildNode({
-  child,
-  prefix,
-  currentSlug,
-}: {
-  child: ChildRecord;
-  prefix: string;
-  currentSlug: string;
-}) {
-  const hasChildren = child.childRecords && child.childRecords.length > 0;
-  return (
-    <li className="list-none">
-      <div className="py-1">
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-[10px] font-bold text-gray-300 shrink-0 tabular-nums">
-            {prefix}
-          </span>
-          <VisitedLink
-            href={`/records/${child.slug}`}
-            isCurrent={child.slug === currentSlug}
-          >
-            {child.title}
-          </VisitedLink>
-        </div>
-        <p className="text-xs text-gray-400 ml-5">
-          {typeLabels[child.recordType ?? ''] || child.recordType}
-          {child.status && ` · ${child.status}`}
-        </p>
-      </div>
-      {hasChildren && (
-        <ul className="ml-5 border-l border-gray-100 pl-3 space-y-0">
-          {child.childRecords?.map((grandchild, i) => (
-            <RecordChildNode
-              key={grandchild._id}
-              child={grandchild}
-              prefix={`${prefix}.${i + 1}`}
-              currentSlug={currentSlug}
-            />
-          ))}
-        </ul>
-      )}
-    </li>
-  );
-}
-
 function RecordLineage({
   record,
   currentSlug,
@@ -207,6 +153,8 @@ function RecordLineage({
 
   if (!hasOrigin && !hasParent && !hasChildren && !hasVerification) return null;
 
+  const children = (record.childRecords ?? []) as LR[];
+
   return (
     <div className="mt-10 pt-8 border-t border-gray-100 mb-8">
       <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
@@ -214,36 +162,32 @@ function RecordLineage({
       </p>
       <div className="flex flex-col gap-0">
         {record.originNotice && (
-          <div className="flex flex-col">
-            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
-              Origin Notice
-            </span>
-            <VisitedLink href={`/notices/${record.originNotice.slug}`}>
-              {record.originNotice.title}
-            </VisitedLink>
-            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+          <>
+            <LineageAncestor
+              label="Origin Notice"
+              href={`/notices/${record.originNotice.slug}`}
+              title={record.originNotice.title}
+            />
+            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
               ↓
-            </span>
-          </div>
+            </div>
+          </>
         )}
         {record.parentRecord && (
-          <div className="flex flex-col">
-            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
-              Produced From
-            </span>
-            <VisitedLink
+          <>
+            <LineageAncestor
+              label="Produced From"
               href={`/records/${record.parentRecord.slug}`}
+              title={record.parentRecord.title}
               isCurrent={record.parentRecord.slug === currentSlug}
-            >
-              {record.parentRecord.title}
-            </VisitedLink>
-            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+            />
+            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
               ↓
-            </span>
-          </div>
+            </div>
+          </>
         )}
         {(hasOrigin || hasParent) && (
-          <div className="flex flex-col">
+          <div className="flex flex-col mb-1">
             <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
               This Record
             </span>
@@ -254,23 +198,14 @@ function RecordLineage({
         )}
         {hasChildren && (
           <>
-            <span className="text-gray-300 text-sm leading-none my-1 ml-1">
+            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
               ↓
-            </span>
+            </div>
             <div className="flex flex-col">
               <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
                 Produced Records
               </span>
-              <ul className="border-l-2 border-amber-100 pl-3 space-y-2">
-                {record.childRecords?.map((child, i) => (
-                  <RecordChildNode
-                    key={child._id}
-                    child={child as ChildRecord}
-                    prefix={`${i + 1}`}
-                    currentSlug={currentSlug}
-                  />
-                ))}
-              </ul>
+              <LineageList records={children} currentSlug={currentSlug} />
             </div>
           </>
         )}
