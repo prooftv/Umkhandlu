@@ -168,7 +168,7 @@ function RecordLineage({
               href={`/notices/${record.originNotice.slug}`}
               title={record.originNotice.title}
             />
-            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
+            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
               ↓
             </div>
           </>
@@ -181,24 +181,24 @@ function RecordLineage({
               title={record.parentRecord.title}
               isCurrent={record.parentRecord.slug === currentSlug}
             />
-            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
+            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
               ↓
             </div>
           </>
         )}
         {(hasOrigin || hasParent) && (
-          <div className="flex flex-col mb-1">
+          <div className="flex flex-col mb-1 border-l-2 border-amber-300 pl-3 py-1">
             <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
               This Record
             </span>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-semibold text-gray-900">
               {record.title}
             </span>
           </div>
         )}
         {hasChildren && (
           <>
-            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
+            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
               ↓
             </div>
             <div className="flex flex-col">

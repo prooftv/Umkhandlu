@@ -100,7 +100,7 @@ export function LineageNode({
           )}
           {/* children indented under this node */}
           {hasChildren && (
-            <div className="mt-2 ml-1 border-l-2 border-amber-200 pl-3 space-y-0">
+            <div className="mt-2 ml-1 border-l-2 border-amber-400 pl-3 space-y-0">
               {record.childRecords?.map((child, i) => (
                 <LineageNode
                   key={child._id}

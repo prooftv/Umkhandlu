@@ -68,7 +68,7 @@ function NoticeLineage({
         </div>
         {notice.producedRecords && notice.producedRecords.length > 0 && (
           <>
-            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
+            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
               ↓
             </div>
             <div className="flex flex-col">
@@ -81,7 +81,7 @@ function NoticeLineage({
         )}
         {followUpNotices && followUpNotices.length > 0 && (
           <>
-            <div className="text-gray-200 text-xs leading-none my-1 ml-1">
+            <div className="text-amber-400 text-sm leading-none my-1 ml-1">
               ↓
             </div>
             <div className="flex flex-col">
