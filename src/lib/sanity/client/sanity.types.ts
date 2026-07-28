@@ -1131,6 +1131,10 @@
               },
               {
                 type: 'string',
+                value: 'agenda',
+              },
+              {
+                type: 'string',
                 value: 'minutes',
               },
               {
@@ -3444,6 +3448,10 @@
         value: {
           type: 'union',
           of: [
+            {
+              type: 'string',
+              value: 'agenda',
+            },
             {
               type: 'string',
               value: 'minutes',

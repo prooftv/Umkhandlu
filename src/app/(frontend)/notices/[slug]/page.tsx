@@ -33,6 +33,7 @@ type OriginNotice = {
 };
 
 const typeLabels: Record<string, string> = {
+  agenda: 'Agenda',
   minutes: 'Meeting Minutes',
   resolution: 'Resolution',
   'land-allocation': 'Land Allocation',

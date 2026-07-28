@@ -27,6 +27,7 @@ export default defineType({
       type: 'string',
       options: {
         list: [
+          { title: 'Agenda', value: 'agenda' },
           { title: 'Meeting Minutes', value: 'minutes' },
           { title: 'Resolution', value: 'resolution' },
           { title: 'Land Allocation', value: 'land-allocation' },

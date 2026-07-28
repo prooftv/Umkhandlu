@@ -25,7 +25,7 @@ export async function sendToWebhook(
   const url = await getWebhookUrl();
 
   if (!url) {
-    console.log(`[${type}] No webhook configured. Data:`, data);
+    console.log(`[webhook] No webhook configured.`);
     return true;
   }
 
@@ -40,8 +40,8 @@ export async function sendToWebhook(
       }),
     });
     return response.ok;
-  } catch (error) {
-    console.error(`[${type}] Webhook delivery failed:`, error);
+  } catch (_error) {
+    console.error('[webhook] Webhook delivery failed');
     return false;
   }
 }
