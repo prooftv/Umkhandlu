@@ -211,12 +211,18 @@ export default async function NoticePage(props: Props) {
   const lineageTab = (
     <>
       <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col gap-2">
         <Link
           href={`/notices/lineage/${slug}`}
           className="text-sm text-primary font-medium hover:underline"
         >
           🖸 Print Lineage Certificate →
+        </Link>
+        <Link
+          href={`/notices/journey/${slug}`}
+          className="text-sm text-primary font-medium hover:underline"
+        >
+          🗺 Print Journey Map →
         </Link>
       </div>
     </>

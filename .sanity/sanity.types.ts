@@ -187,7 +187,7 @@ export type RichText = {
 export type RecordList = {
   _type: "recordList";
   heading?: string;
-  filterType?: "all" | "minutes" | "resolution" | "land-allocation" | "dispute-resolution" | "public-notice" | "policy" | "report" | "external-resource";
+  filterType?: "all" | "agenda" | "minutes" | "resolution" | "land-allocation" | "dispute-resolution" | "public-notice" | "policy" | "report" | "external-resource";
   limit?: number;
 };
 
@@ -526,11 +526,11 @@ export type Record = {
   _rev: string;
   title?: string;
   slug?: Slug;
-  recordType?: "minutes" | "resolution" | "land-allocation" | "dispute-resolution" | "public-notice" | "policy" | "report" | "project-outcome" | "community-decision" | "external-resource";
+  recordType?: "agenda" | "minutes" | "resolution" | "land-allocation" | "dispute-resolution" | "public-notice" | "policy" | "report" | "infrastructure-concern" | "project-outcome" | "community-decision" | "external-resource";
   date?: string;
   summary?: string;
   statusNote?: string;
-  status?: "approved" | "pending" | "rejected" | "resolved";
+  status?: "adopted" | "approved" | "pending" | "open" | "rejected" | "resolved";
   approvedBy?: {
     _ref: string;
     _type: "reference";
@@ -656,6 +656,12 @@ export type Notice = {
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "campaign";
+  };
+  originNotice?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "notice";
   };
 };
 
@@ -3104,17 +3110,17 @@ export type HomePageQueryResult = {
     _key: string;
     _type: "recordList";
     heading: string | null;
-    filterType: "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
+    filterType: "agenda" | "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
     limit: number | null;
     records: Array<{
       _id: string;
       _type: "record";
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       date: string | null;
       summary: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
       approvedBy: {
         firstName: string | null;
         lastName: string | null;
@@ -3135,7 +3141,7 @@ export type HomePageQueryResult = {
       parentRecord: {
         title: string | null;
         slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       } | null;
     }>;
   } | {
@@ -4778,17 +4784,17 @@ export type BlogPageQueryResult = {
     _key: string;
     _type: "recordList";
     heading: string | null;
-    filterType: "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
+    filterType: "agenda" | "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
     limit: number | null;
     records: Array<{
       _id: string;
       _type: "record";
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       date: string | null;
       summary: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
       approvedBy: {
         firstName: string | null;
         lastName: string | null;
@@ -4809,7 +4815,7 @@ export type BlogPageQueryResult = {
       parentRecord: {
         title: string | null;
         slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       } | null;
     }>;
   } | {
@@ -6450,17 +6456,17 @@ export type GetPageQueryResult = {
     _key: string;
     _type: "recordList";
     heading: string | null;
-    filterType: "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
+    filterType: "agenda" | "all" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "public-notice" | "report" | "resolution" | null;
     limit: number | null;
     records: Array<{
       _id: string;
       _type: "record";
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       date: string | null;
       summary: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
       approvedBy: {
         firstName: string | null;
         lastName: string | null;
@@ -6481,7 +6487,7 @@ export type GetPageQueryResult = {
       parentRecord: {
         title: string | null;
         slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       } | null;
     }>;
   } | {
@@ -7280,10 +7286,10 @@ export type AreaDetailQueryResult = {
     _type: "record";
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
     date: string | null;
     summary: string | null;
-    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
     approvedBy: {
       firstName: string | null;
       lastName: string | null;
@@ -7304,7 +7310,7 @@ export type AreaDetailQueryResult = {
     parentRecord: {
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
     } | null;
   }>;
   campaigns: Array<{
@@ -7881,39 +7887,50 @@ export type NoticeDetailQueryResult = {
     campaignType: "activation" | "ad" | "csr" | null;
     status: "active" | "approved" | "completed" | "draft" | "reported" | null;
   } | null;
-  originNotice: null;
-  followUpNotices: Array<never>;
+  originNotice: {
+    title: string | null;
+    slug: string | null;
+    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    date: string | null;
+  } | null;
+  followUpNotices: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    date: string | null;
+  }>;
   producedRecords: Array<{
     _id: string;
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
     date: string | null;
-    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
     verificationNote: string | null;
     childRecords: Array<{
       _id: string;
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       date: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
       verificationNote: string | null;
       childRecords: Array<{
         _id: string;
         title: string | null;
         slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
         date: string | null;
-        status: "approved" | "pending" | "rejected" | "resolved" | null;
+        status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
         verificationNote: string | null;
         childRecords: Array<{
           _id: string;
           title: string | null;
           slug: string | null;
-          recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+          recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
           date: string | null;
-          status: "approved" | "pending" | "rejected" | "resolved" | null;
+          status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
           verificationNote: string | null;
         }>;
       }>;
@@ -7924,9 +7941,10 @@ export type NoticeDetailQueryResult = {
 // Query: *[_type == "notice" && defined(slug.current)][0..$limit].slug.current
 export type NoticeSlugsResult = Array<string | null>;
 // Variable: noticeLineageQuery
-// Query: *[_type == "notice" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    noticeType,    date,    excerpt,    "relatedArea": relatedArea->{ name, "slug": slug.current },    "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },    "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, noticeType, date,      "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,        evidence[]{ _key, title, "url": asset->url },        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status, summary,          evidence[]{ _key, title, "url": asset->url }        }      }    },    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,      evidence[]{ _key, title, "url": asset->url },      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status, summary,        evidence[]{ _key, title, "url": asset->url },        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status, summary,          evidence[]{ _key, title, "url": asset->url }        }      }    }  }
+// Query: *[_type == "notice" && slug.current == $slug][0]{    _id,    _rev,    title,    "slug": slug.current,    noticeType,    date,    excerpt,    "relatedArea": relatedArea->{ name, "slug": slug.current },    "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },    "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, noticeType, date,      "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,        evidence[]{ _key, title, "url": asset->url },        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status, summary,          evidence[]{ _key, title, "url": asset->url }        }      }    },    "producedRecords": *[_type == "record" && originNotice._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date, status, summary, verificationNote,      evidence[]{ _key, title, "url": asset->url },      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status, summary,        evidence[]{ _key, title, "url": asset->url },        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status, summary,          evidence[]{ _key, title, "url": asset->url }        }      }    }  }
 export type NoticeLineageQueryResult = {
   _id: string;
+  _rev: string;
   title: string | null;
   slug: string | null;
   noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
@@ -7936,15 +7954,55 @@ export type NoticeLineageQueryResult = {
     name: string | null;
     slug: string | null;
   } | null;
-  originNotice: null;
-  followUpNotices: Array<never>;
+  originNotice: {
+    title: string | null;
+    slug: string | null;
+    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    date: string | null;
+  } | null;
+  followUpNotices: Array<{
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    noticeType: "alert" | "announcement" | "employment" | "meeting" | "opportunity" | "project-update" | "resolution" | "smme" | null;
+    date: string | null;
+    producedRecords: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      date: string | null;
+      status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
+      summary: string | null;
+      verificationNote: string | null;
+      evidence: Array<{
+        _key: string;
+        title: string | null;
+        url: string | null;
+      }> | null;
+      childRecords: Array<{
+        _id: string;
+        title: string | null;
+        slug: string | null;
+        recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        date: string | null;
+        status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
+        summary: string | null;
+        evidence: Array<{
+          _key: string;
+          title: string | null;
+          url: string | null;
+        }> | null;
+      }>;
+    }>;
+  }>;
   producedRecords: Array<{
     _id: string;
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
     date: string | null;
-    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
     summary: string | null;
     verificationNote: string | null;
     evidence: Array<{
@@ -7956,9 +8014,9 @@ export type NoticeLineageQueryResult = {
       _id: string;
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       date: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
       summary: string | null;
       evidence: Array<{
         _key: string;
@@ -7969,9 +8027,9 @@ export type NoticeLineageQueryResult = {
         _id: string;
         title: string | null;
         slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
         date: string | null;
-        status: "approved" | "pending" | "rejected" | "resolved" | null;
+        status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
         summary: string | null;
         evidence: Array<{
           _key: string;
@@ -8529,15 +8587,15 @@ export type CampaignDetailQueryResult = {
 // Query: *[_type == "campaign" && defined(slug.current)][0..$limit].slug.current
 export type CampaignSlugsResult = Array<string | null>;
 // Variable: recordDetailQuery
-// Query: *[_type == "record" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    recordType,    date,    summary,    status,    "approvedBy": approvedBy->{ firstName, lastName, role, "slug": slug.current },    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    evidence[]{ _key, title, "url": asset->url },    externalUrl,    source,    verificationNote,    "originNotice": originNotice->{ title, "slug": slug.current, noticeType },    "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },    "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date, status,      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status,        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status        }      }    },    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }  }
+// Query: *[_type == "record" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    recordType,    date,    summary,    status,    "approvedBy": approvedBy->{ firstName, lastName, role, "slug": slug.current },    content[]{ ..., markDefs[]{ ..., ...customLink{   _type,  type,  openInNewTab,  external,  href,  internal->{    _type,    _id,    "slug": slug.current  }, } } },    evidence[]{ _key, title, "url": asset->url },    externalUrl,    source,    verificationNote,    "originNotice": originNotice->{ title, "slug": slug.current, noticeType },    "parentRecord": parentRecord->{ title, "slug": slug.current, recordType },    "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {      _id, title, "slug": slug.current, recordType, date, status, verificationNote,      "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {        _id, title, "slug": slug.current, recordType, date, status, verificationNote,        "childRecords": *[_type == "record" && parentRecord._ref == ^._id] | order(date asc) {          _id, title, "slug": slug.current, recordType, date, status, verificationNote        }      }    },    "relatedArea": relatedArea->{ name, "slug": slug.current },    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }  }
 export type RecordDetailQueryResult = {
   _id: string;
   title: string | null;
   slug: string | null;
-  recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+  recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
   date: string | null;
   summary: string | null;
-  status: "approved" | "pending" | "rejected" | "resolved" | null;
+  status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
   approvedBy: {
     firstName: string | null;
     lastName: string | null;
@@ -8616,29 +8674,32 @@ export type RecordDetailQueryResult = {
   parentRecord: {
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
   } | null;
   childRecords: Array<{
     _id: string;
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
     date: string | null;
-    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
+    verificationNote: string | null;
     childRecords: Array<{
       _id: string;
       title: string | null;
       slug: string | null;
-      recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+      recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
       date: string | null;
-      status: "approved" | "pending" | "rejected" | "resolved" | null;
+      status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
+      verificationNote: string | null;
       childRecords: Array<{
         _id: string;
         title: string | null;
         slug: string | null;
-        recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+        recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
         date: string | null;
-        status: "approved" | "pending" | "rejected" | "resolved" | null;
+        status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
+        verificationNote: string | null;
       }>;
     }>;
   }>;
@@ -8662,10 +8723,10 @@ export type RecordListPageQueryResult = Array<{
   _id: string;
   title: string | null;
   slug: string | null;
-  recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+  recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
   date: string | null;
   summary: string | null;
-  status: "approved" | "pending" | "rejected" | "resolved" | null;
+  status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
   relatedArea: {
     name: string | null;
     slug: string | null;
@@ -8679,10 +8740,10 @@ export type RecordsArchiveQueryResult = {
     _id: string;
     title: string | null;
     slug: string | null;
-    recordType: "community-decision" | "dispute-resolution" | "external-resource" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
+    recordType: "agenda" | "community-decision" | "dispute-resolution" | "external-resource" | "infrastructure-concern" | "land-allocation" | "minutes" | "policy" | "project-outcome" | "public-notice" | "report" | "resolution" | null;
     date: string | null;
     summary: string | null;
-    status: "approved" | "pending" | "rejected" | "resolved" | null;
+    status: "adopted" | "approved" | "open" | "pending" | "rejected" | "resolved" | null;
     relatedArea: {
       name: string | null;
       slug: string | null;
@@ -8840,12 +8901,12 @@ declare module "@sanity/client" {
     "\n  *[_type == \"program\" && defined(slug.current)][0..$limit].slug.current\n": ProgramSlugsResult;
     "\n  *[_type == \"notice\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    date,\n    excerpt,\n    image,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    pinned,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current, campaignType, status },\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType, date },\n    \"followUpNotices\": *[_type == \"notice\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, noticeType, date\n    },\n    \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status, verificationNote,\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, verificationNote,\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, verificationNote,\n          \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n            _id, title, \"slug\": slug.current, recordType, date, status, verificationNote\n          }\n        }\n      }\n    }\n  }\n": NoticeDetailQueryResult;
     "\n  *[_type == \"notice\" && defined(slug.current)][0..$limit].slug.current\n": NoticeSlugsResult;
-    "\n  *[_type == \"notice\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    date,\n    excerpt,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType, date },\n    \"followUpNotices\": *[_type == \"notice\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, noticeType, date,\n      \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, summary, verificationNote,\n        evidence[]{ _key, title, \"url\": asset->url },\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, summary,\n          evidence[]{ _key, title, \"url\": asset->url }\n        }\n      }\n    },\n    \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status, summary, verificationNote,\n      evidence[]{ _key, title, \"url\": asset->url },\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, summary,\n        evidence[]{ _key, title, \"url\": asset->url },\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, summary,\n          evidence[]{ _key, title, \"url\": asset->url }\n        }\n      }\n    }\n  }\n": NoticeLineageQueryResult;
+    "\n  *[_type == \"notice\" && slug.current == $slug][0]{\n    _id,\n    _rev,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    date,\n    excerpt,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType, date },\n    \"followUpNotices\": *[_type == \"notice\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, noticeType, date,\n      \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, summary, verificationNote,\n        evidence[]{ _key, title, \"url\": asset->url },\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, summary,\n          evidence[]{ _key, title, \"url\": asset->url }\n        }\n      }\n    },\n    \"producedRecords\": *[_type == \"record\" && originNotice._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status, summary, verificationNote,\n      evidence[]{ _key, title, \"url\": asset->url },\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, summary,\n        evidence[]{ _key, title, \"url\": asset->url },\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, summary,\n          evidence[]{ _key, title, \"url\": asset->url }\n        }\n      }\n    }\n  }\n": NoticeLineageQueryResult;
     "\n  *[_type == \"opportunity\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    opportunityType,\n    description,\n    organization,\n    deadline,\n    link,\n    featured,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current }\n  }\n": OpportunityDetailQueryResult;
     "\n  *[_type == \"opportunity\" && defined(slug.current)][0..$limit].slug.current\n": OpportunitySlugsResult;
     "\n  *[_type == \"campaign\" && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  campaignType,\n  status,\n  projectReference,\n  projectHealth,\n  description,\n  targetAudience,\n  tags,\n  startDate,\n  endDate,\n  image,\n  hideCoverImage,\n  link,\n  videoUrl,\n  \"audioFileUrl\": audioFile.asset->url,\n  fundingSource,\n  contractor,\n  contractNumber,\n  consultingEngineer,\n  projectPhase,\n  localSMMEs,\n  smmeDirectory[] {\n    _key,\n    name,\n    service,\n    owner,\n    cipcNumber,\n    taxClearance,\n    bbbeeLevel,\n    ward,\n    contactPhone,\n    verified,\n    complianceStatus,\n    \"logoUrl\": logo.asset->url\n  },\n  budget,\n  beneficiaries,\n  impactSummary,\n  lessonsLearned,\n  deliverables,\n  deliverablesCertified[] {\n    _key,\n    task,\n    status,\n    percentageComplete,\n    weightage,\n    certifiedBy,\n    certificationDate,\n    notes\n  },\n  totalDeliverables,\n  \"verificationRecords\": *[_type == \"conflictLog\" && references(^._id)] | order(detectedAt desc) [0...5] {\n    _id,\n    field,\n    conflictType,\n    displayTruth,\n    resolutionState,\n    resolutionNote,\n    detectedAt,\n    resolvedAt,\n    claims[] {\n      source,\n      value,\n      date,\n      evidence\n    }\n  },\n  communityNote[] {\n    _key,\n    date,\n    issuedBy,\n    message\n  },\n  projectUpdates[] {\n    _key,\n    date,\n    title,\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    videoUrl\n  },\n  \"sponsor\": sponsor->{ name, \"slug\": slug.current, logo, \"logoUrl\": logo.asset->url, website, sponsorType },\n  \"contactPerson\": contactPerson->{ firstName, lastName, role, \"slug\": slug.current },\n  \"relatedAreas\": relatedAreas[]->{ name, \"slug\": slug.current, \"induna\": induna->{ firstName, lastName, role } },\n  \"relatedProgram\": relatedProgram->{ title, \"slug\": slug.current },\n  \"relatedOpportunities\": *[_type == \"opportunity\" && references(^._id) && (deadline > now() || !defined(deadline))] | order(featured desc, deadline asc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  opportunityType,\n  description,\n  organization,\n  deadline,\n  link,\n  featured,\n  image,\n\n  },\n  \"relatedDevelopmentNotices\": *[_type == \"developmentNotice\" && references(^._id) && status in [\"open\", \"closed\"]] | order(commentDeadline asc) [0...5] {\n    _id,\n    title,\n    \"slug\": slug.current,\n    noticeType,\n    status,\n    applicant,\n    commentDeadline,\n    publishDate,\n    location\n  },\n  \"relatedNotices\": *[_type == \"notice\" && references(^._id)] | order(date desc) [0...5] {\n    \n  _id,\n  _type,\n  title,\n  \"slug\": slug.current,\n  noticeType,\n  date,\n  excerpt,\n  pinned,\n  image,\n  \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current },\n\n  },\n\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    gallery[] {\n      _key,\n      alt,\n      caption,\n      asset->{ _id, url }\n    },\n    progressLog[] {\n      _key,\n      date,\n      update\n    },\n    \"stakeholderLogos\": stakeholderLogos[] {\n      _key,\n      name,\n      \"url\": asset->url\n    },\n    documents[] {\n      _key,\n      title,\n      \"url\": asset->url\n    },\n    \"relatedListings\": relatedListings[]->{\n  _id,\n  _type,\n  name,\n  \"slug\": slug.current,\n  listingType,\n  description,\n  location,\n  geopoint,\n  contactInfo,\n  whatsappContact,\n  website,\n  servicesOffered,\n  operatingHours,\n  verifiedByInduna,\n  featured,\n  image,\n  \"imageUrl\": image.asset->url,\n  \"areaName\": relatedArea->name,\n},\n    seo {\n      \n  _type,\n  metaTitle,\n  noIndex,\n  seoKeywords,\n  metaDescription,\n  metaImage{\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n  additionalMetaTags[]{\n    \n  _key,\n  _type,\n  metaAttributes[] {\n    \n  _type,\n  attributeValueString,\n  attributeType,\n  attributeKey,\n  attributeValueImage {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n\n  },\n  openGraph {\n    \n  _type,\n  siteName,\n  url,\n  description,\n  title,\n  image {\n    \n  _type,\n  crop {\n    _type,\n    right,\n    top,\n    left,\n    bottom\n  },\n  hotspot {\n    _type,\n    x,\n    y,\n    height,\n    width,\n  },\n  asset->{...},\n\n  },\n\n  },\n  twitter {\n    \n  _type,\n  site,\n  creator,\n  cardType,\n  handle,\n\n  }\n\n    }\n  }\n": CampaignDetailQueryResult;
     "\n  *[_type == \"campaign\" && defined(slug.current)][0..$limit].slug.current\n": CampaignSlugsResult;
-    "\n  *[_type == \"record\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    \"approvedBy\": approvedBy->{ firstName, lastName, role, \"slug\": slug.current },\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    evidence[]{ _key, title, \"url\": asset->url },\n    externalUrl,\n    source,\n    verificationNote,\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n    \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n    \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status,\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status,\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status\n        }\n      }\n    },\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current, campaignType, status }\n  }\n": RecordDetailQueryResult;
+    "\n  *[_type == \"record\" && slug.current == $slug][0]{\n    _id,\n    title,\n    \"slug\": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    \"approvedBy\": approvedBy->{ firstName, lastName, role, \"slug\": slug.current },\n    content[]{ ..., markDefs[]{ ..., ...customLink{ \n  _type,\n  type,\n  openInNewTab,\n  external,\n  href,\n  internal->{\n    _type,\n    _id,\n    \"slug\": slug.current\n  },\n } } },\n    evidence[]{ _key, title, \"url\": asset->url },\n    externalUrl,\n    source,\n    verificationNote,\n    \"originNotice\": originNotice->{ title, \"slug\": slug.current, noticeType },\n    \"parentRecord\": parentRecord->{ title, \"slug\": slug.current, recordType },\n    \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n      _id, title, \"slug\": slug.current, recordType, date, status, verificationNote,\n      \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n        _id, title, \"slug\": slug.current, recordType, date, status, verificationNote,\n        \"childRecords\": *[_type == \"record\" && parentRecord._ref == ^._id] | order(date asc) {\n          _id, title, \"slug\": slug.current, recordType, date, status, verificationNote\n        }\n      }\n    },\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current },\n    \"relatedCampaign\": relatedCampaign->{ title, \"slug\": slug.current, campaignType, status }\n  }\n": RecordDetailQueryResult;
     "\n  *[_type == \"record\" && defined(slug.current)][0..$limit].slug.current\n": RecordSlugsResult;
     "\n  *[_type == \"record\" && defined(slug.current)] | order(date desc) {\n    _id,\n    title,\n    \"slug\": slug.current,\n    recordType,\n    date,\n    summary,\n    status,\n    \"relatedArea\": relatedArea->{ name, \"slug\": slug.current }\n  }\n": RecordListPageQueryResult;
     "\n  {\n    \"allResults\": *[_type == \"record\" && defined(slug.current)] | order(date desc)\n  } {\n    \"total\": count(allResults),\n    \"results\": allResults[$from..$to] {\n      _id,\n      title,\n      \"slug\": slug.current,\n      recordType,\n      date,\n      summary,\n      status,\n      \"relatedArea\": relatedArea->{ name, \"slug\": slug.current }\n    }\n  }\n": RecordsArchiveQueryResult;
