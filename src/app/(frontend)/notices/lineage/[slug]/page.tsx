@@ -120,7 +120,7 @@ export default async function NoticeLineagePage(props: Props) {
             <p>Generated: {generatedAt}</p>
             <p className="mt-1 font-mono break-all">{publicUrl}</p>
             {notice._rev && (
-              <p className="mt-1 font-mono text-[10px] text-gray-300 break-all">
+              <p className="mt-1 font-mono text-[10px] text-gray-500 break-all">
                 rev: {notice._rev}
               </p>
             )}
