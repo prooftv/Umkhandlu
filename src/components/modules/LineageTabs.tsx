@@ -5,19 +5,15 @@ import { type ReactNode, useState } from 'react';
 type Props = {
   noticeTab: ReactNode;
   lineageTab: ReactNode;
-  journeyTab: ReactNode;
   lineageCount: number;
 };
 
 export default function LineageTabs({
   noticeTab,
   lineageTab,
-  journeyTab,
   lineageCount,
 }: Props) {
-  const [active, setActive] = useState<'notice' | 'lineage' | 'journey'>(
-    'notice'
-  );
+  const [active, setActive] = useState<'notice' | 'lineage'>('notice');
 
   const tab = (id: typeof active, label: ReactNode) => (
     <button
@@ -48,12 +44,10 @@ export default function LineageTabs({
             )}
           </>
         )}
-        {tab('journey', 'Journey')}
       </div>
       <div>
         {active === 'notice' && noticeTab}
         {active === 'lineage' && lineageTab}
-        {active === 'journey' && journeyTab}
       </div>
     </div>
   );

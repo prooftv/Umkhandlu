@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import { RecordJourney } from '@/components/modules/GovernanceJourney';
+import JourneyDrawer from '@/components/modules/JourneyDrawer';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
 import { LineageChain } from '@/components/modules/LineageNode';
 import LineageTabs from '@/components/modules/LineageTabs';
@@ -186,38 +187,6 @@ function RecordLineage({
   );
 }
 
-function RecordJourneyTab({
-  record,
-  currentSlug,
-}: {
-  record: RecordData;
-  currentSlug: string;
-}) {
-  const hasOrigin = record.originNotice;
-  const hasParent = record.parentRecord;
-  const hasChildren = (record.childRecords?.length ?? 0) > 0;
-  const hasVerification = record.verificationNote;
-
-  if (!hasOrigin && !hasParent && !hasChildren && !hasVerification) return null;
-
-  return (
-    <RecordJourney
-      originNotice={record.originNotice}
-      parentRecord={record.parentRecord}
-      current={{
-        title: record.title,
-        slug: record.slug,
-        recordType: record.recordType,
-        date: record.date,
-        status: record.status,
-        verificationNote: record.verificationNote,
-      }}
-      childRecords={(record.childRecords ?? []) as LR[]}
-      currentSlug={currentSlug}
-    />
-  );
-}
-
 function RecordEvidence({ record }: { record: RecordData }) {
   const hasEvidence = record.evidence && record.evidence.length > 0;
   if (!hasEvidence && !record.externalUrl) return null;
@@ -324,8 +293,31 @@ export default async function RecordPage(props: Props) {
       <RecordHeader record={record} />
       <LineageTabs
         noticeTab={recordTab}
-        lineageTab={<RecordLineage record={record} currentSlug={slug} />}
-        journeyTab={<RecordJourneyTab record={record} currentSlug={slug} />}
+        lineageTab={
+          <>
+            <RecordLineage record={record} currentSlug={slug} />
+            {lineageCount > 0 && (
+              <div className="mt-4">
+                <JourneyDrawer slug={slug}>
+                  <RecordJourney
+                    originNotice={record.originNotice}
+                    parentRecord={record.parentRecord}
+                    current={{
+                      title: record.title,
+                      slug: record.slug,
+                      recordType: record.recordType,
+                      date: record.date,
+                      status: record.status,
+                      verificationNote: record.verificationNote,
+                    }}
+                    childRecords={(record.childRecords ?? []) as LR[]}
+                    currentSlug={slug}
+                  />
+                </JourneyDrawer>
+              </div>
+            )}
+          </>
+        }
         lineageCount={lineageCount}
       />
     </div>

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import { NoticeJourney } from '@/components/modules/GovernanceJourney';
+import JourneyDrawer from '@/components/modules/JourneyDrawer';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
 import { LineageChain } from '@/components/modules/LineageNode';
 import LineageTabs from '@/components/modules/LineageTabs';
@@ -34,6 +35,60 @@ type OriginNotice = {
   noticeType: string | null;
   date: string | null;
 };
+
+function NoticeSeriesLinks({
+  originNotice,
+  relatedCampaign,
+}: {
+  originNotice: OriginNotice | null;
+  relatedCampaign: {
+    slug: string | null;
+    title: string | null;
+    campaignType: string | null;
+    status: string | null;
+  } | null;
+}) {
+  if (!originNotice && !relatedCampaign) return null;
+  return (
+    <>
+      {originNotice && (
+        <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+          <p className="text-xs text-blue-600 uppercase tracking-widest font-semibold mb-1">
+            Part of a series
+          </p>
+          <Link
+            href={`/notices/${originNotice.slug}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            ← {originNotice.title}
+          </Link>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {originNotice.noticeType}
+            {originNotice.date &&
+              ` · ${new Date(originNotice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
+          </p>
+        </div>
+      )}
+      {relatedCampaign && (
+        <div className="mt-6 p-4 bg-gray-50 rounded-xl">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
+            Related Campaign
+          </p>
+          <Link
+            href={`/campaigns/${relatedCampaign.slug}`}
+            className="text-lg font-semibold hover:text-primary transition-colors"
+          >
+            {relatedCampaign.title} →
+          </Link>
+          <div className="flex items-center gap-2 mt-1">
+            <Badge variant="outline">{relatedCampaign.campaignType}</Badge>
+            <Badge variant="secondary">{relatedCampaign.status}</Badge>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 function NoticeLineage({
   notice,
@@ -83,35 +138,6 @@ function NoticeLineage({
         </div>
       )}
     </div>
-  );
-}
-
-function NoticeJourneyTab({
-  notice,
-  followUpNotices,
-}: {
-  notice: {
-    _id: string;
-    title: string | null;
-    slug: string | null;
-    noticeType: string | null;
-    date: string | null;
-    producedRecords?: LR[] | null;
-  };
-  followUpNotices: FollowUpNotice[] | null;
-}) {
-  const hasLineage =
-    (notice.producedRecords && notice.producedRecords.length > 0) ||
-    (followUpNotices && followUpNotices.length > 0);
-
-  if (!hasLineage) return null;
-
-  return (
-    <NoticeJourney
-      notice={notice}
-      producedRecords={notice.producedRecords ?? []}
-      followUpNotices={followUpNotices ?? []}
-    />
   );
 }
 
@@ -165,43 +191,10 @@ export default async function NoticePage(props: Props) {
       {notice.content && (
         <CustomPortableText value={notice.content as PortableTextBlock[]} />
       )}
-      {originNotice && (
-        <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-          <p className="text-xs text-blue-600 uppercase tracking-widest font-semibold mb-1">
-            Part of a series
-          </p>
-          <Link
-            href={`/notices/${originNotice.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            ← {originNotice.title}
-          </Link>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {originNotice.noticeType}
-            {originNotice.date &&
-              ` · ${new Date(originNotice.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}`}
-          </p>
-        </div>
-      )}
-      {notice.relatedCampaign && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
-            Related Campaign
-          </p>
-          <Link
-            href={`/campaigns/${notice.relatedCampaign.slug}`}
-            className="text-lg font-semibold hover:text-primary transition-colors"
-          >
-            {notice.relatedCampaign.title} →
-          </Link>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant="outline">
-              {notice.relatedCampaign.campaignType}
-            </Badge>
-            <Badge variant="secondary">{notice.relatedCampaign.status}</Badge>
-          </div>
-        </div>
-      )}
+      <NoticeSeriesLinks
+        originNotice={originNotice}
+        relatedCampaign={notice.relatedCampaign ?? null}
+      />
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={notice.title || ''} />
       </div>
@@ -218,18 +211,17 @@ export default async function NoticePage(props: Props) {
         >
           🖸 Print Lineage Certificate →
         </Link>
-        <Link
-          href={`/notices/journey/${slug}`}
-          className="text-sm text-primary font-medium hover:underline"
-        >
-          🗺 Print Journey Map →
-        </Link>
+        {lineageCount > 0 && (
+          <JourneyDrawer slug={slug}>
+            <NoticeJourney
+              notice={notice}
+              producedRecords={notice.producedRecords ?? []}
+              followUpNotices={followUpNotices ?? []}
+            />
+          </JourneyDrawer>
+        )}
       </div>
     </>
-  );
-
-  const journeyTab = (
-    <NoticeJourneyTab notice={notice} followUpNotices={followUpNotices} />
   );
 
   return (
@@ -269,7 +261,6 @@ export default async function NoticePage(props: Props) {
       <LineageTabs
         noticeTab={noticeTab}
         lineageTab={lineageTab}
-        journeyTab={journeyTab}
         lineageCount={lineageCount}
       />
     </div>
