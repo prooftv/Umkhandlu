@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import { NoticeJourney } from '@/components/modules/GovernanceJourney';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
 import { LineageChain } from '@/components/modules/LineageNode';
 import LineageTabs from '@/components/modules/LineageTabs';
@@ -39,7 +40,9 @@ function NoticeLineage({
   followUpNotices,
 }: {
   notice: {
+    _id: string;
     title: string | null;
+    slug: string | null;
     noticeType: string | null;
     date: string | null;
     producedRecords?: LR[] | null;
@@ -55,7 +58,7 @@ function NoticeLineage({
   return (
     <div className="mt-10 pt-8 border-t border-gray-100">
       <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-4">
-        Governance Record Lineage
+        Governance Lineage
       </p>
       <LineageChain
         ancestors={[]}
@@ -80,6 +83,35 @@ function NoticeLineage({
         </div>
       )}
     </div>
+  );
+}
+
+function NoticeJourneyTab({
+  notice,
+  followUpNotices,
+}: {
+  notice: {
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    noticeType: string | null;
+    date: string | null;
+    producedRecords?: LR[] | null;
+  };
+  followUpNotices: FollowUpNotice[] | null;
+}) {
+  const hasLineage =
+    (notice.producedRecords && notice.producedRecords.length > 0) ||
+    (followUpNotices && followUpNotices.length > 0);
+
+  if (!hasLineage) return null;
+
+  return (
+    <NoticeJourney
+      notice={notice}
+      producedRecords={notice.producedRecords ?? []}
+      followUpNotices={followUpNotices ?? []}
+    />
   );
 }
 
@@ -190,6 +222,10 @@ export default async function NoticePage(props: Props) {
     </>
   );
 
+  const journeyTab = (
+    <NoticeJourneyTab notice={notice} followUpNotices={followUpNotices} />
+  );
+
   return (
     <div className="container mx-auto max-w-3xl py-12">
       <Breadcrumbs
@@ -227,6 +263,7 @@ export default async function NoticePage(props: Props) {
       <LineageTabs
         noticeTab={noticeTab}
         lineageTab={lineageTab}
+        journeyTab={journeyTab}
         lineageCount={lineageCount}
       />
     </div>

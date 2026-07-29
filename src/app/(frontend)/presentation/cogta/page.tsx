@@ -284,65 +284,81 @@ Permanent Institutional Memory`}
           Izazi High School to petition for recognition as a separate Isigodi.
           The platform automatically generated this audit trail:
         </p>
-        <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 my-6 text-sm text-gray-700">
+        <div className="bg-white border border-amber-200 rounded-xl p-5 my-6">
           <p className="text-xs text-amber-700 uppercase tracking-wide font-semibold mb-3">
-            Governance Record Lineage
+            Governance Record Lineage — Live Example
           </p>
-          <div className="flex flex-col gap-0">
-            <div className="flex flex-col">
-              <span className="text-[10px] text-amber-600 uppercase tracking-widest mb-0.5">
+          <div className="border-l-2 border-amber-400 pl-4">
+            <div className="py-1.5">
+              <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-widest leading-none mb-1">
                 This Notice
-              </span>
-              <span className="font-medium text-amber-800">
-                📢 Community Meeting — KwaGudlucingo Governance, Community
-                Safety & Infrastructure
+              </p>
+              <span className="text-sm font-semibold text-gray-900">
+                Community Meeting — KwaGudlucingo Governance, Community Safety
+                &amp; Infrastructure
               </span>
             </div>
-            <span className="text-amber-300 text-sm leading-none my-1 ml-1">
-              ↓
-            </span>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-amber-600 uppercase tracking-widest mb-1">
+            <div className="pt-1">
+              <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-widest leading-none mb-1">
                 Produced Records
-              </span>
-              <div className="border-l-2 border-amber-200 pl-3 space-y-2">
+              </p>
+              <div className="flex items-start gap-2 py-1.5">
+                <span className="text-xs font-mono font-bold text-amber-500 shrink-0 min-w-[2rem] text-right pt-0.5">
+                  1
+                </span>
                 <div>
-                  <span className="font-medium">📄 Minutes</span>
-                  <span className="text-gray-400 ml-1">— 27/06/2026</span>
-                  <span className="text-gray-300 text-sm leading-none block my-1 ml-1">
-                    ↓
+                  <span className="text-sm font-medium text-gray-900">
+                    Minutes — KwaGudlucingo Community Meeting
                   </span>
-                  <div className="ml-3 border-l border-gray-100 pl-3 space-y-1">
-                    <div>
-                      <span className="font-medium">
-                        📄 Resolution — Petition for Recognition
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Meeting Minutes · Adopted · 27 Jun 2026
+                  </p>
+                  <div className="ml-6 border-l-2 border-amber-300 pl-3 mt-1">
+                    <div className="flex items-start gap-2 py-1">
+                      <span className="text-xs font-mono font-bold text-amber-500 shrink-0 min-w-[2rem] text-right pt-0.5">
+                        1.1
                       </span>
-                      <span className="text-gray-400 ml-1">
-                        — community-decision · adopted
-                      </span>
+                      <div>
+                        <span className="text-sm text-gray-900">
+                          Resolution — Petition for Recognition of KwaGudlucingo
+                        </span>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Community Decision · Adopted
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="font-medium">
-                        📄 Resolution — Community Safety Whistle Alert
+                    <div className="flex items-start gap-2 py-1">
+                      <span className="text-xs font-mono font-bold text-amber-500 shrink-0 min-w-[2rem] text-right pt-0.5">
+                        1.2
                       </span>
-                      <span className="text-gray-400 ml-1">
-                        — community-decision · adopted
-                      </span>
+                      <div>
+                        <span className="text-sm text-gray-900">
+                          Resolution — Community Safety Whistle Alert System
+                        </span>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Community Decision · Adopted
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="font-medium">
-                        📄 Infrastructure Record — Apollo Street Lighting
+                    <div className="flex items-start gap-2 py-1">
+                      <span className="text-xs font-mono font-bold text-amber-500 shrink-0 min-w-[2rem] text-right pt-0.5">
+                        1.3
                       </span>
-                      <span className="text-gray-400 ml-1">
-                        — report · open
-                      </span>
+                      <div>
+                        <span className="text-sm text-gray-900">
+                          Infrastructure Record — Apollo Street Lighting
+                        </span>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Report · Open
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-4">
+          <p className="text-xs text-gray-500 mt-3">
             Evidence: signed petition, community signatures, attendance register
           </p>
         </div>

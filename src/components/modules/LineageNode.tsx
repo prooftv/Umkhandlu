@@ -159,12 +159,14 @@ export function LineageChain({
   records,
   verificationNote,
   currentSlug,
+  showEvidence = false,
 }: {
   ancestors: { label: string; href: string; title: string | null }[];
   current: { label: string; title: string | null };
   records?: LineageRecord[];
   verificationNote?: string | null;
   currentSlug?: string;
+  showEvidence?: boolean;
 }) {
   return (
     <div className="border-l-2 border-amber-400 pl-4">
@@ -197,7 +199,7 @@ export function LineageChain({
           <LineageList
             records={records}
             currentSlug={currentSlug}
-            showEvidence={false}
+            showEvidence={showEvidence}
           />
         </div>
       )}

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
-import { LineageList } from '@/components/modules/LineageNode';
+import { LineageChain } from '@/components/modules/LineageNode';
 import PrintButton from '@/components/modules/PrintButton';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { noticeLineageQuery } from '@/lib/sanity/queries/queries';
@@ -184,25 +184,30 @@ export default async function NoticeLineagePage(props: Props) {
           <h3 className="text-sm font-bold uppercase tracking-wide text-gray-700 mb-2">
             Records Produced by This Notice
           </h3>
-          <LineageList records={producedRecords} showEvidence />
+          <LineageChain
+            ancestors={[]}
+            current={{ label: 'This Notice', title: notice.title }}
+            records={producedRecords}
+            showEvidence
+          />
         </section>
       )}
 
       {/* Follow-up meetings and their records */}
       {followUpNotices.map((fu) => (
-        <section key={fu._id} className="mb-6 border-l-4 border-blue-200 pl-4">
-          <div className="mb-2">
-            <p className="text-xs font-bold uppercase tracking-wide text-blue-700">
-              Follow-up Meeting
-            </p>
-            <h3 className="text-sm font-bold text-gray-900">{fu.title}</h3>
-            <p className="text-xs text-gray-500">
-              {cap(fu.noticeType)} · {fmt(fu.date)}
-            </p>
-          </div>
-          {fu.producedRecords && fu.producedRecords.length > 0 && (
-            <LineageList records={fu.producedRecords as LR[]} showEvidence />
-          )}
+        <section key={fu._id} className="mb-6">
+          <LineageChain
+            ancestors={[
+              {
+                label: 'Origin Notice',
+                href: `${siteUrl}/notices/${slug}`,
+                title: notice.title,
+              },
+            ]}
+            current={{ label: 'Follow-up Meeting', title: fu.title }}
+            records={(fu.producedRecords ?? []) as LR[]}
+            showEvidence
+          />
         </section>
       ))}
 
