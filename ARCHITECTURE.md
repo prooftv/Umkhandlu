@@ -342,7 +342,7 @@ Single-page layout with:
 |---|---|---|
 | `/notices/certificate/[id]` | A4 portrait | Proof of Publication certificate |
 | `/notices/lineage/[slug]` | A4 portrait | Governance lineage certificate |
-| `/notices/journey/[slug]` | A4 portrait | Governance journey map |
+| `/notices/journey/[slug]` | A4 landscape | Governance journey map |
 
 ---
 
