@@ -125,6 +125,34 @@ export default function PublicCommentForm({ noticeId, noticeTitle }: Props) {
         />
       </div>
 
+      <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+        <p className="text-xs text-blue-800 font-semibold mb-1">POPIA Notice</p>
+        <p className="text-xs text-blue-700">
+          Your personal details (name and contact) are collected solely for the
+          purpose of this public participation process. They will be forwarded
+          to the applicant and/or the relevant authority handling this
+          application and will not be stored on this platform or used for any
+          other purpose. You have the right to request access to or correction
+          of your information under the Protection of Personal Information Act,
+          2013.
+        </p>
+      </div>
+
+      <div className="flex items-start gap-3">
+        <input
+          id="popia"
+          name="popia"
+          type="checkbox"
+          required
+          className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+        />
+        <label htmlFor="popia" className="text-sm text-gray-700">
+          I have read the POPIA notice above and consent to my personal details
+          being shared with the applicant and relevant authority for the purpose
+          of this application. *
+        </label>
+      </div>
+
       {state.message && !state.success && (
         <p className="text-sm text-red-600">{state.message}</p>
       )}
@@ -132,12 +160,6 @@ export default function PublicCommentForm({ noticeId, noticeTitle }: Props) {
       <Button type="submit" disabled={pending}>
         {pending ? 'Submitting...' : 'Submit Comment'}
       </Button>
-
-      <p className="text-xs text-gray-400">
-        Your submission will be forwarded to the applicant and/or relevant
-        authority. Personal details are shared only with the parties handling
-        this application.
-      </p>
     </form>
   );
 }

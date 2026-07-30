@@ -1,6 +1,6 @@
 'use server';
 
-import { minLength, object, parse, pipe, string } from 'valibot';
+import { literal, minLength, object, parse, pipe, string } from 'valibot';
 import { sendToWebhook } from '@/actions/webhook';
 
 const CommentSchema = object({
@@ -14,6 +14,7 @@ const CommentSchema = object({
     string(),
     minLength(10, 'Comment must be at least 10 characters')
   ),
+  popia: literal('on'),
 });
 
 type State = { success: boolean; message: string };
@@ -30,14 +31,12 @@ export async function submitComment(
     relationship: formData.get('relationship') as string,
     commentType: formData.get('commentType') as string,
     comment: formData.get('comment') as string,
+    popia: formData.get('popia') as string,
   };
 
   try {
-    const data = parse(CommentSchema, raw);
-    await sendToWebhook('contact', {
-      formType: 'public_comment',
-      ...data,
-    });
+    const { popia: _, ...data } = parse(CommentSchema, raw);
+    await sendToWebhook('public_comment', { ...data, popiaConsent: true });
     return { success: true, message: 'Comment submitted successfully.' };
   } catch (error) {
     const msg =
