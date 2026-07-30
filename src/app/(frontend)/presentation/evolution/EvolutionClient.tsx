@@ -2,7 +2,11 @@
 
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import {
+  NarratorToggle,
+  ScrollNarratorEngine,
+} from '@/components/modules/ScrollNarrator';
 
 // ─── Fade-in wrapper ──────────────────────────────────────────────────────────
 
@@ -373,13 +377,78 @@ function LayerStack() {
   );
 }
 
+// ─── Act inView sentinel ─────────────────────────────────────────────────────
+
+function useActRef() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-120px' });
+  return { ref, inView };
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function EvolutionPage() {
+  const [narrating, setNarrating] = useState(false);
+
+  const act0 = useActRef();
+  const act1 = useActRef();
+  const act2 = useActRef();
+  const act3 = useActRef();
+  const act4 = useActRef();
+  const act5 = useActRef();
+  const act6 = useActRef();
+
+  const cues = [
+    {
+      inView: act0.inView,
+      script:
+        'Communities already create history. Umkhandlu ensures it is never lost.',
+    },
+    {
+      inView: act1.inView,
+      script:
+        'Act one. The Record. A meeting happens and every detail is captured — date, location, weather, attendance — not as a form, but as permanent institutional context.',
+    },
+    {
+      inView: act2.inView,
+      script:
+        'Act two. The Journey. One meeting, and a governance tree grows. Minutes produce resolutions. Resolutions produce petitions. Each record links to its parent — the trail builds itself. Three printable governance outputs are generated automatically.',
+    },
+    {
+      inView: act3.inView,
+      script:
+        'Act three. The Project. A forty million Rand infrastructure project, tracked to the milestone. Buffalo River Abstraction Works, Ward 7, Newcastle. Progress is only what the engineer certifies. When contractor and engineer disagree, the system records both.',
+    },
+    {
+      inView: act4.inView,
+      script:
+        'Act four. The Compliance. Statutory notices — E I A, SPLUMA, mining, cell towers, estate notices — published with comment deadlines, map pins, and public comment forms. Every notice produces a court-submittable proof of publication.',
+    },
+    {
+      inView: act5.inView,
+      script:
+        'Act five. The Community. Every Isigodi gets its own digital presence. Area pages auto-assemble from content references — Induna, listings, notices, programs, opportunities. Bilingual in English and isiZulu.',
+    },
+    {
+      inView: act6.inView,
+      script:
+        'Act six. The Architecture. One codebase. Any council. Any domain. Brand colors, content, and domain change per council. Zero council-specific code. The meeting was never the destination. It was the beginning.',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-white">
+      <ScrollNarratorEngine cues={cues} enabled={narrating} />
+      <NarratorToggle
+        enabled={narrating}
+        onToggle={() => setNarrating((v) => !v)}
+      />
+
       {/* ── Act 0: Hook ── */}
-      <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gray-950">
+      <section
+        ref={act0.ref}
+        className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gray-950"
+      >
         <div className="max-w-3xl">
           <p className="text-xs font-bold text-primary uppercase tracking-widest mb-8">
             The Evolution of Umkhandlu
@@ -406,7 +475,9 @@ export default function EvolutionPage() {
 
       <div className="container mx-auto max-w-3xl px-6 py-20">
         {/* ── Act 1: The Record ── */}
-        <ActLabel number="1" title="The Record" />
+        <div ref={act1.ref}>
+          <ActLabel number="1" title="The Record" />
+        </div>
 
         <Reveal className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
@@ -435,7 +506,9 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 2: The Journey ── */}
-        <ActLabel number="2" title="The Journey" />
+        <div ref={act2.ref}>
+          <ActLabel number="2" title="The Journey" />
+        </div>
 
         <Reveal className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
@@ -467,7 +540,9 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 3: The Project ── */}
-        <ActLabel number="3" title="The Project" />
+        <div ref={act3.ref}>
+          <ActLabel number="3" title="The Project" />
+        </div>
 
         <Reveal className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
@@ -544,7 +619,9 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 4: The Compliance ── */}
-        <ActLabel number="4" title="The Compliance" />
+        <div ref={act4.ref}>
+          <ActLabel number="4" title="The Compliance" />
+        </div>
 
         <Reveal className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
@@ -609,7 +686,9 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 5: The Community ── */}
-        <ActLabel number="5" title="The Community" />
+        <div ref={act5.ref}>
+          <ActLabel number="5" title="The Community" />
+        </div>
 
         <Reveal className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
@@ -676,7 +755,9 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 6: The Architecture ── */}
-        <ActLabel number="6" title="The Architecture" />
+        <div ref={act6.ref}>
+          <ActLabel number="6" title="The Architecture" />
+        </div>
 
         <Reveal className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
