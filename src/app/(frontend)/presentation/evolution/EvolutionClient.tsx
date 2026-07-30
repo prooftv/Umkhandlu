@@ -13,8 +13,12 @@ import {
 const PRINT_STYLES = `
   @media print {
     @page { size: A4 portrait; margin: 1.5cm; }
-    * { animation: none !important; transition: none !important; }
-    .motion-safe\\:opacity-0 { opacity: 1 !important; }
+    * {
+      animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 `;
 
@@ -451,10 +455,12 @@ export default function EvolutionPage() {
       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: print styles only */}
       <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
       <ScrollNarratorEngine cues={cues} enabled={narrating} />
-      <NarratorToggle
-        enabled={narrating}
-        onToggle={() => setNarrating((v) => !v)}
-      />
+      <div className="print:hidden">
+        <NarratorToggle
+          enabled={narrating}
+          onToggle={() => setNarrating((v) => !v)}
+        />
+      </div>
 
       {/* ── Act 0: Hook ── */}
       <section
