@@ -2,25 +2,36 @@
 
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   NarratorToggle,
   ScrollNarratorEngine,
 } from '@/components/modules/ScrollNarrator';
 
 // ─── Print styles ─────────────────────────────────────────────────────────────
-// Injected once — kills animations, forces white, sets A4 page size
 const PRINT_STYLES = `
   @media print {
     @page { size: A4 portrait; margin: 1.5cm; }
-    * {
-      animation: none !important;
-      transition: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
+    * { animation: none !important; transition: none !important; }
   }
 `;
+
+// ─── Detect print ─────────────────────────────────────────────────────────────
+
+function usePrint() {
+  const [printing, setPrinting] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('print');
+    const handler = (e: MediaQueryListEvent) => setPrinting(e.matches);
+    mq.addEventListener('change', handler);
+    window.addEventListener('beforeprint', () => setPrinting(true));
+    window.addEventListener('afterprint', () => setPrinting(false));
+    return () => {
+      mq.removeEventListener('change', handler);
+    };
+  }, []);
+  return printing;
+}
 
 // ─── Fade-in wrapper ──────────────────────────────────────────────────────────
 
@@ -28,13 +39,16 @@ function Reveal({
   children,
   delay = 0,
   className,
+  printing = false,
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
+  printing?: boolean;
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
+  if (printing) return <div className={className}>{children}</div>;
   return (
     <motion.div
       ref={ref}
@@ -90,9 +104,17 @@ function HookLine({
 
 // ─── Act divider ──────────────────────────────────────────────────────────────
 
-function ActLabel({ number, title }: { number: string; title: string }) {
+function ActLabel({
+  number,
+  title,
+  printing = false,
+}: {
+  number: string;
+  title: string;
+  printing?: boolean;
+}) {
   return (
-    <Reveal className="flex items-center gap-4 mb-10 mt-20">
+    <Reveal printing={printing} className="flex items-center gap-4 mb-10 mt-20">
       <span className="text-xs font-bold text-primary uppercase tracking-widest shrink-0">
         Act {number}
       </span>
@@ -403,6 +425,7 @@ function useActRef() {
 
 export default function EvolutionPage() {
   const [narrating, setNarrating] = useState(false);
+  const printing = usePrint();
 
   const act0 = useActRef();
   const act1 = useActRef();
@@ -452,7 +475,7 @@ export default function EvolutionPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: print styles only */}
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: print styles */}
       <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
       <ScrollNarratorEngine cues={cues} enabled={narrating} />
       <div className="print:hidden">
@@ -494,10 +517,10 @@ export default function EvolutionPage() {
       <div className="container mx-auto max-w-3xl px-6 py-20">
         {/* ── Act 1: The Record ── */}
         <div ref={act1.ref} className="print:break-before-page">
-          <ActLabel number="1" title="The Record" />
+          <ActLabel number="1" title="The Record" printing={printing} />
         </div>
 
-        <Reveal className="text-center mb-10">
+        <Reveal printing={printing} className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
             A meeting happens.
             <br />
@@ -505,18 +528,18 @@ export default function EvolutionPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-6">
+        <Reveal printing={printing} delay={0.1} className="mb-6">
           <p className="text-gray-500 text-center text-sm max-w-md mx-auto">
             Date, location, weather, attendance — not as a form, but as
             permanent institutional context.
           </p>
         </Reveal>
 
-        <Reveal delay={0.2} className="mb-16">
+        <Reveal printing={printing} delay={0.2} className="mb-16">
           <RecordCard />
         </Reveal>
 
-        <Reveal className="mb-10 text-center">
+        <Reveal printing={printing} className="mb-10 text-center">
           <p className="text-sm text-gray-400 max-w-sm mx-auto">
             Weather is captured automatically at the time of the meeting — a
             timestamped environmental witness.
@@ -525,10 +548,10 @@ export default function EvolutionPage() {
 
         {/* ── Act 2: The Journey ── */}
         <div ref={act2.ref} className="print:break-before-page">
-          <ActLabel number="2" title="The Journey" />
+          <ActLabel number="2" title="The Journey" printing={printing} />
         </div>
 
-        <Reveal className="text-center mb-10">
+        <Reveal printing={printing} className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
             One meeting.
             <br />
@@ -536,33 +559,33 @@ export default function EvolutionPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-6">
+        <Reveal printing={printing} delay={0.1} className="mb-6">
           <p className="text-gray-500 text-center text-sm max-w-md mx-auto">
             Minutes produce resolutions. Resolutions produce petitions. Each
             record links to its parent — the trail builds itself.
           </p>
         </Reveal>
 
-        <Reveal delay={0.2} className="mb-12">
+        <Reveal printing={printing} delay={0.2} className="mb-12">
           <LineageTree />
         </Reveal>
 
-        <Reveal className="mb-4 text-center">
+        <Reveal printing={printing} className="mb-4 text-center">
           <p className="text-sm font-bold text-gray-700">
             Three printable governance outputs — generated automatically:
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-16">
+        <Reveal printing={printing} delay={0.1} className="mb-16">
           <OutputCards />
         </Reveal>
 
         {/* ── Act 3: The Project ── */}
         <div ref={act3.ref} className="print:break-before-page">
-          <ActLabel number="3" title="The Project" />
+          <ActLabel number="3" title="The Project" printing={printing} />
         </div>
 
-        <Reveal className="text-center mb-10">
+        <Reveal printing={printing} className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
             A R40M infrastructure project.
             <br />
@@ -570,7 +593,7 @@ export default function EvolutionPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-4">
+        <Reveal printing={printing} delay={0.1} className="mb-4">
           <p className="text-gray-500 text-center text-sm max-w-md mx-auto">
             Buffalo River Abstraction Works — Ward 7, Newcastle LM. Progress is
             only what the engineer certifies.
@@ -578,6 +601,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         <Reveal
+          printing={printing}
           delay={0.2}
           className="bg-white border border-gray-200 rounded-2xl p-6 max-w-lg mx-auto mb-8 shadow-sm"
         >
@@ -613,18 +637,18 @@ export default function EvolutionPage() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-6 text-center">
+        <Reveal printing={printing} delay={0.1} className="mb-6 text-center">
           <p className="text-sm text-gray-500 max-w-sm mx-auto">
             When contractor and engineer disagree, the system doesn't break — it
             records both.
           </p>
         </Reveal>
 
-        <Reveal delay={0.2} className="mb-10">
+        <Reveal printing={printing} delay={0.2} className="mb-10">
           <VerificationCard />
         </Reveal>
 
-        <Reveal className="mb-16">
+        <Reveal printing={printing} className="mb-16">
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 max-w-md mx-auto text-sm font-mono text-gray-600">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
               Export API
@@ -638,10 +662,10 @@ export default function EvolutionPage() {
 
         {/* ── Act 4: The Compliance ── */}
         <div ref={act4.ref} className="print:break-before-page">
-          <ActLabel number="4" title="The Compliance" />
+          <ActLabel number="4" title="The Compliance" printing={printing} />
         </div>
 
-        <Reveal className="text-center mb-10">
+        <Reveal printing={printing} className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
             Statutory notices.
             <br />
@@ -649,14 +673,14 @@ export default function EvolutionPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-8">
+        <Reveal printing={printing} delay={0.1} className="mb-8">
           <p className="text-gray-500 text-center text-sm max-w-md mx-auto">
             EIA, SPLUMA, mining, cell towers, estate notices — published with
             comment deadlines, map pins, and public comment forms.
           </p>
         </Reveal>
 
-        <Reveal delay={0.2} className="mb-6">
+        <Reveal printing={printing} delay={0.2} className="mb-6">
           <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-lg mx-auto shadow-sm space-y-3 text-sm">
             <p className="text-[10px] font-bold text-primary uppercase tracking-widest">
               Development Notice
@@ -696,7 +720,7 @@ export default function EvolutionPage() {
           </div>
         </Reveal>
 
-        <Reveal className="mb-16 text-center">
+        <Reveal printing={printing} className="mb-16 text-center">
           <p className="text-xs text-gray-400 max-w-xs mx-auto">
             Personal details are never stored in the CMS — delivered via webhook
             only.
@@ -705,10 +729,10 @@ export default function EvolutionPage() {
 
         {/* ── Act 5: The Community ── */}
         <div ref={act5.ref} className="print:break-before-page">
-          <ActLabel number="5" title="The Community" />
+          <ActLabel number="5" title="The Community" printing={printing} />
         </div>
 
-        <Reveal className="text-center mb-10">
+        <Reveal printing={printing} className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
             Every Isigodi.
             <br />
@@ -716,7 +740,7 @@ export default function EvolutionPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-8">
+        <Reveal printing={printing} delay={0.1} className="mb-8">
           <p className="text-gray-500 text-center text-sm max-w-md mx-auto">
             Area pages auto-assemble from content references — Induna, listings,
             notices, programs, opportunities.
@@ -724,6 +748,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         <Reveal
+          printing={printing}
           delay={0.2}
           className="grid sm:grid-cols-2 gap-3 max-w-lg mx-auto mb-16"
         >
@@ -774,10 +799,10 @@ export default function EvolutionPage() {
 
         {/* ── Act 6: The Architecture ── */}
         <div ref={act6.ref} className="print:break-before-page">
-          <ActLabel number="6" title="The Architecture" />
+          <ActLabel number="6" title="The Architecture" printing={printing} />
         </div>
 
-        <Reveal className="text-center mb-10">
+        <Reveal printing={printing} className="text-center mb-10">
           <p className="text-2xl md:text-3xl font-black text-gray-900 leading-snug">
             One codebase.
             <br />
@@ -785,18 +810,18 @@ export default function EvolutionPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mb-8">
+        <Reveal printing={printing} delay={0.1} className="mb-8">
           <p className="text-gray-500 text-center text-sm max-w-md mx-auto">
             Brand colors, content, and domain change per council. Zero
             council-specific code.
           </p>
         </Reveal>
 
-        <Reveal delay={0.2} className="mb-12">
+        <Reveal printing={printing} delay={0.2} className="mb-12">
           <LayerStack />
         </Reveal>
 
-        <Reveal className="mb-6">
+        <Reveal printing={printing} className="mb-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto text-center">
             {[
               { v: '13', l: 'Document Types' },
@@ -816,7 +841,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Closing ── */}
-        <Reveal className="text-center mt-24 mb-16">
+        <Reveal printing={printing} className="text-center mt-24 mb-16">
           <p className="text-3xl md:text-4xl font-black text-gray-900 leading-snug max-w-xl mx-auto">
             The meeting was never the destination.
           </p>
@@ -826,6 +851,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         <Reveal
+          printing={printing}
           delay={0.2}
           className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap pb-20"
         >
