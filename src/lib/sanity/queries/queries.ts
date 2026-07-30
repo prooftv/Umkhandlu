@@ -27,8 +27,13 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   socialLinks,
   gtmId,
   webhookUrl,
+  ogImage{ asset->{ url } },
   ${menuFragment}
 }`);
+
+export const settingsOgImageQuery = defineQuery(
+  `*[_type == "settings"][0].ogImage.asset->url`
+);
 
 export const homePageQuery = defineQuery(`*[_type == "homePage"][0]{
   _id,

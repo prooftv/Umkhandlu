@@ -15,7 +15,11 @@ import VisitedLink from '@/components/modules/VisitedLink';
 import { Badge } from '@/components/ui/Badge';
 import { clientEnv } from '@/env/clientEnv';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { noticeDetailQuery } from '@/lib/sanity/queries/queries';
+import { urlForImage } from '@/lib/sanity/client/utils';
+import {
+  noticeDetailQuery,
+  settingsOgImageQuery,
+} from '@/lib/sanity/queries/queries';
 import { fetchWeather } from '@/lib/weather';
 
 export const dynamic = 'force-dynamic';
@@ -168,11 +172,17 @@ async function resolveWeather(
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
-  const { data } = await sanityFetch({
-    query: noticeDetailQuery,
-    params: { slug },
-  });
+  const [{ data }, { data: fallbackOgUrl }] = await Promise.all([
+    sanityFetch({ query: noticeDetailQuery, params: { slug } }),
+    sanityFetch({ query: settingsOgImageQuery }),
+  ]);
   if (!data) return {};
+  const imageUrl =
+    (data.image
+      ? urlForImage(data.image)?.width(1200).height(630).fit('crop').url()
+      : null) ??
+    fallbackOgUrl ??
+    undefined;
   return {
     title: data.title,
     description: data.excerpt || undefined,
@@ -183,6 +193,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       type: 'article',
       publishedTime: data.date ?? undefined,
       url: `/notices/${slug}`,
+      images: imageUrl
+        ? [{ url: imageUrl, width: 1200, height: 630 }]
+        : undefined,
     },
   };
 }

@@ -14,7 +14,10 @@ import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { clientEnv } from '@/env/clientEnv';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { recordDetailQuery } from '@/lib/sanity/queries/queries';
+import {
+  recordDetailQuery,
+  settingsOgImageQuery,
+} from '@/lib/sanity/queries/queries';
 import { fetchWeather } from '@/lib/weather';
 
 export const dynamic = 'force-dynamic';
@@ -251,11 +254,12 @@ async function resolveWeather(
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
-  const { data } = await sanityFetch({
-    query: recordDetailQuery,
-    params: { slug },
-  });
+  const [{ data }, { data: fallbackOgUrl }] = await Promise.all([
+    sanityFetch({ query: recordDetailQuery, params: { slug } }),
+    sanityFetch({ query: settingsOgImageQuery }),
+  ]);
   if (!data) return {};
+  const imageUrl = fallbackOgUrl ?? undefined;
   return {
     title: data.title,
     description: data.summary || undefined,
@@ -266,6 +270,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       type: 'article',
       publishedTime: data.date ?? undefined,
       url: `/records/${slug}`,
+      images: imageUrl
+        ? [{ url: imageUrl, width: 1200, height: 630 }]
+        : undefined,
     },
   };
 }
