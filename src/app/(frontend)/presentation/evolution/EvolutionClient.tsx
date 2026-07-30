@@ -665,7 +665,7 @@ export default function EvolutionPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Comment deadline</span>
-              <span className="font-medium text-red-600">30 days</span>
+              <span className="font-medium text-red-600">31 July 2026</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Map pin</span>
