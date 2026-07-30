@@ -203,9 +203,12 @@ export const noticeDetailQuery = defineQuery(`
     image,
     content[]{ ..., markDefs[]{ ..., ...customLink{ ${linkFragment} } } },
     pinned,
-    "relatedArea": relatedArea->{ name, "slug": slug.current },
+    "relatedArea": relatedArea->{ name, "slug": slug.current, "geopoint": geopoint },
     "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status },
     "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },
+    location,
+    attendance,
+    weatherContext,
     "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {
       _id, title, "slug": slug.current, noticeType, date
     },
@@ -347,8 +350,11 @@ export const recordDetailQuery = defineQuery(`
         }
       }
     },
-    "relatedArea": relatedArea->{ name, "slug": slug.current },
-    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status }
+    "relatedArea": relatedArea->{ name, "slug": slug.current, "geopoint": geopoint },
+    "relatedCampaign": relatedCampaign->{ title, "slug": slug.current, campaignType, status },
+    location,
+    attendance,
+    weatherContext,
   }
 `);
 

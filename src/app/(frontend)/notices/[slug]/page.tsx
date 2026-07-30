@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import EventContext from '@/components/modules/EventContext';
 import { NoticeJourney } from '@/components/modules/GovernanceJourney';
 import JourneyDrawer from '@/components/modules/JourneyDrawer';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
@@ -12,10 +13,12 @@ import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import VisitedLink from '@/components/modules/VisitedLink';
 import { Badge } from '@/components/ui/Badge';
-import { serverEnv } from '@/env/serverEnv';
-import { client } from '@/lib/sanity/client/client';
+import { clientEnv } from '@/env/clientEnv';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { noticeDetailQuery, noticeSlugs } from '@/lib/sanity/queries/queries';
+import { noticeDetailQuery } from '@/lib/sanity/queries/queries';
+import { fetchWeather } from '@/lib/weather';
+
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -141,6 +144,28 @@ function NoticeLineage({
   );
 }
 
+type Geopoint = { lat: number; lng: number } | null | undefined;
+
+async function resolveWeather(
+  _id: string,
+  date: string | null,
+  geo: Geopoint,
+  hasStoredContext: boolean
+) {
+  if (!date || !geo?.lat || !geo?.lng) return null;
+  const weather = await fetchWeather(date, geo.lat, geo.lng);
+  if (!weather) return null;
+  const isFuture = new Date(date) >= new Date();
+  if (isFuture || !hasStoredContext) {
+    fetch(`${clientEnv.NEXT_PUBLIC_SITE_URL}/api/weather-patch`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _id, date, lat: geo.lat, lng: geo.lng }),
+    }).catch(() => null);
+  }
+  return weather;
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const { data } = await sanityFetch({
@@ -162,13 +187,6 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export async function generateStaticParams() {
-  const slugs = await client.fetch(noticeSlugs, {
-    limit: serverEnv.MAX_STATIC_PARAMS,
-  });
-  return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
-}
-
 export default async function NoticePage(props: Props) {
   const { slug } = await props.params;
   const { data: notice } = await sanityFetch({
@@ -183,6 +201,15 @@ export default async function NoticePage(props: Props) {
   const lineageCount =
     (notice.producedRecords?.length ?? 0) + (followUpNotices?.length ?? 0);
 
+  // Weather — fetch live on every visit
+  const geo = notice.relatedArea?.geopoint;
+  const weather = await resolveWeather(
+    notice._id,
+    notice.date ?? null,
+    geo,
+    !!notice.weatherContext
+  );
+
   const noticeTab = (
     <>
       {notice.excerpt && (
@@ -191,6 +218,11 @@ export default async function NoticePage(props: Props) {
       {notice.content && (
         <CustomPortableText value={notice.content as PortableTextBlock[]} />
       )}
+      <EventContext
+        weather={weather}
+        location={notice.location}
+        attendance={notice.attendance}
+      />
       <NoticeSeriesLinks
         originNotice={originNotice}
         relatedCampaign={notice.relatedCampaign ?? null}

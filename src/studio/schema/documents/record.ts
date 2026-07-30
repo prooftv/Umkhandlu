@@ -185,6 +185,59 @@ export default defineType({
       description:
         'How this record was verified. e.g. "Confirmed by Inkosi at council meeting 15 May 2026"',
     }),
+    defineField({
+      name: 'location',
+      title: 'Venue / Location',
+      type: 'string',
+      description:
+        'Where this event took place. e.g. "Soccer ground opposite Izazi High School"',
+    }),
+    defineField({
+      name: 'attendance',
+      title: 'Attendance',
+      type: 'number',
+      description: 'Number of people present.',
+    }),
+    defineField({
+      name: 'weatherContext',
+      title: 'Environmental Context',
+      type: 'object',
+      description:
+        'Auto-captured from Open-Meteo on page visit. Do not edit manually.',
+      readOnly: true,
+      fields: [
+        defineField({ name: 'type', type: 'string', title: 'Type' }),
+        defineField({ name: 'condition', type: 'string', title: 'Condition' }),
+        defineField({
+          name: 'temperatureCelsius',
+          type: 'number',
+          title: 'Temperature (°C)',
+        }),
+        defineField({
+          name: 'tempMinCelsius',
+          type: 'number',
+          title: 'Min Temp (°C)',
+        }),
+        defineField({
+          name: 'tempMaxCelsius',
+          type: 'number',
+          title: 'Max Temp (°C)',
+        }),
+        defineField({
+          name: 'rainfallMm',
+          type: 'number',
+          title: 'Rainfall (mm)',
+        }),
+        defineField({ name: 'windKmh', type: 'number', title: 'Wind (km/h)' }),
+        defineField({
+          name: 'humidityPercent',
+          type: 'number',
+          title: 'Humidity (%)',
+        }),
+        defineField({ name: 'uvIndex', type: 'number', title: 'UV Index' }),
+        defineField({ name: 'fetchedAt', type: 'string', title: 'Fetched At' }),
+      ],
+    }),
   ],
   orderings: [
     {

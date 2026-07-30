@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import EventContext from '@/components/modules/EventContext';
 import { RecordJourney } from '@/components/modules/GovernanceJourney';
 import JourneyDrawer from '@/components/modules/JourneyDrawer';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
@@ -11,10 +12,12 @@ import LineageTabs from '@/components/modules/LineageTabs';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
-import { serverEnv } from '@/env/serverEnv';
-import { client } from '@/lib/sanity/client/client';
+import { clientEnv } from '@/env/clientEnv';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { recordDetailQuery, recordSlugs } from '@/lib/sanity/queries/queries';
+import { recordDetailQuery } from '@/lib/sanity/queries/queries';
+import { fetchWeather } from '@/lib/weather';
+
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -225,6 +228,27 @@ function RecordEvidence({ record }: { record: RecordData }) {
   );
 }
 
+type Geopoint = { lat: number; lng: number } | null | undefined;
+
+async function resolveWeather(
+  _id: string,
+  date: string | null,
+  geo: Geopoint,
+  hasStoredContext: boolean
+) {
+  if (!date || !geo?.lat || !geo?.lng) return null;
+  const weather = await fetchWeather(date, geo.lat, geo.lng);
+  if (!weather) return null;
+  if (!hasStoredContext) {
+    fetch(`${clientEnv.NEXT_PUBLIC_SITE_URL}/api/weather-patch`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _id, date, lat: geo.lat, lng: geo.lng }),
+    }).catch(() => null);
+  }
+  return weather;
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const { data } = await sanityFetch({
@@ -246,13 +270,6 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export async function generateStaticParams() {
-  const slugs = await client.fetch(recordSlugs, {
-    limit: serverEnv.MAX_STATIC_PARAMS,
-  });
-  return slugs ? slugs.filter((s) => s !== null).map((slug) => ({ slug })) : [];
-}
-
 export default async function RecordPage(props: Props) {
   const { slug } = await props.params;
   const { data: record } = await sanityFetch({
@@ -261,6 +278,14 @@ export default async function RecordPage(props: Props) {
   });
 
   if (!record) notFound();
+
+  const geo = record.relatedArea?.geopoint;
+  const weather = await resolveWeather(
+    record._id,
+    record.date ?? null,
+    geo,
+    !!record.weatherContext
+  );
 
   const lineageCount =
     (record.childRecords?.length ?? 0) +
@@ -276,6 +301,11 @@ export default async function RecordPage(props: Props) {
           <CustomPortableText value={record.content as PortableTextBlock[]} />
         </div>
       )}
+      <EventContext
+        weather={weather}
+        location={record.location}
+        attendance={record.attendance}
+      />
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={record.title || ''} />
       </div>
