@@ -58,7 +58,7 @@ export function NarratorToggle({
       type="button"
       onClick={onToggle}
       title={enabled ? 'Stop narration' : 'Start narration'}
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full shadow-lg text-sm font-medium transition-colors ${
+      className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full shadow-lg text-sm font-medium transition-colors print:hidden ${
         enabled
           ? 'bg-primary text-white hover:bg-primary/90'
           : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'

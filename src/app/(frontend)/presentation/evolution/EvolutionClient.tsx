@@ -8,6 +8,16 @@ import {
   ScrollNarratorEngine,
 } from '@/components/modules/ScrollNarrator';
 
+// ─── Print styles ─────────────────────────────────────────────────────────────
+// Injected once — kills animations, forces white, sets A4 page size
+const PRINT_STYLES = `
+  @media print {
+    @page { size: A4 portrait; margin: 1.5cm; }
+    * { animation: none !important; transition: none !important; }
+    .motion-safe\\:opacity-0 { opacity: 1 !important; }
+  }
+`;
+
 // ─── Fade-in wrapper ──────────────────────────────────────────────────────────
 
 function Reveal({
@@ -438,6 +448,8 @@ export default function EvolutionPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: print styles only */}
+      <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
       <ScrollNarratorEngine cues={cues} enabled={narrating} />
       <NarratorToggle
         enabled={narrating}
@@ -447,16 +459,16 @@ export default function EvolutionPage() {
       {/* ── Act 0: Hook ── */}
       <section
         ref={act0.ref}
-        className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gray-950"
+        className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gray-950 print:min-h-0 print:bg-white print:py-8 print:mb-4"
       >
         <div className="max-w-3xl">
           <p className="text-xs font-bold text-primary uppercase tracking-widest mb-8">
             The Evolution of Umkhandlu
           </p>
-          <h1 className="text-3xl md:text-5xl font-black text-white leading-tight mb-6">
+          <h1 className="text-3xl md:text-5xl font-black text-white leading-tight mb-6 print:text-gray-900 print:text-3xl">
             <HookLine text="Communities already create history." />
           </h1>
-          <h2 className="text-2xl md:text-4xl font-black text-gray-300 leading-tight">
+          <h2 className="text-2xl md:text-4xl font-black text-gray-300 leading-tight print:text-gray-600 print:text-2xl">
             <HookLine
               text="Umkhandlu ensures it is never lost."
               baseDelay={0.6}
@@ -466,7 +478,7 @@ export default function EvolutionPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.2, duration: 0.8 }}
-            className="text-gray-500 mt-10 text-sm"
+            className="text-gray-500 mt-10 text-sm print:hidden"
           >
             Scroll to follow the journey ↓
           </motion.p>
@@ -475,7 +487,7 @@ export default function EvolutionPage() {
 
       <div className="container mx-auto max-w-3xl px-6 py-20">
         {/* ── Act 1: The Record ── */}
-        <div ref={act1.ref}>
+        <div ref={act1.ref} className="print:break-before-page">
           <ActLabel number="1" title="The Record" />
         </div>
 
@@ -506,7 +518,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 2: The Journey ── */}
-        <div ref={act2.ref}>
+        <div ref={act2.ref} className="print:break-before-page">
           <ActLabel number="2" title="The Journey" />
         </div>
 
@@ -540,7 +552,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 3: The Project ── */}
-        <div ref={act3.ref}>
+        <div ref={act3.ref} className="print:break-before-page">
           <ActLabel number="3" title="The Project" />
         </div>
 
@@ -619,7 +631,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 4: The Compliance ── */}
-        <div ref={act4.ref}>
+        <div ref={act4.ref} className="print:break-before-page">
           <ActLabel number="4" title="The Compliance" />
         </div>
 
@@ -686,7 +698,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 5: The Community ── */}
-        <div ref={act5.ref}>
+        <div ref={act5.ref} className="print:break-before-page">
           <ActLabel number="5" title="The Community" />
         </div>
 
@@ -755,7 +767,7 @@ export default function EvolutionPage() {
         </Reveal>
 
         {/* ── Act 6: The Architecture ── */}
-        <div ref={act6.ref}>
+        <div ref={act6.ref} className="print:break-before-page">
           <ActLabel number="6" title="The Architecture" />
         </div>
 
