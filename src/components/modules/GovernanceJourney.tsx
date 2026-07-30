@@ -115,7 +115,8 @@ function nodeIcon(node: JourneyNode): string {
 }
 
 function nodeCardCls(node: JourneyNode, isRoot: boolean): string {
-  const base = 'rounded-xl p-3 text-center min-w-[140px] max-w-[200px]';
+  const base =
+    'rounded-xl p-3 text-center min-w-[140px] max-w-[200px] print:min-w-0 print:max-w-none print:w-full print:text-left print:rounded-lg print:p-2';
   if (isRoot) return `bg-amber-50 border-2 border-amber-400 ${base}`;
   if (node.isCurrent) return `bg-primary/5 border-2 border-primary ${base}`;
   return `bg-white border border-gray-200 hover:border-amber-300 hover:shadow-sm transition-all ${base}`;
@@ -188,19 +189,29 @@ function JourneyLevel({ nodes }: { nodes: JourneyNode[] }) {
       <div className="w-px h-8 bg-amber-300" />
 
       {hasBranch ? (
-        // ── branching: horizontal spread ──────────────────────────────────────
+        // ── branching: horizontal on screen, vertical on print ────────────────
         <div className="flex flex-col items-center w-full">
-          {/* horizontal bar */}
-          <div className="relative flex items-start justify-center w-full gap-6">
-            {/* top horizontal line spanning all branches */}
+          {/* screen: horizontal spread */}
+          <div className="relative flex items-start justify-center w-full gap-6 print:hidden">
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 h-px bg-amber-300"
               style={{ width: `${(nodes.length - 1) * 50}%` }}
             />
             {nodes.map((node) => (
               <div key={node.id} className="flex flex-col items-center">
-                {/* short drop from horizontal bar to card */}
                 <div className="w-px h-6 bg-amber-300" />
+                <NodeCard node={node} />
+                {node.children.length > 0 && (
+                  <JourneyLevel nodes={node.children} />
+                )}
+              </div>
+            ))}
+          </div>
+          {/* print: vertical stack */}
+          <div className="hidden print:flex print:flex-col print:items-center print:w-full">
+            {nodes.map((node) => (
+              <div key={node.id} className="flex flex-col items-center w-full">
+                <div className="w-px h-4 bg-amber-300" />
                 <NodeCard node={node} />
                 {node.children.length > 0 && (
                   <JourneyLevel nodes={node.children} />

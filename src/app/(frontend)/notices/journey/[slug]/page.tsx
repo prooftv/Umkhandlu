@@ -68,12 +68,12 @@ export default async function NoticeJourneyPrintPage(props: Props) {
     <>
       <style>{`
         @media print {
-          @page { size: A4 landscape; margin: 1cm; }
+          @page { size: A4 portrait; margin: 1.5cm; }
           .no-print { display: none !important; }
         }
       `}</style>
 
-      <div className="max-w-6xl mx-auto py-8 px-6 print:py-0 print:px-0">
+      <div className="max-w-3xl mx-auto py-8 px-6 print:max-w-none print:py-0 print:px-0">
         {/* No-print nav */}
         <div className="no-print flex items-center justify-between mb-8">
           <Link
