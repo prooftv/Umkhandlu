@@ -27,6 +27,7 @@ When Sanity Teams (paid tier) is available, these roles can be enforced with cus
 **Responsibilities:**
 - Publish meeting notices at least 7 days before meetings
 - Upload meeting minutes within 48 hours of meetings
+- Set `location` (venue) and `attendance` on meeting notices and minutes records
 - Keep leadership profiles current
 - Manage campaigns (create, update status, track deliverables)
 - Upload campaign media (photos, video, audio, documents)

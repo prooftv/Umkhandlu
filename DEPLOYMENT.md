@@ -37,6 +37,7 @@ Operational checklist for deploying Umkhandlu for a new council. Follow in order
 | `SANITY_API_READ_TOKEN` | From step 1 |
 | `MAX_STATIC_PARAMS` | `50` |
 | `NEXT_PUBLIC_GTM_ID` | (optional) |
+| `SANITY_API_WRITE_TOKEN` | From step 1 (token with write permissions — for weather context capture) |
 
 - [ ] Deploy
 

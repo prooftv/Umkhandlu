@@ -455,10 +455,14 @@ Layer 5 outputs are derived evidence. They are produced automatically from Layer
 
 ### Current Layer 5 Outputs
 
-| Output | Route | Source Records |
-|---|---|---|
-| Governance Record Lineage Certificate | `/notices/lineage/[slug]` | Notice + all produced records + follow-up notices |
-| Proof of Publication Certificate | `/development-notices/certificate/[slug]` | Development notice fields |
+| Output | Route | Source Records | Status |
+|---|---|---|---|
+| Governance Record Lineage Certificate | `/notices/lineage/[slug]` | Notice + all produced records (4 levels deep) + follow-up notices + `_rev` | ✅ Live |
+| Governance Journey Map | `/notices/journey/[slug]` | Same as lineage certificate, rendered as printable branching tree (A4 landscape) | ✅ Live |
+| Proof of Publication Certificate | `/development-notices/certificate/[slug]` | Development notice fields | ✅ Live |
+
+**Event Context in Layer 5 outputs:**
+Weather context (`weatherContext`) is stored permanently on `notice` and `record` documents via the `/api/weather-patch` route. Because it is stored on the Sanity document, it is available to all Layer 5 outputs that query those documents. Forecast snapshots are re-captured on each page visit until the event date passes, then locked as a historical record. Full specification: [RECORDS.md](./RECORDS.md).
 
 ### Integrity Mechanism
 
@@ -472,7 +476,7 @@ A recipient of a certificate can verify it against the live record by checking w
 
 | Output | Description | Status |
 |---|---|---|
-| Governance Evidence Package | Complete lineage bundle for a governance process — notice, records, evidence files, verification notes — captured at a point in time with a bundle hash | Planned |
+| Governance Evidence Package | Complete lineage bundle for a governance process — notice, records, evidence files, verification notes, weather context — captured at a point in time with a bundle hash | Planned |
 | Community Governance Report | Periodic summary of governance activity for an area — notices issued, records produced, decisions made, infrastructure tracked | Planned |
 | Infrastructure History | Complete project record from notice through implementation to verification | Planned |
 | Decision Provenance Report | Full chain of authority for a specific decision — who called the meeting, who attended, what was resolved, who approved | Planned |

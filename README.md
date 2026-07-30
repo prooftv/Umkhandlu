@@ -39,6 +39,7 @@ npm run dev
 | `NEXT_PUBLIC_SANITY_STUDIO_URL` | Studio URL |
 | `NEXT_PUBLIC_GTM_ID` | Google Tag Manager ID (optional) |
 | `SANITY_API_READ_TOKEN` | Server-side Sanity read token |
+| `SANITY_API_WRITE_TOKEN` | Server-side Sanity write token (weather context capture) |
 | `MAX_STATIC_PARAMS` | Max static params for ISR |
 
 ## Content Architecture
@@ -55,7 +56,7 @@ npm run dev
 | `listing` | Directory (school, clinic, business, accommodation, church, facility, area) with map coordinates and rich content |
 | `opportunity` | Jobs, training, bursaries, funding |
 | `program` | Youth events, skills programs, school collaborations |
-| `record` | Governance documents (minutes, resolutions, land allocations, dispute resolutions, policies, reports, external resources) |
+| `record` | Governance documents (minutes, resolutions, land allocations, dispute resolutions, policies, reports, external resources) — with lineage, event context (location, attendance, weather), and evidence attachments |
 | `sponsor` | Sponsors and partners (NGO, business, government, community, individual) |
 | `campaign` | Campaigns & activations (sponsorship, activation, initiative) with video, audio, documents, SEO, impact tracking |
 | `developmentNotice` | Statutory & public participation notices (EIA, SPLUMA, estate, liquidation, PTO, mining, cell towers) with comment deadline, applicant, map pin, legal mandate, fee tracking, proof of publication |
@@ -201,13 +202,17 @@ The public comment form on development notices captures structured objections/co
 | `GET /api/campaigns/export?token=<READ_TOKEN>` | Campaign data export (JSON), including deliverables, certified progress, sponsor/contact info, area/program references, and related notice/opportunity counts |
 | `GET /api/campaigns/export?token=<READ_TOKEN>&status=active` | Filter by status |
 | `GET /api/campaigns/export?token=<READ_TOKEN>&type=csr` | Filter by type |
+| `POST /api/weather-patch` | Capture weather snapshot onto a notice or record document (server-side, requires write token) |
 | `/development-notices/[slug]` | Public notice detail + comment form |
-| `/records/[slug]` | Governance record detail (institutional memory) |
+| `/records/[slug]` | Governance record detail — event context, lineage, journey map |
 | `/notices/certificate/[id]` | Proof of Publication certificate (printable) |
+| `/notices/lineage/[slug]` | Governance lineage certificate (printable A4) |
+| `/notices/journey/[slug]` | Governance journey map (printable A4 landscape) |
 
 ## Documentation
 
 - [PLAYBOOK.md](./PLAYBOOK.md) — Strategic project playbook for proposals
+- [RECORDS.md](./RECORDS.md) — Records architecture: philosophy, six record roles, event context, weather, schema, frontend
 - [ROLES.md](./ROLES.md) — Content ownership model and roles
 - [DEPLOYMENT.md](./DEPLOYMENT.md) — Council deployment runbook (step-by-step)
 - [SEEDING.md](./SEEDING.md) — Seed data architecture and how to add a new council

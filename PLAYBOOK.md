@@ -1375,20 +1375,50 @@ The shift this enables: instead of asking *"Where is the document?"*, Umkhandlu 
 
 ### Next Architectural Milestone: Institutional Records Layer
 
-The `record` document type exists but is underutilised. It should become the backbone of permanent community memory:
+The `record` document type is the backbone of permanent community memory. Full architecture: [RECORDS.md](./RECORDS.md)
 
-- Traditional council records (PTO allocations, resolutions, imbizo outcomes)
-- Development records (project histories, contractor performance, implementation outcomes)
-- Community records (infrastructure assets, local organisations, service history)
-- Governance records (notices, certificates, evidence trails, decision archives)
+**Six record roles** — each record plays a specific role in the institutional journey:
 
-Municipalities change. Councillors change. Indunas change. Contractors change. But the community memory remains. The platform is becoming that memory.
+| Role | Purpose | Example |
+|---|---|---|
+| **Origin** | Creates the starting point | Meeting minutes |
+| **Decision** | Captures what was decided | Resolution, community decision |
+| **Evidence** | Proves something happened | Attendance register, signed petition |
+| **Matter** | An ongoing concern with a life | Infrastructure concern |
+| **Reference** | Provides institutional context | Customary process explanation |
+| **Status** | Change over time is the value | Infrastructure concern progressing to resolved |
 
-The `record` document type needs:
+**Record network** — the real asset is not any single record but the connected network:
+
+```
+Record
+  ├── originNotice      → the notice that produced this record
+  ├── parentRecord      → the record this was produced from
+  ├── childRecords[]    → records this record produced
+  ├── evidence[]        → attachments proving this record
+  ├── relatedArea       → geographic jurisdiction
+  └── approvedBy        → authority who approved
+```
+
+**Event Context** — records are time capsules. Each record captures the circumstances of the event:
+
+- `location` — where the event physically took place
+- `attendance` — number of people present
+- `weatherContext` — auto-captured from Open-Meteo on page visit (forecast for future notices, historical archive for past records). Stored permanently on the document for evidence trail inclusion.
+
+**Frontend** — `/records/[slug]` and `/notices/[slug]` are fully dynamic (rendered on every request). Both include:
+- Event Context block (weather, venue, attendance)
+- Governance Lineage tab with `LineageChain`
+- Journey Map via `JourneyDrawer` (full-viewport overlay)
+- Printable lineage certificate at `/notices/lineage/[slug]`
+- Printable journey map at `/notices/journey/[slug]`
+
+The `record` document type supports:
 - A frontend detail page at `/records/[slug]`
-- Integration with the proof of publication system
 - Permanent archive (records are never deleted, only status-changed)
-- Search and filter by type, area, date, authority
+- Governance lineage (originNotice → parentRecord → childRecords, 4 levels deep)
+- Evidence preservation (attachments, verification notes)
+- Layer 5 output integration (weather context stored on document, available to all certificates and exports)
 
 ---
 
@@ -1435,10 +1465,11 @@ This turns the operator role into a contractable, auditable, scalable governance
 | Document types | 13 |
 | Page builder sections | 27 |
 | Singletons | 3 |
-| Frontend routes | 18 |
+| Frontend routes | 22 |
 | Server actions | 4 (contact, subscribe, public comment, webhook delivery) |
+| API routes | 3 (campaigns/export, weather-patch, sitemap) |
 | UI components | 7 |
-| Total components | 66 |
+| Total components | 70+ |
 | i18n translation keys | 50+ |
 | Tests | 13 (all passing) |
 | Biome lint errors | 0 |
