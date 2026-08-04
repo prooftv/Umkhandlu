@@ -218,6 +218,7 @@ The public comment form on development notices captures structured objections/co
 - [SEEDING.md](./SEEDING.md) — Seed data architecture and how to add a new council
 - [SOP.md](./SOP.md) — Infrastructure documentation operator SOP (project tracking workflow)
 - [TCRS.md](./TCRS.md) — Truth Conflict Resolution System (governance audit & evidence preservation)
+- [GOVERNANCE_NODE_API.md](./GOVERNANCE_NODE_API.md) — Intelligence API contract v1.0 (Control Centre integration)
 
 ## License
 
