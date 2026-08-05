@@ -308,11 +308,6 @@ export default async function RecordPage(props: Props) {
           <CustomPortableText value={record.content as PortableTextBlock[]} />
         </div>
       )}
-      <EventContext
-        weather={weather}
-        location={record.location}
-        attendance={record.attendance}
-      />
       <div className="mt-8 pt-6 border-t border-gray-100">
         <ShareWhatsApp title={record.title || ''} />
       </div>
@@ -332,6 +327,11 @@ export default async function RecordPage(props: Props) {
         noticeTab={recordTab}
         lineageTab={
           <>
+            <EventContext
+              weather={weather}
+              location={record.location}
+              attendance={record.attendance}
+            />
             <RecordLineage record={record} currentSlug={slug} />
             {lineageCount > 0 && (
               <div className="mt-4">

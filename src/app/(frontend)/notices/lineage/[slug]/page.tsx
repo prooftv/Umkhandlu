@@ -4,9 +4,11 @@ import { notFound } from 'next/navigation';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
 import { LineageChain } from '@/components/modules/LineageNode';
 import PrintButton from '@/components/modules/PrintButton';
+import { clientEnv } from '@/env/clientEnv';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { noticeLineageQuery } from '@/lib/sanity/queries/queries';
 import { SITE_NAME } from '@/lib/siteConfig';
+import { fetchWeather } from '@/lib/weather';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -35,6 +37,87 @@ function cap(s: string | null) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+async function resolveWeatherLine(
+  notice: NonNullable<
+    Awaited<ReturnType<typeof sanityFetch<typeof noticeLineageQuery>>>['data']
+  >
+): Promise<string | null> {
+  const geo = notice.relatedArea?.geopoint as
+    | { lat: number; lng: number }
+    | null
+    | undefined;
+  if (!notice.date || !geo?.lat || !geo?.lng) return null;
+  const w = await fetchWeather(notice.date, geo.lat, geo.lng);
+  if (!w) return null;
+  if (!notice.weatherContext) {
+    fetch(`${clientEnv.NEXT_PUBLIC_SITE_URL}/api/weather-patch`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        _id: notice._id,
+        date: notice.date,
+        lat: geo.lat,
+        lng: geo.lng,
+      }),
+    }).catch(() => null);
+  }
+  return `${w.temperatureCelsius}°C · ${w.condition}${w.type === 'forecast' ? ' (forecast)' : ' (recorded)'}`;
+}
+
+function OriginBlock({
+  notice,
+  weatherLine,
+  siteUrl,
+}: {
+  notice: NonNullable<
+    Awaited<ReturnType<typeof sanityFetch<typeof noticeLineageQuery>>>['data']
+  >;
+  weatherLine: string | null;
+  siteUrl: string;
+}) {
+  const originNotice = notice.originNotice as {
+    title: string | null;
+    slug: string | null;
+    noticeType: string | null;
+    date: string | null;
+  } | null;
+  return (
+    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+      <p className="text-xs font-bold uppercase tracking-wide text-amber-700 mb-2">
+        Originating Notice
+      </p>
+      <h2 className="text-lg font-bold text-gray-900">{notice.title}</h2>
+      <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
+        <span>
+          <span className="font-medium">Type:</span> {cap(notice.noticeType)}
+        </span>
+        <span>
+          <span className="font-medium">Date:</span> {fmt(notice.date)}
+        </span>
+        {notice.relatedArea && (
+          <span>
+            <span className="font-medium">Area:</span> {notice.relatedArea.name}
+          </span>
+        )}
+        {weatherLine && (
+          <span>
+            <span className="font-medium">Weather:</span> {weatherLine}
+          </span>
+        )}
+      </div>
+      {originNotice && (
+        <p className="text-xs text-blue-700 mt-2">
+          Follow-up to:{' '}
+          <a href={`${siteUrl}/notices/${originNotice.slug}`}>
+            {originNotice.title}
+          </a>{' '}
+          ({fmt(originNotice.date)})
+        </p>
+      )}
+    </div>
+  );
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const { data } = await sanityFetch({
@@ -57,6 +140,8 @@ export default async function NoticeLineagePage(props: Props) {
 
   if (!notice) notFound();
 
+  const weatherLine = await resolveWeatherLine(notice);
+
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://umkhandlu.vercel.app';
   const publicUrl = `${siteUrl}/notices/${slug}`;
@@ -68,12 +153,6 @@ export default async function NoticeLineagePage(props: Props) {
 
   const producedRecords = (notice.producedRecords ?? []) as LR[];
   const followUpNotices = (notice.followUpNotices ?? []) as FollowUpNotice[];
-  const originNotice = notice.originNotice as {
-    title: string | null;
-    slug: string | null;
-    noticeType: string | null;
-    date: string | null;
-  } | null;
 
   const totalRecords =
     countRecords(producedRecords) +
@@ -91,7 +170,6 @@ export default async function NoticeLineagePage(props: Props) {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-6 print:py-0 print:px-0">
-      {/* No-print nav */}
       <div className="no-print flex items-center justify-between mb-8">
         <Link
           href={`/notices/${slug}`}
@@ -102,7 +180,6 @@ export default async function NoticeLineagePage(props: Props) {
         <PrintButton />
       </div>
 
-      {/* Certificate header */}
       <div className="border-2 border-gray-900 rounded-xl p-8 mb-6 print:rounded-none print:border-black">
         <div className="flex items-start justify-between mb-6">
           <div>
@@ -127,39 +204,12 @@ export default async function NoticeLineagePage(props: Props) {
           </div>
         </div>
 
-        {/* Origin notice block */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <p className="text-xs font-bold uppercase tracking-wide text-amber-700 mb-2">
-            Originating Notice
-          </p>
-          <h2 className="text-lg font-bold text-gray-900">{notice.title}</h2>
-          <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
-            <span>
-              <span className="font-medium">Type:</span>{' '}
-              {cap(notice.noticeType)}
-            </span>
-            <span>
-              <span className="font-medium">Date:</span> {fmt(notice.date)}
-            </span>
-            {notice.relatedArea && (
-              <span>
-                <span className="font-medium">Area:</span>{' '}
-                {notice.relatedArea.name}
-              </span>
-            )}
-          </div>
-          {originNotice && (
-            <p className="text-xs text-blue-700 mt-2">
-              Follow-up to:{' '}
-              <a href={`${siteUrl}/notices/${originNotice.slug}`}>
-                {originNotice.title}
-              </a>{' '}
-              ({fmt(originNotice.date)})
-            </p>
-          )}
-        </div>
+        <OriginBlock
+          notice={notice}
+          weatherLine={weatherLine}
+          siteUrl={siteUrl}
+        />
 
-        {/* Summary stats */}
         <div className="grid grid-cols-3 gap-4 mt-4">
           <div className="text-center p-3 bg-gray-50 rounded-lg">
             <p className="text-2xl font-black text-gray-900">
@@ -178,7 +228,6 @@ export default async function NoticeLineagePage(props: Props) {
         </div>
       </div>
 
-      {/* Records produced directly from this notice */}
       {producedRecords.length > 0 && (
         <section className="mb-6">
           <h3 className="text-sm font-bold uppercase tracking-wide text-gray-700 mb-2">
@@ -193,7 +242,6 @@ export default async function NoticeLineagePage(props: Props) {
         </section>
       )}
 
-      {/* Follow-up meetings and their records */}
       {followUpNotices.map((fu) => (
         <section key={fu._id} className="mb-6">
           <LineageChain
@@ -217,7 +265,6 @@ export default async function NoticeLineagePage(props: Props) {
         </p>
       )}
 
-      {/* Footer */}
       <div className="mt-8 pt-6 border-t border-gray-200 text-xs text-gray-400">
         <p>
           This document was generated from the {SITE_NAME} governance platform.
@@ -235,7 +282,6 @@ export default async function NoticeLineagePage(props: Props) {
         )}
       </div>
 
-      {/* No-print bottom button */}
       <div className="no-print text-center mt-8">
         <PrintButton />
       </div>

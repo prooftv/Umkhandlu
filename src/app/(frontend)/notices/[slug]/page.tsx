@@ -231,11 +231,6 @@ export default async function NoticePage(props: Props) {
       {notice.content && (
         <CustomPortableText value={notice.content as PortableTextBlock[]} />
       )}
-      <EventContext
-        weather={weather}
-        location={notice.location}
-        attendance={notice.attendance}
-      />
       <NoticeSeriesLinks
         originNotice={originNotice}
         relatedCampaign={notice.relatedCampaign ?? null}
@@ -302,6 +297,12 @@ export default async function NoticePage(props: Props) {
           )}
         </div>
         <h1 className="text-3xl md:text-5xl font-bold mb-6">{notice.title}</h1>
+        <EventContext
+          weather={weather}
+          location={notice.location}
+          attendance={notice.attendance}
+          variant="strip"
+        />
       </div>
       <LineageTabs
         noticeTab={noticeTab}

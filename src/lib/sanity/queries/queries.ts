@@ -245,7 +245,10 @@ export const noticeLineageQuery = defineQuery(`
     noticeType,
     date,
     excerpt,
-    "relatedArea": relatedArea->{ name, "slug": slug.current },
+    "relatedArea": relatedArea->{ name, "slug": slug.current, "geopoint": geopoint },
+    location,
+    attendance,
+    weatherContext,
     "originNotice": originNotice->{ title, "slug": slug.current, noticeType, date },
     "followUpNotices": *[_type == "notice" && originNotice._ref == ^._id] | order(date asc) {
       _id, title, "slug": slug.current, noticeType, date,
