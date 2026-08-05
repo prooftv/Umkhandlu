@@ -27,7 +27,7 @@ const exportQuery = `*[_type == "campaign"] | order(startDate desc) {
     null
   ),
   smmeDirectory[] { name, service, owner, verified },
-  communityNote[] { date, issuedBy, message },
+  communityNote[] { date, issuedBy, message, location, attendance, weatherContext },
   progressLog[] { date, update },
   "sponsor": sponsor->{ name, sponsorType, website },
   "contactPerson": contactPerson->{ firstName, lastName, role },

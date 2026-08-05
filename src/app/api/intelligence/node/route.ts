@@ -1,4 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import {
+  NODE_ID,
+  NODE_MUNICIPALITY,
+  NODE_NAME,
+  NODE_PROVINCE,
+} from '@/lib/siteConfig';
 import { authenticate } from '../_auth';
 
 export const dynamic = 'force-dynamic';
@@ -8,10 +14,10 @@ export async function GET(request: NextRequest) {
   if (denied) return denied;
 
   return NextResponse.json({
-    id: 'umkhandlu-khathide-001',
-    name: 'Umkhandlu — KwaGudlucingo Traditional Council',
+    id: NODE_ID,
+    name: NODE_NAME,
     authority: 'Traditional Council',
-    location: { province: 'KwaZulu-Natal', municipality: 'Nquthu' },
+    location: { province: NODE_PROVINCE, municipality: NODE_MUNICIPALITY },
     contractVersion: '1.0',
     capabilities: [
       'records',
