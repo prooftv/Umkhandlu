@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
     }>(healthQuery);
     return NextResponse.json({
       status: 'healthy',
+      version: '1.0',
       recordCount: data.recordCount ?? 0,
       noticeCount: data.noticeCount ?? 0,
       timestamp: new Date().toISOString(),
@@ -28,6 +29,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         status: 'degraded',
+        version: '1.0',
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

@@ -18,5 +18,7 @@ export const SITE_DESCRIPTION =
 export const NODE_ID = 'umkhandlu-khathide-001';
 export const NODE_NAME = 'Umkhandlu — KwaGudlucingo Traditional Council';
 export const NODE_PROVINCE = 'KwaZulu-Natal';
-export const NODE_MUNICIPALITY = 'Nquthu';
+export const NODE_MUNICIPALITY = 'Newcastle';
+export const NODE_DISTRICT = 'Amajuba';
+export const NODE_LOCALITY = 'Osizweni / Mndozo';
 // force redeploy 1777140588
