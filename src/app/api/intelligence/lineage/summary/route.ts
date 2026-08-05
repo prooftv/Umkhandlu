@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         proofOfPublication: data.proofOfPublication ?? 0,
         journeyMaps: data.noticesWithRecords ?? 0,
       },
-      generatedAt: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json({ error: 'Query failed.' }, { status: 500 });

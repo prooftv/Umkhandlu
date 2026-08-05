@@ -43,7 +43,7 @@ Node identity. No Sanity query. Static response.
   "id": "umkhandlu-khathide-001",
   "name": "Umkhandlu — KwaGudlucingo Traditional Council",
   "authority": "Traditional Council",
-  "location": { "province": "KwaZulu-Natal", "municipality": "Buffalo City" },
+  "location": { "province": "KwaZulu-Natal", "municipality": "Nquthu" },
   "contractVersion": "1.0",
   "capabilities": [
     "records", "notices", "participation",
@@ -61,12 +61,14 @@ Live Sanity connectivity check.
 
 ```json
 {
-  "status": "healthy",          // or "degraded"
+  "status": "healthy",
   "recordCount": 42,
   "noticeCount": 18,
   "timestamp": "<ISO>"
 }
 ```
+
+`status` is `"degraded"` (HTTP 500) if the Sanity query fails.
 
 ---
 
@@ -78,15 +80,29 @@ Governance records aggregated by status and type.
 {
   "total": 42,
   "byStatus": {
-    "pending": 5, "adopted": 20, "approved": 10,
-    "resolved": 5, "rejected": 2
+    "pending": 5,
+    "adopted": 20,
+    "approved": 10,
+    "resolved": 5,
+    "rejected": 2
   },
   "byType": {
-    "minutes": 8, "resolution": 12, "land-allocation": 4,
-    "dispute-resolution": 3, "policy": 5, "report": 6,
+    "minutes": 8,
+    "resolution": 12,
+    "agenda": 1,
+    "land-allocation": 4,
+    "dispute-resolution": 3,
+    "community-decision": 2,
+    "policy": 5,
+    "report": 6,
+    "infrastructure-concern": 1,
+    "project-outcome": 1,
+    "public-notice": 1,
     "external-resource": 4
   },
-  "recent": [ /* 10 most recent: _id, title, recordType, status, date */ ],
+  "recent": [
+    { "id": "<_id>", "title": "...", "type": "<recordType>", "status": "...", "createdAt": "<ISO>" }
+  ],
   "timestamp": "<ISO>"
 }
 ```
@@ -99,20 +115,41 @@ Community notices + statutory development notices.
 
 ```json
 {
-  "community": {
-    "total": 18,
-    "byType": { "meeting": 4, "announcement": 6, "resolution": 2, "alert": 1, "opportunity": 2, "employment": 1, "smme": 1, "project-update": 1 }
+  "total": 25,
+  "byStatus": {
+    "draft": 2,
+    "published": 16,
+    "open": 4,
+    "closed": 2,
+    "approved": 1,
+    "rejected": 0,
+    "withdrawn": 0
+  },
+  "byType": {
+    "meeting": 4, "announcement": 6, "resolution": 2, "alert": 1,
+    "opportunity": 2, "employment": 1, "smme": 1, "project-update": 1,
+    "eia": 2, "rezoning": 1, "land-use": 1, "township": 0,
+    "building": 0, "mining": 1, "liquor": 0, "telecom": 1,
+    "estate": 1, "liquidation": 0, "pto": 1, "other": 0
   },
   "statutory": {
     "total": 7,
     "open": 3,
-    "pendingProof": 2,
-    "byType": { "eia": 2, "spluma": 1, "estate": 1, "liquidation": 0, "pto": 1, "mining": 1, "cell-tower": 1 }
+    "pendingProof": 2
   },
-  "recentActivity": [ /* 10 combined: _id, _type, title, noticeType/developmentType, publishedAt */ ],
+  "recentActivity": [
+    {
+      "id": "<_id>", "title": "...", "type": "<noticeType>",
+      "status": "...", "isStatutory": false,
+      "commentDeadline": null, "createdAt": "<ISO>"
+    }
+  ],
   "timestamp": "<ISO>"
 }
 ```
+
+`statutory.open` = development notices with `status == "open"` and `commentDeadline > now()`.  
+`statutory.pendingProof` = closed notices where `proofIssued != true`.
 
 ---
 
@@ -125,11 +162,19 @@ Public participation aggregated from campaign `participationLog[]` entries.
 ```json
 {
   "total": 34,
-  "byCommentType": { "comment": 15, "objection": 8, "support": 9, "question": 2 },
-  "byRelationship": { "resident": 20, "landowner": 6, "business": 4, "ngo": 2, "other": 2 },
+  "byType": {
+    "comment": 15, "objection": 8, "support": 9, "question": 2
+  },
+  "byRelationship": {
+    "resident": 20, "landowner": 6, "business": 4,
+    "community": 2, "organisation": 1, "other": 1
+  },
+  "activeNotices": 3,
   "timestamp": "<ISO>"
 }
 ```
+
+`activeNotices` = development notices currently open for comment.
 
 ---
 
@@ -139,19 +184,18 @@ File attachments and weather context across records and notices.
 
 ```json
 {
-  "attachments": {
-    "recordEvidence": 28,
-    "developmentNoticeDocuments": 14,
-    "total": 42
+  "total": 42,
+  "byType": {
+    "document": 42, "image": 0, "video": 0, "audio": 0, "other": 0
   },
-  "weatherContext": {
-    "records": 12,
-    "notices": 5,
-    "total": 17
-  },
+  "withWeatherContext": 17,
   "timestamp": "<ISO>"
 }
 ```
+
+`total` = `record.evidence[]` files + `developmentNotice.documents[]` files.  
+`withWeatherContext` = records + notices that have a stored `weatherContext.fetchedAt`.  
+Note: file type breakdown is not stored in schema — all attachments are counted as `document`.
 
 ---
 
@@ -161,24 +205,32 @@ Campaigns, sponsors, budget, and beneficiary totals.
 
 ```json
 {
-  "campaigns": {
+  "projects": {
     "total": 9,
-    "byStatus": { "active": 3, "completed": 4, "planned": 2 },
-    "byHealth": { "on-track": 3, "at-risk": 1, "delayed": 1 },
-    "byPhase": { "planning": 2, "execution": 3, "closeout": 2, "completed": 2 }
-  },
-  "activeTotals": {
-    "budget": 450000,
-    "beneficiaries": 1200
+    "byStatus": {
+      "draft": 1, "approved": 1, "active": 3, "completed": 4, "reported": 0
+    },
+    "byHealth": { "green": 3, "amber": 1, "red": 1 },
+    "byPhase": {
+      "planning": 2, "procurement": 1, "construction": 3,
+      "commissioning": 1, "operational": 2
+    },
+    "totalBudget": 450000,
+    "totalBeneficiaries": 1200
   },
   "sponsors": {
     "total": 11,
     "active": 7
   },
-  "recent": [ /* 10: _id, title, campaignType, status, health */ ],
+  "recent": [
+    { "id": "<_id>", "title": "...", "type": "<campaignType>", "status": "...", "health": "...", "updatedAt": "<ISO>" }
+  ],
   "timestamp": "<ISO>"
 }
 ```
+
+`totalBudget` and `totalBeneficiaries` are summed from active campaigns only.  
+`sponsors.active` = sponsors linked to at least one active campaign.
 
 ---
 
@@ -190,13 +242,19 @@ Truth Conflict Resolution System — conflict log aggregation.
 {
   "total": 6,
   "byResolutionState": {
-    "unverified": 2, "verified": 1, "disputed": 1,
-    "escalated": 1, "resolved": 1
+    "pending": 2,
+    "partial": 1,
+    "resolved": 2,
+    "escalated": 1
   },
-  "averageResolutionDays": 14,   // null if no resolved pairs
+  "escalated": 1,
+  "averageResolutionDays": 14,
   "timestamp": "<ISO>"
 }
 ```
+
+`averageResolutionDays` is omitted (not `null`) when no resolved pairs exist.  
+Resolution states match the `conflictLog` schema: `pending` → `partial` → `resolved` or `escalated`.
 
 ---
 
@@ -208,12 +266,19 @@ Governance lineage — root records, linked chains, Layer 5 outputs.
 {
   "rootRecords": 18,
   "linkedRecords": 24,
-  "lineageCertificates": 5,   // notices with produced records
-  "journeyMaps": 5,           // same count — one per notice with records
-  "proofOfPublicationIssued": 3,
+  "layer5Outputs": {
+    "lineageCertificates": 5,
+    "journeyMaps": 5,
+    "proofOfPublication": 3
+  },
   "timestamp": "<ISO>"
 }
 ```
+
+`rootRecords` = records with no `parentRecord` and no `originNotice`.  
+`linkedRecords` = records with either reference set.  
+`lineageCertificates` and `journeyMaps` share the same count — one per notice that has produced records.  
+`proofOfPublication` = development notices where `proofIssued == true`.
 
 ---
 
@@ -222,7 +287,7 @@ Governance lineage — root records, linked chains, Layer 5 outputs.
 1. Add `INTELLIGENCE_API_KEY` to Vercel environment variables
 2. Redeploy (or the key takes effect on next cold start)
 3. Provide the key + base URL to the Control Centre operator out-of-band
-4. Control Centre polls `/node` first to confirm identity + contractVersion
+4. Control Centre polls `/node` first to confirm identity + `contractVersion`
 5. Then polls `/health` on a schedule; capability endpoints on demand
 
 ---

@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
       ]
         .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
         .slice(0, 10),
-      generatedAt: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json({ error: 'Query failed.' }, { status: 500 });

@@ -9,23 +9,19 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({
     id: 'umkhandlu-khathide-001',
-    name: 'Umkhandlu — Khathide Traditional Council',
-    authority: 'Khathide Traditional Council',
-    location: 'Nquthu, KwaZulu-Natal, South Africa',
-    version: '1.0.0',
+    name: 'Umkhandlu — KwaGudlucingo Traditional Council',
+    authority: 'Traditional Council',
+    location: { province: 'KwaZulu-Natal', municipality: 'Nquthu' },
     contractVersion: '1.0',
     capabilities: [
-      'health',
-      'governance',
+      'records',
+      'notices',
       'participation',
       'evidence',
       'commercial',
       'tcrs',
-      'institutional-memory',
+      'lineage',
     ],
-    timezone: 'Africa/Johannesburg',
-    description:
-      'Community digital platform for traditional councils, youth programs, and local governance. Serves Khathide Traditional Council and surrounding areas.',
-    website: process.env.NEXT_PUBLIC_SITE_URL ?? null,
+    timestamp: new Date().toISOString(),
   });
 }

@@ -20,17 +20,15 @@ export async function GET(request: NextRequest) {
     }>(healthQuery);
     return NextResponse.json({
       status: 'healthy',
-      lastUpdated: new Date().toISOString(),
       recordCount: data.recordCount ?? 0,
       noticeCount: data.noticeCount ?? 0,
-      version: '1.0.0',
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json(
       {
         status: 'degraded',
-        lastUpdated: new Date().toISOString(),
-        version: '1.0.0',
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );

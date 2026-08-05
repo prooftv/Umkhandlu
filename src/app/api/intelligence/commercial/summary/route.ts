@@ -29,7 +29,7 @@ const q = `{
   "activeBeneficiaries": *[_type == "campaign" && status == "active" && defined(beneficiaries)] { beneficiaries },
   "sponsorTotal": count(*[_type == "sponsor"]),
   "sponsorsWithActiveCampaigns": count(*[_type == "sponsor" && count(*[_type == "campaign" && status == "active" && sponsor._ref == ^._id]) > 0]),
-  "recentActivity": *[_type == "campaign"] | order(_updatedAt desc) [0...10] {
+  "recent": *[_type == "campaign"] | order(_updatedAt desc) [0...10] {
     "id": _id,
     title,
     "type": campaignType,
@@ -68,8 +68,8 @@ export async function GET(request: NextRequest) {
         total: data.sponsorTotal ?? 0,
         active: data.sponsorsWithActiveCampaigns ?? 0,
       },
-      recentActivity: data.recentActivity ?? [],
-      generatedAt: new Date().toISOString(),
+      recent: data.recent ?? [],
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json({ error: 'Query failed.' }, { status: 500 });

@@ -27,7 +27,7 @@ const q = `{
     "public-notice":        count(*[_type == "record" && recordType == "public-notice"]),
     "external-resource":    count(*[_type == "record" && recordType == "external-resource"])
   },
-  "recentActivity": *[_type == "record"] | order(_updatedAt desc) [0...10] {
+  "recent": *[_type == "record"] | order(_updatedAt desc) [0...10] {
     "id": _id,
     title,
     "type": recordType,
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     const data = await client.fetch(q);
     return NextResponse.json({
       ...data,
-      generatedAt: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json({ error: 'Query failed.' }, { status: 500 });

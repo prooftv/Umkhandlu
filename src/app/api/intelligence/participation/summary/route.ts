@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       byType,
       byRelationship,
       activeNotices: data.activeNotices ?? 0,
-      generatedAt: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json({ error: 'Query failed.' }, { status: 500 });

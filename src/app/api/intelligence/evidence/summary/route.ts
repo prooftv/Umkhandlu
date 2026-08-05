@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       },
       withWeatherContext:
         (data.recordsWithWeather ?? 0) + (data.noticesWithWeather ?? 0),
-      generatedAt: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json({ error: 'Query failed.' }, { status: 500 });

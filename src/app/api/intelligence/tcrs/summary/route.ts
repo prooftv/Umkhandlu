@@ -6,7 +6,8 @@ export const dynamic = 'force-dynamic';
 
 const q = `{
   "total": count(*[_type == "conflictLog"]),
-  "pending":   count(*[_type == "conflictLog" && resolutionState in ["pending", "partial"]]),
+  "pending":   count(*[_type == "conflictLog" && resolutionState == "pending"]),
+  "partial":   count(*[_type == "conflictLog" && resolutionState == "partial"]),
   "resolved":  count(*[_type == "conflictLog" && resolutionState == "resolved"]),
   "escalated": count(*[_type == "conflictLog" && resolutionState == "escalated"]),
   "resolvedPairs": *[_type == "conflictLog" && resolutionState == "resolved" && defined(detectedAt) && defined(resolvedAt)] {
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest) {
     const data = await client.fetch<{
       total: number;
       pending: number;
+      partial: number;
       resolved: number;
       escalated: number;
       resolvedPairs: { days: number }[];
@@ -39,12 +41,13 @@ export async function GET(request: NextRequest) {
       total: data.total ?? 0,
       byResolutionState: {
         pending: data.pending ?? 0,
+        partial: data.partial ?? 0,
         resolved: data.resolved ?? 0,
         escalated: data.escalated ?? 0,
       },
       escalated: data.escalated ?? 0,
       ...(averageResolutionDays !== undefined && { averageResolutionDays }),
-      generatedAt: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json({ error: 'Query failed.' }, { status: 500 });
