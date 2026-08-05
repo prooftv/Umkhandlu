@@ -68,11 +68,16 @@ Node identity. No Sanity query. Static response from `siteConfig.ts`.
   "id": "umkhandlu-khathide-001",
   "name": "Umkhandlu — KwaGudlucingo Traditional Council",
   "authority": "Traditional Council",
-  "location": { "province": "KwaZulu-Natal", "municipality": "Nquthu" },
+  "location": {
+    "province": "KwaZulu-Natal",
+    "district": "Amajuba",
+    "municipality": "Newcastle",
+    "locality": "Osizweni / Mndozo"
+  },
   "contractVersion": "1.0",
   "capabilities": [
-    "records", "notices", "participation",
-    "evidence", "commercial", "tcrs", "lineage", "operators"
+    "governance", "participation", "evidence",
+    "commercial", "tcrs", "institutional-memory", "health", "operators"
   ],
   "timestamp": "<ISO>"
 }
@@ -89,6 +94,7 @@ Live Sanity connectivity check.
 ```json
 {
   "status": "healthy",
+  "version": "1.0",
   "recordCount": 42,
   "noticeCount": 18,
   "timestamp": "<ISO>"
