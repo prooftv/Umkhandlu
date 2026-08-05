@@ -354,6 +354,76 @@ function CampaignUpdatesTimeline({ campaign }: { campaign: CampaignData }) {
   );
 }
 
+function NoticeCard({
+  note,
+  latest,
+}: {
+  note: CommunityNote;
+  latest?: boolean;
+}) {
+  const dateStr = note.date
+    ? new Date(note.date).toLocaleDateString('en-ZA', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null;
+
+  if (latest) {
+    return (
+      <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 overflow-hidden">
+        <div className="flex items-center gap-2 px-5 py-3 bg-amber-300/40 border-b border-amber-300">
+          <span className="text-base">📢</span>
+          <span className="text-xs font-bold text-amber-900 uppercase tracking-widest">
+            Community Notice
+          </span>
+          <span className="ml-auto text-xs font-semibold text-amber-700">
+            Latest
+          </span>
+        </div>
+        <div className="px-5 py-4">
+          <p className="text-amber-950 text-sm leading-relaxed">
+            {note.message}
+          </p>
+          <div className="flex items-center gap-3 mt-4 pt-3 border-t border-amber-200">
+            {note.issuedBy && (
+              <span className="text-xs font-semibold text-amber-800">
+                — {note.issuedBy}
+              </span>
+            )}
+            {dateStr && (
+              <time
+                dateTime={note.date}
+                className="text-xs text-amber-600 ml-auto"
+              >
+                {dateStr}
+              </time>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white px-4 py-3">
+      <p className="text-sm text-gray-700 leading-relaxed">{note.message}</p>
+      <div className="flex items-center gap-3 mt-3 pt-2 border-t border-gray-100">
+        {note.issuedBy && (
+          <span className="text-xs font-medium text-gray-500">
+            — {note.issuedBy}
+          </span>
+        )}
+        {dateStr && (
+          <time dateTime={note.date} className="text-xs text-gray-400 ml-auto">
+            {dateStr}
+          </time>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function CommunityNotices({ campaign }: { campaign: CampaignData }) {
   const notes = (campaign as unknown as { communityNote?: CommunityNote[] })
     .communityNote;
@@ -365,61 +435,17 @@ function CommunityNotices({ campaign }: { campaign: CampaignData }) {
   const [latestNote, ...previousNotes] = sortedNotes;
 
   return (
-    <div className="space-y-4">
-      <div className="p-5 bg-amber-50 rounded-xl border border-amber-200">
-        <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide">
-            📢 Community Notice — Jobs & SMME Opportunities
-          </h2>
-          <div className="flex items-center gap-2 text-xs text-amber-600">
-            {latestNote.date && (
-              <time dateTime={latestNote.date}>
-                {new Date(latestNote.date).toLocaleDateString('en-ZA', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </time>
-            )}
-            {latestNote.issuedBy && (
-              <span className="font-medium">— {latestNote.issuedBy}</span>
-            )}
-          </div>
-        </div>
-        <p className="text-amber-900 text-sm">{latestNote.message}</p>
-      </div>
-
+    <div className="space-y-3">
+      <NoticeCard note={latestNote} latest />
       {previousNotes.length > 0 && (
-        <details className="rounded-2xl border border-gray-200 bg-white p-4">
-          <summary className="cursor-pointer text-sm font-semibold text-gray-900">
-            View {previousNotes.length} earlier community notice
+        <details className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+          <summary className="px-4 py-3 cursor-pointer text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+            {previousNotes.length} earlier notice
             {previousNotes.length > 1 ? 's' : ''}
           </summary>
-          <div className="mt-4 space-y-3">
+          <div className="px-4 pb-4 space-y-3 border-t border-gray-100 pt-3">
             {previousNotes.map((note) => (
-              <div
-                key={note._key}
-                className="rounded-xl border border-gray-100 bg-gray-50 p-4"
-              >
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <p className="text-xs uppercase tracking-wide text-gray-500">
-                    {note.issuedBy}
-                  </p>
-                  {note.date && (
-                    <time
-                      dateTime={note.date}
-                      className="text-xs text-gray-400"
-                    >
-                      {new Date(note.date).toLocaleDateString('en-ZA', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </time>
-                  )}
-                </div>
-                <p className="text-sm text-gray-700">{note.message}</p>
-              </div>
+              <NoticeCard key={note._key} note={note} />
             ))}
           </div>
         </details>
