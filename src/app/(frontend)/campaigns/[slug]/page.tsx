@@ -29,7 +29,7 @@ type Props = {
 const typeConfig: Record<string, { icon: string; label: string }> = {
   ad: { icon: '📢', label: 'Sponsorship' },
   activation: { icon: '🎯', label: 'Activation' },
-  csr: { icon: '💚', label: 'Initiative' },
+  csr: { icon: '🏗️', label: 'Initiative' },
 };
 
 type CampaignData = NonNullable<
@@ -365,7 +365,7 @@ function CommunityNotices({ campaign }: { campaign: CampaignData }) {
   const [latestNote, ...previousNotes] = sortedNotes;
 
   return (
-    <div className="mb-8 space-y-4">
+    <div className="space-y-4">
       <div className="p-5 bg-amber-50 rounded-xl border border-amber-200">
         <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
           <h2 className="text-sm font-bold text-amber-800 uppercase tracking-wide">
@@ -433,7 +433,7 @@ function CommunityNotices({ campaign }: { campaign: CampaignData }) {
 function ProgressLog({ log }: { log: CampaignData['progressLog'] }) {
   if (!log?.length) return null;
   return (
-    <div className="mb-8">
+    <div>
       <h2 className="text-xl font-bold mb-3">Progress Log</h2>
       <div className="border-l-2 border-primary/30 pl-4 space-y-4">
         {log.map((entry) => (
@@ -833,7 +833,7 @@ function LessonsLearned({ campaign }: { campaign: CampaignData }) {
     .lessonsLearned;
   if (!lessons) return null;
   return (
-    <div className="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
+    <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
       <h2 className="text-xl font-bold mb-2 text-blue-800">
         📝 Lessons Learned
       </h2>
@@ -1042,41 +1042,33 @@ export default async function CampaignPage(props: Props) {
         </div>
       )}
 
-      {/* Community notices (hiring / SMME) */}
-      <CommunityNotices campaign={campaign} />
-
-      {/* Deliverables progress */}
-      <DeliverablesList
-        deliverables={campaign.deliverables ?? undefined}
-        deliverablesCertified={
-          (campaign as CampaignWithVerification).deliverablesCertified
-        }
-        total={campaign.totalDeliverables}
-      />
-
-      {/* Technical progress log (engineer/PMU verified) */}
-      <ProgressLog log={campaign.progressLog} />
-
-      {/* Verified evidence / conflict records */}
-      <VerificationRecords
-        records={
-          (campaign as CampaignWithVerification).verificationRecords ?? []
-        }
-      />
-
-      {campaign.impactSummary && (
-        <div className="mb-8 p-6 bg-green-50 rounded-xl border border-green-100">
-          <h2 className="text-xl font-bold mb-2 text-green-800">
-            💚 Impact Summary
-          </h2>
-          <p className="text-green-700">{campaign.impactSummary}</p>
-        </div>
-      )}
-
-      <LessonsLearned campaign={campaign} />
-
-      {/* Project updates timeline (sod turning, phase completions, etc.) */}
-      <CampaignUpdatesTimeline campaign={campaign} />
+      {/* Nullable sections — space-y-8 only adds gap between sections that render */}
+      <div className="space-y-8 mt-8">
+        <CommunityNotices campaign={campaign} />
+        <DeliverablesList
+          deliverables={campaign.deliverables ?? undefined}
+          deliverablesCertified={
+            (campaign as CampaignWithVerification).deliverablesCertified
+          }
+          total={campaign.totalDeliverables}
+        />
+        <ProgressLog log={campaign.progressLog} />
+        <VerificationRecords
+          records={
+            (campaign as CampaignWithVerification).verificationRecords ?? []
+          }
+        />
+        {campaign.impactSummary && (
+          <div className="p-6 bg-green-50 rounded-xl border border-green-100">
+            <h2 className="text-xl font-bold mb-2 text-green-800">
+              💚 Impact Summary
+            </h2>
+            <p className="text-green-700">{campaign.impactSummary}</p>
+          </div>
+        )}
+        <LessonsLearned campaign={campaign} />
+        <CampaignUpdatesTimeline campaign={campaign} />
+      </div>
 
       {/* Gallery: show for non-CSR, or for CSR when no projectUpdates exist */}
       <CampaignGallery

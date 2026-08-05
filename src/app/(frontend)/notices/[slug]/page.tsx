@@ -43,6 +43,12 @@ type OriginNotice = {
   date: string | null;
 };
 
+const campaignTypeLabel: Record<string, string> = {
+  csr: 'Related Initiative',
+  activation: 'Related Activation',
+  ad: 'Related Campaign',
+};
+
 function NoticeSeriesLinks({
   originNotice,
   relatedCampaign,
@@ -56,6 +62,13 @@ function NoticeSeriesLinks({
   } | null;
 }) {
   if (!originNotice && !relatedCampaign) return null;
+  const campaignLabel =
+    campaignTypeLabel[relatedCampaign?.campaignType ?? ''] ??
+    'Related Campaign';
+  const campaignTypeDisplay =
+    relatedCampaign?.campaignType === 'csr'
+      ? 'Initiative'
+      : (relatedCampaign?.campaignType ?? '');
   return (
     <>
       {originNotice && (
@@ -79,7 +92,7 @@ function NoticeSeriesLinks({
       {relatedCampaign && (
         <div className="mt-6 p-4 bg-gray-50 rounded-xl">
           <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
-            Related Campaign
+            {campaignLabel}
           </p>
           <Link
             href={`/campaigns/${relatedCampaign.slug}`}
@@ -88,7 +101,7 @@ function NoticeSeriesLinks({
             {relatedCampaign.title} →
           </Link>
           <div className="flex items-center gap-2 mt-1">
-            <Badge variant="outline">{relatedCampaign.campaignType}</Badge>
+            <Badge variant="outline">{campaignTypeDisplay}</Badge>
             <Badge variant="secondary">{relatedCampaign.status}</Badge>
           </div>
         </div>
