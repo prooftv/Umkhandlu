@@ -33,8 +33,8 @@ export default function OperatorPage() {
           description="Institutional guide — show to stakeholders, PMUs, councils."
         />
         <RouteCard
-          label="Area Page"
-          path="/areas/[slug]"
+          label="Area Page (Mndozo)"
+          path="/areas/mndozo"
           description="Community digital twin — listings, notices, programs, campaigns."
         />
       </Section>
@@ -44,6 +44,11 @@ export default function OperatorPage() {
           label="Campaign Detail"
           path="/campaigns/[slug]"
           description="Live project page — info board, deliverables, progress, community notices."
+        />
+        <RouteCard
+          label="Buffalo River (Live)"
+          path="/campaigns/buffalo-river-abstraction-works-ward-7"
+          description="Current pilot project."
         />
       </Section>
 
