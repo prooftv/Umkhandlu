@@ -311,6 +311,15 @@ export const campaignDetailQuery = defineQuery(`
       date,
       update
     },
+    communityNote[] {
+      _key,
+      date,
+      issuedBy,
+      message,
+      location,
+      attendance,
+      weatherContext
+    },
     "stakeholderLogos": stakeholderLogos[] {
       _key,
       name,

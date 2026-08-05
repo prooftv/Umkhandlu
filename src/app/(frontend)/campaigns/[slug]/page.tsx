@@ -41,6 +41,16 @@ type CommunityNote = {
   date: string;
   issuedBy: string;
   message: string;
+  location?: string;
+  attendance?: number;
+  weatherContext?: {
+    type?: string;
+    condition?: string;
+    temperatureCelsius?: number;
+    rainfallMm?: number;
+    windKmh?: number;
+    fetchedAt?: string;
+  };
 };
 
 type ProjectUpdate = {
@@ -354,6 +364,41 @@ function CampaignUpdatesTimeline({ campaign }: { campaign: CampaignData }) {
   );
 }
 
+function buildWeatherLine(wx: CommunityNote['weatherContext']): string | null {
+  if (!wx) return null;
+  return (
+    [
+      wx.condition,
+      wx.temperatureCelsius != null ? `${wx.temperatureCelsius}\u00b0C` : null,
+      wx.rainfallMm ? `${wx.rainfallMm}mm rain` : null,
+    ]
+      .filter(Boolean)
+      .join(' \u00b7 ') || null
+  );
+}
+
+function NoticeCardMeta({
+  note,
+  amber,
+}: {
+  note: CommunityNote;
+  amber?: boolean;
+}) {
+  const weatherLine = buildWeatherLine(note.weatherContext);
+  if (!note.location && !note.attendance && !weatherLine) return null;
+  return (
+    <div
+      className={`flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs ${
+        amber ? 'text-amber-700' : 'text-gray-400'
+      }`}
+    >
+      {note.location && <span>\ud83d\udccd {note.location}</span>}
+      {note.attendance && <span>\ud83d\udc65 {note.attendance} attendees</span>}
+      {weatherLine && <span>\ud83c\udf24\ufe0f {weatherLine}</span>}
+    </div>
+  );
+}
+
 function NoticeCard({
   note,
   latest,
@@ -373,7 +418,7 @@ function NoticeCard({
     return (
       <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-3 bg-amber-300/40 border-b border-amber-300">
-          <span className="text-base">📢</span>
+          <span className="text-base">\ud83d\udce2</span>
           <span className="text-xs font-bold text-amber-900 uppercase tracking-widest">
             Community Notice
           </span>
@@ -385,10 +430,11 @@ function NoticeCard({
           <p className="text-amber-950 text-sm leading-relaxed">
             {note.message}
           </p>
+          <NoticeCardMeta note={note} amber />
           <div className="flex items-center gap-3 mt-4 pt-3 border-t border-amber-200">
             {note.issuedBy && (
               <span className="text-xs font-semibold text-amber-800">
-                — {note.issuedBy}
+                \u2014 {note.issuedBy}
               </span>
             )}
             {dateStr && (
@@ -408,10 +454,11 @@ function NoticeCard({
   return (
     <div className="rounded-xl border border-gray-200 bg-white px-4 py-3">
       <p className="text-sm text-gray-700 leading-relaxed">{note.message}</p>
+      <NoticeCardMeta note={note} />
       <div className="flex items-center gap-3 mt-3 pt-2 border-t border-gray-100">
         {note.issuedBy && (
           <span className="text-xs font-medium text-gray-500">
-            — {note.issuedBy}
+            \u2014 {note.issuedBy}
           </span>
         )}
         {dateStr && (
