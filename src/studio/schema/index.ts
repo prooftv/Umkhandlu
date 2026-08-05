@@ -4,6 +4,7 @@ import conflictLog from './documents/conflictLog';
 import developmentNotice from './documents/developmentNotice';
 import listing from './documents/listing';
 import notice from './documents/notice';
+import operatorProfile from './documents/operatorProfile';
 import opportunity from './documents/opportunity';
 import page from './documents/page';
 import person from './documents/person';
@@ -69,6 +70,7 @@ export const schemaTypes = [
   sponsor,
   campaign,
   conflictLog,
+  operatorProfile,
 
   // Sections
   adBanner,

@@ -79,6 +79,11 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
+      // Platform
+      S.documentTypeListItem('operatorProfile')
+        .title('Operator Profiles')
+        .icon(UsersIcon),
+
       // Settings
       S.listItem()
         .title('Site Settings')

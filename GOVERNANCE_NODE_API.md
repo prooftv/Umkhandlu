@@ -47,7 +47,7 @@ Node identity. No Sanity query. Static response.
   "contractVersion": "1.0",
   "capabilities": [
     "records", "notices", "participation",
-    "evidence", "commercial", "tcrs", "lineage"
+    "evidence", "commercial", "tcrs", "lineage", "operators"
   ],
   "timestamp": "<ISO>"
 }
@@ -279,6 +279,44 @@ Governance lineage — root records, linked chains, Layer 5 outputs.
 `linkedRecords` = records with either reference set.  
 `lineageCertificates` and `journeyMaps` share the same count — one per notice that has produced records.  
 `proofOfPublication` = development notices where `proofIssued == true`.
+
+---
+
+### `GET /operators`
+
+Operator registry for this node. Returns all platform operators with their role, organisation, Sanity user ID (for audit log cross-reference), and assignment dates. Email and phone are never returned.
+
+```json
+{
+  "total": 4,
+  "active": 3,
+  "inactive": 1,
+  "byRole": {
+    "council-secretary": 1,
+    "youth-rep": 1,
+    "operating-partner": 1,
+    "platform-operator": 1
+  },
+  "operators": [
+    {
+      "id": "<_id>",
+      "name": "...",
+      "operatorRole": "council-secretary",
+      "organisation": "Khathide Traditional Council",
+      "sanityUserId": "p_abc123",
+      "active": true,
+      "assignedSince": "2025-01-01",
+      "assignedUntil": null,
+      "notes": null
+    }
+  ],
+  "timestamp": "<ISO>"
+}
+```
+
+**Operator roles:** `council-secretary` · `youth-rep` · `induna-rep` · `operating-partner` · `pmu-rep` · `platform-operator`
+
+`sanityUserId` cross-references against the Sanity Management API audit log (`/v2021-06-07/projects/{projectId}/datasets/{dataset}/history`) to attribute document edits to named operators in the admin dashboard.
 
 ---
 

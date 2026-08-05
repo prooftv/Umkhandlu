@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       'commercial',
       'tcrs',
       'lineage',
+      'operators',
     ],
     timestamp: new Date().toISOString(),
   });
