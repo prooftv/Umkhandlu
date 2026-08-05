@@ -8,7 +8,6 @@ import { areaListPageQuery } from '@/lib/sanity/queries/queries';
 
 export const metadata: Metadata = {
   title: 'Areas',
-  description: 'Izigodi and areas under the Traditional Council.',
 };
 
 export default async function AreasPage() {

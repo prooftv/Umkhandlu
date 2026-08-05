@@ -44,7 +44,7 @@ export default async function Header() {
         <div className="container max-w-7xl mx-auto px-4 flex justify-between items-center">
           <Link className="flex items-center space-x-4" href="/">
             <Logo />
-            <span className="text-lg md:text-2xl font-bold">Umkhandlu</span>
+            <span className="text-lg md:text-2xl font-bold">{SITE_NAME}</span>
           </Link>
         </div>
       </header>
