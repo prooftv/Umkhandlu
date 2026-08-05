@@ -21,4 +21,10 @@ export const NODE_PROVINCE = 'KwaZulu-Natal';
 export const NODE_MUNICIPALITY = 'Newcastle';
 export const NODE_DISTRICT = 'Amajuba';
 export const NODE_LOCALITY = 'Osizweni / Mndozo';
-// force redeploy 1777140588
+
+/**
+ * Council-level fallback geopoint.
+ * Used when a notice/record has no relatedArea geopoint set.
+ * Newcastle, KwaZulu-Natal.
+ */
+export const NODE_GEOPOINT = { lat: -27.7569, lng: 29.9318 };

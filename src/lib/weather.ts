@@ -52,17 +52,18 @@ export async function fetchWeather(
     const isFuture = eventDate >= today;
 
     const dateStr = eventDate.toISOString().split('T')[0];
+    const dailyFields = [
+      'weather_code',
+      'temperature_2m_max',
+      'temperature_2m_min',
+      'precipitation_sum',
+      'wind_speed_10m_max',
+      ...(isFuture ? ['uv_index_max'] : []),
+    ];
     const params = new URLSearchParams({
       latitude: lat.toString(),
       longitude: lng.toString(),
-      daily: [
-        'weather_code',
-        'temperature_2m_max',
-        'temperature_2m_min',
-        'precipitation_sum',
-        'wind_speed_10m_max',
-        'uv_index_max',
-      ].join(','),
+      daily: dailyFields.join(','),
       hourly: 'relative_humidity_2m',
       timezone: 'Africa/Johannesburg',
       start_date: dateStr,
@@ -74,14 +75,14 @@ export async function fetchWeather(
       : 'https://archive-api.open-meteo.com/v1/archive';
 
     const res = await fetch(`${base}?${params}`, {
-      next: { revalidate: isFuture ? 3600 : 0 }, // forecast: 1h cache; historical: no revalidate
+      next: { revalidate: isFuture ? 3600 : 0 },
     });
 
     if (!res.ok) return null;
     const json = await res.json();
 
     const d = json.daily;
-    if (!d?.weather_code?.[0] === undefined) return null;
+    if (d?.weather_code?.[0] == null) return null;
 
     // median hourly humidity for the day
     const hourly: number[] = json.hourly?.relative_humidity_2m ?? [];

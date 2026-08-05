@@ -20,6 +20,7 @@ import {
   noticeDetailQuery,
   settingsOgImageQuery,
 } from '@/lib/sanity/queries/queries';
+import { NODE_GEOPOINT } from '@/lib/siteConfig';
 import { fetchWeather } from '@/lib/weather';
 
 export const dynamic = 'force-dynamic';
@@ -169,15 +170,16 @@ async function resolveWeather(
   geo: Geopoint,
   hasStoredContext: boolean
 ) {
-  if (!date || !geo?.lat || !geo?.lng) return null;
-  const weather = await fetchWeather(date, geo.lat, geo.lng);
+  if (!date) return null;
+  const { lat, lng } = geo ?? NODE_GEOPOINT;
+  const weather = await fetchWeather(date, lat, lng);
   if (!weather) return null;
   const isFuture = new Date(date) >= new Date();
   if (isFuture || !hasStoredContext) {
     fetch(`${clientEnv.NEXT_PUBLIC_SITE_URL}/api/weather-patch`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ _id, date, lat: geo.lat, lng: geo.lng }),
+      body: JSON.stringify({ _id, date, lat, lng }),
     }).catch(() => null);
   }
   return weather;
