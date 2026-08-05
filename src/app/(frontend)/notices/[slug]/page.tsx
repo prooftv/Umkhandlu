@@ -200,6 +200,78 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
+function LineageTabContent({
+  notice,
+  followUpNotices,
+  lineageCount,
+  slug,
+}: {
+  notice: {
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    noticeType: string | null;
+    date: string | null;
+    producedRecords?: LR[] | null;
+    relatedCampaign?: {
+      slug: string | null;
+      title: string | null;
+      campaignType: string | null;
+      status: string | null;
+    } | null;
+  };
+  followUpNotices: FollowUpNotice[] | null;
+  lineageCount: number;
+  slug: string;
+}) {
+  return (
+    <>
+      <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
+      {lineageCount === 0 && (
+        <div className="py-6">
+          <p className="text-sm font-semibold text-gray-700 mb-1">
+            No governance records linked yet.
+          </p>
+          <p className="text-sm text-gray-500 leading-relaxed">
+            Governance lineage appears here when formal records — meeting
+            minutes, resolutions, or decisions — are produced from this notice
+            and linked to it in the CMS. This notice may be the origin of a
+            chain that has not yet been recorded.
+          </p>
+          {notice.relatedCampaign && (
+            <p className="text-sm text-gray-400 mt-3">
+              Related project:{' '}
+              <Link
+                href={`/campaigns/${notice.relatedCampaign.slug}`}
+                className="text-primary hover:underline"
+              >
+                {notice.relatedCampaign.title}
+              </Link>
+            </p>
+          )}
+        </div>
+      )}
+      <div className="mt-6 flex flex-col gap-2">
+        <Link
+          href={`/notices/lineage/${slug}`}
+          className="text-sm text-primary font-medium hover:underline"
+        >
+          🖸 Print Lineage Certificate →
+        </Link>
+        {lineageCount > 0 && (
+          <JourneyDrawer slug={slug}>
+            <NoticeJourney
+              notice={notice}
+              producedRecords={notice.producedRecords ?? []}
+              followUpNotices={followUpNotices ?? []}
+            />
+          </JourneyDrawer>
+        )}
+      </div>
+    </>
+  );
+}
+
 export default async function NoticePage(props: Props) {
   const { slug } = await props.params;
   const { data: notice } = await sanityFetch({
@@ -242,26 +314,12 @@ export default async function NoticePage(props: Props) {
   );
 
   const lineageTab = (
-    <>
-      <NoticeLineage notice={notice} followUpNotices={followUpNotices} />
-      <div className="mt-6 flex flex-col gap-2">
-        <Link
-          href={`/notices/lineage/${slug}`}
-          className="text-sm text-primary font-medium hover:underline"
-        >
-          🖸 Print Lineage Certificate →
-        </Link>
-        {lineageCount > 0 && (
-          <JourneyDrawer slug={slug}>
-            <NoticeJourney
-              notice={notice}
-              producedRecords={notice.producedRecords ?? []}
-              followUpNotices={followUpNotices ?? []}
-            />
-          </JourneyDrawer>
-        )}
-      </div>
-    </>
+    <LineageTabContent
+      notice={notice}
+      followUpNotices={followUpNotices}
+      lineageCount={lineageCount}
+      slug={slug}
+    />
   );
 
   return (
