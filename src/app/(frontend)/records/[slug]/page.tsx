@@ -325,15 +325,16 @@ export default async function RecordPage(props: Props) {
         ]}
       />
       <RecordHeader record={record} />
+      <EventContext
+        weather={weather}
+        location={record.location}
+        attendance={record.attendance}
+        variant="strip"
+      />
       <LineageTabs
         noticeTab={recordTab}
         lineageTab={
           <>
-            <EventContext
-              weather={weather}
-              location={record.location}
-              attendance={record.attendance}
-            />
             <RecordLineage record={record} currentSlug={slug} />
             {lineageCount > 0 && (
               <div className="mt-4">
