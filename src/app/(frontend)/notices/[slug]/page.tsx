@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import EventContext from '@/components/modules/EventContext';
+import RecordGem from '@/components/gem/RecordGem';
+import type { GemRecord } from '@/components/gem/RecordGem.types';
 import { NoticeJourney } from '@/components/modules/GovernanceJourney';
 import JourneyDrawer from '@/components/modules/JourneyDrawer';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
@@ -376,6 +378,24 @@ export default async function NoticePage(props: Props) {
           attendance={notice.attendance}
           variant="strip"
         />
+        {/* Record GEM — meeting notices only. Additive: remove this block and the page is unchanged. */}
+        {notice.noticeType === 'meeting' && (() => {
+          const gemRecord: GemRecord = {
+            _id: notice._id,
+            _type: 'notice',
+            title: notice.title ?? '',
+            slug: notice.slug ?? '',
+            noticeType: notice.noticeType,
+            date: notice.date ?? null,
+            location: notice.location ?? null,
+            attendance: notice.attendance ?? null,
+            relatedArea: notice.relatedArea ?? null,
+            relatedCampaign: notice.relatedCampaign ?? null,
+            originNotice: notice.originNotice as GemRecord['originNotice'] ?? null,
+            lineageCount,
+          }
+          return <div className="mt-4"><RecordGem record={gemRecord} variant="card" /></div>
+        })()}
       </div>
       <LineageTabs
         noticeTab={noticeTab}
