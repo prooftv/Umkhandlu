@@ -20,6 +20,8 @@ import {
 } from '@/lib/sanity/queries/queries';
 import { NODE_GEOPOINT } from '@/lib/siteConfig';
 import { fetchWeather, type WeatherSnapshot } from '@/lib/weather';
+import RecordGem from '@/components/gem/RecordGem';
+import type { GemRecord } from '@/components/gem/RecordGem.types';
 
 export const dynamic = 'force-dynamic';
 
@@ -331,6 +333,23 @@ export default async function RecordPage(props: Props) {
         attendance={record.attendance}
         variant="strip"
       />
+      {/* Record GEM — additive: remove this block and the page is unchanged. */}
+      {(() => {
+        const gemRecord: GemRecord = {
+          _id: record._id,
+          _type: 'record',
+          title: record.title ?? '',
+          slug: record.slug ?? '',
+          recordType: record.recordType,
+          status: record.status ?? null,
+          date: record.date ?? null,
+          location: record.location ?? null,
+          externalUrl: record.externalUrl ?? null,
+          lineageCount,
+          evidence: record.evidence ?? [],
+        }
+        return <div className="mt-4"><RecordGem record={gemRecord} variant="card" /></div>
+      })()}
       <LineageTabs
         noticeTab={recordTab}
         lineageTab={
