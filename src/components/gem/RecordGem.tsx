@@ -86,7 +86,7 @@ function GemCalendar({ actions }: { actions: RecordAction[] }) {
 }
 
 export default function RecordGem({ record, variant = 'card' }: Props) {
-  const actions = resolveActions(record)
+  const actions = resolveActions(record, new Date())
   if (!actions.length) return null
 
   if (variant === 'detail')   return <GemDetail actions={actions} />

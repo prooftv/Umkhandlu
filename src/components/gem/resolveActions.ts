@@ -3,26 +3,34 @@ import type { ActionSet, GemRecord, RecordAction } from './RecordGem.types'
 // Pure function — no side effects, no async, no UI.
 // All condition logic for action availability lives here and nowhere else.
 
-export function resolveActions(record: GemRecord): ActionSet {
+export function resolveActions(record: GemRecord, now: Date = new Date()): ActionSet {
   const actions: RecordAction[] = []
 
   if (record._type === 'notice') {
-    // Attendance + Calendar: meeting notices with a date
+    // Attendance + Calendar: meeting notices with a date, only when event has not yet occurred.
+    // State-changing actions expire when the event is in the past (Invariant 4).
     if (record.noticeType === 'meeting' && record.date) {
-      actions.push({
-        id: 'attendance',
-        context: { title: record.title, date: record.date, location: record.location },
-      })
-      actions.push({
-        id: 'calendar',
-        context: { title: record.title, date: record.date, location: record.location },
-      })
+      const eventDate = new Date(record.date)
+      const isUpcoming = eventDate >= now
+      if (isUpcoming) {
+        actions.push({
+          id: 'attendance',
+          context: { title: record.title, date: record.date, location: record.location },
+        })
+        actions.push({
+          id: 'calendar',
+          context: { title: record.title, date: record.date, location: record.location },
+        })
+      }
     } else if (record.date) {
-      // Non-meeting dated notices can still be added to calendar
-      actions.push({
-        id: 'calendar',
-        context: { title: record.title, date: record.date, location: record.location },
-      })
+      // Non-meeting dated notices: calendar only when upcoming
+      const isUpcoming = new Date(record.date) >= now
+      if (isUpcoming) {
+        actions.push({
+          id: 'calendar',
+          context: { title: record.title, date: record.date, location: record.location },
+        })
+      }
     }
 
     // Share — always
@@ -45,7 +53,7 @@ export function resolveActions(record: GemRecord): ActionSet {
   if (record._type === 'developmentNotice') {
     const isOpen = record.status === 'open'
     const deadlinePassed = record.commentDeadline
-      ? new Date(record.commentDeadline) < new Date()
+      ? new Date(record.commentDeadline) < now
       : false
     const acceptingComments = isOpen && !deadlinePassed
 
