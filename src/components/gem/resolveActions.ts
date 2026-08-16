@@ -91,6 +91,11 @@ export function resolveActions(record: GemRecord, now: Date = new Date()): Actio
     // Share — always
     actions.push({ id: 'share', context: { title: record.title } })
 
+    // View Source — external-resource records with an externalUrl
+    if (record.externalUrl) {
+      actions.push({ id: 'view-source', context: { url: record.externalUrl } })
+    }
+
     // Journey — only when lineage exists
     if ((record.lineageCount ?? 0) > 0) {
       actions.push({ id: 'journey', context: { slug: record.slug, _type: record._type } })

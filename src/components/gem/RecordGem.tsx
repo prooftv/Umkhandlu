@@ -34,6 +34,18 @@ function renderAction(action: RecordAction) {
       )
     case 'share':
       return <ShareAction key="share" title={action.context.title} />
+    case 'view-source':
+      return (
+        <a
+          key="view-source"
+          href={action.context.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+        >
+          🔗 View Source
+        </a>
+      )
     // Remaining actions (participation, documents, journey, lineage-cert, proof-of-pub)
     // are composed in Phase D when extracted from existing pages.
     default:

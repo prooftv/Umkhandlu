@@ -57,6 +57,7 @@ export type GemRecord = {
 
   // Lineage count — determines journey action availability
   lineageCount?: number
+  externalUrl?: string | null      // external-resource only
 }
 
 // ─── Action IDs ───────────────────────────────────────────────────────────────
@@ -71,6 +72,7 @@ export type ActionId =
   | 'journey'         // Inst.Nav — lineageCount > 0
   | 'lineage-cert'    // Inst.Nav — notice only
   | 'proof-of-pub'    // Inst.Nav — developmentNotice only
+  | 'view-source'     // Inst.Nav — external-resource only
 
 // ─── Action Context ───────────────────────────────────────────────────────────
 // Pre-resolved payload each action component receives. No eligibility logic inside components.
@@ -84,5 +86,6 @@ export type RecordAction =
   | { id: 'journey';      context: { slug: string; _type: GemRecord['_type'] } }
   | { id: 'lineage-cert'; context: { slug: string } }
   | { id: 'proof-of-pub'; context: { _id: string } }
+  | { id: 'view-source';  context: { url: string } }
 
 export type ActionSet = RecordAction[]
