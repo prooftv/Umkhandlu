@@ -198,20 +198,7 @@ export default defineType({
       title: 'Supporting Documents',
       type: 'array',
       description: 'EIA reports, site plans, application forms.',
-      of: [
-        {
-          type: 'file',
-          options: { accept: '.pdf,.doc,.docx' },
-          fields: [
-            defineField({
-              name: 'title',
-              type: 'string',
-              title: 'Document Title',
-              validation: (rule) => rule.required(),
-            }),
-          ],
-        },
-      ],
+      of: [{ type: 'evidenceAttachment', options: { accept: '.pdf,.doc,.docx' } }],
     }),
     defineField({
       name: 'relatedArea',

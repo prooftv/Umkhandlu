@@ -14,6 +14,8 @@ import record from './documents/record';
 import sponsor from './documents/sponsor';
 import blockContent from './objects/blockContent';
 import button from './objects/button';
+import environmentalContext from './objects/environmentalContext';
+import evidenceAttachment from './objects/evidenceAttachment';
 import link from './objects/link';
 import menuItem from './objects/menuItem';
 import adBanner from './objects/sections/adBanner';
@@ -108,5 +110,7 @@ export const schemaTypes = [
   link,
   button,
   menuItem,
+  environmentalContext,
+  evidenceAttachment,
   ...seoTypes,
 ];

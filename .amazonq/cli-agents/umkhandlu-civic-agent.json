@@ -1,0 +1,16 @@
+{
+  "description": "Umkhandlu Civic Agent — Architecture & Repository Intelligence. READ-ONLY assessment of the Umkhandlu governance platform. Never modifies the Umkhandlu repository.",
+  "allowedTools": ["fs_read", "execute_bash"],
+  "resources": [
+    "file://ARCHITECTURE.md",
+    "file://GOVERNANCE_NODE_API.md",
+    "file://PLAYBOOK.md",
+    "file://README.md"
+  ],
+  "mcpServers": {
+    "umkhandlu-civic": {
+      "command": "node",
+      "args": ["/home/ec2-user/umkhandlu-civic-mcp/src/index.js"]
+    }
+  }
+}
