@@ -23,7 +23,7 @@ import {
   settingsOgImageQuery,
 } from '@/lib/sanity/queries/queries';
 import { NODE_GEOPOINT } from '@/lib/siteConfig';
-import { fetchWeather } from '@/lib/weather';
+import { fetchWeather, type WeatherSnapshot } from '@/lib/weather';
 
 export const dynamic = 'force-dynamic';
 
@@ -303,14 +303,14 @@ export default async function NoticePage(props: Props) {
   const lineageCount =
     (notice.producedRecords?.length ?? 0) + (followUpNotices?.length ?? 0);
 
-  // Weather — fetch live on every visit
+  // Weather — fetch live on every visit; fall back to frozen Sanity snapshot for past events
   const geo = notice.relatedArea?.geopoint;
   const weather = await resolveWeather(
     notice._id,
     notice.date ?? null,
     geo,
     !!notice.weatherContext
-  );
+  ) ?? (notice.weatherContext as WeatherSnapshot | null) ?? null;
 
   const noticeTab = (
     <>

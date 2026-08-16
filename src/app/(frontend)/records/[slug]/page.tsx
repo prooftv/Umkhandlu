@@ -19,7 +19,7 @@ import {
   settingsOgImageQuery,
 } from '@/lib/sanity/queries/queries';
 import { NODE_GEOPOINT } from '@/lib/siteConfig';
-import { fetchWeather } from '@/lib/weather';
+import { fetchWeather, type WeatherSnapshot } from '@/lib/weather';
 
 export const dynamic = 'force-dynamic';
 
@@ -294,7 +294,7 @@ export default async function RecordPage(props: Props) {
     record.date ?? null,
     geo,
     !!record.weatherContext
-  );
+  ) ?? (record.weatherContext as WeatherSnapshot | null) ?? null;
 
   const lineageCount =
     (record.childRecords?.length ?? 0) +
