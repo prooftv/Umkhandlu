@@ -121,6 +121,10 @@ export const areaDetailQuery = defineQuery(`
     location,
     geopoint,
     image,
+    areaLevel,
+    wardNumber,
+    municipality,
+    "parentArea": parentArea->{ name, "slug": slug.current, areaLevel },
     "induna": induna->{${personFragment}},
     "relatedListings": relatedListings[]->{${listingFragment}},
     "notices": *[_type == "notice" && references(^._id)] | order(pinned desc, date desc) [0...5] {
@@ -164,6 +168,10 @@ export const areaListPageQuery = defineQuery(`
     description,
     location,
     image,
+    areaLevel,
+    wardNumber,
+    municipality,
+    "parentArea": parentArea->{ name, "slug": slug.current, areaLevel },
     "induna": induna->{ firstName, lastName }
   }
 `);

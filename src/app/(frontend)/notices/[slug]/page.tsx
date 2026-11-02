@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
-import Breadcrumbs from '@/components/modules/Breadcrumbs';
-import EventContext from '@/components/modules/EventContext';
 import RecordGem from '@/components/gem/RecordGem';
 import type { GemRecord } from '@/components/gem/RecordGem.types';
+import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import EventContext from '@/components/modules/EventContext';
 import { NoticeJourney } from '@/components/modules/GovernanceJourney';
 import JourneyDrawer from '@/components/modules/JourneyDrawer';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
@@ -305,12 +305,15 @@ export default async function NoticePage(props: Props) {
 
   // Weather — fetch live on every visit; fall back to frozen Sanity snapshot for past events
   const geo = notice.relatedArea?.geopoint;
-  const weather = await resolveWeather(
-    notice._id,
-    notice.date ?? null,
-    geo,
-    !!notice.weatherContext
-  ) ?? (notice.weatherContext as WeatherSnapshot | null) ?? null;
+  const weather =
+    (await resolveWeather(
+      notice._id,
+      notice.date ?? null,
+      geo,
+      !!notice.weatherContext
+    )) ??
+    (notice.weatherContext as WeatherSnapshot | null) ??
+    null;
 
   const noticeTab = (
     <>
@@ -371,7 +374,9 @@ export default async function NoticePage(props: Props) {
             <span className="text-sm text-primary">📌 Pinned</span>
           )}
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold mb-6">{notice.title}</h1>
+        <h1 className="text-2xl md:text-4xl font-bold mb-6 leading-tight">
+          {notice.title}
+        </h1>
         <EventContext
           weather={weather}
           location={notice.location}
@@ -379,23 +384,29 @@ export default async function NoticePage(props: Props) {
           variant="strip"
         />
         {/* Record GEM — meeting notices only. Additive: remove this block and the page is unchanged. */}
-        {notice.noticeType === 'meeting' && (() => {
-          const gemRecord: GemRecord = {
-            _id: notice._id,
-            _type: 'notice',
-            title: notice.title ?? '',
-            slug: notice.slug ?? '',
-            noticeType: notice.noticeType,
-            date: notice.date ?? null,
-            location: notice.location ?? null,
-            attendance: notice.attendance ?? null,
-            relatedArea: notice.relatedArea ?? null,
-            relatedCampaign: notice.relatedCampaign ?? null,
-            originNotice: notice.originNotice as GemRecord['originNotice'] ?? null,
-            lineageCount,
-          }
-          return <div className="mt-4"><RecordGem record={gemRecord} variant="card" /></div>
-        })()}
+        {notice.noticeType === 'meeting' &&
+          (() => {
+            const gemRecord: GemRecord = {
+              _id: notice._id,
+              _type: 'notice',
+              title: notice.title ?? '',
+              slug: notice.slug ?? '',
+              noticeType: notice.noticeType,
+              date: notice.date ?? null,
+              location: notice.location ?? null,
+              attendance: notice.attendance ?? null,
+              relatedArea: notice.relatedArea ?? null,
+              relatedCampaign: notice.relatedCampaign ?? null,
+              originNotice:
+                (notice.originNotice as GemRecord['originNotice']) ?? null,
+              lineageCount,
+            };
+            return (
+              <div className="mt-4">
+                <RecordGem record={gemRecord} variant="card" />
+              </div>
+            );
+          })()}
       </div>
       <LineageTabs
         noticeTab={noticeTab}

@@ -193,6 +193,59 @@ export default defineType({
       hidden: ({ parent }) => parent?.listingType === 'area',
     }),
     defineField({
+      name: 'areaLevel',
+      title: 'Area Level',
+      type: 'string',
+      description: 'Geographic classification level for this area.',
+      options: {
+        list: [
+          { title: 'District Municipality', value: 'district' },
+          { title: 'Local Municipality', value: 'municipality' },
+          { title: 'Ward', value: 'ward' },
+          { title: 'Traditional Authority', value: 'traditional-authority' },
+          { title: 'Isigodi (Village / Settlement)', value: 'isigodi' },
+          { title: 'Settlement / Locality', value: 'settlement' },
+        ],
+        layout: 'radio',
+      },
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
+      name: 'wardNumber',
+      title: 'Ward Number',
+      type: 'number',
+      description: 'Municipal ward number (if applicable).',
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
+      name: 'municipality',
+      title: 'Local Municipality',
+      type: 'string',
+      description: 'The local municipality this area falls within.',
+      options: {
+        list: [
+          { title: 'Newcastle Local Municipality', value: 'newcastle' },
+          { title: 'Dannhauser Local Municipality', value: 'dannhauser' },
+          { title: 'eMadlangeni Local Municipality', value: 'emadlangeni' },
+          { title: 'Amajuba District (cross-municipal)', value: 'amajuba' },
+        ],
+        layout: 'radio',
+      },
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
+      name: 'parentArea',
+      title: 'Parent Area',
+      type: 'reference',
+      to: [{ type: 'listing' }],
+      description:
+        'The larger area this area belongs to (e.g. isigodi → ward → municipality → district).',
+      options: {
+        filter: 'listingType == "area" && _id != ^._id',
+      },
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
       name: 'induna',
       title: 'Induna (Headman)',
       type: 'reference',

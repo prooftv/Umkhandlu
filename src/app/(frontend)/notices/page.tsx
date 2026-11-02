@@ -63,34 +63,39 @@ function NoticeRow({ notice }: { notice: NoticeItem }) {
   return (
     <Link
       href={`/notices/${notice.slug}`}
-      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
+      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
     >
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <Badge variant="outline">{notice.noticeType}</Badge>
-          {notice.pinned && <span className="text-xs text-primary">📌</span>}
-          {notice.relatedArea && (
-            <span className="text-xs text-gray-400">
-              📍 {notice.relatedArea.name}
-            </span>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <Badge variant="outline">{notice.noticeType}</Badge>
+            {notice.pinned && <span className="text-xs text-primary">📌</span>}
+            {notice.relatedArea && (
+              <span className="text-xs text-gray-400">
+                📍 {notice.relatedArea.name}
+              </span>
+            )}
+          </div>
+          <h2 className="font-semibold leading-snug">{notice.title}</h2>
+          {notice.excerpt && (
+            <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+              {notice.excerpt}
+            </p>
           )}
         </div>
-        <h2 className="font-semibold">{notice.title}</h2>
-        {notice.excerpt && (
-          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-            {notice.excerpt}
-          </p>
+        {notice.date && (
+          <time
+            dateTime={notice.date}
+            className="text-xs text-gray-400 shrink-0 mt-0.5 whitespace-nowrap"
+          >
+            {new Date(notice.date).toLocaleDateString('en-ZA', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            })}
+          </time>
         )}
       </div>
-      {notice.date && (
-        <time dateTime={notice.date} className="text-xs text-gray-400 shrink-0">
-          {new Date(notice.date).toLocaleDateString('en-ZA', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-          })}
-        </time>
-      )}
     </Link>
   );
 }

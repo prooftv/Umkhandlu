@@ -20,6 +20,69 @@ type AreaData = NonNullable<
   Awaited<ReturnType<typeof sanityFetch<typeof areaDetailQuery>>>['data']
 >;
 
+type AreaExtended = AreaData & {
+  areaLevel?: string;
+  wardNumber?: number;
+  municipality?: string;
+  parentArea?: { name: string; slug: string };
+};
+
+const LEVEL_LABELS: Record<string, string> = {
+  district: 'District Municipality',
+  municipality: 'Local Municipality',
+  ward: 'Ward',
+  'traditional-authority': 'Traditional Authority',
+  isigodi: 'Isigodi',
+  settlement: 'Settlement',
+};
+
+const MUNI_LABELS: Record<string, string> = {
+  newcastle: 'Newcastle LM',
+  dannhauser: 'Dannhauser LM',
+  emadlangeni: 'eMadlangeni LM',
+  amajuba: 'Amajuba District',
+};
+
+function AreaHero({ area }: { area: AreaExtended }) {
+  return (
+    <div className="mb-12">
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        {area.areaLevel && (
+          <Badge variant="outline">
+            {LEVEL_LABELS[area.areaLevel] ?? area.areaLevel}
+          </Badge>
+        )}
+        {area.wardNumber != null && (
+          <Badge variant="secondary">Ward {area.wardNumber}</Badge>
+        )}
+        {area.municipality && (
+          <Badge variant="secondary">
+            {MUNI_LABELS[area.municipality] ?? area.municipality}
+          </Badge>
+        )}
+      </div>
+      <h1 className="text-4xl md:text-5xl font-bold mb-4">{area.name}</h1>
+      {area.parentArea && (
+        <p className="text-sm text-gray-500 mb-3">
+          Part of{' '}
+          <Link
+            href={`/areas/${area.parentArea.slug}`}
+            className="text-primary hover:underline font-medium"
+          >
+            {area.parentArea.name}
+          </Link>
+        </p>
+      )}
+      {area.description && (
+        <p className="text-xl text-gray-600 max-w-3xl">{area.description}</p>
+      )}
+      {area.location && (
+        <p className="text-gray-500 mt-2">📍 {area.location}</p>
+      )}
+    </div>
+  );
+}
+
 function AreaInduna({ induna }: { induna: AreaData['induna'] }) {
   return (
     <section className="mb-12">
@@ -466,16 +529,7 @@ export default async function AreaPage(props: Props) {
         items={[{ label: 'Areas', href: '/areas' }, { label: area.name || '' }]}
       />
 
-      {/* Hero */}
-      <div className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">{area.name}</h1>
-        {area.description && (
-          <p className="text-xl text-gray-600 max-w-3xl">{area.description}</p>
-        )}
-        {area.location && (
-          <p className="text-gray-500 mt-2">📍 {area.location}</p>
-        )}
-      </div>
+      <AreaHero area={area as AreaExtended} />
 
       <AreaInduna induna={area.induna} />
 

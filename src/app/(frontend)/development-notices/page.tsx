@@ -39,49 +39,51 @@ function NoticeCard({ notice }: { notice: NoticeItem }) {
   return (
     <Link
       href={`/development-notices/${notice.slug}`}
-      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
+      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
     >
-      <div>
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <Badge variant={isOpen ? 'default' : 'secondary'}>
-            {isOpen ? '🟢 Open' : '🔴 Closed'}
-          </Badge>
-          <Badge variant="outline">
-            {typeLabels[notice.noticeType ?? ''] || notice.noticeType}
-          </Badge>
+      <div className="flex items-start gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <Badge variant={isOpen ? 'default' : 'secondary'}>
+              {isOpen ? '🟢 Open' : '🔴 Closed'}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              {typeLabels[notice.noticeType ?? ''] || notice.noticeType}
+            </Badge>
+          </div>
+          <h3 className="font-semibold leading-snug">{notice.title}</h3>
+          {notice.applicant && (
+            <p className="text-sm text-gray-500 mt-1">
+              Applicant: {notice.applicant}
+            </p>
+          )}
+          {notice.location && (
+            <p className="text-xs text-gray-500 mt-1">📍 {notice.location}</p>
+          )}
+          {notice.relatedArea && (
+            <p className="text-xs text-gray-500">🏘️ {notice.relatedArea.name}</p>
+          )}
+          {notice.commentDeadline && (
+            <p
+              className={`text-xs mt-2 font-medium ${
+                isOpen ? 'text-red-600' : 'text-gray-400'
+              }`}
+            >
+              {isOpen ? 'Deadline: ' : 'Closed: '}
+              {new Date(notice.commentDeadline).toLocaleDateString('en-ZA', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </p>
+          )}
+          {notice.referenceNumber && (
+            <span className="text-xs text-gray-400 font-mono mt-1 block">
+              Ref: {notice.referenceNumber}
+            </span>
+          )}
         </div>
-        <h3 className="font-semibold">{notice.title}</h3>
-        {notice.applicant && (
-          <p className="text-sm text-gray-500 mt-1">
-            Applicant: {notice.applicant}
-          </p>
-        )}
-        {notice.location && (
-          <p className="text-xs text-gray-500 mt-1">📍 {notice.location}</p>
-        )}
-        {notice.relatedArea && (
-          <p className="text-xs text-gray-500">🏘️ {notice.relatedArea.name}</p>
-        )}
-      </div>
-      <div className="text-right shrink-0">
-        {notice.commentDeadline && (
-          <time
-            dateTime={notice.commentDeadline}
-            className={`text-xs block ${isOpen ? 'text-red-600 font-medium' : 'text-gray-400'}`}
-          >
-            {isOpen ? 'Deadline: ' : 'Closed: '}
-            {new Date(notice.commentDeadline).toLocaleDateString('en-ZA', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
-          </time>
-        )}
-        {notice.referenceNumber && (
-          <span className="text-xs text-gray-400 block mt-1 font-mono">
-            {notice.referenceNumber}
-          </span>
-        )}
+        <span className="text-primary text-sm shrink-0 mt-0.5">→</span>
       </div>
     </Link>
   );
@@ -110,7 +112,7 @@ export default async function DevelopmentNoticesPage() {
         <h1 className="text-3xl md:text-4xl font-bold mb-3">
           Development & Statutory Notices
         </h1>
-        <p className="text-gray-600 max-w-2xl">
+        <p className="text-gray-600 max-w-2xl text-sm md:text-base">
           Public participation notices for developments within the traditional
           authority area. Submit comments or objections before the deadline.
         </p>

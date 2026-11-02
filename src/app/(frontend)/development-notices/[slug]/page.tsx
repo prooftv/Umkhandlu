@@ -70,6 +70,8 @@ function formatDateZA(date: string) {
   });
 }
 
+// Mobile-safe detail row: stacks label above value on narrow screens,
+// side-by-side on sm+
 function DetailRow({
   label,
   value,
@@ -81,10 +83,14 @@ function DetailRow({
 }) {
   if (!value) return null;
   return (
-    <div className="flex justify-between items-baseline">
-      <span className="text-sm text-gray-500">{label}</span>
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-0.5 sm:gap-4">
+      <span className="text-xs text-gray-500 uppercase tracking-wide shrink-0">
+        {label}
+      </span>
       <span
-        className={`text-sm font-medium ${highlight ? 'text-red-600 font-bold' : 'text-gray-900'}`}
+        className={`text-sm font-medium break-words ${
+          highlight ? 'text-red-600 font-bold' : 'text-gray-900'
+        }`}
       >
         {value}
       </span>
@@ -96,7 +102,7 @@ function NoticeHeader({ notice }: { notice: NoticeData }) {
   const isOpen = notice.status === 'open';
   return (
     <div className="mb-8">
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
         <Badge>
           {typeLabels[notice.noticeType ?? ''] || notice.noticeType}
         </Badge>
@@ -111,9 +117,13 @@ function NoticeHeader({ notice }: { notice: NoticeData }) {
           <Badge variant="outline">{notice.legalMandate}</Badge>
         )}
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold mb-4">{notice.title}</h1>
+      <h1 className="text-2xl md:text-4xl font-bold mb-4 leading-tight">
+        {notice.title}
+      </h1>
       {notice.description && (
-        <p className="text-lg text-gray-600">{notice.description}</p>
+        <p className="text-base md:text-lg text-gray-600">
+          {notice.description}
+        </p>
       )}
     </div>
   );
@@ -127,7 +137,7 @@ function NoticeDetails({
   acceptingComments: boolean;
 }) {
   return (
-    <div className="bg-gray-50 rounded-xl p-6 mb-8 space-y-3">
+    <div className="bg-gray-50 rounded-xl p-4 md:p-6 mb-8 space-y-3">
       <DetailRow label="Applicant" value={notice.applicant} />
       {notice.referenceNumber && (
         <DetailRow label="Reference No" value={notice.referenceNumber} />
@@ -144,8 +154,10 @@ function NoticeDetails({
         />
       )}
       {notice.relatedArea && (
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm text-gray-500">Affected Area</span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-0.5 sm:gap-4">
+          <span className="text-xs text-gray-500 uppercase tracking-wide shrink-0">
+            Affected Area
+          </span>
           <Link
             href={`/areas/${notice.relatedArea.slug}`}
             className="text-sm font-medium text-primary hover:underline"
@@ -174,13 +186,15 @@ function NoticeDocuments({
             href={doc.url ?? '#'}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors min-h-[44px]"
           >
-            <span className="text-lg">📄</span>
-            <span className="text-sm font-medium">
+            <span className="text-lg shrink-0">📄</span>
+            <span className="text-sm font-medium flex-1 min-w-0 break-words">
               {doc.title || 'Document'}
             </span>
-            <span className="text-xs text-primary ml-auto">Download →</span>
+            <span className="text-xs text-primary ml-auto shrink-0">
+              Download →
+            </span>
           </a>
         ))}
       </div>
@@ -222,7 +236,7 @@ function CommentSection({
               ? '📬 Where to Submit Comments'
               : '📬 Comments Were Submitted To'}
           </h3>
-          <p className="text-sm text-amber-700 whitespace-pre-line">
+          <p className="text-sm text-amber-700 whitespace-pre-line break-words">
             {notice.commentContact}
           </p>
         </div>
@@ -271,7 +285,7 @@ export default async function DevelopmentNoticePage(props: Props) {
     <div className="container mx-auto max-w-3xl py-12">
       <Breadcrumbs
         items={[
-          { label: 'Development Notices', href: '/' },
+          { label: 'Development Notices', href: '/development-notices' },
           { label: notice.title || '' },
         ]}
       />
