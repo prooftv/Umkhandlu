@@ -1,61 +1,80 @@
-import type { ActionSet, GemRecord, RecordAction } from './RecordGem.types'
+import type { ActionSet, GemRecord, RecordAction } from './RecordGem.types';
 
 // Pure function — no side effects, no async, no UI.
 // All condition logic for action availability lives here and nowhere else.
 
-export function resolveActions(record: GemRecord, now: Date = new Date()): ActionSet {
-  const actions: RecordAction[] = []
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: intentional -- single source of truth for all action eligibility
+export function resolveActions(
+  record: GemRecord,
+  now: Date = new Date()
+): ActionSet {
+  const actions: RecordAction[] = [];
 
   if (record._type === 'notice') {
     // Attendance + Calendar: meeting notices with a date, only when event has not yet occurred.
     // State-changing actions expire when the event is in the past (Invariant 4).
     if (record.noticeType === 'meeting' && record.date) {
-      const eventDate = new Date(record.date)
-      const isUpcoming = eventDate >= now
+      const eventDate = new Date(record.date);
+      const isUpcoming = eventDate >= now;
       if (isUpcoming) {
         actions.push({
           id: 'attendance',
-          context: { title: record.title, date: record.date, location: record.location },
-        })
+          context: {
+            title: record.title,
+            date: record.date,
+            location: record.location,
+          },
+        });
         actions.push({
           id: 'calendar',
-          context: { title: record.title, date: record.date, location: record.location },
-        })
+          context: {
+            title: record.title,
+            date: record.date,
+            location: record.location,
+          },
+        });
       }
     } else if (record.date) {
       // Non-meeting dated notices: calendar only when upcoming
-      const isUpcoming = new Date(record.date) >= now
+      const isUpcoming = new Date(record.date) >= now;
       if (isUpcoming) {
         actions.push({
           id: 'calendar',
-          context: { title: record.title, date: record.date, location: record.location },
-        })
+          context: {
+            title: record.title,
+            date: record.date,
+            location: record.location,
+          },
+        });
       }
     }
 
     // Share — always
-    actions.push({ id: 'share', context: { title: record.title } })
+    actions.push({ id: 'share', context: { title: record.title } });
 
     // Lineage certificate — always for notices
-    actions.push({ id: 'lineage-cert', context: { slug: record.slug } })
+    actions.push({ id: 'lineage-cert', context: { slug: record.slug } });
 
     // Journey — only when lineage exists
     if ((record.lineageCount ?? 0) > 0) {
-      actions.push({ id: 'journey', context: { slug: record.slug, _type: record._type } })
+      actions.push({
+        id: 'journey',
+        context: { slug: record.slug, _type: record._type },
+      });
     }
 
     // Documents
     if (record.evidence?.length) {
-      actions.push({ id: 'documents', context: { items: record.evidence } })
+      actions.push({ id: 'documents', context: { items: record.evidence } });
     }
   }
 
   if (record._type === 'developmentNotice') {
-    const isOpen = record.status === 'open'
+    const isOpen = record.status === 'open';
     const deadlinePassed = record.commentDeadline
       ? new Date(record.commentDeadline) < now
-      : false
-    const acceptingComments = isOpen && !deadlinePassed
+      : false;
+    const acceptingComments = isOpen && !deadlinePassed;
 
     // Participation — statutory, only when open + deadline not passed
     if (acceptingComments && record.commentDeadline && record.commentContact) {
@@ -67,45 +86,52 @@ export function resolveActions(record: GemRecord, now: Date = new Date()): Actio
           deadline: record.commentDeadline,
           contact: record.commentContact,
         },
-      })
+      });
       // Calendar using deadline as the event
       actions.push({
         id: 'calendar',
-        context: { title: `Comment deadline: ${record.title}`, date: record.commentDeadline, isDeadline: true },
-      })
+        context: {
+          title: `Comment deadline: ${record.title}`,
+          date: record.commentDeadline,
+          isDeadline: true,
+        },
+      });
     }
 
     // Share — always
-    actions.push({ id: 'share', context: { title: record.title } })
+    actions.push({ id: 'share', context: { title: record.title } });
 
     // Proof of publication — always for devNotices
-    actions.push({ id: 'proof-of-pub', context: { _id: record._id } })
+    actions.push({ id: 'proof-of-pub', context: { _id: record._id } });
 
     // Documents
     if (record.documents?.length) {
-      actions.push({ id: 'documents', context: { items: record.documents } })
+      actions.push({ id: 'documents', context: { items: record.documents } });
     }
   }
 
   if (record._type === 'record') {
     // Share — always
-    actions.push({ id: 'share', context: { title: record.title } })
+    actions.push({ id: 'share', context: { title: record.title } });
 
     // View Source — external-resource records with an externalUrl
     if (record.externalUrl) {
-      actions.push({ id: 'view-source', context: { url: record.externalUrl } })
+      actions.push({ id: 'view-source', context: { url: record.externalUrl } });
     }
 
     // Journey — only when lineage exists
     if ((record.lineageCount ?? 0) > 0) {
-      actions.push({ id: 'journey', context: { slug: record.slug, _type: record._type } })
+      actions.push({
+        id: 'journey',
+        context: { slug: record.slug, _type: record._type },
+      });
     }
 
     // Documents
     if (record.evidence?.length) {
-      actions.push({ id: 'documents', context: { items: record.evidence } })
+      actions.push({ id: 'documents', context: { items: record.evidence } });
     }
   }
 
-  return actions
+  return actions;
 }

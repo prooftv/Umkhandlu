@@ -1,33 +1,40 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 
-type AttendanceValue = 'attending' | 'maybe' | 'not-attending'
+type AttendanceValue = 'attending' | 'maybe' | 'not-attending';
 
 type Props = {
-  title: string
-  date: string
-  location?: string | null
-  onResponse?: (value: AttendanceValue) => void
-}
+  title: string;
+  date: string;
+  location?: string | null;
+  onResponse?: (value: AttendanceValue) => void;
+};
 
 const options: { value: AttendanceValue; label: string; icon: string }[] = [
-  { value: 'attending',     label: 'Attending',     icon: '✓' },
-  { value: 'maybe',         label: 'Maybe',         icon: '?' },
-  { value: 'not-attending', label: "Can't attend",  icon: '✗' },
-]
+  { value: 'attending', label: 'Attending', icon: '✓' },
+  { value: 'maybe', label: 'Maybe', icon: '?' },
+  { value: 'not-attending', label: "Can't attend", icon: '✗' },
+];
 
-export default function AttendanceAction({ title, date, location, onResponse }: Props) {
-  const [selected, setSelected] = useState<AttendanceValue | null>(null)
+export default function AttendanceAction({
+  title,
+  date,
+  location,
+  onResponse,
+}: Props) {
+  const [selected, setSelected] = useState<AttendanceValue | null>(null);
 
   function handleSelect(value: AttendanceValue) {
-    setSelected(value)
-    onResponse?.(value)
+    setSelected(value);
+    onResponse?.(value);
   }
 
   const dateStr = new Date(date).toLocaleDateString('en-ZA', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  })
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   return (
     <div className="rounded-xl border border-gray-100 bg-white p-4">
@@ -36,7 +43,8 @@ export default function AttendanceAction({ title, date, location, onResponse }: 
       </p>
       <p className="text-sm font-semibold text-gray-800 mb-0.5">{title}</p>
       <p className="text-xs text-gray-500 mb-3">
-        {dateStr}{location ? ` · ${location}` : ''}
+        {dateStr}
+        {location ? ` · ${location}` : ''}
       </p>
       <div className="flex gap-2">
         {options.map(({ value, label, icon }) => (
@@ -61,5 +69,5 @@ export default function AttendanceAction({ title, date, location, onResponse }: 
         </p>
       )}
     </div>
-  )
+  );
 }
