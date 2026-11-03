@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
+import RecordGem from '@/components/gem/RecordGem';
+import type { GemRecord } from '@/components/gem/RecordGem.types';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import EventContext from '@/components/modules/EventContext';
 import { RecordJourney } from '@/components/modules/GovernanceJourney';
@@ -20,8 +22,6 @@ import {
 } from '@/lib/sanity/queries/queries';
 import { NODE_GEOPOINT } from '@/lib/siteConfig';
 import { fetchWeather, type WeatherSnapshot } from '@/lib/weather';
-import RecordGem from '@/components/gem/RecordGem';
-import type { GemRecord } from '@/components/gem/RecordGem.types';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,7 +84,9 @@ function RecordHeader({ record }: { record: RecordData }) {
           </time>
         )}
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold mb-4">{record.title}</h1>
+      <h1 className="text-2xl md:text-4xl font-bold mb-4 leading-tight">
+        {record.title}
+      </h1>
       {record.summary && (
         <p className="text-lg text-gray-600">{record.summary}</p>
       )}
@@ -101,13 +103,13 @@ function RecordMeta({ record }: { record: RecordData }) {
   if (!hasApproval && !hasArea && !hasCampaign && !hasSource) return null;
 
   return (
-    <div className="bg-gray-50 rounded-xl p-6 mb-8 space-y-3">
+    <div className="bg-gray-50 rounded-xl p-4 md:p-6 mb-8 space-y-3">
       {record.approvedBy && (
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm text-gray-500">Approved By</span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-0.5 sm:gap-4">
+          <span className="text-sm text-gray-500 shrink-0">Approved By</span>
           <Link
             href={`/people/${record.approvedBy.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
+            className="text-sm font-medium text-primary hover:underline break-words"
           >
             {record.approvedBy.firstName} {record.approvedBy.lastName}
             {record.approvedBy.role && (
@@ -117,8 +119,8 @@ function RecordMeta({ record }: { record: RecordData }) {
         </div>
       )}
       {record.relatedArea && (
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm text-gray-500">Related Area</span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-0.5 sm:gap-4">
+          <span className="text-sm text-gray-500 shrink-0">Related Area</span>
           <Link
             href={`/areas/${record.relatedArea.slug}`}
             className="text-sm font-medium text-primary hover:underline"
@@ -128,20 +130,22 @@ function RecordMeta({ record }: { record: RecordData }) {
         </div>
       )}
       {record.relatedCampaign && (
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm text-gray-500">Related Project</span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-0.5 sm:gap-4">
+          <span className="text-sm text-gray-500 shrink-0">
+            Related Project
+          </span>
           <Link
             href={`/campaigns/${record.relatedCampaign.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
+            className="text-sm font-medium text-primary hover:underline break-words"
           >
             {record.relatedCampaign.title}
           </Link>
         </div>
       )}
       {record.source && (
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm text-gray-500">Source</span>
-          <span className="text-sm font-medium text-gray-900">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-0.5 sm:gap-4">
+          <span className="text-sm text-gray-500 shrink-0">Source</span>
+          <span className="text-sm font-medium text-gray-900 break-words">
             {record.source}
           </span>
         </div>
@@ -291,12 +295,15 @@ export default async function RecordPage(props: Props) {
   if (!record) notFound();
 
   const geo = record.relatedArea?.geopoint;
-  const weather = await resolveWeather(
-    record._id,
-    record.date ?? null,
-    geo,
-    !!record.weatherContext
-  ) ?? (record.weatherContext as WeatherSnapshot | null) ?? null;
+  const weather =
+    (await resolveWeather(
+      record._id,
+      record.date ?? null,
+      geo,
+      !!record.weatherContext
+    )) ??
+    (record.weatherContext as WeatherSnapshot | null) ??
+    null;
 
   const lineageCount =
     (record.childRecords?.length ?? 0) +
@@ -347,8 +354,12 @@ export default async function RecordPage(props: Props) {
           externalUrl: record.externalUrl ?? null,
           lineageCount,
           evidence: record.evidence ?? [],
-        }
-        return <div className="mt-4"><RecordGem record={gemRecord} variant="card" /></div>
+        };
+        return (
+          <div className="mt-4">
+            <RecordGem record={gemRecord} variant="card" />
+          </div>
+        );
       })()}
       <LineageTabs
         noticeTab={recordTab}

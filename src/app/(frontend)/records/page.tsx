@@ -55,41 +55,46 @@ function RecordRow({ record }: { record: RecordItem }) {
   return (
     <Link
       href={`/records/${record.slug}`}
-      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
+      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
     >
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <Badge variant="outline">
-            {typeLabels[record.recordType || ''] || record.recordType}
-          </Badge>
-          {record.status && (
-            <Badge variant={statusVariants[record.status] || 'outline'}>
-              {record.status.charAt(0).toUpperCase()}
-              {record.status.slice(1)}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <Badge variant="outline">
+              {typeLabels[record.recordType || ''] || record.recordType}
             </Badge>
+            {record.status && (
+              <Badge variant={statusVariants[record.status] || 'outline'}>
+                {record.status.charAt(0).toUpperCase()}
+                {record.status.slice(1)}
+              </Badge>
+            )}
+          </div>
+          <h2 className="font-semibold">{record.title}</h2>
+          {record.summary && (
+            <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+              {record.summary}
+            </p>
+          )}
+          {record.relatedArea && (
+            <p className="text-xs text-gray-400 mt-1">
+              📍 {record.relatedArea.name}
+            </p>
           )}
         </div>
-        <h2 className="font-semibold">{record.title}</h2>
-        {record.summary && (
-          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-            {record.summary}
-          </p>
-        )}
-        {record.relatedArea && (
-          <p className="text-xs text-gray-400 mt-1">
-            📍 {record.relatedArea.name}
-          </p>
+        {record.date && (
+          <time
+            dateTime={record.date}
+            className="text-xs text-gray-400 shrink-0 whitespace-nowrap"
+          >
+            {new Date(record.date).toLocaleDateString('en-ZA', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            })}
+          </time>
         )}
       </div>
-      {record.date && (
-        <time dateTime={record.date} className="text-xs text-gray-400 shrink-0">
-          {new Date(record.date).toLocaleDateString('en-ZA', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-          })}
-        </time>
-      )}
     </Link>
   );
 }
