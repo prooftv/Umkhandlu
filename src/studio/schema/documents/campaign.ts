@@ -610,6 +610,60 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'siteGeopoint',
+      title: 'Project Site Location',
+      type: 'geopoint',
+      group: 'details',
+      description:
+        'Exact project site coordinate. Distinct from the area geopoint.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+    }),
+    defineField({
+      name: 'geographicAssociations',
+      title: 'Geographic Associations',
+      type: 'array',
+      group: 'details',
+      description:
+        'All geographic areas this project relates to. A project can relate to multiple areas at different levels — ward, municipality, TA, isigodi.',
+      hidden: ({ parent }) => parent?.campaignType !== 'csr',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'area',
+              title: 'Area',
+              type: 'reference',
+              to: [{ type: 'listing' }],
+              options: { filter: 'listingType == "area"' },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'associationType',
+              title: 'Association Type',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Primary site', value: 'primary-site' },
+                  { title: 'Service area', value: 'service-area' },
+                  { title: 'Ward', value: 'ward' },
+                  { title: 'Municipality', value: 'municipality' },
+                  {
+                    title: 'Traditional Authority area',
+                    value: 'traditional-authority',
+                  },
+                ],
+              },
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: { title: 'area.name', subtitle: 'associationType' },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'relatedListings',
       title: 'Related Infrastructure',
       type: 'array',
@@ -746,7 +800,12 @@ export default defineType({
       type: 'array',
       group: 'media',
       description: 'PDFs, proposals, reports, or other documents.',
-      of: [{ type: 'evidenceAttachment', options: { accept: '.pdf,.doc,.docx,.xls,.xlsx' } }],
+      of: [
+        {
+          type: 'evidenceAttachment',
+          options: { accept: '.pdf,.doc,.docx,.xls,.xlsx' },
+        },
+      ],
     }),
 
     // ─── Tracking & Impact ─────────────────────────────────

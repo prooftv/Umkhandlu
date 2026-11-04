@@ -246,6 +246,46 @@ export default defineType({
       hidden: ({ parent }) => parent?.listingType !== 'area',
     }),
     defineField({
+      name: 'boundary',
+      title: 'Area Boundary (GeoJSON)',
+      type: 'text',
+      description:
+        'GeoJSON polygon prepared via QGIS from authorised institutional source. Do not edit manually.',
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
+      name: 'boundarySource',
+      title: 'Boundary Source',
+      type: 'string',
+      description:
+        'Institution and dataset. e.g. "KZN COGTA Ward Boundaries 2022"',
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
+      name: 'boundaryDate',
+      title: 'Boundary Dataset Date',
+      type: 'date',
+      description: 'Date of the source dataset (not import date).',
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
+      name: 'boundaryPermission',
+      title: 'Redistribution Permission',
+      type: 'string',
+      options: {
+        list: [
+          {
+            title: 'Reference only (display, no redistribution)',
+            value: 'reference',
+          },
+          { title: 'Display permitted', value: 'display' },
+          { title: 'Redistribution confirmed', value: 'redistribute' },
+        ],
+      },
+      initialValue: 'reference',
+      hidden: ({ parent }) => parent?.listingType !== 'area',
+    }),
+    defineField({
       name: 'induna',
       title: 'Induna (Headman)',
       type: 'reference',
