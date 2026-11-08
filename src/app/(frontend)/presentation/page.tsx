@@ -456,6 +456,12 @@ Filter by area: ?area=kwagudlucingo`}</CodeBlock>
           >
             Buffalo River Project →
           </Link>
+          <Link
+            href="/presentation/founders"
+            className="text-sm text-primary hover:underline"
+          >
+            Founders Briefing →
+          </Link>
         </div>
       </footer>
     </div>
