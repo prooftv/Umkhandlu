@@ -146,6 +146,14 @@ export default defineType({
       description: 'Pin the proposed development site on the map.',
     }),
     defineField({
+      name: 'siteBoundary',
+      title: 'Site Boundary (GeoJSON)',
+      type: 'text',
+      rows: 4,
+      description:
+        'GeoJSON geometry object for the affected site boundary polygon. Paste the geometry field from a GeoJSON Feature (type + coordinates). Leave blank if not available.',
+    }),
+    defineField({
       name: 'commentDeadline',
       title: 'Comment Deadline',
       type: 'date',
@@ -198,7 +206,9 @@ export default defineType({
       title: 'Supporting Documents',
       type: 'array',
       description: 'EIA reports, site plans, application forms.',
-      of: [{ type: 'evidenceAttachment', options: { accept: '.pdf,.doc,.docx' } }],
+      of: [
+        { type: 'evidenceAttachment', options: { accept: '.pdf,.doc,.docx' } },
+      ],
     }),
     defineField({
       name: 'relatedArea',

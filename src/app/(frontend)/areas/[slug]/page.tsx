@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Image } from 'next-sanity/image';
@@ -11,6 +12,11 @@ import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import { areaDetailQuery, areaSlugs } from '@/lib/sanity/queries/queries';
+
+const AreaBoundaryLeaflet = dynamic(
+  () => import('@/components/modules/AreaBoundaryLeaflet'),
+  { ssr: false }
+);
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -532,6 +538,35 @@ export default async function AreaPage(props: Props) {
       <AreaHero area={area as AreaExtended} />
 
       <AreaInduna induna={area.induna} />
+
+      {/* Boundary map — shown when boundary polygon is available */}
+      {(area as AreaExtended & { boundary?: unknown }).boundary && (
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">Area Boundary</h2>
+          <AreaBoundaryLeaflet
+            boundary={
+              (
+                area as AreaExtended & {
+                  boundary: { type: string; coordinates: unknown };
+                }
+              ).boundary
+            }
+            name={area.name || ''}
+            geopoint={area.geopoint}
+            boundarySource={
+              (area as AreaExtended & { boundarySource?: string })
+                .boundarySource
+            }
+            boundaryDate={
+              (area as AreaExtended & { boundaryDate?: string }).boundaryDate
+            }
+            boundaryPermission={
+              (area as AreaExtended & { boundaryPermission?: string })
+                .boundaryPermission
+            }
+          />
+        </section>
+      )}
 
       {/* Map + Listings */}
       {area.relatedListings && area.relatedListings.length > 0 && (
