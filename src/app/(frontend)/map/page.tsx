@@ -14,6 +14,41 @@ const CONTROL_CENTRE_WARDS_URL = process.env.CONTROL_CENTRE_URL
   ? `${process.env.CONTROL_CENTRE_URL}/api/spatial/wards`
   : null;
 
+// MDB property keys — confirmed from live dataset
+// WardNo: ward number within municipality (resets per municipality)
+// CAT_B: stable municipality code (KZN252=Newcastle, KZN253=eMadlangeni, KZN254=Dannhauser)
+// WardID: unique national ward identifier (e.g. 52504001)
+// WardLink: stable composite key (e.g. KZN254_1)
+const EXPECTED_WARD_COUNT = 55;
+const EXPECTED_CAT_B_CODES = new Set(['KZN252', 'KZN253', 'KZN254']);
+
+function validateWardResponse(json: unknown): json is {
+  type: string;
+  features: Array<{
+    type: string;
+    geometry: { type: string; coordinates: unknown };
+    properties: Record<string, unknown>;
+  }>;
+  meta?: { dataset?: string; datasetDate?: string; attribution?: string };
+} {
+  if (!json || typeof json !== 'object') return false;
+  const d = json as Record<string, unknown>;
+  if (d.type !== 'FeatureCollection') return false;
+  const features = d.features;
+  if (!Array.isArray(features) || features.length < EXPECTED_WARD_COUNT)
+    return false;
+  // Verify expected municipality codes are present
+  const cats = new Set(
+    features.map(
+      (f) => (f as { properties: Record<string, unknown> }).properties?.CAT_B
+    )
+  );
+  for (const code of EXPECTED_CAT_B_CODES) {
+    if (!cats.has(code)) return false;
+  }
+  return true;
+}
+
 async function fetchControlCentreWards(): Promise<MapBoundary[]> {
   if (!CONTROL_CENTRE_WARDS_URL) return [];
   try {
@@ -21,29 +56,27 @@ async function fetchControlCentreWards(): Promise<MapBoundary[]> {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return [];
-    const json = (await res.json()) as {
-      type: string;
-      features: Array<{
-        type: string;
-        geometry: { type: string; coordinates: unknown };
-        properties: Record<string, unknown>;
-      }>;
-      meta?: { dataset?: string; datasetDate?: string; attribution?: string };
-    };
-    return (json.features ?? []).map((f) => {
+    const json = await res.json();
+    // Validate before using — never silently fall back to incomplete data
+    if (!validateWardResponse(json)) return [];
+    return json.features.map((f) => {
       const p = f.properties;
-      const wardNum = p.WARDNO ?? p.WardNo ?? p.ward_number ?? null;
-      const munic = (p.MUNICNAME ??
-        p.MunicName ??
-        p.municipality ??
-        '') as string;
+      // Use authoritative MDB field names — WardNo (not WARDNO), CAT_B (not municipality string)
+      const wardNum = p.WardNo as number | null;
+      const catB = (p.CAT_B ?? '') as string;
+      const municName = (p.MUNICNAME ?? '') as string;
+      const wardLink = (p.WardLink ?? '') as string; // stable composite: KZN254_1
       const name =
-        wardNum != null ? `Ward ${wardNum} — ${munic}` : munic || 'Ward';
+        wardNum != null
+          ? `Ward ${wardNum} — ${municName}`
+          : municName || 'Ward';
       return {
-        slug: `ward-${wardNum ?? name}`,
+        // Use WardLink as slug — stable, unique, matches MDB identifier
+        slug: wardLink || `ward-${catB}-${wardNum}`,
         name,
         areaLevel: 'ward',
-        municipality: munic || null,
+        // Store CAT_B as municipality for matching — stable code, not display string
+        municipality: catB || null,
         wardNumber: wardNum != null ? Number(wardNum) : null,
         indunaName: null,
         indunaSlug: null,
@@ -201,19 +234,31 @@ export default async function MapPage() {
   );
 
   let boundaries: MapBoundary[];
+  // CAT_B → MUNICNAME mapping for Sanity match normalisation
+  // Sanity stores municipality as display string (e.g. 'Newcastle'), MDB uses CAT_B code
+  const CAT_B_TO_MUNIC: Record<string, string> = {
+    KZN252: 'newcastle',
+    KZN253: 'emadlangeni',
+    KZN254: 'dannhauser',
+  };
+
   if (controlCentreWards.length > 0) {
-    // Enrich Control Centre wards with Sanity governance data where available
     boundaries = controlCentreWards.map((ccWard) => {
+      // Match Sanity area by wardNumber + normalised municipality name
+      // Sanity stores municipality as lowercase slug (e.g. 'newcastle')
+      const sanityMunic = CAT_B_TO_MUNIC[ccWard.municipality ?? ''];
       const match = sanityBoundaries.find(
         (s) =>
           s.wardNumber != null &&
           s.wardNumber === ccWard.wardNumber &&
-          s.municipality === ccWard.municipality
+          (s.municipality?.toLowerCase() === sanityMunic ||
+            s.municipality?.toLowerCase() ===
+              ccWard.municipality?.toLowerCase())
       );
       if (!match) return ccWard;
+      // Enrich with Sanity governance data — keep MDB geometry and slug
       return {
         ...ccWard,
-        slug: match.slug,
         indunaName: match.indunaName,
         indunaSlug: match.indunaSlug,
         recordCount: match.recordCount,

@@ -13,6 +13,60 @@ import { sanityFetch } from '@/lib/sanity/client/live';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import { areaDetailQuery, areaSlugs } from '@/lib/sanity/queries/queries';
 
+// CAT_B codes for Amajuba municipalities — used to look up MDB ward boundary
+const MUNIC_TO_CAT_B: Record<string, string> = {
+  newcastle: 'KZN252',
+  emadlangeni: 'KZN253',
+  dannhauser: 'KZN254',
+};
+
+type WardBoundary = {
+  geometry: { type: string; coordinates: unknown };
+  source: string;
+  date: string;
+  attribution: string;
+} | null;
+
+async function fetchMDBWardBoundary(
+  wardNumber: number,
+  municipality: string
+): Promise<WardBoundary> {
+  const baseUrl = process.env.CONTROL_CENTRE_URL;
+  if (!baseUrl) return null;
+  try {
+    const res = await fetch(`${baseUrl}/api/spatial/wards`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      type: string;
+      features: Array<{
+        geometry: { type: string; coordinates: unknown };
+        properties: Record<string, unknown>;
+      }>;
+      meta?: { dataset?: string; datasetDate?: string; attribution?: string };
+    };
+    if (json.type !== 'FeatureCollection' || !Array.isArray(json.features))
+      return null;
+    const catB = MUNIC_TO_CAT_B[municipality.toLowerCase()];
+    const feature = json.features.find(
+      (f) =>
+        f.properties.WardNo === wardNumber &&
+        (!catB || f.properties.CAT_B === catB)
+    );
+    if (!feature) return null;
+    return {
+      geometry: feature.geometry,
+      source: json.meta?.dataset ?? 'MDB 2026',
+      date: json.meta?.datasetDate ?? '2026',
+      attribution:
+        json.meta?.attribution ?? 'Municipal Demarcation Board (MDB)',
+    };
+  } catch {
+    return null;
+  }
+}
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -27,6 +81,49 @@ type AreaExtended = AreaData & {
   municipality?: string;
   parentArea?: { name: string; slug: string };
 };
+
+type ActiveBoundary = {
+  geometry: { type: string; coordinates: unknown };
+  source: string | null;
+  date: string | null;
+  permission: string | null;
+} | null;
+
+type AreaWithBoundary = AreaExtended & {
+  boundary?: { type: string; coordinates: unknown };
+  boundarySource?: string;
+  boundaryDate?: string;
+  boundaryPermission?: string;
+};
+
+async function resolveActiveBoundary(
+  area: AreaWithBoundary
+): Promise<ActiveBoundary> {
+  if (
+    area.areaLevel === 'ward' &&
+    area.wardNumber != null &&
+    area.municipality
+  ) {
+    const mdb = await fetchMDBWardBoundary(area.wardNumber, area.municipality);
+    if (mdb) {
+      return {
+        geometry: mdb.geometry,
+        source: mdb.source,
+        date: mdb.date,
+        permission: 'public-domain',
+      };
+    }
+  }
+  if (area.boundary) {
+    return {
+      geometry: area.boundary,
+      source: area.boundarySource ?? null,
+      date: area.boundaryDate ?? null,
+      permission: area.boundaryPermission ?? null,
+    };
+  }
+  return null;
+}
 
 const LEVEL_LABELS: Record<string, string> = {
   district: 'District Municipality',
@@ -477,6 +574,31 @@ function CampaignCard({
   );
 }
 
+function AreaBoundarySection({
+  boundary,
+  name,
+  geopoint,
+}: {
+  boundary: ActiveBoundary;
+  name: string;
+  geopoint?: { lat: number; lng: number } | null;
+}) {
+  if (!boundary) return null;
+  return (
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold mb-4">Area Boundary</h2>
+      <AreaBoundaryLeaflet
+        boundary={boundary.geometry}
+        name={name}
+        geopoint={geopoint}
+        boundarySource={boundary.source ?? undefined}
+        boundaryDate={boundary.date ?? undefined}
+        boundaryPermission={boundary.permission ?? undefined}
+      />
+    </section>
+  );
+}
+
 function DevNoticeCard({
   notice,
 }: {
@@ -524,57 +646,40 @@ export default async function AreaPage(props: Props) {
 
   if (!area) notFound();
 
+  const areaExt = area as AreaWithBoundary;
+  const activeBoundary = await resolveActiveBoundary(areaExt);
+
   return (
     <div className="container mx-auto py-12">
       <Breadcrumbs
         items={[{ label: 'Areas', href: '/areas' }, { label: area.name || '' }]}
       />
 
-      <AreaHero area={area as AreaExtended} />
+      <AreaHero area={areaExt} />
 
       <AreaInduna induna={area.induna} />
 
-      {/* Boundary map — shown when boundary polygon is available */}
-      {(area as AreaExtended & { boundary?: unknown }).boundary && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Area Boundary</h2>
-          <AreaBoundaryLeaflet
-            boundary={
-              (
-                area as AreaExtended & {
-                  boundary: { type: string; coordinates: unknown };
-                }
-              ).boundary
-            }
-            name={area.name || ''}
-            geopoint={area.geopoint}
-            boundarySource={
-              (area as AreaExtended & { boundarySource?: string })
-                .boundarySource
-            }
-            boundaryDate={
-              (area as AreaExtended & { boundaryDate?: string }).boundaryDate
-            }
-            boundaryPermission={
-              (area as AreaExtended & { boundaryPermission?: string })
-                .boundaryPermission
-            }
-          />
-        </section>
-      )}
+      {/* Boundary map — MDB 2026 for wards, Sanity boundary for other area types */}
+      <AreaBoundarySection
+        boundary={activeBoundary}
+        name={area.name || ''}
+        geopoint={area.geopoint}
+      />
 
-      {/* Map + Listings */}
+      {/* Map + Listings — only render LocationPin when a real geopoint is available */}
       {area.relatedListings && area.relatedListings.length > 0 && (
         <>
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Area Map</h2>
-            <LocationPin
-              lat={area.geopoint?.lat ?? -27.82}
-              lng={area.geopoint?.lng ?? 30.05}
-              name={area.name || ''}
-              listingType="area"
-            />
-          </section>
+          {area.geopoint?.lat && area.geopoint?.lng && (
+            <section className="mb-12">
+              <h2 className="text-2xl font-bold mb-4">Area Map</h2>
+              <LocationPin
+                lat={area.geopoint.lat}
+                lng={area.geopoint.lng}
+                name={area.name || ''}
+                listingType="area"
+              />
+            </section>
+          )}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">In This Area</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
