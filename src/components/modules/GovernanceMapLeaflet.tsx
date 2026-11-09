@@ -20,6 +20,14 @@ export interface MapRecord {
 export interface MapBoundary {
   slug: string;
   name: string;
+  areaLevel: string | null;
+  municipality: string | null;
+  wardNumber: number | null;
+  indunaName: string | null;
+  indunaSlug: string | null;
+  recordCount: number;
+  noticeCount: number;
+  campaignCount: number;
   boundary: { type: string; coordinates: unknown };
   boundarySource: string | null;
   boundaryDate: string | null;
@@ -60,7 +68,12 @@ function loadLeafletCss() {
   document.head.appendChild(link);
 }
 
-function addBoundaries(Leaf: typeof L, map: L.Map, boundaries: MapBoundary[]) {
+function addBoundaries(
+  Leaf: typeof L,
+  map: L.Map,
+  boundaries: MapBoundary[],
+  onSelect: (b: MapBoundary) => void
+) {
   for (const b of boundaries) {
     try {
       const layer = Leaf.geoJSON(
@@ -79,6 +92,7 @@ function addBoundaries(Leaf: typeof L, map: L.Map, boundaries: MapBoundary[]) {
           },
         }
       );
+      layer.on('click', () => onSelect(b));
       layer.bindTooltip(b.name, { sticky: true });
       layer.addTo(map);
     } catch {
@@ -149,6 +163,257 @@ function TypePill({
   );
 }
 
+function RecordDetail({ rec }: { rec: MapRecord }) {
+  return (
+    <div className="p-3 space-y-2 overflow-y-auto flex-1">
+      <span
+        className="inline-block text-[10px] font-medium px-1.5 py-0.5 rounded"
+        style={{
+          background: `${TYPE_COLOUR[rec.type]}18`,
+          color: TYPE_COLOUR[rec.type],
+        }}
+      >
+        {rec.subtype}
+      </span>
+      <p className="text-sm font-semibold leading-snug">{rec.label}</p>
+      <div className="space-y-0.5 text-xs text-gray-500">
+        {rec.municipality && <p>{rec.municipality}</p>}
+        {rec.ward != null && <p>Ward {rec.ward}</p>}
+        {rec.status && <p className="capitalize">{rec.status}</p>}
+        {rec.date && <p>{new Date(rec.date).toLocaleDateString()}</p>}
+      </div>
+      <a
+        href={`${TYPE_PATH[rec.type]}/${rec.slug}`}
+        className="inline-block mt-1 text-xs font-medium text-primary hover:underline"
+      >
+        View full record →
+      </a>
+    </div>
+  );
+}
+
+function ItemList({
+  boundaries,
+  filtered,
+  onSelectArea,
+  onSelectRecord,
+}: {
+  boundaries: MapBoundary[];
+  filtered: MapRecord[];
+  onSelectArea: (b: MapBoundary) => void;
+  onSelectRecord: (r: MapRecord) => void;
+}) {
+  return (
+    <div className="overflow-y-auto flex-1 divide-y divide-gray-50">
+      {boundaries.length > 0 && (
+        <div className="px-3 py-2 bg-gray-50">
+          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+            Areas — tap boundary to explore
+          </p>
+          {boundaries.map((b) => (
+            <button
+              key={b.slug}
+              type="button"
+              onClick={() => onSelectArea(b)}
+              className="w-full text-left flex items-center justify-between py-1.5 hover:text-primary transition-colors"
+            >
+              <span className="text-xs text-gray-700">{b.name}</span>
+              <span className="text-[10px] text-gray-400">
+                {b.recordCount + b.noticeCount + b.campaignCount} items →
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+      {filtered.length === 0 ? (
+        <p className="p-4 text-xs text-gray-400 text-center">
+          No items match your filters.
+        </p>
+      ) : (
+        filtered.map((rec) => (
+          <button
+            key={rec.id}
+            type="button"
+            onClick={() => onSelectRecord(rec)}
+            className="w-full text-left px-3 py-2.5 hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-start gap-2">
+              <span
+                className="mt-1 shrink-0"
+                style={{
+                  display: 'inline-block',
+                  width: 8,
+                  height: 8,
+                  borderRadius: rec.type === 'project' ? 1 : '50%',
+                  background: TYPE_COLOUR[rec.type],
+                }}
+              />
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-gray-800 leading-snug truncate">
+                  {rec.label}
+                </p>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  {rec.subtype}
+                  {rec.municipality ? ` · ${rec.municipality}` : ''}
+                  {rec.date
+                    ? ` · ${new Date(rec.date).toLocaleDateString()}`
+                    : ''}
+                </p>
+              </div>
+            </div>
+          </button>
+        ))
+      )}
+    </div>
+  );
+}
+
+function AreaPanel({
+  area,
+  onClose,
+}: {
+  area: MapBoundary;
+  onClose: () => void;
+}) {
+  const total = area.recordCount + area.noticeCount + area.campaignCount;
+  return (
+    <div className="p-3 space-y-3 overflow-y-auto flex-1">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          {area.areaLevel && (
+            <span className="inline-block text-[10px] font-medium px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 mb-1">
+              {area.areaLevel}
+            </span>
+          )}
+          <p className="text-sm font-semibold leading-snug">{area.name}</p>
+          {area.municipality && (
+            <p className="text-xs text-gray-500 mt-0.5">{area.municipality}</p>
+          )}
+          {area.wardNumber != null && (
+            <p className="text-xs text-gray-400">Ward {area.wardNumber}</p>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-600 text-xs shrink-0"
+        >
+          ✕
+        </button>
+      </div>
+
+      {area.indunaName && (
+        <div className="rounded-lg bg-gray-50 px-3 py-2 space-y-0.5">
+          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">
+            Induna
+          </p>
+          {area.indunaSlug ? (
+            <a
+              href={`/people/${area.indunaSlug}`}
+              className="text-xs font-medium text-primary hover:underline"
+            >
+              {area.indunaName}
+            </a>
+          ) : (
+            <p className="text-xs font-medium text-gray-700">
+              {area.indunaName}
+            </p>
+          )}
+        </div>
+      )}
+
+      {total > 0 ? (
+        <div className="space-y-1.5">
+          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">
+            Governance activity
+          </p>
+          {area.recordCount > 0 && (
+            <a
+              href={`/areas/${area.slug}#records`}
+              className="flex items-center justify-between rounded-lg px-3 py-2 bg-purple-50 hover:bg-purple-100 transition-colors"
+            >
+              <span className="flex items-center gap-2 text-xs font-medium text-purple-700">
+                <span
+                  className="inline-block w-2 h-2 rounded-full"
+                  style={{ background: TYPE_COLOUR.record }}
+                />
+                Records
+              </span>
+              <span className="text-xs font-semibold text-purple-700">
+                {area.recordCount}
+              </span>
+            </a>
+          )}
+          {area.noticeCount > 0 && (
+            <a
+              href={`/areas/${area.slug}#notices`}
+              className="flex items-center justify-between rounded-lg px-3 py-2 bg-cyan-50 hover:bg-cyan-100 transition-colors"
+            >
+              <span className="flex items-center gap-2 text-xs font-medium text-cyan-700">
+                <span
+                  className="inline-block w-2 h-2 rounded-full"
+                  style={{ background: TYPE_COLOUR.notice }}
+                />
+                Dev Notices
+              </span>
+              <span className="text-xs font-semibold text-cyan-700">
+                {area.noticeCount}
+              </span>
+            </a>
+          )}
+          {area.campaignCount > 0 && (
+            <a
+              href={`/areas/${area.slug}#campaigns`}
+              className="flex items-center justify-between rounded-lg px-3 py-2 bg-green-50 hover:bg-green-100 transition-colors"
+            >
+              <span className="flex items-center gap-2 text-xs font-medium text-green-700">
+                <span
+                  className="inline-block w-2 h-2 rounded-full"
+                  style={{ background: TYPE_COLOUR.project }}
+                />
+                Campaigns
+              </span>
+              <span className="text-xs font-semibold text-green-700">
+                {area.campaignCount}
+              </span>
+            </a>
+          )}
+        </div>
+      ) : (
+        <p className="text-xs text-gray-400">
+          No governance activity recorded for this area yet.
+        </p>
+      )}
+
+      <a
+        href={`/areas/${area.slug}`}
+        className="block text-xs font-medium text-primary hover:underline"
+      >
+        View area page →
+      </a>
+
+      {(area.boundarySource || area.boundaryPermission) && (
+        <div className="pt-2 border-t border-gray-100 space-y-0.5">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">
+            Boundary data
+          </p>
+          {area.boundarySource && (
+            <p className="text-[10px] text-gray-400">{area.boundarySource}</p>
+          )}
+          {area.boundaryDate && (
+            <p className="text-[10px] text-gray-400">{area.boundaryDate}</p>
+          )}
+          {area.boundaryPermission && (
+            <p className="text-[10px] text-amber-600">
+              Permission: {area.boundaryPermission}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function GovernanceMapLeaflet({
   records,
   boundaries,
@@ -159,7 +424,8 @@ export default function GovernanceMapLeaflet({
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
 
-  const [selected, setSelected] = useState<MapRecord | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<MapRecord | null>(null);
+  const [selectedArea, setSelectedArea] = useState<MapBoundary | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeTypes, setActiveTypes] = useState<Set<string>>(
@@ -209,12 +475,29 @@ export default function GovernanceMapLeaflet({
   }
 
   const selectRecord = useCallback((rec: MapRecord) => {
-    setSelected(rec);
+    setSelectedRecord(rec);
+    setSelectedArea(null);
     mapRef.current?.flyTo([rec.lat, rec.lng], 13, { duration: 0.8 });
     setPanelOpen(true);
   }, []);
 
-  // Init map — runs once; marker click handler stable via useCallback
+  const selectArea = useCallback((area: MapBoundary) => {
+    setSelectedArea(area);
+    setSelectedRecord(null);
+    if (area.geopoint) {
+      mapRef.current?.flyTo([area.geopoint.lat, area.geopoint.lng], 11, {
+        duration: 0.8,
+      });
+    }
+    setPanelOpen(true);
+  }, []);
+
+  function clearSelection() {
+    setSelectedRecord(null);
+    setSelectedArea(null);
+  }
+
+  // Init map — runs once; callbacks stable via useCallback
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     loadLeafletCss();
@@ -230,7 +513,7 @@ export default function GovernanceMapLeaflet({
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19,
       }).addTo(map);
-      addBoundaries(Leaf, map, boundaries);
+      addBoundaries(Leaf, map, boundaries, selectArea);
       markersRef.current = buildMarkers(Leaf, map, records, selectRecord);
       mapRef.current = map;
     });
@@ -240,7 +523,7 @@ export default function GovernanceMapLeaflet({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [centre, zoom, boundaries, records, selectRecord]);
+  }, [centre, zoom, boundaries, records, selectRecord, selectArea]);
 
   // Show/hide markers based on filter
   useEffect(() => {
@@ -257,156 +540,90 @@ export default function GovernanceMapLeaflet({
     }
   }, [filtered, records]);
 
-  const panel = (
+  const panelContent = (
     <div className="flex flex-col h-full bg-white">
       {/* Panel header */}
       <div className="p-3 border-b border-gray-100 space-y-2 shrink-0">
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-gray-800">
-            {filtered.length} of {records.length} items
+            {selectedArea
+              ? selectedArea.name
+              : `${filtered.length} of ${records.length} items`}
           </p>
-          {selected && (
+          <div className="flex items-center gap-2">
+            {(selectedRecord || selectedArea) && (
+              <button
+                type="button"
+                onClick={clearSelection}
+                className="text-xs text-gray-400 hover:text-gray-600"
+              >
+                ← All
+              </button>
+            )}
+            {/* Mobile close button — inside drawer header so always reachable */}
             <button
               type="button"
-              onClick={() => setSelected(null)}
-              className="text-xs text-gray-400 hover:text-gray-600"
+              onClick={() => setPanelOpen(false)}
+              className="md:hidden text-gray-400 hover:text-gray-600 text-lg leading-none"
+              aria-label="Close panel"
             >
-              ← All
+              ×
             </button>
-          )}
+          </div>
         </div>
 
-        {/* Search */}
-        <input
-          type="search"
-          placeholder="Search records, notices…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-gray-400 bg-gray-50"
-        />
-
-        {/* Type filters */}
-        <div className="flex flex-wrap gap-1.5">
-          {(['record', 'notice', 'project'] as const).map((t) => (
-            <TypePill
-              key={t}
-              type={t}
-              active={activeTypes.has(t)}
-              count={counts[t]}
-              onClick={() => toggleType(t)}
+        {!selectedArea && (
+          <>
+            <input
+              type="search"
+              placeholder="Search records, notices…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-gray-400 bg-gray-50"
             />
-          ))}
-        </div>
-
-        {/* Municipality filter */}
-        {municipalities.length > 1 && (
-          <select
-            value={activeMuni}
-            onChange={(e) => setActiveMuni(e.target.value)}
-            className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-gray-50 outline-none focus:border-gray-400"
-          >
-            <option value="">All municipalities</option>
-            {municipalities.map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
+            <div className="flex flex-wrap gap-1.5">
+              {(['record', 'notice', 'project'] as const).map((t) => (
+                <TypePill
+                  key={t}
+                  type={t}
+                  active={activeTypes.has(t)}
+                  count={counts[t]}
+                  onClick={() => toggleType(t)}
+                />
+              ))}
+            </div>
+            {municipalities.length > 1 && (
+              <select
+                value={activeMuni}
+                onChange={(e) => setActiveMuni(e.target.value)}
+                className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-gray-50 outline-none focus:border-gray-400"
+              >
+                <option value="">All municipalities</option>
+                {municipalities.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            )}
+          </>
         )}
       </div>
 
-      {/* Selected detail */}
-      {selected ? (
-        <div className="p-3 space-y-2 overflow-y-auto">
-          <span
-            className="inline-block text-[10px] font-medium px-1.5 py-0.5 rounded"
-            style={{
-              background: `${TYPE_COLOUR[selected.type]}18`,
-              color: TYPE_COLOUR[selected.type],
-            }}
-          >
-            {selected.subtype}
-          </span>
-          <p className="text-sm font-semibold leading-snug">{selected.label}</p>
-          <div className="space-y-0.5 text-xs text-gray-500">
-            {selected.municipality && <p>{selected.municipality}</p>}
-            {selected.ward != null && <p>Ward {selected.ward}</p>}
-            {selected.status && <p className="capitalize">{selected.status}</p>}
-            {selected.date && (
-              <p>{new Date(selected.date).toLocaleDateString()}</p>
-            )}
-          </div>
-          <a
-            href={`${TYPE_PATH[selected.type]}/${selected.slug}`}
-            className="inline-block mt-1 text-xs font-medium text-primary hover:underline"
-          >
-            View full record →
-          </a>
-
-          {/* Boundary attribution */}
-          {boundaries.length > 0 && (
-            <div className="pt-3 border-t border-gray-100 space-y-1">
-              <p className="text-xs font-semibold text-gray-600">Boundaries</p>
-              {boundaries.map((b) => (
-                <div key={b.slug} className="text-xs text-gray-400 space-y-0.5">
-                  <p className="text-gray-600 font-medium">{b.name}</p>
-                  {b.boundarySource && <p>{b.boundarySource}</p>}
-                  {b.boundaryPermission && (
-                    <p className="text-amber-600">
-                      Permission: {b.boundaryPermission}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+      {/* Area context panel */}
+      {selectedArea ? (
+        <AreaPanel area={selectedArea} onClose={clearSelection} />
+      ) : selectedRecord ? (
+        <RecordDetail rec={selectedRecord} />
       ) : (
-        /* Item list */
-        <div className="overflow-y-auto flex-1 divide-y divide-gray-50">
-          {filtered.length === 0 ? (
-            <p className="p-4 text-xs text-gray-400 text-center">
-              No items match your filters.
-            </p>
-          ) : (
-            filtered.map((rec) => (
-              <button
-                key={rec.id}
-                type="button"
-                onClick={() => selectRecord(rec)}
-                className="w-full text-left px-3 py-2.5 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-start gap-2">
-                  <span
-                    className="mt-1 shrink-0"
-                    style={{
-                      display: 'inline-block',
-                      width: 8,
-                      height: 8,
-                      borderRadius: rec.type === 'project' ? 1 : '50%',
-                      background: TYPE_COLOUR[rec.type],
-                    }}
-                  />
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium text-gray-800 leading-snug truncate">
-                      {rec.label}
-                    </p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">
-                      {rec.subtype}
-                      {rec.municipality ? ` · ${rec.municipality}` : ''}
-                      {rec.date
-                        ? ` · ${new Date(rec.date).toLocaleDateString()}`
-                        : ''}
-                    </p>
-                  </div>
-                </div>
-              </button>
-            ))
-          )}
-        </div>
+        <ItemList
+          boundaries={boundaries}
+          filtered={filtered}
+          onSelectArea={selectArea}
+          onSelectRecord={selectRecord}
+        />
       )}
 
-      {/* Data quality note */}
       <div className="p-3 border-t border-gray-50 shrink-0">
         <p className="text-[10px] text-gray-400">
           Only georeferenced items shown.{' '}
@@ -431,38 +648,44 @@ export default function GovernanceMapLeaflet({
 
       {/* Desktop panel — right overlay */}
       <div className="hidden md:flex absolute top-3 right-3 bottom-3 w-72 flex-col rounded-xl border border-gray-100 shadow-lg overflow-hidden z-[1000]">
-        {panel}
+        {panelContent}
       </div>
 
-      {/* Mobile — bottom drawer toggle button */}
-      <button
-        type="button"
-        onClick={() => setPanelOpen((v) => !v)}
-        className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700"
-      >
-        <span
-          style={{
-            display: 'inline-block',
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            background: '#7c3aed',
-          }}
-        />
-        {filtered.length} items
-        <span className="text-gray-400">{panelOpen ? '↓' : '↑'}</span>
-      </button>
+      {/* Mobile — floating toggle button (only when drawer is closed) */}
+      {!panelOpen && (
+        <button
+          type="button"
+          onClick={() => setPanelOpen(true)}
+          className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700"
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              background: '#7c3aed',
+            }}
+          />
+          {filtered.length} items ↑
+        </button>
+      )}
 
-      {/* Mobile — bottom drawer */}
+      {/* Mobile — bottom drawer (close button is inside the panel header) */}
       {panelOpen && (
         <div
           className="md:hidden absolute left-0 right-0 bottom-0 z-[1001] rounded-t-2xl border-t border-gray-200 shadow-2xl overflow-hidden"
-          style={{ height: '55vh' }}
+          style={{ height: '60vh' }}
         >
           <div className="flex justify-center pt-2 pb-1 bg-white">
             <div className="w-8 h-1 rounded-full bg-gray-300" />
           </div>
-          <div className="h-full bg-white overflow-hidden">{panel}</div>
+          <div
+            style={{ height: 'calc(100% - 20px)' }}
+            className="bg-white overflow-hidden"
+          >
+            {panelContent}
+          </div>
         </div>
       )}
     </div>

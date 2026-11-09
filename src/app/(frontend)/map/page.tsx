@@ -56,6 +56,14 @@ const mapQuery = `{
   "boundaries": *[_type == "listing" && listingType == "area" && defined(boundary)] {
     "slug": slug.current,
     "name": name,
+    "areaLevel": areaLevel,
+    "municipality": municipality,
+    "wardNumber": wardNumber,
+    "indunaName": induna->firstName + " " + induna->lastName,
+    "indunaSlug": induna->slug.current,
+    "recordCount": count(*[_type == "record" && references(^._id)]),
+    "noticeCount": count(*[_type == "developmentNotice" && references(^._id)]),
+    "campaignCount": count(*[_type == "campaign" && references(^._id)]),
     "boundary": boundary,
     "boundarySource": boundarySource,
     "boundaryDate": boundaryDate,
@@ -85,6 +93,14 @@ export default async function MapPage() {
     boundaries: {
       slug: string;
       name: string;
+      areaLevel: string | null;
+      municipality: string | null;
+      wardNumber: number | null;
+      indunaName: string | null;
+      indunaSlug: string | null;
+      recordCount: number;
+      noticeCount: number;
+      campaignCount: number;
       boundary: { type: string; coordinates: unknown };
       boundarySource: string | null;
       boundaryDate: string | null;
