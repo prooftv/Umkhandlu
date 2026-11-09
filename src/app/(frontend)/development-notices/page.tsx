@@ -9,7 +9,10 @@ import { DEV_NOTICES_PER_PAGE } from '@/lib/constants';
 import { DEV_NOTICE_TYPE_LABELS } from '@/lib/governance-labels';
 import { paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { devNoticesArchiveQuery } from '@/lib/sanity/queries/queries';
+import {
+  devNoticesArchiveFilteredQuery,
+  devNoticesArchiveQuery,
+} from '@/lib/sanity/queries/queries';
 
 export const metadata: Metadata = {
   title: 'Development & Statutory Notices',
@@ -18,11 +21,22 @@ export const metadata: Metadata = {
   alternates: { canonical: '/development-notices' },
 };
 
-export default async function DevelopmentNoticesPage() {
-  const { data } = await sanityFetch({
-    query: devNoticesArchiveQuery,
-    params: { from: 0, to: DEV_NOTICES_PER_PAGE - 1 },
-  });
+type Props = { searchParams: Promise<{ type?: string }> };
+
+export default async function DevelopmentNoticesPage({ searchParams }: Props) {
+  const { type } = await searchParams;
+
+  const { data } = await sanityFetch(
+    type
+      ? {
+          query: devNoticesArchiveFilteredQuery,
+          params: { from: 0, to: DEV_NOTICES_PER_PAGE - 1, type },
+        }
+      : {
+          query: devNoticesArchiveQuery,
+          params: { from: 0, to: DEV_NOTICES_PER_PAGE - 1 },
+        }
+  );
 
   const paginated = paginatedData(
     data ?? { total: 0, results: [] },
@@ -35,9 +49,16 @@ export default async function DevelopmentNoticesPage() {
   const open = results.filter((n) => n.status === 'open');
   const closed = results.filter((n) => n.status !== 'open');
 
-  // Build type filter options
+  // Build type filter options from unfiltered counts
+  const { data: allData } = type
+    ? await sanityFetch({
+        query: devNoticesArchiveQuery,
+        params: { from: 0, to: 999 },
+      })
+    : { data: data };
+
   const typeCounts: Record<string, number> = {};
-  for (const n of results) {
+  for (const n of allData?.results ?? results) {
     if (n.noticeType)
       typeCounts[n.noticeType] = (typeCounts[n.noticeType] ?? 0) + 1;
   }
@@ -66,7 +87,11 @@ export default async function DevelopmentNoticesPage() {
 
       {results.length === 0 ? (
         <EmptyState
-          title="No development notices published yet"
+          title={
+            type
+              ? `No ${DEV_NOTICE_TYPE_LABELS[type] ?? type} notices`
+              : 'No development notices published yet'
+          }
           description="Public participation notices will appear here once published."
           icon="📋"
         />

@@ -422,6 +422,24 @@ export const recordsArchiveQuery = defineQuery(`
   }
 `);
 
+export const recordsArchiveFilteredQuery = defineQuery(`
+  {
+    "allResults": *[_type == "record" && defined(slug.current) && recordType == $type] | order(date desc)
+  } {
+    "total": count(allResults),
+    "results": allResults[$from..$to] {
+      _id,
+      title,
+      "slug": slug.current,
+      recordType,
+      date,
+      summary,
+      status,
+      "relatedArea": relatedArea->{ name, "slug": slug.current }
+    }
+  }
+`);
+
 export const noticesArchiveQuery = defineQuery(`
   {
     "allResults": *[_type == "notice" && defined(slug.current)] | order(pinned desc, date desc)
@@ -444,6 +462,27 @@ export const noticesArchiveQuery = defineQuery(`
 export const devNoticesArchiveQuery = defineQuery(`
   {
     "allResults": *[_type == "developmentNotice" && defined(slug.current)] | order(commentDeadline desc)
+  } {
+    "total": count(allResults),
+    "results": allResults[$from..$to] {
+      _id,
+      title,
+      "slug": slug.current,
+      noticeType,
+      status,
+      applicant,
+      referenceNumber,
+      location,
+      commentDeadline,
+      legalMandate,
+      "relatedArea": relatedArea->{ name, "slug": slug.current }
+    }
+  }
+`);
+
+export const devNoticesArchiveFilteredQuery = defineQuery(`
+  {
+    "allResults": *[_type == "developmentNotice" && defined(slug.current) && noticeType == $type] | order(commentDeadline desc)
   } {
     "total": count(allResults),
     "results": allResults[$from..$to] {

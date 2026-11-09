@@ -9,7 +9,10 @@ import { RECORDS_PER_PAGE } from '@/lib/constants';
 import { RECORD_TYPE_LABELS } from '@/lib/governance-labels';
 import { paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
-import { recordsArchiveQuery } from '@/lib/sanity/queries/queries';
+import {
+  recordsArchiveFilteredQuery,
+  recordsArchiveQuery,
+} from '@/lib/sanity/queries/queries';
 
 export const metadata: Metadata = {
   title: 'Documents & Records',
@@ -24,11 +27,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RecordsPage() {
-  const { data } = await sanityFetch({
-    query: recordsArchiveQuery,
-    params: { from: 0, to: RECORDS_PER_PAGE - 1 },
-  });
+type Props = { searchParams: Promise<{ type?: string }> };
+
+export default async function RecordsPage({ searchParams }: Props) {
+  const { type } = await searchParams;
+
+  const { data } = await sanityFetch(
+    type
+      ? {
+          query: recordsArchiveFilteredQuery,
+          params: { from: 0, to: RECORDS_PER_PAGE - 1, type },
+        }
+      : {
+          query: recordsArchiveQuery,
+          params: { from: 0, to: RECORDS_PER_PAGE - 1 },
+        }
+  );
 
   const paginated = paginatedData(
     data ?? { total: 0, results: [] },
@@ -39,9 +53,16 @@ export default async function RecordsPage() {
   const results = paginated.data.results;
   const total = paginated.data.total ?? results.length;
 
-  // Build type filter options from results
+  // Build type filter options from unfiltered counts — fetch all types once
+  const { data: allData } = type
+    ? await sanityFetch({
+        query: recordsArchiveQuery,
+        params: { from: 0, to: 999 },
+      })
+    : { data: data };
+
   const typeCounts: Record<string, number> = {};
-  for (const r of results) {
+  for (const r of allData?.results ?? results) {
     if (r.recordType)
       typeCounts[r.recordType] = (typeCounts[r.recordType] ?? 0) + 1;
   }
@@ -68,7 +89,11 @@ export default async function RecordsPage() {
 
       {results.length === 0 ? (
         <EmptyState
-          title="No records published yet"
+          title={
+            type
+              ? `No ${RECORD_TYPE_LABELS[type] ?? type} records`
+              : 'No records published yet'
+          }
           description="Governance records will appear here once published."
           icon="📄"
         />

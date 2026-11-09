@@ -5,6 +5,8 @@ import { Image } from 'next-sanity/image';
 import AreaBoundaryLeaflet from '@/components/modules/AreaBoundaryLeaflet';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import LocationPin from '@/components/modules/LocationPin';
+import { NoticeListItem } from '@/components/modules/NoticeListItem';
+import { RecordListItem } from '@/components/modules/RecordListItem';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
@@ -469,67 +471,6 @@ function OpportunityCard({
   );
 }
 
-function RecordCard({
-  record,
-}: {
-  record: NonNullable<AreaData['records']>[number];
-}) {
-  return (
-    <div className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm flex justify-between items-start gap-4">
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <Badge variant="outline">{record.recordType}</Badge>
-          {record.status && (
-            <Badge variant="secondary">
-              {record.status.charAt(0).toUpperCase()}
-              {record.status.slice(1)}
-            </Badge>
-          )}
-        </div>
-        <h3 className="font-semibold">
-          {record.slug ? (
-            <Link
-              href={`/records/${record.slug}`}
-              className="hover:text-primary transition-colors"
-            >
-              {record.title}
-            </Link>
-          ) : (
-            record.title
-          )}
-        </h3>
-        {record.summary && (
-          <p className="text-sm text-gray-600 mt-1">{record.summary}</p>
-        )}
-        {record.approvedBy && (
-          <p className="text-xs text-gray-500 mt-1">
-            Approved by {record.approvedBy.firstName}{' '}
-            {record.approvedBy.lastName}
-          </p>
-        )}
-      </div>
-      <div className="text-right shrink-0">
-        {record.date && (
-          <time dateTime={record.date} className="text-xs text-gray-400 block">
-            {new Date(record.date).toLocaleDateString()}
-          </time>
-        )}
-        {record.evidence && record.evidence.length > 0 && (
-          <a
-            href={record.evidence[0].url || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary text-sm font-medium"
-          >
-            📎 {record.evidence.length} file
-            {record.evidence.length > 1 ? 's' : ''}
-          </a>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function CampaignCard({
   campaign,
 }: {
@@ -596,44 +537,6 @@ function AreaBoundarySection({
         boundaryPermission={boundary.permission ?? undefined}
       />
     </section>
-  );
-}
-
-function DevNoticeCard({
-  notice,
-}: {
-  notice: NonNullable<AreaData['developmentNotices']>[number];
-}) {
-  return (
-    <Link
-      href={`/development-notices/${notice.slug}`}
-      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-start gap-4 block"
-    >
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <Badge variant={notice.status === 'open' ? 'default' : 'secondary'}>
-            {notice.status === 'open' ? '🟢 Open for Comment' : notice.status}
-          </Badge>
-          <span className="text-xs text-gray-500">{notice.noticeType}</span>
-        </div>
-        <h3 className="font-semibold">{notice.title}</h3>
-        {notice.applicant && (
-          <p className="text-sm text-gray-500 mt-1">
-            Applicant: {notice.applicant}
-          </p>
-        )}
-      </div>
-      <div className="text-right shrink-0">
-        {notice.commentDeadline && (
-          <time
-            dateTime={notice.commentDeadline}
-            className="text-xs text-gray-400 block"
-          >
-            Deadline: {new Date(notice.commentDeadline).toLocaleDateString()}
-          </time>
-        )}
-      </div>
-    </Link>
   );
 }
 
@@ -731,9 +634,9 @@ export default async function AreaPage(props: Props) {
       {area.records && area.records.length > 0 && (
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Documents & Records</h2>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {area.records.map((record) => (
-              <RecordCard key={record._id} record={record} />
+              <RecordListItem key={record._id} record={record} />
             ))}
           </div>
         </section>
@@ -757,9 +660,9 @@ export default async function AreaPage(props: Props) {
           <h2 className="text-2xl font-bold mb-4">
             Development & Statutory Notices
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {area.developmentNotices.map((notice) => (
-              <DevNoticeCard key={notice._id} notice={notice} />
+              <NoticeListItem key={notice._id} notice={notice} />
             ))}
           </div>
         </section>
