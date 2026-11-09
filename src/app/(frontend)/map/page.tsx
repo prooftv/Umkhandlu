@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import GovernanceMapClient from '@/components/modules/GovernanceMapClient';
 import type {
   MapBoundary,
   MapRecord,
@@ -15,18 +15,6 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 0;
-
-const GovernanceMapLeaflet = nextDynamic(
-  () => import('@/components/modules/GovernanceMapLeaflet'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[480px] rounded-xl border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-400 text-sm">
-        Loading map…
-      </div>
-    ),
-  }
-);
 
 const mapQuery = `{
   "records": *[_type == "record" && defined(relatedArea->geopoint)] | order(_updatedAt desc) [0...100] {
@@ -175,7 +163,7 @@ export default async function MapPage() {
           </p>
         </div>
       ) : (
-        <GovernanceMapLeaflet
+        <GovernanceMapClient
           records={records}
           boundaries={boundaries}
           centre={AMAJUBA_CENTRE}
