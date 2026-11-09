@@ -2,7 +2,8 @@
 
 Constitutional reference — Umkhandlu Governance Node
 Full architecture: `unami-platform-core/docs/context/GIS_INTEGRATION.md`
-Last updated: 2026-11-07
+System relationship: see "How the GIS and Governance Node Connect" in the full architecture doc
+Last updated: 2026-11-09
 
 ---
 
@@ -183,4 +184,4 @@ The pilot content is preserved. Amajuba's wider geography is additive.
 | `/api/intelligence/spatial/summary` | ⏳ Pending (awaiting boundary data) |
 | Ward boundary data (COGTA) | ⏳ Awaiting permission confirmation |
 | Amajuba DM boundary data | ⏳ Awaiting form submission response |
-| GIS commit pushed to origin/trunk | ⏳ Pending push |
+| GIS commit pushed to origin/trunk | ✅ Complete |
