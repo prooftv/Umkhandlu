@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
       'institutional-memory',
       'health',
       'operators',
+      'spatial',
     ],
     timestamp: new Date().toISOString(),
   });

@@ -46,13 +46,57 @@ const q = `{
   },
   "recentCommunity": *[_type == "notice"] | order(_updatedAt desc) [0...5] {
     "id": _id, title, "type": noticeType, "status": select(defined(date) => "published", "draft"),
-    "isStatutory": false, "commentDeadline": null, "createdAt": _createdAt
+    "isStatutory": false, "commentDeadline": null, "createdAt": _createdAt,
+    "geoRefLat": relatedArea->geopoint.lat,
+    "geoRefLng": relatedArea->geopoint.lng,
+    "geoRefWard": relatedArea->wardNumber,
+    "geoRefMunicipality": relatedArea->municipality
   },
   "recentStatutory": *[_type == "developmentNotice"] | order(_updatedAt desc) [0...5] {
     "id": _id, title, "type": noticeType, status,
-    "isStatutory": true, "commentDeadline": commentDeadline, "createdAt": _createdAt
+    "isStatutory": true, "commentDeadline": commentDeadline, "createdAt": _createdAt,
+    "geoRefLat": coalesce(geopoint.lat, relatedArea->geopoint.lat),
+    "geoRefLng": coalesce(geopoint.lng, relatedArea->geopoint.lng),
+    "geoRefWard": relatedArea->wardNumber,
+    "geoRefMunicipality": relatedArea->municipality
   }
 }`;
+
+type RawItem = {
+  id: string;
+  title: string;
+  type: string;
+  status: string;
+  isStatutory: boolean;
+  commentDeadline: string | null;
+  createdAt: string;
+  geoRefLat?: number | null;
+  geoRefLng?: number | null;
+  geoRefWard?: number | null;
+  geoRefMunicipality?: string | null;
+};
+
+function mapItem(r: RawItem) {
+  const item: Record<string, unknown> = {
+    id: r.id,
+    title: r.title,
+    type: r.type,
+    status: r.status,
+    isStatutory: r.isStatutory,
+    commentDeadline: r.commentDeadline,
+    createdAt: r.createdAt,
+  };
+  if (r.geoRefLat != null && r.geoRefLng != null) {
+    item.geoRef = {
+      latitude: r.geoRefLat,
+      longitude: r.geoRefLng,
+      district: 'Amajuba',
+      municipality: r.geoRefMunicipality ?? undefined,
+      ward: r.geoRefWard != null ? `Ward ${r.geoRefWard}` : undefined,
+    };
+  }
+  return item;
+}
 
 export async function GET(request: NextRequest) {
   const denied = authenticate(request);
@@ -61,6 +105,16 @@ export async function GET(request: NextRequest) {
   try {
     const data = await client.fetch(q);
     const total = (data.communityTotal ?? 0) + (data.statutoryTotal ?? 0);
+
+    const recentActivity = [
+      ...(data.recentCommunity ?? []).map(mapItem),
+      ...(data.recentStatutory ?? []).map(mapItem),
+    ]
+      .sort((a, b) =>
+        (a.createdAt as string) < (b.createdAt as string) ? 1 : -1
+      )
+      .slice(0, 10);
+
     return NextResponse.json({
       total,
       byStatus: {
@@ -76,12 +130,7 @@ export async function GET(request: NextRequest) {
         open: data.statutoryOpen ?? 0,
         pendingProof: data.statutoryPendingProof ?? 0,
       },
-      recentActivity: [
-        ...(data.recentCommunity ?? []),
-        ...(data.recentStatutory ?? []),
-      ]
-        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-        .slice(0, 10),
+      recentActivity,
       timestamp: new Date().toISOString(),
     });
   } catch {

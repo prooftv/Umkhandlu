@@ -32,9 +32,25 @@ const q = `{
     title,
     "type": recordType,
     status,
-    "createdAt": _createdAt
+    "createdAt": _createdAt,
+    "geoRefLat": relatedArea->geopoint.lat,
+    "geoRefLng": relatedArea->geopoint.lng,
+    "geoRefWard": relatedArea->wardNumber,
+    "geoRefMunicipality": relatedArea->municipality
   }
 }`;
+
+type RawRecord = {
+  id: string;
+  title: string;
+  type: string;
+  status: string | null;
+  createdAt: string;
+  geoRefLat?: number | null;
+  geoRefLng?: number | null;
+  geoRefWard?: number | null;
+  geoRefMunicipality?: string | null;
+};
 
 export async function GET(request: NextRequest) {
   const denied = authenticate(request);
@@ -42,8 +58,28 @@ export async function GET(request: NextRequest) {
 
   try {
     const data = await client.fetch(q);
+    const recent = (data.recent ?? []).map((r: RawRecord) => {
+      const item: Record<string, unknown> = {
+        id: r.id,
+        title: r.title,
+        type: r.type,
+        status: r.status,
+        createdAt: r.createdAt,
+      };
+      if (r.geoRefLat != null && r.geoRefLng != null) {
+        item.geoRef = {
+          latitude: r.geoRefLat,
+          longitude: r.geoRefLng,
+          district: 'Amajuba',
+          municipality: r.geoRefMunicipality ?? undefined,
+          ward: r.geoRefWard != null ? `Ward ${r.geoRefWard}` : undefined,
+        };
+      }
+      return item;
+    });
     return NextResponse.json({
       ...data,
+      recent,
       timestamp: new Date().toISOString(),
     });
   } catch {

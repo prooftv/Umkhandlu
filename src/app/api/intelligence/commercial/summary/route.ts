@@ -35,9 +35,24 @@ const q = `{
     "type": campaignType,
     status,
     "health": projectHealth,
-    "updatedAt": _updatedAt
+    "updatedAt": _updatedAt,
+    "geoRefLat": coalesce(siteGeopoint.lat, geographicAssociations[0].area->geopoint.lat),
+    "geoRefLng": coalesce(siteGeopoint.lng, geographicAssociations[0].area->geopoint.lng),
+    "geoRefMunicipality": geographicAssociations[0].area->municipality
   }
 }`;
+
+type RawCampaign = {
+  id: string;
+  title: string;
+  type: string;
+  status: string;
+  health: string | null;
+  updatedAt: string;
+  geoRefLat?: number | null;
+  geoRefLng?: number | null;
+  geoRefMunicipality?: string | null;
+};
 
 export async function GET(request: NextRequest) {
   const denied = authenticate(request);
@@ -55,6 +70,26 @@ export async function GET(request: NextRequest) {
       0
     );
 
+    const recent = (data.recent ?? []).map((r: RawCampaign) => {
+      const item: Record<string, unknown> = {
+        id: r.id,
+        title: r.title,
+        type: r.type,
+        status: r.status,
+        health: r.health,
+        updatedAt: r.updatedAt,
+      };
+      if (r.geoRefLat != null && r.geoRefLng != null) {
+        item.geoRef = {
+          latitude: r.geoRefLat,
+          longitude: r.geoRefLng,
+          district: 'Amajuba',
+          municipality: r.geoRefMunicipality ?? undefined,
+        };
+      }
+      return item;
+    });
+
     return NextResponse.json({
       projects: {
         total: data.total ?? 0,
@@ -68,7 +103,7 @@ export async function GET(request: NextRequest) {
         total: data.sponsorTotal ?? 0,
         active: data.sponsorsWithActiveCampaigns ?? 0,
       },
-      recent: data.recent ?? [],
+      recent,
       timestamp: new Date().toISOString(),
     });
   } catch {
