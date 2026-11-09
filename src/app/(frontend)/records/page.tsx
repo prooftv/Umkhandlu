@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Suspense } from 'react';
+import { ArchiveHeader } from '@/components/modules/ArchiveHeader';
 import { ArchivePagination } from '@/components/modules/ArchivePagination';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
-import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/modules/EmptyState';
+import { RecordListItem } from '@/components/modules/RecordListItem';
 import { RECORDS_PER_PAGE } from '@/lib/constants';
+import { RECORD_TYPE_LABELS } from '@/lib/governance-labels';
 import { paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { recordsArchiveQuery } from '@/lib/sanity/queries/queries';
@@ -21,84 +24,6 @@ export const metadata: Metadata = {
   },
 };
 
-const typeLabels: Record<string, string> = {
-  minutes: 'Minutes',
-  resolution: 'Resolution',
-  'land-allocation': 'Land Allocation',
-  'dispute-resolution': 'Dispute Resolution',
-  'public-notice': 'Public Notice',
-  policy: 'Policy',
-  report: 'Report',
-  'infrastructure-concern': 'Infrastructure Concern',
-  'project-outcome': 'Project Outcome',
-  'community-decision': 'Community Decision',
-  'external-resource': 'External Resource',
-};
-
-const statusVariants: Record<
-  string,
-  'default' | 'secondary' | 'destructive' | 'outline'
-> = {
-  adopted: 'default',
-  approved: 'default',
-  pending: 'outline',
-  open: 'secondary',
-  rejected: 'destructive',
-  resolved: 'secondary',
-};
-
-type RecordItem = NonNullable<
-  Awaited<ReturnType<typeof sanityFetch<typeof recordsArchiveQuery>>>['data']
->['results'][number];
-
-function RecordRow({ record }: { record: RecordItem }) {
-  return (
-    <Link
-      href={`/records/${record.slug}`}
-      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow block"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <Badge variant="outline">
-              {typeLabels[record.recordType || ''] || record.recordType}
-            </Badge>
-            {record.status && (
-              <Badge variant={statusVariants[record.status] || 'outline'}>
-                {record.status.charAt(0).toUpperCase()}
-                {record.status.slice(1)}
-              </Badge>
-            )}
-          </div>
-          <h2 className="font-semibold">{record.title}</h2>
-          {record.summary && (
-            <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-              {record.summary}
-            </p>
-          )}
-          {record.relatedArea && (
-            <p className="text-xs text-gray-400 mt-1">
-              📍 {record.relatedArea.name}
-            </p>
-          )}
-        </div>
-        {record.date && (
-          <time
-            dateTime={record.date}
-            className="text-xs text-gray-400 shrink-0 whitespace-nowrap"
-          >
-            {new Date(record.date).toLocaleDateString('en-ZA', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric',
-            })}
-          </time>
-        )}
-      </div>
-    </Link>
-  );
-}
-
 export default async function RecordsPage() {
   const { data } = await sanityFetch({
     query: recordsArchiveQuery,
@@ -111,21 +36,50 @@ export default async function RecordsPage() {
     RECORDS_PER_PAGE
   );
 
+  const results = paginated.data.results;
+  const total = paginated.data.total ?? results.length;
+
+  // Build type filter options from results
+  const typeCounts: Record<string, number> = {};
+  for (const r of results) {
+    if (r.recordType)
+      typeCounts[r.recordType] = (typeCounts[r.recordType] ?? 0) + 1;
+  }
+  const filterOptions = Object.entries(typeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([value, count]) => ({
+      value,
+      label: RECORD_TYPE_LABELS[value] ?? value,
+      count,
+    }));
+
   return (
     <div className="container mx-auto max-w-3xl py-12">
       <Breadcrumbs items={[{ label: 'Documents & Records' }]} />
-      <h1 className="text-3xl md:text-4xl font-bold mb-8">
-        Documents & Records
-      </h1>
-      {!paginated.data.results || paginated.data.results.length === 0 ? (
-        <p className="text-gray-500">No records yet.</p>
+      <Suspense>
+        <ArchiveHeader
+          title="Documents & Records"
+          description="Governance records, resolutions, minutes and institutional documents from the traditional authority."
+          total={total}
+          noun="record"
+          filters={filterOptions}
+        />
+      </Suspense>
+
+      {results.length === 0 ? (
+        <EmptyState
+          title="No records published yet"
+          description="Governance records will appear here once published."
+          icon="📄"
+        />
       ) : (
-        <div className="space-y-3">
-          {paginated.data.results.map((record) => (
-            <RecordRow key={record._id} record={record} />
+        <div className="space-y-2">
+          {results.map((record) => (
+            <RecordListItem key={record._id} record={record} />
           ))}
         </div>
       )}
+
       <ArchivePagination
         totalPages={paginated.totalPages}
         currentPage={1}
