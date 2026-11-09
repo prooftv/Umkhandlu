@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Image } from 'next-sanity/image';
+import AreaBoundaryLeaflet from '@/components/modules/AreaBoundaryLeaflet';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import LocationPin from '@/components/modules/LocationPin';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
@@ -12,11 +12,6 @@ import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { urlForImage } from '@/lib/sanity/client/utils';
 import { areaDetailQuery, areaSlugs } from '@/lib/sanity/queries/queries';
-
-const AreaBoundaryLeaflet = dynamic(
-  () => import('@/components/modules/AreaBoundaryLeaflet'),
-  { ssr: false }
-);
 
 type Props = {
   params: Promise<{ slug: string }>;
