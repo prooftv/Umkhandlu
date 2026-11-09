@@ -8,6 +8,60 @@ import type {
 } from '@/components/modules/GovernanceMapLeaflet';
 import { client } from '@/lib/sanity/client/client';
 
+// Control Centre public ward boundaries — authoritative MDB 2026 geometry.
+// Falls back to Sanity-managed boundaries if unavailable.
+const CONTROL_CENTRE_WARDS_URL = process.env.CONTROL_CENTRE_URL
+  ? `${process.env.CONTROL_CENTRE_URL}/api/spatial/wards`
+  : null;
+
+async function fetchControlCentreWards(): Promise<MapBoundary[]> {
+  if (!CONTROL_CENTRE_WARDS_URL) return [];
+  try {
+    const res = await fetch(CONTROL_CENTRE_WARDS_URL, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return [];
+    const json = (await res.json()) as {
+      type: string;
+      features: Array<{
+        type: string;
+        geometry: { type: string; coordinates: unknown };
+        properties: Record<string, unknown>;
+      }>;
+      meta?: { dataset?: string; datasetDate?: string; attribution?: string };
+    };
+    return (json.features ?? []).map((f) => {
+      const p = f.properties;
+      const wardNum = p.WARDNO ?? p.WardNo ?? p.ward_number ?? null;
+      const munic = (p.MUNICNAME ??
+        p.MunicName ??
+        p.municipality ??
+        '') as string;
+      const name =
+        wardNum != null ? `Ward ${wardNum} — ${munic}` : munic || 'Ward';
+      return {
+        slug: `ward-${wardNum ?? name}`,
+        name,
+        areaLevel: 'ward',
+        municipality: munic || null,
+        wardNumber: wardNum != null ? Number(wardNum) : null,
+        indunaName: null,
+        indunaSlug: null,
+        recordCount: 0,
+        noticeCount: 0,
+        campaignCount: 0,
+        boundary: f.geometry,
+        boundarySource: json.meta?.dataset ?? 'MDB 2026',
+        boundaryDate: json.meta?.datasetDate ?? '2026',
+        boundaryPermission: 'public-domain',
+        geopoint: null,
+      } satisfies MapBoundary;
+    });
+  } catch {
+    return [];
+  }
+}
+
 export const metadata: Metadata = {
   title: 'Geographic View — Umkhandlu',
   description:
@@ -86,28 +140,32 @@ type RawItem = {
 };
 
 export default async function MapPage() {
-  const data = await client.fetch<{
-    records: RawItem[];
-    devNotices: RawItem[];
-    campaigns: RawItem[];
-    boundaries: {
-      slug: string;
-      name: string;
-      areaLevel: string | null;
-      municipality: string | null;
-      wardNumber: number | null;
-      indunaName: string | null;
-      indunaSlug: string | null;
-      recordCount: number;
-      noticeCount: number;
-      campaignCount: number;
-      boundary: { type: string; coordinates: unknown };
-      boundarySource: string | null;
-      boundaryDate: string | null;
-      boundaryPermission: string | null;
-      geopoint: { lat: number; lng: number } | null;
-    }[];
-  }>(mapQuery);
+  // Fetch ward boundaries from Control Centre (authoritative) and Sanity (governance context) in parallel
+  const [controlCentreWards, data] = await Promise.all([
+    fetchControlCentreWards(),
+    client.fetch<{
+      records: RawItem[];
+      devNotices: RawItem[];
+      campaigns: RawItem[];
+      boundaries: {
+        slug: string;
+        name: string;
+        areaLevel: string | null;
+        municipality: string | null;
+        wardNumber: number | null;
+        indunaName: string | null;
+        indunaSlug: string | null;
+        recordCount: number;
+        noticeCount: number;
+        campaignCount: number;
+        boundary: { type: string; coordinates: unknown };
+        boundarySource: string | null;
+        boundaryDate: string | null;
+        boundaryPermission: string | null;
+        geopoint: { lat: number; lng: number } | null;
+      }[];
+    }>(mapQuery),
+  ]);
 
   function toMapRecord(
     item: RawItem,
@@ -135,9 +193,38 @@ export default async function MapPage() {
     ...(data.campaigns ?? []).map((r) => toMapRecord(r, 'project')),
   ].filter((r): r is MapRecord => r !== null);
 
-  const boundaries: MapBoundary[] = (data.boundaries ?? []).filter(
+  // Prefer Control Centre MDB boundaries (authoritative, 55 wards).
+  // Merge with Sanity boundaries: Sanity entries enrich with induna/governance counts
+  // for any ward that matches by wardNumber + municipality.
+  const sanityBoundaries: MapBoundary[] = (data.boundaries ?? []).filter(
     (b) => b.boundary && b.slug
   );
+
+  let boundaries: MapBoundary[];
+  if (controlCentreWards.length > 0) {
+    // Enrich Control Centre wards with Sanity governance data where available
+    boundaries = controlCentreWards.map((ccWard) => {
+      const match = sanityBoundaries.find(
+        (s) =>
+          s.wardNumber != null &&
+          s.wardNumber === ccWard.wardNumber &&
+          s.municipality === ccWard.municipality
+      );
+      if (!match) return ccWard;
+      return {
+        ...ccWard,
+        slug: match.slug,
+        indunaName: match.indunaName,
+        indunaSlug: match.indunaSlug,
+        recordCount: match.recordCount,
+        noticeCount: match.noticeCount,
+        campaignCount: match.campaignCount,
+      };
+    });
+  } else {
+    // Fallback: use Sanity boundaries only
+    boundaries = sanityBoundaries;
+  }
 
   // Centre on Amajuba District; if boundaries exist, map will fit to them
   const AMAJUBA_CENTRE: [number, number] = [-28.05, 29.0];
