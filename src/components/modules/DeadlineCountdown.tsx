@@ -38,7 +38,6 @@ export default function DeadlineCountdown({ deadline, isOpen }: Props) {
       <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-100 text-red-700 text-xs font-medium">
         <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
         Closes today
-        <span className="opacity-60 font-normal ml-1">· calendar days</span>
       </div>
     );
   }
@@ -54,7 +53,6 @@ export default function DeadlineCountdown({ deadline, isOpen }: Props) {
         className={`w-2 h-2 rounded-full shrink-0 ${urgent ? 'bg-orange-500' : 'bg-green-500'}`}
       />
       {days} day{days !== 1 ? 's' : ''} remaining
-      <span className="opacity-60 font-normal ml-1">· calendar days</span>
     </div>
   );
 }

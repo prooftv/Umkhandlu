@@ -38,7 +38,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   });
   if (!data) return {};
   return {
-    title: `Proof of Publication — ${data.title}`,
+    title: `Digital Publication Evidence Record — ${data.title}`,
     robots: { index: false },
   };
 }

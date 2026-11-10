@@ -186,6 +186,14 @@ export default function SiteContextMap({
           </a>
         )}
       </div>
+      {locationPrecision !== 'verified' && (
+        <p className="text-xs text-gray-400 leading-relaxed">
+          The map shows the ward administrative boundary (MDB 2026) and an
+          operator-provided site point. No verified site or premises boundary is
+          available. The ward polygon is geographic context only — it does not
+          represent the affected site.
+        </p>
+      )}
     </div>
   );
 }

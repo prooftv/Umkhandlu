@@ -68,17 +68,17 @@ export default defineType({
     }),
     defineField({
       name: 'retentionPeriod',
-      title: 'Minimum Retention Period',
+      title: 'Online Publication Period',
       type: 'string',
       description:
-        'How long this notice must remain published. e.g. 30 days, 3 months, Full project duration, Permanent',
+        'How long this notice must remain publicly accessible on this platform. Separate from statutory records-retention obligations under the applicable legislation. e.g. 30 days, 3 months, Full project duration, Permanent',
     }),
     defineField({
       name: 'fee',
-      title: 'Publication Fee (ZAR)',
+      title: 'Platform Publication Fee (ZAR)',
       type: 'number',
       description:
-        'Fee charged to the applicant. R0 for traditional council notices (COP model). Suggested: PTO R100–R150 | Estate R350–R450 | SPLUMA R650–R850 | EIA R950–R1,200',
+        'Unami platform service fee charged to the applicant for digital publication. This is not a regulatory fee, newspaper advertising cost, or statutory charge. R0 for traditional council notices (COP model). Suggested: PTO R100–R150 | Estate R350–R450 | SPLUMA R650–R850 | EIA R950–R1,200',
       initialValue: 0,
     }),
     defineField({
@@ -176,11 +176,11 @@ export default defineType({
     }),
     defineField({
       name: 'siteBoundary',
-      title: 'Site Boundary (GeoJSON)',
+      title: 'Site Boundary (GeoJSON) — Placeholder',
       type: 'text',
       rows: 4,
       description:
-        'GeoJSON geometry object for the affected site boundary polygon. Paste the geometry field from a GeoJSON Feature (type + coordinates). Leave blank if not available.',
+        'Temporary field. A coordinate is not a boundary. This field will be replaced by a Control Centre spatial feature reference (siteFeatureId) once the site geometry has been assessed, staged, validated and published through the Control Centre spatial catalogue. Do not paste unverified geometry here and present it as a verified site boundary.',
     }),
     defineField({
       name: 'commentDeadline',
@@ -214,10 +214,10 @@ export default defineType({
     }),
     defineField({
       name: 'proofIssued',
-      title: 'Proof of Publication Issued',
+      title: 'Digital Publication Evidence Record Issued',
       type: 'boolean',
       description:
-        'Check when the applicant has received their proof of publication certificate.',
+        'Check when the applicant has been provided with the Digital Publication Evidence Record. This records platform publication activity only — it does not certify statutory compliance, newspaper publication, physical notice display, or any other prescribed requirement.',
       initialValue: false,
     }),
     defineField({
