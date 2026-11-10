@@ -17,6 +17,7 @@ export default function GovernanceMapClient(props: {
   boundaries: MapBoundary[];
   centre: [number, number];
   zoom: number;
+  initialWard?: string | null;
 }) {
   return <GovernanceMapLeaflet {...props} />;
 }

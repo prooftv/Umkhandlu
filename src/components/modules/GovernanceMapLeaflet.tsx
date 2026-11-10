@@ -40,6 +40,7 @@ interface Props {
   boundaries: MapBoundary[];
   centre: [number, number];
   zoom: number;
+  initialWard?: string | null; // WardLink slug e.g. KZN253_7 — auto-selects on mount
 }
 
 const TYPE_COLOUR: Record<string, string> = {
@@ -428,6 +429,7 @@ export default function GovernanceMapLeaflet({
   boundaries,
   centre,
   zoom,
+  initialWard,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -505,6 +507,13 @@ export default function GovernanceMapLeaflet({
     setSelectedRecord(null);
     setSelectedArea(null);
   }
+
+  // Auto-select ward from deep link — runs after map init
+  useEffect(() => {
+    if (!initialWard || !mapRef.current) return;
+    const match = boundaries.find((b) => b.slug === initialWard);
+    if (match) selectArea(match);
+  }, [initialWard, boundaries, selectArea]);
 
   // Init map — runs once; callbacks stable via useCallback
   useEffect(() => {

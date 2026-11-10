@@ -103,6 +103,10 @@ export const metadata: Metadata = {
 
 export const revalidate = 0;
 
+type MapPageProps = {
+  searchParams: Promise<{ ward?: string }>;
+};
+
 const mapQuery = `{
   "records": *[_type == "record" && defined(relatedArea->geopoint)] | order(_updatedAt desc) [0...100] {
     "id": _id,
@@ -172,7 +176,8 @@ type RawItem = {
   ward: number | null;
 };
 
-export default async function MapPage() {
+export default async function MapPage({ searchParams }: MapPageProps) {
+  const { ward: initialWard } = await searchParams;
   // Fetch ward boundaries from Control Centre (authoritative) and Sanity (governance context) in parallel
   const [controlCentreWards, data] = await Promise.all([
     fetchControlCentreWards(),
@@ -316,6 +321,7 @@ export default async function MapPage() {
           boundaries={boundaries}
           centre={AMAJUBA_CENTRE}
           zoom={9}
+          initialWard={initialWard ?? null}
         />
       )}
     </div>
