@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import { defineQuery } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import {
+  DeadlineCountdownClient,
+  SiteContextMapClient,
+} from '@/components/modules/NoticeMapClients';
 import CustomPortableText from '@/components/modules/PortableText';
 import PublicCommentForm from '@/components/modules/PublicCommentForm';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
@@ -13,23 +16,6 @@ import { serverEnv } from '@/env/serverEnv';
 import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { devNoticeSlugs } from '@/lib/sanity/queries/queries';
-
-const DeadlineCountdown = dynamic(
-  () => import('@/components/modules/DeadlineCountdown'),
-  { ssr: false }
-);
-
-const SiteContextMap = dynamic(
-  () => import('@/components/modules/SiteContextMap'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[280px] rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 text-sm">
-        Loading map…
-      </div>
-    ),
-  }
-);
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -430,7 +416,7 @@ export default async function DevelopmentNoticePage(props: Props) {
       {/* Deadline countdown */}
       {notice.commentDeadline && (
         <div className="mb-6">
-          <DeadlineCountdown
+          <DeadlineCountdownClient
             deadline={notice.commentDeadline}
             isOpen={isOpen}
           />
@@ -451,7 +437,7 @@ export default async function DevelopmentNoticePage(props: Props) {
       {notice.geopoint?.lat && notice.geopoint?.lng && (
         <div className="mb-8">
           <h2 className="text-xl font-bold mb-4">Site Location</h2>
-          <SiteContextMap
+          <SiteContextMapClient
             lat={notice.geopoint.lat}
             lng={notice.geopoint.lng}
             name={notice.title ?? 'Development Site'}
