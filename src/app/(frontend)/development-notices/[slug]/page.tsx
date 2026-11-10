@@ -39,6 +39,7 @@ const devNoticeQuery = defineQuery(`
     geopoint,
     locationPrecision,
     siteFeatureId,
+    ccNoticeRef,
     commentDeadline,
     commentContact,
     publishDate,
@@ -85,6 +86,71 @@ type WardBoundary = {
   source: string | null;
   date: string | null;
 } | null;
+
+type RiskItem = {
+  id: string;
+  identifier: string;
+  title: string;
+  category: string;
+  exposure: number;
+  status: string;
+  treatment: string;
+  methodology: string | null;
+  assessed_at: string | null;
+};
+
+type ObligationItem = {
+  id: string;
+  identifier: string;
+  title: string;
+  source: string;
+  responsible_party: string;
+  due_date: string | null;
+  status: string;
+};
+
+type FindingItem = {
+  id: string;
+  title: string;
+  finding_type: string;
+  severity: string;
+  status: string;
+  identified_at: string;
+};
+
+type NoticeIntelligence = {
+  risks: RiskItem[];
+  obligations: ObligationItem[];
+  findings: FindingItem[];
+  summary: {
+    riskCount: number;
+    criticalRisks: number;
+    highRisks: number;
+    obligationCount: number;
+    nonCompliant: number;
+    underReview: number;
+    findingCount: number;
+    openFindings: number;
+    dataConfidence: string;
+  };
+} | null;
+
+async function fetchNoticeIntelligence(
+  ccNoticeRef: string
+): Promise<NoticeIntelligence> {
+  const baseUrl = process.env.CONTROL_CENTRE_URL;
+  if (!baseUrl) return null;
+  try {
+    const res = await fetch(
+      `${baseUrl}/api/notices/by-ref/${encodeURIComponent(ccNoticeRef)}`,
+      { next: { revalidate: 300 } }
+    );
+    if (!res.ok) return null;
+    return (await res.json()) as NoticeIntelligence;
+  } catch {
+    return null;
+  }
+}
 
 async function fetchSiteBoundary(siteFeatureId: string): Promise<WardBoundary> {
   const baseUrl = process.env.CONTROL_CENTRE_URL;
@@ -289,6 +355,152 @@ function NoticeDocuments({
   );
 }
 
+const EXPOSURE_LABEL: Record<string, { label: string; colour: string }> = {
+  critical: {
+    label: 'Critical',
+    colour: 'text-red-700 bg-red-50 border-red-200',
+  },
+  high: {
+    label: 'High',
+    colour: 'text-amber-700 bg-amber-50 border-amber-200',
+  },
+  moderate: {
+    label: 'Moderate',
+    colour: 'text-gray-600 bg-gray-50 border-gray-200',
+  },
+};
+
+function exposureBand(score: number) {
+  if (score >= 15) return EXPOSURE_LABEL.critical;
+  if (score >= 8) return EXPOSURE_LABEL.high;
+  return EXPOSURE_LABEL.moderate;
+}
+
+function RiskPanel({ intelligence }: { intelligence: NoticeIntelligence }) {
+  if (!intelligence) return null;
+  const { risks, obligations, findings, summary } = intelligence;
+  if (summary.dataConfidence === 'no-assessment') return null;
+
+  return (
+    <div className="mb-8">
+      <h2 className="text-xl font-bold mb-4">
+        Risk &amp; Planning Considerations
+      </h2>
+
+      {risks.length > 0 && (
+        <div className="mb-4 space-y-2">
+          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            Identified Risks
+          </h3>
+          {risks.map((r) => {
+            const band = exposureBand(r.exposure);
+            return (
+              <div
+                key={r.id}
+                className={`rounded-lg border p-3 ${band.colour}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">
+                      {r.identifier} — {r.title}
+                    </p>
+                    <p className="text-xs mt-0.5 opacity-75 capitalize">
+                      {r.category} · Treatment: {r.treatment}
+                    </p>
+                  </div>
+                  <span className="text-xs font-semibold shrink-0">
+                    {band.label} ({r.exposure})
+                  </span>
+                </div>
+                {r.methodology && (
+                  <p className="text-xs mt-1 opacity-60">
+                    Methodology: {r.methodology}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {obligations.length > 0 && (
+        <div className="mb-4 space-y-2">
+          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            Compliance Obligations
+          </h3>
+          {obligations.map((o) => {
+            const isNonCompliant = o.status === 'non-compliant';
+            const isUnderReview = o.status === 'under-review';
+            return (
+              <div
+                key={o.id}
+                className={`rounded-lg border p-3 ${
+                  isNonCompliant
+                    ? 'bg-red-50 border-red-200 text-red-700'
+                    : isUnderReview
+                      ? 'bg-amber-50 border-amber-200 text-amber-700'
+                      : 'bg-gray-50 border-gray-200 text-gray-700'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">
+                      {o.identifier} — {o.title}
+                    </p>
+                    <p className="text-xs mt-0.5 opacity-75">{o.source}</p>
+                  </div>
+                  <span className="text-xs font-semibold shrink-0 capitalize">
+                    {o.status.replace(/-/g, ' ')}
+                  </span>
+                </div>
+                {o.due_date && (
+                  <p className="text-xs mt-1 opacity-60">
+                    Due:{' '}
+                    {new Date(o.due_date).toLocaleDateString('en-ZA', {
+                      dateStyle: 'medium',
+                    })}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {findings.length > 0 && (
+        <div className="mb-4 space-y-2">
+          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            Outstanding Matters
+          </h3>
+          {findings.map((f) => (
+            <div
+              key={f.id}
+              className="rounded-lg border border-gray-200 bg-gray-50 p-3"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-sm font-medium text-gray-800">{f.title}</p>
+                <span className="text-xs font-semibold shrink-0 capitalize text-gray-600">
+                  {f.severity}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5 capitalize">
+                {f.finding_type.replace(/-/g, ' ')}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <p className="text-xs text-gray-400">
+        Risk and compliance assessment by the platform operator. These are
+        evidence and assessment states — not findings that the application is
+        legally compliant or non-compliant. The responsible authority retains
+        all decision-making power.
+      </p>
+    </div>
+  );
+}
+
 function LiquorStatutoryNote() {
   return (
     <details className="mb-8 rounded-xl border border-blue-100 bg-blue-50 group">
@@ -405,15 +617,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 async function resolveNoticeSpatial(notice: NoticeData) {
   const area = notice.relatedArea as RelatedArea | null;
   const { wardName, wardLink } = resolveWardContext(area);
-  const [wardBoundary, siteBoundary] = await Promise.all([
+  const [wardBoundary, siteBoundary, intelligence] = await Promise.all([
     area?.wardNumber != null && area.municipality
       ? fetchWardBoundary(area.wardNumber, area.municipality)
       : Promise.resolve(null),
     notice.siteFeatureId
       ? fetchSiteBoundary(notice.siteFeatureId)
       : Promise.resolve(null),
+    notice.ccNoticeRef
+      ? fetchNoticeIntelligence(notice.ccNoticeRef)
+      : Promise.resolve(null),
   ]);
-  return { area, wardName, wardLink, wardBoundary, siteBoundary };
+  return { area, wardName, wardLink, wardBoundary, siteBoundary, intelligence };
 }
 
 export default async function DevelopmentNoticePage(props: Props) {
@@ -431,7 +646,7 @@ export default async function DevelopmentNoticePage(props: Props) {
     : false;
   const acceptingComments = isOpen && !deadlinePassed;
 
-  const { area, wardName, wardLink, wardBoundary, siteBoundary } =
+  const { area, wardName, wardLink, wardBoundary, siteBoundary, intelligence } =
     await resolveNoticeSpatial(notice);
 
   return (
@@ -486,6 +701,9 @@ export default async function DevelopmentNoticePage(props: Props) {
           />
         </div>
       )}
+
+      {/* Risk and planning considerations — from Control Centre */}
+      <RiskPanel intelligence={intelligence} />
 
       {/* Liquor-specific statutory process note */}
       {notice.noticeType === 'liquor' && <LiquorStatutoryNote />}

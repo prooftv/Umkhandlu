@@ -182,6 +182,13 @@ export default defineType({
         'UUID of the approved spatial feature in the Control Centre spatial catalogue (spatial_staged_features.id). The site boundary polygon is fetched from the Control Centre at render time. Leave blank until the site geometry has been assessed, staged, validated and published through the Control Centre. Do not enter unverified geometry.',
     }),
     defineField({
+      name: 'ccNoticeRef',
+      title: 'Control Centre Notice ID',
+      type: 'string',
+      description:
+        'The UUID of the corresponding notice record in the Control Centre (notices.id). When set, the notice page fetches the risk and compliance intelligence panel from the Control Centre and displays it publicly. Leave blank until a CC notice has been created and linked to this application.',
+    }),
+    defineField({
       name: 'commentDeadline',
       title: 'Comment Deadline',
       type: 'date',
