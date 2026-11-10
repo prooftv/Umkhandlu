@@ -146,6 +146,35 @@ export default defineType({
       description: 'Pin the proposed development site on the map.',
     }),
     defineField({
+      name: 'locationPrecision',
+      title: 'Location Precision',
+      type: 'string',
+      description:
+        'How accurate is the map location? This is displayed to the public alongside the map.',
+      options: {
+        list: [
+          {
+            title: 'Verified — confirmed property coordinates',
+            value: 'verified',
+          },
+          {
+            title: 'Operator-provided — applicant or operator supplied',
+            value: 'operator-provided',
+          },
+          {
+            title: 'Approximate — general area, not exact site',
+            value: 'approximate',
+          },
+          {
+            title: 'Locality only — ward or area association, no point',
+            value: 'locality-only',
+          },
+        ],
+        layout: 'radio',
+      },
+      hidden: ({ parent }) => !parent?.geopoint,
+    }),
+    defineField({
       name: 'siteBoundary',
       title: 'Site Boundary (GeoJSON)',
       type: 'text',

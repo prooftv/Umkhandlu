@@ -218,6 +218,15 @@ export default defineType({
       hidden: ({ parent }) => parent?.listingType !== 'area',
     }),
     defineField({
+      name: 'mdbWardId',
+      title: 'MDB Ward ID',
+      type: 'string',
+      description:
+        'Stable national MDB ward identifier (e.g. 52504001). Used to match authoritative MDB 2026 geometry from the Control Centre. Do not edit manually — set from the MDB dataset.',
+      hidden: ({ parent }) =>
+        parent?.listingType !== 'area' || parent?.areaLevel !== 'ward',
+    }),
+    defineField({
       name: 'municipality',
       title: 'Local Municipality',
       type: 'string',

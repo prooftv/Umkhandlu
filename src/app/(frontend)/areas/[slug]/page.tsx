@@ -519,12 +519,15 @@ function AreaBoundarySection({
   boundary,
   name,
   geopoint,
+  wardLink,
 }: {
   boundary: ActiveBoundary;
   name: string;
   geopoint?: { lat: number; lng: number } | null;
+  wardLink?: string | null;
 }) {
   if (!boundary) return null;
+  const mapDeepLink = wardLink ? `/map?ward=${wardLink}` : '/map';
   return (
     <section className="mb-12">
       <h2 className="text-2xl font-bold mb-4">Area Boundary</h2>
@@ -535,9 +538,22 @@ function AreaBoundarySection({
         boundarySource={boundary.source ?? undefined}
         boundaryDate={boundary.date ?? undefined}
         boundaryPermission={boundary.permission ?? undefined}
+        mapDeepLink={mapDeepLink}
       />
     </section>
   );
+}
+
+function computeWardLink(area: AreaExtended): string | null {
+  if (
+    area.areaLevel !== 'ward' ||
+    !area.municipality ||
+    area.wardNumber == null
+  )
+    return null;
+  const catB =
+    MUNIC_TO_CAT_B[area.municipality.toLowerCase()] ?? area.municipality;
+  return `${catB}_${area.wardNumber}`;
 }
 
 export default async function AreaPage(props: Props) {
@@ -567,6 +583,7 @@ export default async function AreaPage(props: Props) {
         boundary={activeBoundary}
         name={area.name || ''}
         geopoint={area.geopoint}
+        wardLink={computeWardLink(areaExt)}
       />
 
       {/* Map + Listings — only render LocationPin when a real geopoint is available */}

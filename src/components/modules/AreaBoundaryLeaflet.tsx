@@ -15,6 +15,7 @@ type Props = {
   boundarySource?: string | null;
   boundaryDate?: string | null;
   boundaryPermission?: string | null;
+  mapDeepLink?: string | null; // e.g. /map?ward=KZN252_7
 };
 
 function loadLeafletCss() {
@@ -87,6 +88,7 @@ export default function AreaBoundaryLeaflet({
   boundarySource,
   boundaryDate,
   boundaryPermission,
+  mapDeepLink,
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -131,6 +133,14 @@ export default function AreaBoundaryLeaflet({
             .filter(Boolean)
             .join(' · ')}
         </p>
+      )}
+      {mapDeepLink && (
+        <a
+          href={mapDeepLink}
+          className="text-xs text-primary hover:underline font-medium"
+        >
+          View on full map →
+        </a>
       )}
     </div>
   );

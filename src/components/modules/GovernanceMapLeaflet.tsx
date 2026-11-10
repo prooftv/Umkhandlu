@@ -268,6 +268,15 @@ function ItemList({
   );
 }
 
+const AREA_LEVEL_LABELS: Record<string, string> = {
+  district: 'District Municipality',
+  municipality: 'Local Municipality',
+  ward: 'Ward',
+  'traditional-authority': 'Traditional Authority',
+  isigodi: 'Isigodi',
+  settlement: 'Settlement',
+};
+
 function AreaPanel({
   area,
   onClose,
@@ -282,7 +291,7 @@ function AreaPanel({
         <div>
           {area.areaLevel && (
             <span className="inline-block text-[10px] font-medium px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 mb-1">
-              {area.areaLevel}
+              {AREA_LEVEL_LABELS[area.areaLevel] ?? area.areaLevel}
             </span>
           )}
           <p className="text-sm font-semibold leading-snug">{area.name}</p>
