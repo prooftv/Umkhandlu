@@ -364,16 +364,11 @@ type RelatedArea = {
 };
 
 function resolveWardContext(area: RelatedArea | null) {
-  if (
-    !area ||
-    area.areaLevel !== 'ward' ||
-    area.wardNumber == null ||
-    !area.municipality
-  ) {
+  if (!area || area.wardNumber == null || !area.municipality) {
     return { wardName: null, wardLink: null, catB: null };
   }
   const catB = MUNIC_TO_CAT_B[area.municipality.toLowerCase()] ?? null;
-  const wardName = `Ward ${area.wardNumber}${area.municipality ? ` — ${MUNIC_LABELS[area.municipality] ?? area.municipality}` : ''}`;
+  const wardName = `Ward ${area.wardNumber} — ${MUNIC_LABELS[area.municipality] ?? area.municipality}`;
   const wardLink = catB ? `${catB}_${area.wardNumber}` : null;
   return { wardName, wardLink, catB };
 }
@@ -417,7 +412,7 @@ export default async function DevelopmentNoticePage(props: Props) {
   const area = notice.relatedArea as RelatedArea | null;
   const { wardName, wardLink } = resolveWardContext(area);
   const wardBoundary =
-    area?.areaLevel === 'ward' && area.wardNumber != null && area.municipality
+    area?.wardNumber != null && area.municipality
       ? await fetchWardBoundary(area.wardNumber, area.municipality)
       : null;
 
