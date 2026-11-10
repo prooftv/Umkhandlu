@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import type { ComponentProps } from 'react';
 import type DeadlineCountdownType from './DeadlineCountdown';
+import type NoticeStatutoryMapType from './NoticeStatutoryMap';
 import type SiteContextMapType from './SiteContextMap';
 
 export const DeadlineCountdownClient = dynamic(
@@ -21,3 +22,15 @@ export const SiteContextMapClient = dynamic(
     ),
   }
 ) as React.ComponentType<ComponentProps<typeof SiteContextMapType>>;
+
+export const NoticeStatutoryMapClient = dynamic(
+  () => import('@/components/modules/NoticeStatutoryMap'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[380px] rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 text-sm">
+        Loading spatial map…
+      </div>
+    ),
+  }
+) as React.ComponentType<ComponentProps<typeof NoticeStatutoryMapType>>;

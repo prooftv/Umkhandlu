@@ -6,7 +6,7 @@ import { defineQuery } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import {
   DeadlineCountdownClient,
-  SiteContextMapClient,
+  NoticeStatutoryMapClient,
 } from '@/components/modules/NoticeMapClients';
 import CustomPortableText from '@/components/modules/PortableText';
 import PublicCommentForm from '@/components/modules/PublicCommentForm';
@@ -674,11 +674,12 @@ export default async function DevelopmentNoticePage(props: Props) {
       {/* Spatial context map */}
       {notice.geopoint?.lat && notice.geopoint?.lng && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Site Location</h2>
-          <SiteContextMapClient
+          <h2 className="text-xl font-bold mb-4">Spatial Context</h2>
+          <NoticeStatutoryMapClient
             lat={notice.geopoint.lat}
             lng={notice.geopoint.lng}
             name={notice.title ?? 'Development Site'}
+            noticeType={notice.noticeType ?? 'other'}
             locationPrecision={notice.locationPrecision}
             wardBoundary={wardBoundary}
             siteBoundary={siteBoundary}
@@ -689,6 +690,10 @@ export default async function DevelopmentNoticePage(props: Props) {
                 : null
             }
             mapDeepLink={wardLink ? `/map?ward=${wardLink}` : `/map`}
+            controlCentreUrl={
+              process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
+              'https://unami-platform-core-umkhandlu.vercel.app'
+            }
           />
         </div>
       )}
