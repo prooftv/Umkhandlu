@@ -27,33 +27,33 @@ export const metadata: Metadata = {
   },
 };
 
-type Props = { searchParams: Promise<{ type?: string }> };
+type Props = { searchParams: Promise<{ type?: string; size?: string }> };
 
 export default async function RecordsPage({ searchParams }: Props) {
-  const { type } = await searchParams;
+  const { type, size } = await searchParams;
+  const perPage = size === '20' ? 20 : RECORDS_PER_PAGE;
 
   const { data } = await sanityFetch(
     type
       ? {
           query: recordsArchiveFilteredQuery,
-          params: { from: 0, to: RECORDS_PER_PAGE - 1, type },
+          params: { from: 0, to: perPage - 1, type },
         }
       : {
           query: recordsArchiveQuery,
-          params: { from: 0, to: RECORDS_PER_PAGE - 1 },
+          params: { from: 0, to: perPage - 1 },
         }
   );
 
   const paginated = paginatedData(
     data ?? { total: 0, results: [] },
     1,
-    RECORDS_PER_PAGE
+    perPage
   );
-
   const results = paginated.data.results;
   const total = paginated.data.total ?? results.length;
 
-  // Build type filter options from unfiltered counts — fetch all types once
+  // Filter pill counts always reflect full dataset
   const { data: allData } = type
     ? await sanityFetch({
         query: recordsArchiveQuery,
@@ -109,6 +109,7 @@ export default async function RecordsPage({ searchParams }: Props) {
         totalPages={paginated.totalPages}
         currentPage={1}
         linkBase="/records"
+        perPage={perPage}
       />
     </div>
   );

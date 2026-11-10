@@ -13,10 +13,9 @@ type Props = {
   title: string;
   description?: string;
   total: number;
-  noun?: string; // e.g. "record", "notice"
+  noun?: string;
   filters?: FilterOption[];
-  filterParam?: string; // URL search param name, e.g. "type"
-  activeFilter?: string;
+  filterParam?: string;
 };
 
 export function ArchiveHeader({
@@ -26,10 +25,10 @@ export function ArchiveHeader({
   noun = 'item',
   filters,
   filterParam = 'type',
-  activeFilter,
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const activeFilter = searchParams.get(filterParam) ?? undefined;
 
   const setFilter = useCallback(
     (value: string | null) => {
@@ -39,7 +38,6 @@ export function ArchiveHeader({
       } else {
         params.delete(filterParam);
       }
-      // Reset to page 1 when filter changes
       params.delete('page');
       router.push(`?${params.toString()}`, { scroll: false });
     },

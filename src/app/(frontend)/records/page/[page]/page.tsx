@@ -8,7 +8,10 @@ import { paginatedData } from '@/lib/pagination';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { recordsArchiveQuery } from '@/lib/sanity/queries/queries';
 
-type Props = { params: Promise<{ page: string }> };
+type Props = {
+  params: Promise<{ page: string }>;
+  searchParams: Promise<{ size?: string }>;
+};
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { page } = await props.params;
@@ -26,21 +29,24 @@ export async function generateStaticParams() {
 
 export default async function RecordsPageN(props: Props) {
   const { page } = await props.params;
+  const { size } = await props.searchParams;
   const pageNumber = parseInt(page, 10);
   if (!pageNumber || pageNumber < 2) notFound();
+
+  const perPage = size === '20' ? 20 : RECORDS_PER_PAGE;
 
   const { data } = await sanityFetch({
     query: recordsArchiveQuery,
     params: {
-      from: (pageNumber - 1) * RECORDS_PER_PAGE,
-      to: pageNumber * RECORDS_PER_PAGE - 1,
+      from: (pageNumber - 1) * perPage,
+      to: pageNumber * perPage - 1,
     },
   });
 
   const paginated = paginatedData(
     data ?? { total: 0, results: [] },
     pageNumber,
-    RECORDS_PER_PAGE
+    perPage
   );
   if (pageNumber > paginated.totalPages) notFound();
 
@@ -67,6 +73,7 @@ export default async function RecordsPageN(props: Props) {
         totalPages={paginated.totalPages}
         currentPage={pageNumber}
         linkBase="/records"
+        perPage={perPage}
       />
     </div>
   );

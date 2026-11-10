@@ -21,35 +21,45 @@ export const metadata: Metadata = {
   alternates: { canonical: '/development-notices' },
 };
 
-type Props = { searchParams: Promise<{ type?: string }> };
+type Props = { searchParams: Promise<{ type?: string; size?: string }> };
+
+function buildFilterOptions(
+  items: Array<{ noticeType?: string | null }>,
+  labels: Record<string, string>
+) {
+  const counts: Record<string, number> = {};
+  for (const n of items) {
+    if (n.noticeType) counts[n.noticeType] = (counts[n.noticeType] ?? 0) + 1;
+  }
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([value, count]) => ({ value, label: labels[value] ?? value, count }));
+}
 
 export default async function DevelopmentNoticesPage({ searchParams }: Props) {
-  const { type } = await searchParams;
+  const { type, size } = await searchParams;
+  const perPage = size === '20' ? 20 : DEV_NOTICES_PER_PAGE;
 
   const { data } = await sanityFetch(
     type
       ? {
           query: devNoticesArchiveFilteredQuery,
-          params: { from: 0, to: DEV_NOTICES_PER_PAGE - 1, type },
+          params: { from: 0, to: perPage - 1, type },
         }
       : {
           query: devNoticesArchiveQuery,
-          params: { from: 0, to: DEV_NOTICES_PER_PAGE - 1 },
+          params: { from: 0, to: perPage - 1 },
         }
   );
 
   const paginated = paginatedData(
     data ?? { total: 0, results: [] },
     1,
-    DEV_NOTICES_PER_PAGE
+    perPage
   );
-
   const results = paginated.data.results;
   const total = paginated.data.total ?? results.length;
-  const open = results.filter((n) => n.status === 'open');
-  const closed = results.filter((n) => n.status !== 'open');
 
-  // Build type filter options from unfiltered counts
   const { data: allData } = type
     ? await sanityFetch({
         query: devNoticesArchiveQuery,
@@ -57,18 +67,13 @@ export default async function DevelopmentNoticesPage({ searchParams }: Props) {
       })
     : { data: data };
 
-  const typeCounts: Record<string, number> = {};
-  for (const n of allData?.results ?? results) {
-    if (n.noticeType)
-      typeCounts[n.noticeType] = (typeCounts[n.noticeType] ?? 0) + 1;
-  }
-  const filterOptions = Object.entries(typeCounts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([value, count]) => ({
-      value,
-      label: DEV_NOTICE_TYPE_LABELS[value] ?? value,
-      count,
-    }));
+  const filterOptions = buildFilterOptions(
+    allData?.results ?? results,
+    DEV_NOTICE_TYPE_LABELS
+  );
+
+  const open = results.filter((n) => n.status === 'open');
+  const closed = results.filter((n) => n.status !== 'open');
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
@@ -114,7 +119,6 @@ export default async function DevelopmentNoticesPage({ searchParams }: Props) {
               </div>
             </section>
           )}
-
           {closed.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-3">
@@ -139,6 +143,7 @@ export default async function DevelopmentNoticesPage({ searchParams }: Props) {
         totalPages={paginated.totalPages}
         currentPage={1}
         linkBase="/development-notices"
+        perPage={perPage}
       />
     </div>
   );
