@@ -293,7 +293,7 @@ function LiquorStatutoryNote() {
   return (
     <details className="mb-8 rounded-xl border border-blue-100 bg-blue-50 group">
       <summary className="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-bold text-blue-800 list-none">
-        <span>⚖️ KZN Liquor Licensing — Statutory Process</span>
+        <span>⚖️ About this notice</span>
         <span className="text-blue-400 text-xs group-open:hidden">Show ▾</span>
         <span className="text-blue-400 text-xs hidden group-open:inline">
           Hide ▴
@@ -301,35 +301,19 @@ function LiquorStatutoryNote() {
       </summary>
       <div className="px-4 pb-4 text-sm text-blue-700 space-y-2">
         <p>
-          Liquor applications in KwaZulu-Natal are governed by the{' '}
-          <strong>KZN Liquor Licensing Act 6 of 2010</strong>. The licensing
-          authority is the{' '}
-          <strong>KwaZulu-Natal Economic Regulatory Authority (KZNERA)</strong>{' '}
-          — not the traditional council.
+          This notice is published by the traditional council as a community
+          information and consultation record. Your comment is captured as part
+          of the community&apos;s structured response to this application — it
+          forms part of the consultation evidence submitted to the{' '}
+          <strong>KwaZulu-Natal Economic Regulatory Authority (KZNERA)</strong>.
         </p>
         <p>
-          <strong>Statutory objections and representations</strong> must be
-          served in writing on the relevant local committee and on the applicant
-          or the applicant&apos;s representative, with proof of service
-          submitted to the local committee (section 43). The objection period is{' '}
-          <strong>21 business days</strong> from the date of newspaper
-          publication of the prescribed notice — not from the date this digital
-          notice was published.
-        </p>
-        <p>
-          Statutory publication requires a prescribed newspaper advertisement
-          and a physical notice board displayed at the proposed premises for 21
-          days. Where the premises are in a residential area, notice must also
-          be served on qualifying neighbouring households. A copy of the
-          application must be delivered to the relevant SAPS Station
-          Commissioner. This digital notice is an additional community
-          information channel — it does not substitute for any of those
-          statutory requirements.
-        </p>
-        <p className="text-xs text-blue-600 border-t border-blue-200 pt-2 mt-2">
-          Submitting a comment through this platform does not constitute a
-          statutory objection and does not establish that the prescribed
-          notification process has been completed.
+          If you wish to lodge a formal statutory objection under the{' '}
+          <strong>KZN Liquor Licensing Act 6 of 2010</strong>, that must be
+          served in writing on the relevant KZNERA local committee and on the
+          applicant, with proof of service (section 43). The statutory objection
+          period is <strong>21 business days</strong> from newspaper
+          publication. The statutory objection address is shown below.
         </p>
       </div>
     </details>
@@ -348,24 +332,11 @@ function CommentSection({
     <>
       {acceptingComments && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-2">Submit a Community Comment</h2>
-          <div className="mb-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
-            <p className="text-sm text-amber-800">
-              <strong>This is an informal community comment channel.</strong>{' '}
-              Submitting here does not constitute a statutory objection or
-              representation and does not establish that any prescribed
-              notification requirement has been met.
-              {isLiquor && (
-                <>
-                  {' '}
-                  For a statutory objection under the KZN Liquor Licensing Act,
-                  you must serve a written objection on the relevant local
-                  committee and on the applicant, with proof of service — see
-                  the statutory process note above.
-                </>
-              )}
-            </p>
-          </div>
+          <h2 className="text-xl font-bold mb-2">Community Comment</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            Your comment is recorded as part of the community consultation
+            evidence for this application.
+          </p>
           <PublicCommentForm
             noticeId={notice._id}
             noticeTitle={notice.title ?? ''}
@@ -373,21 +344,19 @@ function CommentSection({
         </div>
       )}
       {acceptingComments && notice.commentContact && (
-        <div className="mb-8 p-4 bg-amber-50 rounded-xl border border-amber-100">
-          <h3 className="text-sm font-bold text-amber-800 mb-1">
-            📬 Where to Submit Objections
+        <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-200">
+          <h3 className="text-sm font-bold text-gray-700 mb-1">
+            {isLiquor
+              ? '⚖️ Statutory objection address (KZNERA)'
+              : '📬 Statutory objection address'}
           </h3>
-          <p className="text-sm text-amber-700 whitespace-pre-line break-words">
+          <p className="text-sm text-gray-600 whitespace-pre-line break-words">
             {notice.commentContact}
           </p>
-          {isLiquor && (
-            <p className="text-xs text-amber-600 mt-2 border-t border-amber-200 pt-2">
-              For statutory objections under the KZN Liquor Licensing Act, serve
-              written objections on the relevant KZNERA local committee and on
-              the applicant, with proof of service submitted to the local
-              committee.
-            </p>
-          )}
+          <p className="text-xs text-gray-400 mt-2">
+            Formal objections under the applicable legislation must be served at
+            this address — separate from the community comment above.
+          </p>
         </div>
       )}
     </>
