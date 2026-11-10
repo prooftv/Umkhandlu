@@ -175,12 +175,11 @@ export default defineType({
       hidden: ({ parent }) => !parent?.geopoint,
     }),
     defineField({
-      name: 'siteBoundary',
-      title: 'Site Boundary (GeoJSON) — Placeholder',
-      type: 'text',
-      rows: 4,
+      name: 'siteFeatureId',
+      title: 'Site Boundary — Control Centre Feature ID',
+      type: 'string',
       description:
-        'Temporary field. A coordinate is not a boundary. This field will be replaced by a Control Centre spatial feature reference (siteFeatureId) once the site geometry has been assessed, staged, validated and published through the Control Centre spatial catalogue. Do not paste unverified geometry here and present it as a verified site boundary.',
+        'UUID of the approved spatial feature in the Control Centre spatial catalogue (spatial_staged_features.id). The site boundary polygon is fetched from the Control Centre at render time. Leave blank until the site geometry has been assessed, staged, validated and published through the Control Centre. Do not enter unverified geometry.',
     }),
     defineField({
       name: 'commentDeadline',

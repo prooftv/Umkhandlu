@@ -38,6 +38,7 @@ const devNoticeQuery = defineQuery(`
     location,
     geopoint,
     locationPrecision,
+    siteFeatureId,
     commentDeadline,
     commentContact,
     publishDate,
@@ -84,6 +85,33 @@ type WardBoundary = {
   source: string | null;
   date: string | null;
 } | null;
+
+async function fetchSiteBoundary(siteFeatureId: string): Promise<WardBoundary> {
+  const baseUrl = process.env.CONTROL_CENTRE_URL;
+  if (!baseUrl) return null;
+  try {
+    const res = await fetch(
+      `${baseUrl}/api/spatial/features/${siteFeatureId}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    );
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      type: string;
+      geometry: { type: string; coordinates: unknown };
+      meta?: { dataset?: string; datasetDate?: string };
+    };
+    if (json.type !== 'Feature' || !json.geometry) return null;
+    return {
+      geometry: json.geometry,
+      source: json.meta?.dataset ?? 'Control Centre',
+      date: json.meta?.datasetDate ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
 
 async function fetchWardBoundary(
   wardNumber: number,
@@ -263,11 +291,15 @@ function NoticeDocuments({
 
 function LiquorStatutoryNote() {
   return (
-    <div className="mb-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
-      <h3 className="text-sm font-bold text-blue-800 mb-2">
-        ⚖️ KZN Liquor Licensing — Statutory Process
-      </h3>
-      <div className="text-sm text-blue-700 space-y-2">
+    <details className="mb-8 rounded-xl border border-blue-100 bg-blue-50 group">
+      <summary className="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-bold text-blue-800 list-none">
+        <span>⚖️ KZN Liquor Licensing — Statutory Process</span>
+        <span className="text-blue-400 text-xs group-open:hidden">Show ▾</span>
+        <span className="text-blue-400 text-xs hidden group-open:inline">
+          Hide ▴
+        </span>
+      </summary>
+      <div className="px-4 pb-4 text-sm text-blue-700 space-y-2">
         <p>
           Liquor applications in KwaZulu-Natal are governed by the{' '}
           <strong>KZN Liquor Licensing Act 6 of 2010</strong>. The licensing
@@ -300,7 +332,7 @@ function LiquorStatutoryNote() {
           notification process has been completed.
         </p>
       </div>
-    </div>
+    </details>
   );
 }
 
@@ -340,12 +372,10 @@ function CommentSection({
           />
         </div>
       )}
-      {notice.commentContact && (
+      {acceptingComments && notice.commentContact && (
         <div className="mb-8 p-4 bg-amber-50 rounded-xl border border-amber-100">
           <h3 className="text-sm font-bold text-amber-800 mb-1">
-            {acceptingComments
-              ? '📬 Contact Information'
-              : '📬 Contact Information'}
+            📬 Where to Submit Objections
           </h3>
           <p className="text-sm text-amber-700 whitespace-pre-line break-words">
             {notice.commentContact}
@@ -403,6 +433,20 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
+async function resolveNoticeSpatial(notice: NoticeData) {
+  const area = notice.relatedArea as RelatedArea | null;
+  const { wardName, wardLink } = resolveWardContext(area);
+  const [wardBoundary, siteBoundary] = await Promise.all([
+    area?.wardNumber != null && area.municipality
+      ? fetchWardBoundary(area.wardNumber, area.municipality)
+      : Promise.resolve(null),
+    notice.siteFeatureId
+      ? fetchSiteBoundary(notice.siteFeatureId)
+      : Promise.resolve(null),
+  ]);
+  return { area, wardName, wardLink, wardBoundary, siteBoundary };
+}
+
 export default async function DevelopmentNoticePage(props: Props) {
   const { slug } = await props.params;
   const { data: notice } = await sanityFetch({
@@ -418,12 +462,8 @@ export default async function DevelopmentNoticePage(props: Props) {
     : false;
   const acceptingComments = isOpen && !deadlinePassed;
 
-  const area = notice.relatedArea as RelatedArea | null;
-  const { wardName, wardLink } = resolveWardContext(area);
-  const wardBoundary =
-    area?.wardNumber != null && area.municipality
-      ? await fetchWardBoundary(area.wardNumber, area.municipality)
-      : null;
+  const { area, wardName, wardLink, wardBoundary, siteBoundary } =
+    await resolveNoticeSpatial(notice);
 
   return (
     <div className="container mx-auto max-w-3xl py-12">
@@ -466,6 +506,7 @@ export default async function DevelopmentNoticePage(props: Props) {
             name={notice.title ?? 'Development Site'}
             locationPrecision={notice.locationPrecision}
             wardBoundary={wardBoundary}
+            siteBoundary={siteBoundary}
             wardName={wardName}
             municipality={
               area?.municipality

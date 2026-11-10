@@ -15,6 +15,7 @@ type Props = {
   name: string;
   locationPrecision?: string | null;
   wardBoundary?: WardBoundary | null;
+  siteBoundary?: WardBoundary | null;
   wardName?: string | null;
   municipality?: string | null;
   mapDeepLink?: string | null;
@@ -98,6 +99,7 @@ export default function SiteContextMap({
   name,
   locationPrecision,
   wardBoundary,
+  siteBoundary,
   wardName,
   municipality,
   mapDeepLink,
@@ -130,6 +132,32 @@ export default function SiteContextMap({
       // Ward boundary layer
       addWardBoundary(Leaf, map, wardBoundary, wardName);
 
+      // Verified site boundary from CC (distinct style)
+      if (siteBoundary) {
+        try {
+          Leaf.geoJSON(
+            {
+              type: 'Feature',
+              geometry: siteBoundary.geometry,
+              properties: {},
+            } as GeoJSON.Feature,
+            {
+              style: {
+                color: '#2563eb',
+                weight: 2,
+                opacity: 0.8,
+                fillColor: '#2563eb',
+                fillOpacity: 0.06,
+              },
+            }
+          )
+            .addTo(map)
+            .bindTooltip('Verified site boundary', { sticky: true });
+        } catch {
+          // invalid geometry — skip
+        }
+      }
+
       // Site marker
       addSiteMarker(Leaf, map, lat, lng, name, precision);
     });
@@ -139,7 +167,7 @@ export default function SiteContextMap({
       mapInstanceRef.current?.remove();
       mapInstanceRef.current = null;
     };
-  }, [lat, lng, name, wardBoundary, wardName, precision]);
+  }, [lat, lng, name, wardBoundary, siteBoundary, wardName, precision]);
 
   return (
     <div className="space-y-2">
@@ -172,8 +200,14 @@ export default function SiteContextMap({
           )}
           {wardBoundary?.source && (
             <span className="text-gray-400">
-              Boundary: {wardBoundary.source}
+              Ward boundary: {wardBoundary.source}
               {wardBoundary.date ? ` (${wardBoundary.date})` : ''}
+            </span>
+          )}
+          {siteBoundary && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-blue-300 text-blue-600 bg-blue-50">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+              Verified site boundary
             </span>
           )}
         </div>
@@ -186,7 +220,7 @@ export default function SiteContextMap({
           </a>
         )}
       </div>
-      {locationPrecision !== 'verified' && (
+      {locationPrecision !== 'verified' && !siteBoundary && (
         <p className="text-xs text-gray-400 leading-relaxed">
           The map shows the ward administrative boundary (MDB 2026) and an
           operator-provided site point. No verified site or premises boundary is
