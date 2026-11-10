@@ -19,10 +19,11 @@ export default function PublicCommentForm({ noticeId, noticeTitle }: Props) {
     return (
       <div className="p-6 bg-green-50 rounded-xl border border-green-200">
         <p className="text-green-800 font-medium">
-          ✓ Your comment has been submitted successfully.
+          ✓ Your community comment has been submitted.
         </p>
         <p className="text-sm text-green-600 mt-1">
-          It will be forwarded to the relevant authority for consideration.
+          Your comment has been recorded. This is an informal community comment
+          and does not constitute a statutory objection or representation.
         </p>
       </div>
     );
@@ -128,13 +129,13 @@ export default function PublicCommentForm({ noticeId, noticeTitle }: Props) {
       <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
         <p className="text-xs text-blue-800 font-semibold mb-1">POPIA Notice</p>
         <p className="text-xs text-blue-700">
-          Your personal details (name and contact) are collected solely for the
-          purpose of this public participation process. They will be forwarded
-          to the applicant and/or the relevant authority handling this
-          application and will not be stored on this platform or used for any
-          other purpose. You have the right to request access to or correction
-          of your information under the Protection of Personal Information Act,
-          2013.
+          Your name and contact details are collected solely for the purpose of
+          this community comment process. They will be transmitted to the
+          platform operator for forwarding and will not be retained on this
+          platform after delivery. You have the right to request access to or
+          correction of your information under the Protection of Personal
+          Information Act, 2013. Submitting this form does not constitute a
+          statutory objection or representation under any legislation.
         </p>
       </div>
 
@@ -147,9 +148,8 @@ export default function PublicCommentForm({ noticeId, noticeTitle }: Props) {
           className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
         />
         <label htmlFor="popia" className="text-sm text-gray-700">
-          I have read the POPIA notice above and consent to my personal details
-          being shared with the applicant and relevant authority for the purpose
-          of this application. *
+          I have read the POPIA notice above and consent to my name and contact
+          details being transmitted for the purpose of this community comment. *
         </label>
       </div>
 
@@ -158,7 +158,7 @@ export default function PublicCommentForm({ noticeId, noticeTitle }: Props) {
       )}
 
       <Button type="submit" disabled={pending}>
-        {pending ? 'Submitting...' : 'Submit Comment'}
+        {pending ? 'Submitting...' : 'Submit Community Comment'}
       </Button>
     </form>
   );

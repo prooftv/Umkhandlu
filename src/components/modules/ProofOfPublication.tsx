@@ -63,7 +63,7 @@ export default function ProofOfPublication(props: Props) {
     <div className="max-w-2xl mx-auto border-2 border-gray-900 p-8 my-8 print:border-black print:my-0 print:p-6">
       <div className="text-center mb-8">
         <h1 className="text-lg font-black uppercase tracking-widest mb-1">
-          Proof of Publication Certificate
+          Digital Publication Evidence Record
         </h1>
         <p className="text-xs text-gray-500 uppercase tracking-wide">
           {props.siteName}
@@ -72,9 +72,9 @@ export default function ProofOfPublication(props: Props) {
 
       <div className="flex justify-between text-xs text-gray-600 mb-6 border-b border-gray-300 pb-4">
         <span>
-          Certificate No:{' '}
+          Record No:{' '}
           <strong className="text-gray-900">
-            POP-{props.publishDate?.replace(/-/g, '') || 'DRAFT'}
+            DPER-{props.publishDate?.replace(/-/g, '') || 'DRAFT'}
           </strong>
         </span>
         <span>
@@ -171,10 +171,19 @@ export default function ProofOfPublication(props: Props) {
 
       <div className="border-t-2 border-gray-900 pt-6 mt-8">
         <p className="text-xs text-gray-700 leading-relaxed">
-          This certificate confirms that the above notice was published on the{' '}
-          {props.siteName} community platform and remained publicly accessible
-          for the stated duration. The notice, supporting documents, and site
+          This record confirms that the above notice was published on the{' '}
+          {props.siteName} community platform and was publicly accessible for
+          the stated duration. The notice, supporting documents, and site
           location were available for public inspection at the URL above.
+        </p>
+        <p className="text-xs text-gray-500 mt-3 leading-relaxed">
+          <strong>Scope and limitations:</strong> This record documents platform
+          publication activity only. It does not certify that statutory
+          newspaper advertisement, physical site display, household
+          notification, SAPS notification, or any other prescribed publication
+          requirement has been completed. Statutory compliance with the
+          applicable legislation remains the responsibility of the applicant and
+          is assessed by the relevant authority.
         </p>
         <p className="text-xs text-gray-500 mt-4">
           Issued by: Unami Foundation (Platform Operator)

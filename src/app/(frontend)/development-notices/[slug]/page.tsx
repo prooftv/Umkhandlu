@@ -271,20 +271,33 @@ function LiquorStatutoryNote() {
         <p>
           Liquor applications in KwaZulu-Natal are governed by the{' '}
           <strong>KZN Liquor Licensing Act 6 of 2010</strong>. The licensing
-          authority is the <strong>KZN Liquor Authority</strong> — not the
-          traditional council.
+          authority is the{' '}
+          <strong>KwaZulu-Natal Economic Regulatory Authority (KZNERA)</strong>{' '}
+          — not the traditional council.
         </p>
         <p>
-          <strong>Formal objections</strong> must be lodged directly with the
-          KZN Liquor Authority within 30 days of publication. Submitting a
-          comment through this platform does not constitute a formal objection
-          to the licensing authority.
+          <strong>Statutory objections and representations</strong> must be
+          served in writing on the relevant local committee and on the applicant
+          or the applicant&apos;s representative, with proof of service
+          submitted to the local committee (section 43). The objection period is{' '}
+          <strong>21 business days</strong> from the date of newspaper
+          publication of the prescribed notice — not from the date this digital
+          notice was published.
         </p>
         <p>
-          Statutory publication requires newspaper advertisement and physical
-          site display. This digital notice is an additional community
-          information channel — it does not substitute for statutory
-          publication.
+          Statutory publication requires a prescribed newspaper advertisement
+          and a physical notice board displayed at the proposed premises for 21
+          days. Where the premises are in a residential area, notice must also
+          be served on qualifying neighbouring households. A copy of the
+          application must be delivered to the relevant SAPS Station
+          Commissioner. This digital notice is an additional community
+          information channel — it does not substitute for any of those
+          statutory requirements.
+        </p>
+        <p className="text-xs text-blue-600 border-t border-blue-200 pt-2 mt-2">
+          Submitting a comment through this platform does not constitute a
+          statutory objection and does not establish that the prescribed
+          notification process has been completed.
         </p>
       </div>
     </div>
@@ -298,20 +311,29 @@ function CommentSection({
   notice: NoticeData;
   acceptingComments: boolean;
 }) {
+  const isLiquor = notice.noticeType === 'liquor';
   return (
     <>
       {acceptingComments && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-2">
-            Submit Comment or Objection
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            Comments must be received before{' '}
-            {notice.commentDeadline
-              ? formatDateZA(notice.commentDeadline)
-              : 'the deadline'}
-            . You may also submit directly to: {notice.commentContact}
-          </p>
+          <h2 className="text-xl font-bold mb-2">Submit a Community Comment</h2>
+          <div className="mb-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
+            <p className="text-sm text-amber-800">
+              <strong>This is an informal community comment channel.</strong>{' '}
+              Submitting here does not constitute a statutory objection or
+              representation and does not establish that any prescribed
+              notification requirement has been met.
+              {isLiquor && (
+                <>
+                  {' '}
+                  For a statutory objection under the KZN Liquor Licensing Act,
+                  you must serve a written objection on the relevant local
+                  committee and on the applicant, with proof of service — see
+                  the statutory process note above.
+                </>
+              )}
+            </p>
+          </div>
           <PublicCommentForm
             noticeId={notice._id}
             noticeTitle={notice.title ?? ''}
@@ -322,17 +344,18 @@ function CommentSection({
         <div className="mb-8 p-4 bg-amber-50 rounded-xl border border-amber-100">
           <h3 className="text-sm font-bold text-amber-800 mb-1">
             {acceptingComments
-              ? '📬 Where to Submit Formal Comments'
-              : '📬 Comments Were Submitted To'}
+              ? '📬 Contact Information'
+              : '📬 Contact Information'}
           </h3>
           <p className="text-sm text-amber-700 whitespace-pre-line break-words">
             {notice.commentContact}
           </p>
-          {notice.noticeType === 'liquor' && acceptingComments && (
+          {isLiquor && (
             <p className="text-xs text-amber-600 mt-2 border-t border-amber-200 pt-2">
-              For formal objections under the KZN Liquor Licensing Act, submit
-              directly to the KZN Liquor Authority — not to the traditional
-              council.
+              For statutory objections under the KZN Liquor Licensing Act, serve
+              written objections on the relevant KZNERA local committee and on
+              the applicant, with proof of service submitted to the local
+              committee.
             </p>
           )}
         </div>
@@ -467,8 +490,12 @@ export default async function DevelopmentNoticePage(props: Props) {
           href={`/notices/certificate/${notice._id}`}
           className="text-sm font-medium text-primary hover:underline"
         >
-          View Proof of Publication Certificate →
+          View Digital Publication Evidence Record →
         </Link>
+        <p className="text-xs text-gray-400 mt-1">
+          Records platform publication activity only. Does not certify statutory
+          compliance.
+        </p>
       </div>
 
       <div className="mt-8 pt-6 border-t border-gray-100">
