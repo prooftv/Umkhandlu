@@ -95,8 +95,6 @@ type RiskItem = {
   exposure: number;
   status: string;
   treatment: string;
-  methodology: string | null;
-  assessed_at: string | null;
 };
 
 type ObligationItem = {
@@ -104,7 +102,6 @@ type ObligationItem = {
   identifier: string;
   title: string;
   source: string;
-  responsible_party: string;
   due_date: string | null;
   status: string;
 };
@@ -136,13 +133,13 @@ type NoticeIntelligence = {
 } | null;
 
 async function fetchNoticeIntelligence(
-  ccNoticeRef: string
+  sanityId: string
 ): Promise<NoticeIntelligence> {
   const baseUrl = process.env.CONTROL_CENTRE_URL;
   if (!baseUrl) return null;
   try {
     const res = await fetch(
-      `${baseUrl}/api/notices/by-ref/${encodeURIComponent(ccNoticeRef)}`,
+      `${baseUrl}/api/notices/by-ref/${encodeURIComponent(sanityId)}`,
       { next: { revalidate: 300 } }
     );
     if (!res.ok) return null;
@@ -412,11 +409,6 @@ function RiskPanel({ intelligence }: { intelligence: NoticeIntelligence }) {
                     {band.label} ({r.exposure})
                   </span>
                 </div>
-                {r.methodology && (
-                  <p className="text-xs mt-1 opacity-60">
-                    Methodology: {r.methodology}
-                  </p>
-                )}
               </div>
             );
           })}
@@ -624,9 +616,8 @@ async function resolveNoticeSpatial(notice: NoticeData) {
     notice.siteFeatureId
       ? fetchSiteBoundary(notice.siteFeatureId)
       : Promise.resolve(null),
-    notice.ccNoticeRef
-      ? fetchNoticeIntelligence(notice.ccNoticeRef)
-      : Promise.resolve(null),
+    // Use Sanity _id as the stable node reference — CC looks up by node_notice_ref
+    fetchNoticeIntelligence(notice._id),
   ]);
   return { area, wardName, wardLink, wardBoundary, siteBoundary, intelligence };
 }
