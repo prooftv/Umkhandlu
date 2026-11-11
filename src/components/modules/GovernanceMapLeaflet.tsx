@@ -2,6 +2,12 @@
 
 import type L from 'leaflet';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  createMap,
+  fitToLayer,
+  fitToPoints,
+  loadLeafletCss,
+} from '@/lib/map/leaflet-utils';
 
 export interface MapRecord {
   id: string;
@@ -61,14 +67,6 @@ const TYPE_PATH: Record<string, string> = {
   project: '/campaigns',
 };
 
-function loadLeafletCss() {
-  if (document.querySelector('link[href*="leaflet"]')) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-  document.head.appendChild(link);
-}
-
 function addBoundaries(
   Leaf: typeof L,
   map: L.Map,
@@ -96,9 +94,7 @@ function addBoundaries(
       layer.on('click', () => onSelect(b));
       layer.bindTooltip(b.name, { sticky: true });
       layer.addTo(map);
-    } catch {
-      // invalid boundary — skip
-    }
+    } catch {}
   }
 }
 
@@ -523,28 +519,28 @@ export default function GovernanceMapLeaflet({
 
     import('leaflet').then((Leaf) => {
       if (cancelled || !containerRef.current) return;
-      const map = Leaf.map(containerRef.current, {
+      const map = createMap(Leaf, containerRef.current, centre, zoom, {
         scrollWheelZoom: true,
-      }).setView(centre, zoom);
-      Leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-      }).addTo(map);
+      });
       addBoundaries(Leaf, map, boundaries, selectArea);
       markersRef.current = buildMarkers(Leaf, map, records, selectRecord);
       mapRef.current = map;
-      // Fit to markers so they're visible on load — don't leave user at AMAJUBA_CENTRE
       if (records.length > 0) {
+        fitToPoints(
+          Leaf,
+          map,
+          records.map((r) => [r.lat, r.lng] as [number, number])
+        );
+      } else if (boundaries.length > 0) {
+        // Fit to first valid boundary if no records
         try {
-          const bounds = Leaf.latLngBounds(
-            records.map((r) => [r.lat, r.lng] as [number, number])
-          );
-          if (bounds.isValid())
-            map.fitBounds(bounds, { padding: [60, 60], maxZoom: 13 });
-        } catch {
-          /* fallback to centre */
-        }
+          const first = Leaf.geoJSON({
+            type: 'Feature',
+            geometry: boundaries[0].boundary,
+            properties: {},
+          } as GeoJSON.Feature);
+          fitToLayer(map, first, [60, 60], 13);
+        } catch {}
       }
     });
 

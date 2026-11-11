@@ -2,35 +2,63 @@
 
 import type L from 'leaflet';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  addFeatureCollection,
+  addGeoJSON,
+  addProximityCircle,
+  addSiteMarker,
+  createMap,
+  fitToLayer,
+  type GeoJSONGeometry,
+  loadLeafletCss,
+  syncLayerVisibility,
+} from '@/lib/map/leaflet-utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type GeoJSONGeometry = { type: string; coordinates: unknown };
-
-type LayerEntry = {
-  id: string;
-  label: string;
-  role: string;
-  geometryType: string;
-  sourceOrg: string;
-  availability: 'available' | 'pending-permission' | 'not-available';
-  permissionNote: string | null;
-  attribution: string | null;
-  statutoryRelevance: string;
-  features?: {
-    type: 'FeatureCollection';
-    features: Array<{
-      type: 'Feature';
-      geometry: GeoJSONGeometry;
-      properties: Record<string, unknown>;
-    }>;
-    meta: { dataset: string; attribution: string | null; count: number };
-  } | null;
+type SpatialFeature = {
+  type: 'Feature';
+  geometry: GeoJSONGeometry;
+  properties: Record<string, unknown>;
 };
 
-type NoticeLayersResponse = {
+type DatasetResult = {
+  status:
+    | 'found'
+    | 'not-found'
+    | 'unavailable'
+    | 'pending-permission'
+    | 'not-applicable';
+  datasetName: string | null;
+  attribution: string | null;
+  datasetDate: string | null;
+  featureCount: number;
+  features: SpatialFeature[];
+  note: string | null;
+};
+
+type NoticeContextResponse = {
   noticeType: string;
-  layers: LayerEntry[];
+  wardNumber: number | null;
+  catB: string | null;
+  administrative: {
+    ward: DatasetResult;
+    municipality: DatasetResult;
+    district: DatasetResult;
+  };
+  proximity: {
+    traditionalAreas: DatasetResult;
+    licensedPremises: DatasetResult;
+    schools: DatasetResult;
+    religiousInstitutions: DatasetResult;
+    recreationFacilities: DatasetResult;
+  };
+  siteContext: {
+    landUse: DatasetResult;
+    cadastre: DatasetResult;
+  };
+  proximityRadiusMetres: number | null;
+  proximityRadiusNote: string | null;
   generatedAt: string;
   disclaimer: string;
 };
@@ -55,7 +83,6 @@ export type Props = {
   municipality?: string | null;
   mapDeepLink?: string | null;
   controlCentreUrl: string;
-  // Ward context for spatial filtering — narrows CC layers to this notice's ward
   wardNumber?: number | null;
   catB?: string | null;
 };
@@ -72,481 +99,422 @@ const PRECISION_META: Record<string, { label: string; colour: string }> = {
   'locality-only': { label: 'Locality association only', colour: '#6b7280' },
 };
 
-const ROLE_STYLE: Record<
-  string,
-  { color: string; fillColor: string; weight: number; fillOpacity: number }
-> = {
-  administrative: {
+const LAYER_STYLE = {
+  ward: {
     color: '#2563eb',
     fillColor: '#2563eb',
     weight: 2.5,
-    fillOpacity: 0.2,
+    fillOpacity: 0.18,
+    opacity: 1,
   },
-  community: {
+  municipality: {
     color: '#7c3aed',
     fillColor: '#7c3aed',
-    weight: 2.5,
-    fillOpacity: 0.22,
+    weight: 2,
+    fillOpacity: 0.12,
+    opacity: 0.8,
+  },
+  district: {
+    color: '#6b7280',
+    fillColor: '#6b7280',
+    weight: 1.5,
+    fillOpacity: 0.06,
+    opacity: 0.6,
   },
   site: {
     color: '#0891b2',
     fillColor: '#0891b2',
     weight: 3,
     fillOpacity: 0.25,
-  },
-  proximity: {
-    color: '#dc2626',
-    fillColor: '#dc2626',
-    weight: 2,
-    fillOpacity: 0.12,
-  },
-  context: {
-    color: '#d97706',
-    fillColor: '#d97706',
-    weight: 2,
-    fillOpacity: 0.18,
+    opacity: 1,
   },
 };
 
-const AVAIL_COLOUR: Record<string, string> = {
-  available: 'bg-green-100 text-green-800',
-  'pending-permission': 'bg-amber-100 text-amber-800',
-  'not-available': 'bg-gray-100 text-gray-500',
+const STATUS_COLOUR: Record<string, string> = {
+  found: 'bg-green-50 text-green-700 border-green-200',
+  'not-found': 'bg-amber-50 text-amber-700 border-amber-200',
+  unavailable: 'bg-gray-50 text-gray-500 border-gray-200',
+  'pending-permission': 'bg-amber-50 text-amber-700 border-amber-200',
+  'not-applicable': 'bg-gray-50 text-gray-400 border-gray-100',
 };
 
-const AVAIL_LABEL: Record<string, string> = {
-  available: 'Available',
+const STATUS_LABEL: Record<string, string> = {
+  found: 'Available',
+  'not-found': 'Not matched',
+  unavailable: 'Unavailable',
   'pending-permission': 'Pending permission',
-  'not-available': 'Not available',
+  'not-applicable': 'Not applicable',
 };
 
-// ─── Leaflet helpers ──────────────────────────────────────────────────────────
-
-function loadLeafletCss() {
-  if (document.querySelector('link[href*="leaflet"]')) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-  document.head.appendChild(link);
-}
-
-function addGeoJSONLayer(
-  Leaf: typeof L,
-  map: L.Map,
-  geometry: GeoJSONGeometry,
-  style: L.PathOptions,
-  tooltip: string,
-  onClick?: (e: L.LeafletMouseEvent) => void
-): L.GeoJSON | null {
-  try {
-    const layer = Leaf.geoJSON(
-      { type: 'Feature', geometry, properties: {} } as GeoJSON.Feature,
-      { style }
-    );
-    layer.bindTooltip(tooltip, { sticky: true });
-    if (onClick) layer.on('click', onClick);
-    layer.addTo(map);
-    return layer;
-  } catch {
-    return null;
-  }
-}
+type LayerKey = 'ward' | 'municipality' | 'district' | 'proximity';
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function LayerToggle({
-  layer,
-  visible,
-  onToggle,
-}: {
-  layer: LayerEntry;
-  visible: boolean;
-  onToggle: () => void;
-}) {
-  const style = ROLE_STYLE[layer.role] ?? ROLE_STYLE.administrative;
+function StatusBadge({ status }: { status: DatasetResult['status'] }) {
   return (
-    <button
-      type="button"
-      onClick={onToggle}
-      className={`flex items-center gap-2 w-full text-left px-2 py-1.5 rounded text-xs transition-colors ${
-        visible ? 'bg-gray-100' : 'opacity-50 hover:opacity-75'
-      }`}
+    <span
+      className={`inline-block text-[10px] font-medium px-1.5 py-0.5 rounded border ${STATUS_COLOUR[status]}`}
     >
-      <span
-        className="shrink-0 w-3.5 h-3.5 rounded-sm border-2"
-        style={{
-          background: visible ? style.fillColor : 'transparent',
-          borderColor: style.color,
-          opacity: visible ? 0.85 : 0.4,
-        }}
-      />
-      <span className="flex-1 min-w-0 truncate font-medium">{layer.label}</span>
-      {layer.availability !== 'available' && (
-        <span
-          className={`shrink-0 text-[10px] px-1 py-0.5 rounded ${AVAIL_COLOUR[layer.availability]}`}
-        >
-          {layer.availability === 'pending-permission' ? 'pending' : 'n/a'}
-        </span>
-      )}
-    </button>
+      {STATUS_LABEL[status]}
+    </span>
   );
 }
 
-function LayerCatalogue({ layers }: { layers: LayerEntry[] }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="mt-3 border-t border-gray-100 pt-3">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-1"
-      >
-        Layer catalogue {open ? '▴' : '▾'}
-      </button>
-      {open && (
-        <div className="mt-2 space-y-3">
-          {layers.map((l) => (
-            <div key={l.id} className="text-xs space-y-0.5">
-              <div className="flex items-start justify-between gap-2">
-                <span className="font-medium text-gray-800">{l.label}</span>
-                <span
-                  className={`shrink-0 text-[10px] px-1.5 py-0.5 rounded font-medium ${AVAIL_COLOUR[l.availability]}`}
-                >
-                  {AVAIL_LABEL[l.availability]}
-                </span>
-              </div>
-              <p className="text-gray-500">{l.sourceOrg}</p>
-              <p className="text-gray-400 italic">{l.statutoryRelevance}</p>
-              {l.permissionNote && (
-                <p className="text-amber-600">{l.permissionNote}</p>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function FeaturePanel({
-  feature,
-  onClose,
+function FindingRow({
+  label,
+  result,
+  onFocus,
 }: {
-  feature: {
-    label: string;
-    props: Record<string, unknown>;
-    role: string;
-  } | null;
-  onClose: () => void;
+  label: string;
+  result: DatasetResult;
+  onFocus?: () => void;
 }) {
-  if (!feature) return null;
-  const displayProps = Object.entries(feature.props).filter(
-    ([k]) =>
-      ![
-        'FID',
-        'Shape_Area',
-        'Shape_Leng',
-        'Shape__Area',
-        'Shape__Length',
-        'DATE',
-      ].includes(k)
-  );
   return (
-    <div className="mt-3 border border-gray-200 rounded-lg p-3 bg-white text-xs space-y-2">
-      <div className="flex items-start justify-between gap-2">
-        <p className="font-semibold text-gray-800">{feature.label}</p>
+    <div className="flex items-start justify-between gap-3 py-2.5 border-b border-gray-50 last:border-0">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm font-medium text-gray-800">{label}</span>
+          <StatusBadge status={result.status} />
+        </div>
+        {result.status === 'found' && result.datasetName && (
+          <p className="text-xs text-gray-500 mt-0.5 truncate">
+            {result.datasetName}
+          </p>
+        )}
+        {result.note && result.status !== 'found' && (
+          <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+            {result.note}
+          </p>
+        )}
+        {result.status === 'found' &&
+          (result.attribution || result.datasetDate) && (
+            <p className="text-[10px] text-gray-400 mt-0.5">
+              {[result.attribution, result.datasetDate]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          )}
+      </div>
+      {result.status === 'found' && result.featureCount > 0 && onFocus && (
         <button
           type="button"
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 shrink-0"
+          onClick={onFocus}
+          className="shrink-0 text-xs text-primary hover:underline font-medium"
         >
-          ✕
+          View →
         </button>
-      </div>
-      <div className="space-y-0.5">
-        {displayProps.map(([k, v]) => (
-          <div key={k} className="flex gap-2">
-            <span className="text-gray-400 shrink-0 w-24 truncate">{k}</span>
-            <span className="text-gray-700 break-all">{String(v)}</span>
-          </div>
-        ))}
-      </div>
+      )}
     </div>
   );
 }
 
-// ─── Map init helpers (extracted to reduce cognitive complexity) ─────────────
-
-function initBasemap(
-  Leaf: typeof L,
-  container: HTMLDivElement,
-  lat: number,
-  lng: number
-): L.Map {
-  const map = Leaf.map(container, { scrollWheelZoom: false }).setView(
-    [lat, lng],
-    13
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide pt-4 pb-1 first:pt-0">
+      {children}
+    </p>
   );
-  Leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-      '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19,
-  }).addTo(map);
-  return map;
 }
 
-function addWardLayer(
-  Leaf: typeof L,
-  map: L.Map,
-  wardBoundary: { geometry: GeoJSONGeometry } | null | undefined,
-  wardName: string | null | undefined,
-  layerRefs: Map<string, L.GeoJSON>
-) {
-  if (!wardBoundary) return;
-  const style = { ...ROLE_STYLE.administrative, opacity: 1 };
-  const l = addGeoJSONLayer(
-    Leaf,
-    map,
-    wardBoundary.geometry,
-    style,
-    wardName ?? 'Ward'
+function LayerToggleBar({
+  visibility,
+  onToggle,
+  items,
+}: {
+  visibility: Record<LayerKey, boolean>;
+  onToggle: (key: LayerKey) => void;
+  items: Array<{ key: LayerKey; label: string; colour: string; show: boolean }>;
+}) {
+  return (
+    <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-1">
+      {items
+        .filter((i) => i.show)
+        .map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => onToggle(item.key)}
+            className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium bg-white/95 border shadow-sm transition-opacity ${
+              visibility[item.key]
+                ? 'border-gray-200 opacity-100'
+                : 'border-gray-100 opacity-50'
+            }`}
+          >
+            <span
+              className="shrink-0 w-2.5 h-2.5 rounded-sm border"
+              style={{
+                background: visibility[item.key] ? item.colour : 'transparent',
+                borderColor: item.colour,
+              }}
+            />
+            {item.label}
+          </button>
+        ))}
+    </div>
   );
-  if (!l) return;
-  layerRefs.set('wards-direct', l);
-  try {
-    // paddingTopLeft accounts for the 224px left overlay panel
-    map.fitBounds(l.getBounds(), {
-      paddingTopLeft: [240, 20],
-      paddingBottomRight: [20, 20],
-      maxZoom: 14,
-    });
-  } catch {}
 }
 
-function addProximityRadius(
-  Leaf: typeof L,
-  map: L.Map,
-  lat: number,
-  lng: number,
-  radiusMetres: number,
-  label: string
-) {
-  Leaf.circle([lat, lng], {
-    radius: radiusMetres,
-    color: '#dc2626',
-    fillColor: '#dc2626',
-    fillOpacity: 0.08,
-    weight: 2,
-    dashArray: '8 5',
-  })
-    .addTo(map)
-    .bindTooltip(label, { sticky: true });
-}
+// ─── Map helpers (module-level, no React, uses shared utils) ─────────────────
 
-function addSiteMarker(
-  Leaf: typeof L,
-  map: L.Map,
-  lat: number,
-  lng: number,
+function buildSitePopup(
   name: string,
   precision: { label: string; colour: string } | null
 ) {
-  const markerColour = precision?.colour ?? '#dc2626';
-  const icon = Leaf.divIcon({
-    className: '',
-    html: `<div style="width:14px;height:14px;border-radius:50%;background:${markerColour};border:2.5px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.4)"></div>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-  });
-  Leaf.marker([lat, lng], { icon })
-    .addTo(map)
-    .bindPopup(
-      `<strong>${name}</strong>${precision ? `<br/><small style="color:${markerColour}">${precision.label}</small>` : ''}`
-    );
+  return `<strong>${name}</strong>${precision ? `<br/><small style="color:${precision.colour}">${precision.label}</small>` : ''}`;
 }
 
-function syncCCLayer(
+function addAdminLayers(
   Leaf: typeof L,
   map: L.Map,
-  layer: LayerEntry,
-  shouldShow: boolean,
-  layerRefs: Map<string, L.GeoJSON>,
-  onFeatureClick: (props: Record<string, unknown>, role: string) => void
+  context: NoticeContextResponse,
+  refs: Map<string, L.Layer>
 ) {
-  const key = `cc-${layer.id}`;
-  const existing = layerRefs.get(key);
-  if (shouldShow && !existing && layer.features?.features.length) {
-    const style = ROLE_STYLE[layer.role] ?? ROLE_STYLE.administrative;
-    const group = Leaf.geoJSON(
-      {
-        type: 'FeatureCollection',
-        features: layer.features.features,
-      } as GeoJSON.FeatureCollection,
-      {
-        style,
-        onEachFeature: (feature, featureLayer) => {
-          const props = (feature.properties ?? {}) as Record<string, unknown>;
-          const label =
-            (props.WardLink as string) ??
-            (props.MUNICNAME as string) ??
-            (props.name as string) ??
-            layer.label;
-          featureLayer.bindTooltip(label, { sticky: true });
-          featureLayer.on('click', () => onFeatureClick(props, layer.role));
-        },
+  const { municipality, district } = context.administrative;
+  if (municipality.features.length && !refs.has('municipality')) {
+    const l = addFeatureCollection(
+      Leaf,
+      map,
+      municipality.features,
+      LAYER_STYLE.municipality,
+      (f, fl) => {
+        const p = (f.properties ?? {}) as Record<string, unknown>;
+        fl.bindTooltip(
+          (p.NAMECODE as string) ?? (p.MUNICNAME as string) ?? 'Municipality',
+          { sticky: true }
+        );
       }
-    ).addTo(map);
-    layerRefs.set(key, group);
-  } else if (!shouldShow && existing) {
-    existing.remove();
-    layerRefs.delete(key);
+    );
+    if (l) refs.set('municipality', l);
+  }
+  if (district.features.length && !refs.has('district')) {
+    const l = addFeatureCollection(
+      Leaf,
+      map,
+      district.features,
+      LAYER_STYLE.district
+    );
+    if (l) {
+      l.bindTooltip('Amajuba District Municipality (DC25)', { sticky: true });
+      refs.set('district', l);
+    }
   }
 }
 
-// ─── Overlay panel content (extracted to reduce cognitive complexity) ────────────────
+// ─── Map init (module-level to reduce component complexity) ─────────────────
 
-function LayerPanelContent({
-  panelTab,
-  setPanelTab,
-  precision,
+type InitMapArgs = {
+  Leaf: typeof L;
+  container: HTMLDivElement;
+  lat: number;
+  lng: number;
+  wardBoundary: Props['wardBoundary'];
+  siteBoundary: Props['siteBoundary'];
+  wardName: string | null | undefined;
+  name: string;
+  precision: { label: string; colour: string } | null;
+  refs: Map<string, L.Layer>;
+};
+
+function initNoticeMap({
+  Leaf,
+  container,
+  lat,
+  lng,
+  wardBoundary,
   siteBoundary,
+  wardName,
+  name,
+  precision,
+  refs,
+}: InitMapArgs): L.Map {
+  const map = createMap(Leaf, container, [lat, lng], 13);
+  if (wardBoundary) {
+    const l = addGeoJSON(
+      Leaf,
+      map,
+      wardBoundary.geometry,
+      LAYER_STYLE.ward,
+      wardName ?? 'Ward'
+    );
+    if (l) {
+      refs.set('ward', l);
+      fitToLayer(map, l);
+    }
+  }
+  if (siteBoundary) {
+    const l = addGeoJSON(
+      Leaf,
+      map,
+      siteBoundary.geometry,
+      LAYER_STYLE.site,
+      'Verified site boundary'
+    );
+    if (l) refs.set('site-boundary', l);
+  }
+  refs.set(
+    'proximity',
+    addProximityCircle(Leaf, map, lat, lng, 500, '500m proximity context')
+  );
+  addSiteMarker(
+    Leaf,
+    map,
+    lat,
+    lng,
+    buildSitePopup(name, precision),
+    precision?.colour
+  );
+  return map;
+}
+
+// ─── Findings panel (extracted to reduce component complexity) ───────────────
+
+function FindingsPanel({
   loading,
-  availableLayers,
-  unavailableLayers,
-  allLayers,
-  visibleLayers,
-  toggleLayer,
-  selectedFeature,
-  onCloseFeature,
+  context,
+  noticeType,
+  lat,
+  lng,
+  name,
+  precision,
   wardName,
   municipality,
-  wardBoundary,
-  mapDeepLink,
+  focusLayer,
 }: {
-  panelTab: 'layers' | 'info';
-  setPanelTab: (t: 'layers' | 'info') => void;
-  precision: { label: string; colour: string } | null;
-  siteBoundary: unknown;
   loading: boolean;
-  availableLayers: LayerEntry[];
-  unavailableLayers: LayerEntry[];
-  allLayers: LayerEntry[];
-  visibleLayers: Set<string>;
-  toggleLayer: (id: string) => void;
-  selectedFeature: {
-    label: string;
-    props: Record<string, unknown>;
-    role: string;
-  } | null;
-  onCloseFeature: () => void;
+  context: NoticeContextResponse | null;
+  noticeType: string;
+  lat: number;
+  lng: number;
+  name: string;
+  precision: { label: string; colour: string } | null;
   wardName: string | null | undefined;
   municipality: string | null | undefined;
-  wardBoundary:
-    | { source: string | null; date: string | null }
-    | null
-    | undefined;
-  mapDeepLink: string | null | undefined;
+  focusLayer: (key: string) => void;
 }) {
+  if (loading) {
+    return (
+      <div className="px-4 py-6 text-center text-sm text-gray-400">
+        Loading spatial context…
+      </div>
+    );
+  }
+  if (!context) {
+    return (
+      <div className="px-4 py-4 text-sm text-gray-400">
+        Spatial context unavailable. The notice and its geographic associations
+        are shown above.
+      </div>
+    );
+  }
+  const pendingCount = Object.values(context.proximity).filter(
+    (r) => r.status === 'pending-permission'
+  ).length;
   return (
-    <div className="absolute top-12 left-3 bottom-3 w-56 z-[1000] flex flex-col rounded-xl border border-gray-100 shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm">
-      <div className="flex border-b border-gray-100">
-        {(['layers', 'info'] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setPanelTab(tab)}
-            className={`flex-1 py-2 text-xs font-medium capitalize transition-colors ${
-              panelTab === tab
-                ? 'bg-white text-gray-900 border-b-2 border-gray-900'
-                : 'text-gray-400 hover:text-gray-600'
-            }`}
-          >
-            {tab === 'layers' ? 'Layers' : 'Feature'}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-3 space-y-1">
-        {panelTab === 'layers' ? (
-          <>
-            <div className="flex items-center gap-2 px-2 py-1.5 mb-1">
-              <span
-                className="shrink-0 w-3 h-3 rounded-full border-2 border-white shadow"
-                style={{ background: precision?.colour ?? '#dc2626' }}
-              />
-              <span className="text-xs text-gray-600">
-                {precision?.label ?? 'Site location'}
-              </span>
-            </div>
-            {siteBoundary && (
-              <div className="flex items-center gap-2 px-2 py-1.5 mb-1">
-                <span className="shrink-0 w-3 h-3 rounded-sm border-2 border-blue-500 bg-blue-50" />
-                <span className="text-xs text-gray-600">
-                  Verified site boundary
-                </span>
-              </div>
-            )}
-            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide px-2 pt-2 pb-1">
-              Available layers
+    <div className="divide-y divide-gray-50">
+      <div className="px-4 py-4">
+        <SectionHeading>Proposed site</SectionHeading>
+        <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 space-y-1.5">
+          <div className="flex items-center gap-2">
+            <span
+              className="shrink-0 w-3 h-3 rounded-full border-2 border-white shadow"
+              style={{ background: precision?.colour ?? '#dc2626' }}
+            />
+            <span className="text-sm font-medium text-gray-800 truncate">
+              {name}
+            </span>
+          </div>
+          <div className="text-xs text-gray-500 space-y-0.5 pl-5">
+            <p>
+              {lat.toFixed(5)}, {lng.toFixed(5)}
             </p>
-            {loading && (
-              <p className="px-2 text-xs text-gray-400">Loading layers…</p>
+            {precision && (
+              <p style={{ color: precision.colour }}>{precision.label}</p>
             )}
-            {availableLayers.map((l) => (
-              <LayerToggle
-                key={l.id}
-                layer={l}
-                visible={visibleLayers.has(l.id)}
-                onToggle={() => toggleLayer(l.id)}
-              />
-            ))}
-            {unavailableLayers.length > 0 && (
-              <>
-                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide px-2 pt-3 pb-1">
-                  Pending / unavailable
-                </p>
-                {unavailableLayers.map((l) => (
-                  <LayerToggle
-                    key={l.id}
-                    layer={l}
-                    visible={false}
-                    onToggle={() => {}}
-                  />
-                ))}
-              </>
-            )}
-            <LayerCatalogue layers={allLayers} />
-          </>
-        ) : selectedFeature ? (
-          <FeaturePanel feature={selectedFeature} onClose={onCloseFeature} />
-        ) : (
-          <p className="px-2 py-4 text-xs text-gray-400 text-center">
-            Click a feature on the map to see its details.
-          </p>
-        )}
+            {wardName && <p>{wardName}</p>}
+            {municipality && <p>{municipality}</p>}
+          </div>
+        </div>
       </div>
-
-      <div className="p-2 border-t border-gray-100 space-y-1 shrink-0">
-        {wardName && (
-          <p className="text-[10px] text-gray-400 truncate">{wardName}</p>
-        )}
-        {municipality && (
-          <p className="text-[10px] text-gray-400 truncate">{municipality}</p>
-        )}
-        {wardBoundary?.source && (
-          <p className="text-[10px] text-gray-400 truncate">
-            {wardBoundary.source}
-            {wardBoundary.date ? ` (${wardBoundary.date})` : ''}
+      <div className="px-4 py-4">
+        <SectionHeading>Administrative context</SectionHeading>
+        <FindingRow
+          label="Ward boundary"
+          result={context.administrative.ward}
+          onFocus={() => focusLayer('ward')}
+        />
+        <FindingRow
+          label="Local municipality"
+          result={context.administrative.municipality}
+          onFocus={() => focusLayer('municipality')}
+        />
+        <FindingRow
+          label="District municipality"
+          result={context.administrative.district}
+          onFocus={() => focusLayer('district')}
+        />
+      </div>
+      {noticeType === 'liquor' && (
+        <div className="px-4 py-4">
+          <SectionHeading>
+            Proximity context (statutory considerations)
+          </SectionHeading>
+          {context.proximityRadiusNote && (
+            <p className="text-[10px] text-amber-600 mb-2 leading-relaxed">
+              {context.proximityRadiusNote}
+            </p>
+          )}
+          <FindingRow
+            label="Traditional authority / community area"
+            result={context.proximity.traditionalAreas}
+          />
+          <FindingRow
+            label="Existing licensed premises"
+            result={context.proximity.licensedPremises}
+          />
+          <FindingRow
+            label="Learning institutions"
+            result={context.proximity.schools}
+          />
+          <FindingRow
+            label="Religious institutions"
+            result={context.proximity.religiousInstitutions}
+          />
+          <FindingRow
+            label="Public recreation facilities"
+            result={context.proximity.recreationFacilities}
+          />
+        </div>
+      )}
+      <div className="px-4 py-4">
+        <SectionHeading>Site context</SectionHeading>
+        <FindingRow
+          label="Zoning / land-use scheme"
+          result={context.siteContext.landUse}
+        />
+        <FindingRow
+          label="Property / cadastral boundary"
+          result={context.siteContext.cadastre}
+        />
+      </div>
+      {pendingCount > 0 && (
+        <div className="px-4 py-3 bg-amber-50">
+          <p className="text-xs text-amber-700 leading-relaxed">
+            <span className="font-semibold">
+              {pendingCount} statutory layer{pendingCount !== 1 ? 's' : ''}{' '}
+              pending.
+            </span>{' '}
+            Data permission not yet confirmed. Absence of a dataset does not
+            imply absence of relevant features.
           </p>
-        )}
-        {mapDeepLink && (
-          <a
-            href={mapDeepLink}
-            className="text-[10px] text-primary hover:underline font-medium block"
-          >
-            View on full map →
-          </a>
-        )}
+        </div>
+      )}
+      <div className="px-4 py-3 rounded-b-xl">
+        <p className="text-[10px] text-gray-400 leading-relaxed">
+          {context.disclaimer}
+        </p>
+        <p className="text-[10px] text-gray-400 mt-1">
+          Generated: {new Date(context.generatedAt).toLocaleString('en-ZA')}
+        </p>
       </div>
     </div>
   );
@@ -571,52 +539,54 @@ export default function NoticeStatutoryMap({
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
-  const layerRefs = useRef<Map<string, L.GeoJSON>>(new Map());
+  const layerRefs = useRef<Map<string, L.Layer>>(new Map());
 
-  const [layers, setLayers] = useState<LayerEntry[]>([]);
-  const [visibleLayers, setVisibleLayers] = useState<Set<string>>(
-    new Set(['wards', 'municipalities', 'district'])
-  );
-  const [selectedFeature, setSelectedFeature] = useState<{
-    label: string;
-    props: Record<string, unknown>;
-    role: string;
-  } | null>(null);
+  const [context, setContext] = useState<NoticeContextResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [panelTab, setPanelTab] = useState<'layers' | 'info'>('layers');
-  const [panelOpen, setPanelOpen] = useState(true);
+  const [visibility, setVisibility] = useState<Record<LayerKey, boolean>>({
+    ward: true,
+    municipality: true,
+    district: true,
+    proximity: true,
+  });
 
   const precision = PRECISION_META[locationPrecision ?? ''] ?? null;
 
-  // Fetch layer profile from CC — scoped to this notice's ward
+  // Fetch structured spatial context from CC
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams({ noticeType });
     if (wardNumber != null) params.set('wardNumber', String(wardNumber));
     if (catB) params.set('catB', catB);
-    fetch(`${controlCentreUrl}/api/spatial/notice-layers?${params.toString()}`)
-      .then((r) => (r.ok ? (r.json() as Promise<NoticeLayersResponse>) : null))
+    params.set('lat', String(lat));
+    params.set('lng', String(lng));
+    if (locationPrecision) params.set('locationPrecision', locationPrecision);
+    fetch(`${controlCentreUrl}/api/spatial/notice-context?${params}`)
+      .then((r) => (r.ok ? (r.json() as Promise<NoticeContextResponse>) : null))
       .then((data) => {
-        if (data?.layers) setLayers(data.layers);
+        if (data) setContext(data);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [noticeType, controlCentreUrl, wardNumber, catB]);
+  }, [
+    noticeType,
+    controlCentreUrl,
+    wardNumber,
+    catB,
+    lat,
+    lng,
+    locationPrecision,
+  ]);
 
-  const handleFeatureClick = useCallback(
-    (props: Record<string, unknown>, role: string) => {
-      const label =
-        (props.WardLink as string) ??
-        (props.MUNICNAME as string) ??
-        (props.name as string) ??
-        'Feature';
-      setSelectedFeature({ label, props, role });
-      setPanelTab('info');
-    },
-    []
-  );
+  // Focus map on a named layer
+  const focusLayer = useCallback((key: string) => {
+    const map = mapInstanceRef.current;
+    const layer = layerRefs.current.get(key);
+    if (!map || !layer || !('getBounds' in layer)) return;
+    fitToLayer(map, layer as L.GeoJSON);
+  }, []);
 
-  // Init map
+  // Init map once
   useEffect(() => {
     if (!mapRef.current) return;
     loadLeafletCss();
@@ -625,24 +595,18 @@ export default function NoticeStatutoryMap({
       if (cancelled || !mapRef.current) return;
       mapInstanceRef.current?.remove();
       layerRefs.current.clear();
-      const map = initBasemap(Leaf, mapRef.current, lat, lng);
-      mapInstanceRef.current = map;
-      addWardLayer(Leaf, map, wardBoundary, wardName, layerRefs.current);
-      if (siteBoundary) {
-        const l = addGeoJSONLayer(
-          Leaf,
-          map,
-          siteBoundary.geometry,
-          ROLE_STYLE.site,
-          'Verified site boundary'
-        );
-        if (l) layerRefs.current.set('site-boundary', l);
-      }
-      // Statutory proximity buffer — always drawn around the site point
-      // 500m is a common reference distance for KZN Liquor Act s.43 considerations
-      // Not a legal determination — shown as context only
-      addProximityRadius(Leaf, map, lat, lng, 500, '500m proximity context');
-      addSiteMarker(Leaf, map, lat, lng, name, precision);
+      mapInstanceRef.current = initNoticeMap({
+        Leaf,
+        container: mapRef.current,
+        lat,
+        lng,
+        wardBoundary,
+        siteBoundary,
+        wardName,
+        name,
+        precision,
+        refs: layerRefs.current,
+      });
     });
     return () => {
       cancelled = true;
@@ -652,102 +616,110 @@ export default function NoticeStatutoryMap({
     };
   }, [lat, lng, name, wardBoundary, siteBoundary, wardName, precision]);
 
-  // Add/remove CC layers when layers data or visibility changes
+  // Add admin layers when context arrives
   useEffect(() => {
     const map = mapInstanceRef.current;
-    if (!map || !layers.length) return;
-    import('leaflet').then((Leaf) => {
-      for (const layer of layers) {
-        syncCCLayer(
-          Leaf,
-          map,
-          layer,
-          visibleLayers.has(layer.id),
-          layerRefs.current,
-          handleFeatureClick
-        );
-      }
-    });
-  }, [layers, visibleLayers, handleFeatureClick]);
+    if (!map || !context) return;
+    import('leaflet').then((Leaf) =>
+      addAdminLayers(Leaf, map, context, layerRefs.current)
+    );
+  }, [context]);
 
-  function toggleLayer(id: string) {
-    setVisibleLayers((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  // Sync visibility
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+    for (const [key, layer] of layerRefs.current) {
+      if (key in visibility)
+        syncLayerVisibility(map, layer, visibility[key as LayerKey]);
+    }
+  }, [visibility]);
+
+  function toggleVisibility(key: LayerKey) {
+    setVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
-  const availableLayers = layers.filter((l) => l.availability === 'available');
-  const unavailableLayers = layers.filter(
-    (l) => l.availability !== 'available'
-  );
-  const pendingCount = unavailableLayers.filter(
-    (l) => l.availability === 'pending-permission'
-  ).length;
+  const hasMunicipality =
+    (context?.administrative.municipality.featureCount ?? 0) > 0;
+  const hasDistrict = (context?.administrative.district.featureCount ?? 0) > 0;
+  const proximityMetres = context?.proximityRadiusMetres ?? null;
+
+  const toggleItems: Array<{
+    key: LayerKey;
+    label: string;
+    colour: string;
+    show: boolean;
+  }> = [
+    {
+      key: 'ward',
+      label: 'Ward',
+      colour: LAYER_STYLE.ward.color,
+      show: !!wardBoundary,
+    },
+    {
+      key: 'municipality',
+      label: 'Municipality',
+      colour: LAYER_STYLE.municipality.color,
+      show: hasMunicipality,
+    },
+    {
+      key: 'district',
+      label: 'District',
+      colour: LAYER_STYLE.district.color,
+      show: hasDistrict,
+    },
+    {
+      key: 'proximity',
+      label: `${proximityMetres ?? 500}m`,
+      colour: '#dc2626',
+      show: true,
+    },
+  ];
 
   return (
-    <div
-      className="relative w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm"
-      style={{ height: 480, minHeight: 400 }}
-    >
-      {/* Map — fills container */}
-      <div ref={mapRef} className="absolute inset-0" />
-
-      {/* Panel toggle button — always visible top-left */}
-      <button
-        type="button"
-        onClick={() => setPanelOpen((v) => !v)}
-        className="absolute top-3 left-3 z-[1001] bg-white border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-1.5"
+    <div className="space-y-0">
+      {/* Zone A — Map */}
+      <div
+        className="relative w-full rounded-t-xl overflow-hidden border border-gray-200 border-b-0 shadow-sm"
+        style={{ height: 400 }}
       >
-        <span>{panelOpen ? '◀' : '▶'}</span>
-        <span>{panelOpen ? 'Hide' : 'Layers'}</span>
-      </button>
+        <div ref={mapRef} className="absolute inset-0" />
+        <LayerToggleBar
+          visibility={visibility}
+          onToggle={toggleVisibility}
+          items={toggleItems}
+        />
+        {mapDeepLink && (
+          <a
+            href={mapDeepLink}
+            className="absolute bottom-3 right-3 z-[1000] bg-white/95 border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Full map →
+          </a>
+        )}
+        {!siteBoundary && locationPrecision !== 'verified' && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] bg-white/90 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] text-gray-500 shadow whitespace-nowrap">
+            Operator-provided location — ward boundary is geographic context
+            only
+          </div>
+        )}
+      </div>
 
-      {/* Left overlay panel — collapsible */}
-      {panelOpen && (
-        <LayerPanelContent
-          panelTab={panelTab}
-          setPanelTab={setPanelTab}
-          precision={precision}
-          siteBoundary={siteBoundary}
+      {/* Zone B — Structured spatial findings */}
+      <div className="rounded-b-xl border border-gray-200 border-t bg-white shadow-sm">
+        <FindingsPanel
           loading={loading}
-          availableLayers={availableLayers}
-          unavailableLayers={unavailableLayers}
-          allLayers={layers}
-          visibleLayers={visibleLayers}
-          toggleLayer={toggleLayer}
-          selectedFeature={selectedFeature}
-          onCloseFeature={() => {
-            setSelectedFeature(null);
-            setPanelTab('layers');
-          }}
+          context={context}
+          noticeType={noticeType}
+          lat={lat}
+          lng={lng}
+          name={name}
+          precision={precision}
           wardName={wardName}
           municipality={municipality}
-          wardBoundary={wardBoundary}
-          mapDeepLink={mapDeepLink}
+          focusLayer={focusLayer}
         />
-      )}
-
-      {/* Pending layers amber badge — bottom right */}
-      {pendingCount > 0 && (
-        <div className="absolute bottom-3 right-3 z-[1000] max-w-[200px] bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-2 text-[10px] text-amber-700 leading-relaxed shadow">
-          <span className="font-semibold">
-            {pendingCount} statutory layer{pendingCount !== 1 ? 's' : ''}{' '}
-            pending
-          </span>{' '}
-          — data permission not yet confirmed. Absence does not imply absence of
-          relevant features.
-        </div>
-      )}
-
-      {/* Disclaimer badge — bottom center */}
-      {!siteBoundary && locationPrecision !== 'verified' && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] bg-white/90 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] text-gray-500 shadow whitespace-nowrap">
-          Operator-provided location — ward boundary is geographic context only
-        </div>
-      )}
+      </div>
     </div>
   );
 }

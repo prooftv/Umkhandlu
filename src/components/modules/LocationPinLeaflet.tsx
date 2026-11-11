@@ -2,6 +2,7 @@
 
 import type L from 'leaflet';
 import { useEffect, useRef } from 'react';
+import { createMap, loadLeafletCss } from '@/lib/map/leaflet-utils';
 
 type Props = {
   lat: number;
@@ -11,14 +12,6 @@ type Props = {
   icon?: string;
   verifiedByInduna?: string;
 };
-
-function loadLeafletCss() {
-  if (document.querySelector('link[href*="leaflet"]')) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-  document.head.appendChild(link);
-}
 
 function buildPopup(
   name: string,
@@ -62,17 +55,12 @@ export default function LocationPinLeaflet({
         mapInstanceRef.current = null;
       }
 
-      const map = Leaf.map(mapRef.current, {
+      const map = createMap(Leaf, mapRef.current, [lat, lng], 15, {
         scrollWheelZoom: false,
         dragging: false,
         zoomControl: false,
-      }).setView([lat, lng], 15);
+      });
       mapInstanceRef.current = map;
-
-      Leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap',
-        maxZoom: 18,
-      }).addTo(map);
 
       Leaf.circleMarker([lat, lng], {
         radius: 10,
