@@ -77,34 +77,34 @@ const ROLE_STYLE: Record<
   { color: string; fillColor: string; weight: number; fillOpacity: number }
 > = {
   administrative: {
-    color: '#6b7280',
-    fillColor: '#6b7280',
-    weight: 2,
-    fillOpacity: 0.12,
+    color: '#2563eb',
+    fillColor: '#2563eb',
+    weight: 2.5,
+    fillOpacity: 0.2,
   },
   community: {
     color: '#7c3aed',
     fillColor: '#7c3aed',
-    weight: 2,
-    fillOpacity: 0.15,
+    weight: 2.5,
+    fillOpacity: 0.22,
   },
   site: {
-    color: '#2563eb',
-    fillColor: '#2563eb',
-    weight: 2.5,
-    fillOpacity: 0.18,
+    color: '#0891b2',
+    fillColor: '#0891b2',
+    weight: 3,
+    fillOpacity: 0.25,
   },
   proximity: {
     color: '#dc2626',
     fillColor: '#dc2626',
-    weight: 1.5,
-    fillOpacity: 0.08,
+    weight: 2,
+    fillOpacity: 0.12,
   },
   context: {
     color: '#d97706',
     fillColor: '#d97706',
-    weight: 1.5,
-    fillOpacity: 0.12,
+    weight: 2,
+    fillOpacity: 0.18,
   },
 };
 
@@ -173,10 +173,11 @@ function LayerToggle({
       }`}
     >
       <span
-        className="shrink-0 w-3 h-3 rounded-sm border"
+        className="shrink-0 w-3.5 h-3.5 rounded-sm border-2"
         style={{
-          background: visible ? `${style.fillColor}30` : 'transparent',
+          background: visible ? style.fillColor : 'transparent',
           borderColor: style.color,
+          opacity: visible ? 0.85 : 0.4,
         }}
       />
       <span className="flex-1 min-w-0 truncate font-medium">{layer.label}</span>
@@ -302,7 +303,7 @@ function addWardLayer(
   layerRefs: Map<string, L.GeoJSON>
 ) {
   if (!wardBoundary) return;
-  const style = { ...ROLE_STYLE.administrative, opacity: 0.8 };
+  const style = { ...ROLE_STYLE.administrative, opacity: 1 };
   const l = addGeoJSONLayer(
     Leaf,
     map,
@@ -334,9 +335,9 @@ function addProximityRadius(
     radius: radiusMetres,
     color: '#dc2626',
     fillColor: '#dc2626',
-    fillOpacity: 0.06,
-    weight: 1.5,
-    dashArray: '6 4',
+    fillOpacity: 0.08,
+    weight: 2,
+    dashArray: '8 5',
   })
     .addTo(map)
     .bindTooltip(label, { sticky: true });

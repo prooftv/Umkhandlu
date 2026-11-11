@@ -85,11 +85,11 @@ function addBoundaries(
         } as GeoJSON.Feature,
         {
           style: {
-            color: '#6b7280',
-            weight: 1.5,
-            opacity: 0.6,
-            fillColor: '#6b7280',
-            fillOpacity: 0.04,
+            color: '#3b82f6',
+            weight: 2,
+            opacity: 0.9,
+            fillColor: '#3b82f6',
+            fillOpacity: 0.15,
           },
         }
       );

@@ -202,7 +202,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
         boundaryPermission: string | null;
         geopoint: { lat: number; lng: number } | null;
       }[];
-    }>(mapQuery),
+    }>(mapQuery, {}, { cache: 'no-store' }),
   ]);
 
   function toMapRecord(
