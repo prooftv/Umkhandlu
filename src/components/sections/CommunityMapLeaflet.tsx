@@ -2,6 +2,7 @@
 
 import type L from 'leaflet';
 import { useEffect, useRef } from 'react';
+import { loadLeafletCss } from '@/lib/map/leaflet-utils';
 
 type Listing = {
   _id: string;
@@ -50,14 +51,6 @@ function injectMapStyles() {
     .popup-actions a{font-size:12px;font-weight:600;text-decoration:none}
   `;
   document.head.appendChild(style);
-}
-
-function loadLeafletCss() {
-  if (document.querySelector('link[href*="leaflet"]')) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-  document.head.appendChild(link);
 }
 
 function createMarkerIcon(

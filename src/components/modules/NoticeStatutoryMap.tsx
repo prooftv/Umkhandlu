@@ -351,10 +351,6 @@ function initNoticeMap({
     );
     if (l) refs.set('site-boundary', l);
   }
-  refs.set(
-    'proximity',
-    addProximityCircle(Leaf, map, lat, lng, 500, '500m proximity context')
-  );
   addSiteMarker(
     Leaf,
     map,
@@ -616,14 +612,25 @@ export default function NoticeStatutoryMap({
     };
   }, [lat, lng, name, wardBoundary, siteBoundary, wardName, precision]);
 
-  // Add admin layers when context arrives
+  // Add admin layers and proximity circle when context arrives
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !context) return;
-    import('leaflet').then((Leaf) =>
-      addAdminLayers(Leaf, map, context, layerRefs.current)
-    );
-  }, [context]);
+    import('leaflet').then((Leaf) => {
+      addAdminLayers(Leaf, map, context, layerRefs.current);
+      // Proximity circle: only drawn when the statutory profile specifies a radius.
+      // Not drawn unconditionally — absence of a radius means no applicable criterion.
+      const radius = context.proximityRadiusMetres;
+      if (radius != null && !layerRefs.current.has('proximity')) {
+        const precisionNote = precision
+          ? ` (${precision.label})`
+          : ' (location precision unverified)';
+        const label = `${radius}m illustrative context radius${precisionNote}`;
+        const circle = addProximityCircle(Leaf, map, lat, lng, radius, label);
+        layerRefs.current.set('proximity', circle);
+      }
+    });
+  }, [context, lat, lng, precision]);
 
   // Sync visibility
   useEffect(() => {
@@ -670,9 +677,10 @@ export default function NoticeStatutoryMap({
     },
     {
       key: 'proximity',
-      label: `${proximityMetres ?? 500}m`,
+      label: `${proximityMetres}m context`,
       colour: '#dc2626',
-      show: true,
+      // Only show toggle when the statutory profile specifies a radius
+      show: proximityMetres != null,
     },
   ];
 
