@@ -526,15 +526,11 @@ export default function GovernanceMapLeaflet({
       const map = Leaf.map(containerRef.current, {
         scrollWheelZoom: true,
       }).setView(centre, zoom);
-      Leaf.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-        {
-          attribution:
-            '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-          maxZoom: 19,
-          subdomains: 'abcd',
-        }
-      ).addTo(map);
+      Leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(map);
       addBoundaries(Leaf, map, boundaries, selectArea);
       markersRef.current = buildMarkers(Leaf, map, records, selectRecord);
       mapRef.current = map;
