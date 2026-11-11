@@ -37,6 +37,40 @@ type DatasetResult = {
   note: string | null;
 };
 
+type WardDemographics = {
+  WardID: string;
+  WardNo: number;
+  Ward_Label: string;
+  CAT_B: string;
+  Municipality: string;
+  Total_Pop: number;
+  Pop_Density: number;
+  Employed: number;
+  Unemployed: number;
+  Discouraged_Work_Seeker: number;
+  Not_Economically_Active: number;
+  Not_Applicable_Emp: number;
+  Grade_12_Std10: number;
+  Higher: number;
+  No_schooling: number;
+  Flush_Toilet_SewerSystem: number;
+  Flush_Toilet_SepticTank: number;
+  Chemical_Toilet: number;
+  Pit_Toilet_VIP: number;
+  Pit_Toilet_NoVentilation: number;
+  Bucket_Toilet: number;
+  None_Toilet: number;
+  Tap_In_Dwelling: number;
+  tap_in_Yard: number;
+  No_access_to_piped_water: number;
+  Removed_Weekly: number;
+  Removed_Seldom: number;
+  Own_dump: number;
+  No_Disposal: number;
+  Reg_Voters: number;
+  Area_SqKm: number;
+};
+
 type NoticeContextResponse = {
   noticeType: string;
   wardNumber: number | null;
@@ -46,6 +80,7 @@ type NoticeContextResponse = {
     municipality: DatasetResult;
     district: DatasetResult;
   };
+  wardDemographics: WardDemographics | null;
   proximity: {
     traditionalAreas: DatasetResult;
     licensedPremises: DatasetResult;
@@ -364,6 +399,87 @@ function initNoticeMap({
 
 // ─── Findings panel (extracted to reduce component complexity) ───────────────
 
+function fmt(n: number | undefined): string {
+  if (n == null) return '—';
+  return n.toLocaleString('en-ZA');
+}
+
+function pct(part: number | undefined, total: number | undefined): string {
+  if (part == null || total == null || total === 0) return '';
+  return ` (${Math.round((part / total) * 100)}%)`;
+}
+
+function WardDemographicsPanel({ d }: { d: WardDemographics }) {
+  const labourForce = d.Employed + d.Unemployed + d.Discouraged_Work_Seeker;
+  const formalToilet =
+    d.Flush_Toilet_SewerSystem +
+    d.Flush_Toilet_SepticTank +
+    d.Chemical_Toilet +
+    d.Pit_Toilet_VIP;
+  const pipedWater = d.Tap_In_Dwelling + d.tap_in_Yard;
+  return (
+    <div className="rounded-lg border border-blue-100 bg-blue-50/40 p-3 space-y-3 text-xs">
+      <div className="flex items-center justify-between">
+        <span className="font-semibold text-gray-700">
+          {d.Ward_Label} — {d.Municipality}
+        </span>
+        <span className="text-[10px] text-gray-400">Census 2021</span>
+      </div>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-gray-600">
+        <div>
+          <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5">
+            Population
+          </p>
+          <p>{fmt(d.Total_Pop)} residents</p>
+          <p className="text-gray-400">{fmt(d.Pop_Density)} per km²</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5">
+            Employment
+          </p>
+          <p>
+            Employed: {fmt(d.Employed)}
+            {pct(d.Employed, labourForce)}
+          </p>
+          <p>
+            Unemployed: {fmt(d.Unemployed)}
+            {pct(d.Unemployed, labourForce)}
+          </p>
+        </div>
+        <div>
+          <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5 mt-1">
+            Sanitation
+          </p>
+          <p>
+            Formal: {fmt(formalToilet)}
+            {pct(formalToilet, d.Total_Pop)}
+          </p>
+          <p>
+            None: {fmt(d.None_Toilet)}
+            {pct(d.None_Toilet, d.Total_Pop)}
+          </p>
+        </div>
+        <div>
+          <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5 mt-1">
+            Water access
+          </p>
+          <p>
+            Piped: {fmt(pipedWater)}
+            {pct(pipedWater, d.Total_Pop)}
+          </p>
+          <p>
+            No access: {fmt(d.No_access_to_piped_water)}
+            {pct(d.No_access_to_piped_water, d.Total_Pop)}
+          </p>
+        </div>
+      </div>
+      <p className="text-[10px] text-gray-400">
+        Registered voters: {fmt(d.Reg_Voters)} · Area: {fmt(d.Area_SqKm)} km²
+      </p>
+    </div>
+  );
+}
+
 function FindingsPanel({
   loading,
   context,
@@ -448,6 +564,11 @@ function FindingsPanel({
           result={context.administrative.district}
           onFocus={() => focusLayer('district')}
         />
+        {context.wardDemographics && (
+          <div className="mt-3">
+            <WardDemographicsPanel d={context.wardDemographics} />
+          </div>
+        )}
       </div>
       {noticeType === 'liquor' && (
         <div className="px-4 py-4">
