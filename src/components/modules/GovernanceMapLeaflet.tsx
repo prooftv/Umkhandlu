@@ -534,6 +534,18 @@ export default function GovernanceMapLeaflet({
       addBoundaries(Leaf, map, boundaries, selectArea);
       markersRef.current = buildMarkers(Leaf, map, records, selectRecord);
       mapRef.current = map;
+      // Fit to markers so they're visible on load — don't leave user at AMAJUBA_CENTRE
+      if (records.length > 0) {
+        try {
+          const bounds = Leaf.latLngBounds(
+            records.map((r) => [r.lat, r.lng] as [number, number])
+          );
+          if (bounds.isValid())
+            map.fitBounds(bounds, { padding: [60, 60], maxZoom: 13 });
+        } catch {
+          /* fallback to centre */
+        }
+      }
     });
 
     return () => {

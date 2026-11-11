@@ -79,32 +79,32 @@ const ROLE_STYLE: Record<
   administrative: {
     color: '#6b7280',
     fillColor: '#6b7280',
-    weight: 1.5,
-    fillOpacity: 0.04,
+    weight: 2,
+    fillOpacity: 0.12,
   },
   community: {
     color: '#7c3aed',
     fillColor: '#7c3aed',
-    weight: 1.5,
-    fillOpacity: 0.05,
+    weight: 2,
+    fillOpacity: 0.15,
   },
   site: {
     color: '#2563eb',
     fillColor: '#2563eb',
-    weight: 2,
-    fillOpacity: 0.06,
+    weight: 2.5,
+    fillOpacity: 0.18,
   },
   proximity: {
     color: '#dc2626',
     fillColor: '#dc2626',
-    weight: 1,
+    weight: 1.5,
     fillOpacity: 0.08,
   },
   context: {
     color: '#d97706',
     fillColor: '#d97706',
-    weight: 1,
-    fillOpacity: 0.05,
+    weight: 1.5,
+    fillOpacity: 0.12,
   },
 };
 
@@ -302,7 +302,7 @@ function addWardLayer(
   layerRefs: Map<string, L.GeoJSON>
 ) {
   if (!wardBoundary) return;
-  const style = { ...ROLE_STYLE.administrative, opacity: 0.7 };
+  const style = { ...ROLE_STYLE.administrative, opacity: 0.8 };
   const l = addGeoJSONLayer(
     Leaf,
     map,
@@ -313,8 +313,33 @@ function addWardLayer(
   if (!l) return;
   layerRefs.set('wards-direct', l);
   try {
-    map.fitBounds(l.getBounds(), { padding: [30, 30], maxZoom: 14 });
+    // paddingTopLeft accounts for the 224px left overlay panel
+    map.fitBounds(l.getBounds(), {
+      paddingTopLeft: [240, 20],
+      paddingBottomRight: [20, 20],
+      maxZoom: 14,
+    });
   } catch {}
+}
+
+function addProximityRadius(
+  Leaf: typeof L,
+  map: L.Map,
+  lat: number,
+  lng: number,
+  radiusMetres: number,
+  label: string
+) {
+  Leaf.circle([lat, lng], {
+    radius: radiusMetres,
+    color: '#dc2626',
+    fillColor: '#dc2626',
+    fillOpacity: 0.06,
+    weight: 1.5,
+    dashArray: '6 4',
+  })
+    .addTo(map)
+    .bindTooltip(label, { sticky: true });
 }
 
 function addSiteMarker(
@@ -422,7 +447,7 @@ function LayerPanelContent({
   mapDeepLink: string | null | undefined;
 }) {
   return (
-    <div className="absolute top-3 left-3 bottom-3 w-56 z-[1000] flex flex-col rounded-xl border border-gray-100 shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm">
+    <div className="absolute top-12 left-3 bottom-3 w-56 z-[1000] flex flex-col rounded-xl border border-gray-100 shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm">
       <div className="flex border-b border-gray-100">
         {(['layers', 'info'] as const).map((tab) => (
           <button
@@ -558,6 +583,7 @@ export default function NoticeStatutoryMap({
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [panelTab, setPanelTab] = useState<'layers' | 'info'>('layers');
+  const [panelOpen, setPanelOpen] = useState(true);
 
   const precision = PRECISION_META[locationPrecision ?? ''] ?? null;
 
@@ -611,6 +637,10 @@ export default function NoticeStatutoryMap({
         );
         if (l) layerRefs.current.set('site-boundary', l);
       }
+      // Statutory proximity buffer — always drawn around the site point
+      // 500m is a common reference distance for KZN Liquor Act s.43 considerations
+      // Not a legal determination — shown as context only
+      addProximityRadius(Leaf, map, lat, lng, 500, '500m proximity context');
       addSiteMarker(Leaf, map, lat, lng, name, precision);
     });
     return () => {
@@ -664,28 +694,40 @@ export default function NoticeStatutoryMap({
       {/* Map — fills container */}
       <div ref={mapRef} className="absolute inset-0" />
 
-      {/* Left overlay panel — layer controls */}
-      <LayerPanelContent
-        panelTab={panelTab}
-        setPanelTab={setPanelTab}
-        precision={precision}
-        siteBoundary={siteBoundary}
-        loading={loading}
-        availableLayers={availableLayers}
-        unavailableLayers={unavailableLayers}
-        allLayers={layers}
-        visibleLayers={visibleLayers}
-        toggleLayer={toggleLayer}
-        selectedFeature={selectedFeature}
-        onCloseFeature={() => {
-          setSelectedFeature(null);
-          setPanelTab('layers');
-        }}
-        wardName={wardName}
-        municipality={municipality}
-        wardBoundary={wardBoundary}
-        mapDeepLink={mapDeepLink}
-      />
+      {/* Panel toggle button — always visible top-left */}
+      <button
+        type="button"
+        onClick={() => setPanelOpen((v) => !v)}
+        className="absolute top-3 left-3 z-[1001] bg-white border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-1.5"
+      >
+        <span>{panelOpen ? '◀' : '▶'}</span>
+        <span>{panelOpen ? 'Hide' : 'Layers'}</span>
+      </button>
+
+      {/* Left overlay panel — collapsible */}
+      {panelOpen && (
+        <LayerPanelContent
+          panelTab={panelTab}
+          setPanelTab={setPanelTab}
+          precision={precision}
+          siteBoundary={siteBoundary}
+          loading={loading}
+          availableLayers={availableLayers}
+          unavailableLayers={unavailableLayers}
+          allLayers={layers}
+          visibleLayers={visibleLayers}
+          toggleLayer={toggleLayer}
+          selectedFeature={selectedFeature}
+          onCloseFeature={() => {
+            setSelectedFeature(null);
+            setPanelTab('layers');
+          }}
+          wardName={wardName}
+          municipality={municipality}
+          wardBoundary={wardBoundary}
+          mapDeepLink={mapDeepLink}
+        />
+      )}
 
       {/* Pending layers amber badge — bottom right */}
       {pendingCount > 0 && (
