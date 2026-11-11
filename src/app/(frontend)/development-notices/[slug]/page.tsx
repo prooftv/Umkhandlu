@@ -606,6 +606,50 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
+function NoticeSpatialSection({
+  notice,
+  wardBoundary,
+  siteBoundary,
+  wardName,
+  wardLink,
+  mapMunicipality,
+  mapCatB,
+  mapControlCentreUrl,
+  wardNumber,
+}: {
+  notice: NoticeData;
+  wardBoundary: WardBoundary;
+  siteBoundary: WardBoundary;
+  wardName: string | null;
+  wardLink: string | null;
+  mapMunicipality: string | null;
+  mapCatB: string | null;
+  mapControlCentreUrl: string;
+  wardNumber: number | null | undefined;
+}) {
+  if (!notice.geopoint?.lat || !notice.geopoint?.lng) return null;
+  return (
+    <div className="mb-8">
+      <h2 className="text-xl font-bold mb-4">Spatial Context</h2>
+      <NoticeStatutoryMapClient
+        lat={notice.geopoint.lat}
+        lng={notice.geopoint.lng}
+        name={notice.title ?? 'Development Site'}
+        noticeType={notice.noticeType ?? 'other'}
+        locationPrecision={notice.locationPrecision}
+        wardBoundary={wardBoundary}
+        siteBoundary={siteBoundary}
+        wardName={wardName}
+        municipality={mapMunicipality}
+        mapDeepLink={wardLink ? `/map?ward=${wardLink}` : '/map'}
+        wardNumber={wardNumber ?? null}
+        catB={mapCatB}
+        controlCentreUrl={mapControlCentreUrl}
+      />
+    </div>
+  );
+}
+
 async function resolveNoticeSpatial(notice: NoticeData) {
   const area = notice.relatedArea as RelatedArea | null;
   const { wardName, wardLink } = resolveWardContext(area);
@@ -640,6 +684,16 @@ export default async function DevelopmentNoticePage(props: Props) {
   const { area, wardName, wardLink, wardBoundary, siteBoundary, intelligence } =
     await resolveNoticeSpatial(notice);
 
+  const mapMunicipality = area?.municipality
+    ? (MUNIC_LABELS[area.municipality] ?? area.municipality)
+    : null;
+  const mapCatB = area?.municipality
+    ? (MUNIC_TO_CAT_B[area.municipality.toLowerCase()] ?? null)
+    : null;
+  const mapControlCentreUrl =
+    process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
+    'https://unami-platform-core-umkhandlu.vercel.app';
+
   return (
     <div className="container mx-auto max-w-3xl py-12">
       <Breadcrumbs
@@ -672,31 +726,17 @@ export default async function DevelopmentNoticePage(props: Props) {
       <NoticeDocuments documents={notice.documents} />
 
       {/* Spatial context map */}
-      {notice.geopoint?.lat && notice.geopoint?.lng && (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Spatial Context</h2>
-          <NoticeStatutoryMapClient
-            lat={notice.geopoint.lat}
-            lng={notice.geopoint.lng}
-            name={notice.title ?? 'Development Site'}
-            noticeType={notice.noticeType ?? 'other'}
-            locationPrecision={notice.locationPrecision}
-            wardBoundary={wardBoundary}
-            siteBoundary={siteBoundary}
-            wardName={wardName}
-            municipality={
-              area?.municipality
-                ? (MUNIC_LABELS[area.municipality] ?? area.municipality)
-                : null
-            }
-            mapDeepLink={wardLink ? `/map?ward=${wardLink}` : `/map`}
-            controlCentreUrl={
-              process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
-              'https://unami-platform-core-umkhandlu.vercel.app'
-            }
-          />
-        </div>
-      )}
+      <NoticeSpatialSection
+        notice={notice}
+        wardBoundary={wardBoundary}
+        siteBoundary={siteBoundary}
+        wardName={wardName}
+        wardLink={wardLink}
+        mapMunicipality={mapMunicipality}
+        mapCatB={mapCatB}
+        mapControlCentreUrl={mapControlCentreUrl}
+        wardNumber={area?.wardNumber}
+      />
 
       {/* Risk and planning considerations — from Control Centre */}
       <RiskPanel intelligence={intelligence} />

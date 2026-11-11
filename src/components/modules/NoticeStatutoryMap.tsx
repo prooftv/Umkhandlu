@@ -55,6 +55,9 @@ export type Props = {
   municipality?: string | null;
   mapDeepLink?: string | null;
   controlCentreUrl: string;
+  // Ward context for spatial filtering — narrows CC layers to this notice's ward
+  wardNumber?: number | null;
+  catB?: string | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -283,11 +286,15 @@ function initBasemap(
     [lat, lng],
     13
   );
-  Leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-      '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19,
-  }).addTo(map);
+  Leaf.tileLayer(
+    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    {
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+      maxZoom: 19,
+      subdomains: 'abcd',
+    }
+  ).addTo(map);
   return map;
 }
 
@@ -374,7 +381,9 @@ function syncCCLayer(
   }
 }
 
-function SidePanel({
+// ─── Overlay panel content (extracted to reduce cognitive complexity) ────────────────
+
+function LayerPanelContent({
   panelTab,
   setPanelTab,
   precision,
@@ -387,6 +396,10 @@ function SidePanel({
   toggleLayer,
   selectedFeature,
   onCloseFeature,
+  wardName,
+  municipality,
+  wardBoundary,
+  mapDeepLink,
 }: {
   panelTab: 'layers' | 'info';
   setPanelTab: (t: 'layers' | 'info') => void;
@@ -404,9 +417,16 @@ function SidePanel({
     role: string;
   } | null;
   onCloseFeature: () => void;
+  wardName: string | null | undefined;
+  municipality: string | null | undefined;
+  wardBoundary:
+    | { source: string | null; date: string | null }
+    | null
+    | undefined;
+  mapDeepLink: string | null | undefined;
 }) {
   return (
-    <div className="md:w-64 flex flex-col border border-gray-200 rounded-xl overflow-hidden bg-white text-xs">
+    <div className="absolute top-3 left-3 bottom-3 w-56 z-[1000] flex flex-col rounded-xl border border-gray-100 shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm">
       <div className="flex border-b border-gray-100">
         {(['layers', 'info'] as const).map((tab) => (
           <button
@@ -423,6 +443,7 @@ function SidePanel({
           </button>
         ))}
       </div>
+
       <div className="flex-1 overflow-y-auto p-3 space-y-1">
         {panelTab === 'layers' ? (
           <>
@@ -431,20 +452,24 @@ function SidePanel({
                 className="shrink-0 w-3 h-3 rounded-full border-2 border-white shadow"
                 style={{ background: precision?.colour ?? '#dc2626' }}
               />
-              <span className="text-gray-600">
+              <span className="text-xs text-gray-600">
                 {precision?.label ?? 'Site location'}
               </span>
             </div>
             {siteBoundary && (
               <div className="flex items-center gap-2 px-2 py-1.5 mb-1">
                 <span className="shrink-0 w-3 h-3 rounded-sm border-2 border-blue-500 bg-blue-50" />
-                <span className="text-gray-600">Verified site boundary</span>
+                <span className="text-xs text-gray-600">
+                  Verified site boundary
+                </span>
               </div>
             )}
             <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide px-2 pt-2 pb-1">
               Available layers
             </p>
-            {loading && <p className="px-2 text-gray-400">Loading layers…</p>}
+            {loading && (
+              <p className="px-2 text-xs text-gray-400">Loading layers…</p>
+            )}
             {availableLayers.map((l) => (
               <LayerToggle
                 key={l.id}
@@ -473,9 +498,32 @@ function SidePanel({
         ) : selectedFeature ? (
           <FeaturePanel feature={selectedFeature} onClose={onCloseFeature} />
         ) : (
-          <p className="px-2 py-4 text-gray-400 text-center">
+          <p className="px-2 py-4 text-xs text-gray-400 text-center">
             Click a feature on the map to see its details.
           </p>
+        )}
+      </div>
+
+      <div className="p-2 border-t border-gray-100 space-y-1 shrink-0">
+        {wardName && (
+          <p className="text-[10px] text-gray-400 truncate">{wardName}</p>
+        )}
+        {municipality && (
+          <p className="text-[10px] text-gray-400 truncate">{municipality}</p>
+        )}
+        {wardBoundary?.source && (
+          <p className="text-[10px] text-gray-400 truncate">
+            {wardBoundary.source}
+            {wardBoundary.date ? ` (${wardBoundary.date})` : ''}
+          </p>
+        )}
+        {mapDeepLink && (
+          <a
+            href={mapDeepLink}
+            className="text-[10px] text-primary hover:underline font-medium block"
+          >
+            View on full map →
+          </a>
         )}
       </div>
     </div>
@@ -496,6 +544,8 @@ export default function NoticeStatutoryMap({
   municipality,
   mapDeepLink,
   controlCentreUrl,
+  wardNumber,
+  catB,
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -515,19 +565,20 @@ export default function NoticeStatutoryMap({
 
   const precision = PRECISION_META[locationPrecision ?? ''] ?? null;
 
-  // Fetch layer profile from CC
+  // Fetch layer profile from CC — scoped to this notice's ward
   useEffect(() => {
     setLoading(true);
-    fetch(
-      `${controlCentreUrl}/api/spatial/notice-layers?noticeType=${encodeURIComponent(noticeType)}`
-    )
+    const params = new URLSearchParams({ noticeType });
+    if (wardNumber != null) params.set('wardNumber', String(wardNumber));
+    if (catB) params.set('catB', catB);
+    fetch(`${controlCentreUrl}/api/spatial/notice-layers?${params.toString()}`)
       .then((r) => (r.ok ? (r.json() as Promise<NoticeLayersResponse>) : null))
       .then((data) => {
         if (data?.layers) setLayers(data.layers);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [noticeType, controlCentreUrl]);
+  }, [noticeType, controlCentreUrl, wardNumber, catB]);
 
   const handleFeatureClick = useCallback(
     (props: Record<string, unknown>, role: string) => {
@@ -605,114 +656,58 @@ export default function NoticeStatutoryMap({
   const unavailableLayers = layers.filter(
     (l) => l.availability !== 'available'
   );
+  const pendingCount = unavailableLayers.filter(
+    (l) => l.availability === 'pending-permission'
+  ).length;
 
   return (
-    <div className="space-y-3">
-      {/* Map + side panel */}
-      <div className="flex flex-col md:flex-row gap-3">
-        {/* Map */}
-        <div
-          ref={mapRef}
-          className="flex-1 rounded-xl overflow-hidden border border-gray-200 shadow-sm"
-          style={{ height: 380, minHeight: 320 }}
-        />
+    <div
+      className="relative w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm"
+      style={{ height: 480, minHeight: 400 }}
+    >
+      {/* Map — fills container */}
+      <div ref={mapRef} className="absolute inset-0" />
 
-        {/* Side panel */}
-        <SidePanel
-          panelTab={panelTab}
-          setPanelTab={setPanelTab}
-          precision={precision}
-          siteBoundary={siteBoundary}
-          loading={loading}
-          availableLayers={availableLayers}
-          unavailableLayers={unavailableLayers}
-          allLayers={layers}
-          visibleLayers={visibleLayers}
-          toggleLayer={toggleLayer}
-          selectedFeature={selectedFeature}
-          onCloseFeature={() => {
-            setSelectedFeature(null);
-            setPanelTab('layers');
-          }}
-        />
-      </div>
+      {/* Left overlay panel — layer controls */}
+      <LayerPanelContent
+        panelTab={panelTab}
+        setPanelTab={setPanelTab}
+        precision={precision}
+        siteBoundary={siteBoundary}
+        loading={loading}
+        availableLayers={availableLayers}
+        unavailableLayers={unavailableLayers}
+        allLayers={layers}
+        visibleLayers={visibleLayers}
+        toggleLayer={toggleLayer}
+        selectedFeature={selectedFeature}
+        onCloseFeature={() => {
+          setSelectedFeature(null);
+          setPanelTab('layers');
+        }}
+        wardName={wardName}
+        municipality={municipality}
+        wardBoundary={wardBoundary}
+        mapDeepLink={mapDeepLink}
+      />
 
-      {/* Attribution and context row */}
-      <div className="flex flex-wrap items-start justify-between gap-2 text-xs text-gray-400">
-        <div className="flex flex-wrap gap-2">
-          {precision && (
-            <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border"
-              style={{
-                borderColor: precision.colour,
-                color: precision.colour,
-                background: `${precision.colour}12`,
-              }}
-            >
-              <span
-                className="w-1.5 h-1.5 rounded-full shrink-0"
-                style={{ background: precision.colour }}
-              />
-              {precision.label}
-            </span>
-          )}
-          {wardName && <span>{wardName}</span>}
-          {municipality && <span>{municipality}</span>}
-          {wardBoundary?.source && (
-            <span>
-              Ward boundary: {wardBoundary.source}
-              {wardBoundary.date ? ` (${wardBoundary.date})` : ''}
-            </span>
-          )}
-          {siteBoundary && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-blue-300 text-blue-600 bg-blue-50">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-              Verified site boundary
-            </span>
-          )}
+      {/* Pending layers amber badge — bottom right */}
+      {pendingCount > 0 && (
+        <div className="absolute bottom-3 right-3 z-[1000] max-w-[200px] bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-2 text-[10px] text-amber-700 leading-relaxed shadow">
+          <span className="font-semibold">
+            {pendingCount} statutory layer{pendingCount !== 1 ? 's' : ''}{' '}
+            pending
+          </span>{' '}
+          — data permission not yet confirmed. Absence does not imply absence of
+          relevant features.
         </div>
-        {mapDeepLink && (
-          <a
-            href={mapDeepLink}
-            className="text-primary hover:underline font-medium shrink-0"
-          >
-            View on full map →
-          </a>
-        )}
-      </div>
-
-      {/* Disclaimer */}
-      {!siteBoundary && locationPrecision !== 'verified' && (
-        <p className="text-xs text-gray-400 leading-relaxed">
-          The map shows the ward administrative boundary (MDB 2026) and an
-          operator-provided site point. No verified site or premises boundary is
-          available. The ward polygon is geographic context only — it does not
-          represent the affected site.
-        </p>
       )}
 
-      {unavailableLayers.length > 0 && (
-        <p className="text-xs text-amber-600 leading-relaxed">
-          {
-            unavailableLayers.filter(
-              (l) => l.availability === 'pending-permission'
-            ).length
-          }{' '}
-          statutory layer
-          {unavailableLayers.filter(
-            (l) => l.availability === 'pending-permission'
-          ).length !== 1
-            ? 's'
-            : ''}{' '}
-          (
-          {unavailableLayers
-            .filter((l) => l.availability === 'pending-permission')
-            .map((l) => l.label)
-            .join(', ')}
-          ) are not yet available — data access or redistribution permission is
-          pending. Absence of these layers does not imply absence of relevant
-          features.
-        </p>
+      {/* Disclaimer badge — bottom center */}
+      {!siteBoundary && locationPrecision !== 'verified' && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] bg-white/90 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] text-gray-500 shadow whitespace-nowrap">
+          Operator-provided location — ward boundary is geographic context only
+        </div>
       )}
     </div>
   );

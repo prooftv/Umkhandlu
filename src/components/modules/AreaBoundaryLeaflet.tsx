@@ -41,10 +41,15 @@ function initMap(
     11
   );
 
-  Leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 18,
-  }).addTo(map);
+  Leaf.tileLayer(
+    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    {
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+      maxZoom: 19,
+      subdomains: 'abcd',
+    }
+  ).addTo(map);
 
   const layer = Leaf.geoJSON(
     {
