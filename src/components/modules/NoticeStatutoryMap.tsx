@@ -50,9 +50,11 @@ type WardDemographics = {
   Discouraged_Work_Seeker: number;
   Not_Economically_Active: number;
   Not_Applicable_Emp: number;
+  Unspecified_Emp: number;
   Grade_12_Std10: number;
   Higher: number;
   No_schooling: number;
+  Not_Applicable_Edu: number;
   Flush_Toilet_SewerSystem: number;
   Flush_Toilet_SepticTank: number;
   Chemical_Toilet: number;
@@ -60,13 +62,16 @@ type WardDemographics = {
   Pit_Toilet_NoVentilation: number;
   Bucket_Toilet: number;
   None_Toilet: number;
+  Unspecified_Toilet: number;
   Tap_In_Dwelling: number;
   tap_in_Yard: number;
   No_access_to_piped_water: number;
+  Unspecified_Water: number;
   Removed_Weekly: number;
   Removed_Seldom: number;
   Own_dump: number;
   No_Disposal: number;
+  Unspecified_Refuse: number;
   Reg_Voters: number;
   Area_SqKm: number;
 };
@@ -409,21 +414,38 @@ function pct(part: number | undefined, total: number | undefined): string {
   return ` (${Math.round((part / total) * 100)}%)`;
 }
 
-function WardDemographicsPanel({ d }: { d: WardDemographics }) {
-  const labourForce = d.Employed + d.Unemployed + d.Discouraged_Work_Seeker;
+function WardDemographicsPanel({
+  d,
+  datasetName,
+  attribution,
+}: {
+  d: WardDemographics;
+  datasetName: string;
+  attribution: string;
+}) {
+  // Employment denominator: active labour force only (excludes children/elderly)
+  const activeLF = d.Employed + d.Unemployed + d.Discouraged_Work_Seeker;
   const formalToilet =
     d.Flush_Toilet_SewerSystem +
     d.Flush_Toilet_SepticTank +
     d.Chemical_Toilet +
     d.Pit_Toilet_VIP;
   const pipedWater = d.Tap_In_Dwelling + d.tap_in_Yard;
+  // Unspecified counts — non-zero means data quality caveat applies
+  const hasUnspecified =
+    d.Unspecified_Toilet > 0 ||
+    d.Unspecified_Water > 0 ||
+    d.Unspecified_Refuse > 0 ||
+    d.Unspecified_Emp > 0;
   return (
     <div className="rounded-lg border border-blue-100 bg-blue-50/40 p-3 space-y-3 text-xs">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-2">
         <span className="font-semibold text-gray-700">
           {d.Ward_Label} — {d.Municipality}
         </span>
-        <span className="text-[10px] text-gray-400">Census 2021</span>
+        <span className="shrink-0 text-[10px] text-blue-600 font-medium bg-blue-100 px-1.5 py-0.5 rounded">
+          Census 2021
+        </span>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-gray-600">
         <div>
@@ -437,19 +459,21 @@ function WardDemographicsPanel({ d }: { d: WardDemographics }) {
           <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5">
             Employment
           </p>
+          {/* Denominator: active labour force (Emp + Unemp + Discouraged). Excludes Not_Applicable_Emp (children/elderly). */}
           <p>
             Employed: {fmt(d.Employed)}
-            {pct(d.Employed, labourForce)}
+            {pct(d.Employed, activeLF)}
           </p>
           <p>
             Unemployed: {fmt(d.Unemployed)}
-            {pct(d.Unemployed, labourForce)}
+            {pct(d.Unemployed, activeLF)}
           </p>
         </div>
         <div>
           <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5 mt-1">
             Sanitation
           </p>
+          {/* Denominator: Total_Pop (household-level, per person) */}
           <p>
             Formal: {fmt(formalToilet)}
             {pct(formalToilet, d.Total_Pop)}
@@ -463,6 +487,7 @@ function WardDemographicsPanel({ d }: { d: WardDemographics }) {
           <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5 mt-1">
             Water access
           </p>
+          {/* Denominator: Total_Pop */}
           <p>
             Piped: {fmt(pipedWater)}
             {pct(pipedWater, d.Total_Pop)}
@@ -473,9 +498,20 @@ function WardDemographicsPanel({ d }: { d: WardDemographics }) {
           </p>
         </div>
       </div>
-      <p className="text-[10px] text-gray-400">
-        Registered voters: {fmt(d.Reg_Voters)} · Area: {fmt(d.Area_SqKm)} km²
-      </p>
+      <div className="space-y-0.5">
+        <p className="text-[10px] text-gray-400">
+          Registered voters: {fmt(d.Reg_Voters)} · Area: {fmt(d.Area_SqKm)} km²
+        </p>
+        {hasUnspecified && (
+          <p className="text-[10px] text-amber-600">
+            Some responses unspecified in source data — percentages exclude
+            unspecified counts.
+          </p>
+        )}
+        <p className="text-[10px] text-gray-400">
+          {datasetName} · {attribution}
+        </p>
+      </div>
     </div>
   );
 }
@@ -566,7 +602,11 @@ function FindingsPanel({
         />
         {context.wardDemographics && (
           <div className="mt-3">
-            <WardDemographicsPanel d={context.wardDemographics} />
+            <WardDemographicsPanel
+              d={context.wardDemographics}
+              datasetName="MDB WardProfile 2021"
+              attribution="Municipal Demarcation Board (MDB) — public domain"
+            />
           </div>
         )}
       </div>
