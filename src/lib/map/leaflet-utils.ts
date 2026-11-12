@@ -145,15 +145,15 @@ export function addProximityCircle(
   lng: number,
   radiusMetres: number,
   tooltip: string,
-  colour = '#dc2626'
+  colour = '#7c3aed'
 ): L.Circle {
   return Leaf.circle([lat, lng], {
     radius: radiusMetres,
     color: colour,
     fillColor: colour,
     fillOpacity: 0.07,
-    weight: 2,
-    dashArray: '8 5',
+    weight: 3,
+    dashArray: '10 6',
   })
     .addTo(map)
     .bindTooltip(tooltip, { sticky: true });
