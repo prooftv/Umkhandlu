@@ -4,6 +4,7 @@ import type { PortableTextBlock } from 'next-sanity';
 import { Image } from 'next-sanity/image';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
 import ClientGallery from '@/components/modules/ClientGallery';
+import ListingSpatialContext from '@/components/modules/ListingSpatialContext';
 import LocationPin from '@/components/modules/LocationPin';
 import CustomPortableText from '@/components/modules/PortableText';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
@@ -194,6 +195,9 @@ function ListingCover({ listing }: { listing: ListingData }) {
 
 function ListingMap({ listing }: { listing: ListingData }) {
   if (!listing.geopoint?.lat || !listing.geopoint?.lng) return null;
+  const controlCentreUrl =
+    process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
+    'https://unami-platform-core-umkhandlu.vercel.app';
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4">Location</h2>
@@ -204,6 +208,17 @@ function ListingMap({ listing }: { listing: ListingData }) {
         listingType={listing.listingType ?? undefined}
         verifiedByInduna={listing.verifiedByInduna ?? undefined}
       />
+      <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+        <h3 className="text-sm font-semibold text-gray-700 mb-3">
+          Nearby facilities
+        </h3>
+        <ListingSpatialContext
+          lat={listing.geopoint.lat}
+          lng={listing.geopoint.lng}
+          controlCentreUrl={controlCentreUrl}
+          listingType={listing.listingType ?? undefined}
+        />
+      </div>
     </div>
   );
 }

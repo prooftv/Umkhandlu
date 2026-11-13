@@ -24,18 +24,25 @@ type SpatialFeature = {
 
 type MapLayer = {
   id: string;
+  datasetId: string;
   label: string;
   colour: string;
   weight: number;
   fillOpacity: number;
   featureCount: number;
+  returnedCount: number;
   loadOnDemand: boolean;
   features: SpatialFeature[];
   attribution: string | null;
+  publishedAt: string | null;
+  datasetDate: string | null;
+  radiusFiltered: boolean;
 };
 
 type MapLayersResponse = {
   layers: MapLayer[];
+  filterLat: number | null;
+  filterLng: number | null;
   generatedAt: string;
 };
 
@@ -764,15 +771,18 @@ export default function NoticeStatutoryMap({
 
   const precision = PRECISION_META[locationPrecision ?? ''] ?? null;
 
-  // Fetch POI/infrastructure layers from CC
+  // Fetch POI/infrastructure layers from CC — pass location + notice type for radius filtering
   useEffect(() => {
-    fetch(`${controlCentreUrl}/api/spatial/map-layers`)
+    const params = new URLSearchParams({ noticeType });
+    params.set('lat', String(lat));
+    params.set('lng', String(lng));
+    fetch(`${controlCentreUrl}/api/spatial/map-layers?${params}`)
       .then((r) => (r.ok ? (r.json() as Promise<MapLayersResponse>) : null))
       .then((data) => {
         if (data) setMapLayers(data.layers);
       })
       .catch(() => {});
-  }, [controlCentreUrl]);
+  }, [controlCentreUrl, lat, lng, noticeType]);
 
   // Fetch structured spatial context from CC
   useEffect(() => {
