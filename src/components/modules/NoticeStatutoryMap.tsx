@@ -32,6 +32,8 @@ type MapLayer = {
   featureCount: number;
   returnedCount: number;
   loadOnDemand: boolean;
+  truncated: boolean;
+  radiusKm: number | null;
   features: SpatialFeature[];
   attribution: string | null;
   publishedAt: string | null;
@@ -41,6 +43,7 @@ type MapLayer = {
 
 type MapLayersResponse = {
   layers: MapLayer[];
+  permissionFiltered?: boolean;
   filterLat: number | null;
   filterLng: number | null;
   generatedAt: string;
@@ -373,7 +376,7 @@ function renderPoiLayers(
   refs: Map<string, L.Layer>
 ) {
   for (const layer of mapLayers) {
-    if (layer.loadOnDemand || !layer.features.length) continue;
+    if (!layer.features.length) continue;
     if (refs.has(`poi-${layer.id}`)) continue;
     const style: L.PathOptions = {
       color: layer.colour,
@@ -389,12 +392,14 @@ function renderPoiLayers(
       style,
       (f, fl) => {
         const p = (f.properties ?? {}) as Record<string, unknown>;
-        const name =
+        const label =
           (p.name as string) ??
           (p.NAME as string) ??
           (p.amenity as string) ??
           layer.label;
-        fl.bindTooltip(name, { sticky: true });
+        const tooltip = document.createElement('span');
+        tooltip.textContent = label;
+        fl.bindTooltip(tooltip, { sticky: true });
       }
     );
     if (l) refs.set(`poi-${layer.id}`, l);
@@ -758,10 +763,14 @@ export default function NoticeStatutoryMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerRefs = useRef<Map<string, L.Layer>>(new Map());
+  const [mapReady, setMapReady] = useState(false);
 
   const [context, setContext] = useState<NoticeContextResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [mapLayers, setMapLayers] = useState<MapLayer[]>([]);
+  const [mapLayersError, setMapLayersError] = useState(false);
+  const [mapLayersPermissionNotice, setMapLayersPermissionNotice] =
+    useState(false);
   const [visibility, setVisibility] = useState<Record<LayerKey, boolean>>({
     ward: true,
     municipality: true,
@@ -770,19 +779,37 @@ export default function NoticeStatutoryMap({
   });
 
   const precision = PRECISION_META[locationPrecision ?? ''] ?? null;
+  const reliableSiteLocation =
+    locationPrecision === 'verified' ||
+    locationPrecision === 'operator-provided';
 
-  // Fetch POI/infrastructure layers from CC — pass location + notice type for radius filtering
+  // Fetch nearby published layers; large layers return a capped nearby subset.
   useEffect(() => {
     const params = new URLSearchParams({ noticeType });
     params.set('lat', String(lat));
     params.set('lng', String(lng));
-    fetch(`${controlCentreUrl}/api/spatial/map-layers?${params}`)
-      .then((r) => (r.ok ? (r.json() as Promise<MapLayersResponse>) : null))
-      .then((data) => {
-        if (data) setMapLayers(data.layers);
+    if (locationPrecision) params.set('locationPrecision', locationPrecision);
+    const controller = new AbortController();
+    setMapLayers([]);
+    setMapLayersError(false);
+    setMapLayersPermissionNotice(false);
+    fetch(`${controlCentreUrl}/api/spatial/map-layers?${params}`, {
+      signal: controller.signal,
+    })
+      .then((r) => {
+        if (!r.ok)
+          throw new Error(`Spatial layer request failed (${r.status})`);
+        return r.json() as Promise<MapLayersResponse>;
       })
-      .catch(() => {});
-  }, [controlCentreUrl, lat, lng, noticeType]);
+      .then((data) => {
+        setMapLayers(data.layers);
+        setMapLayersPermissionNotice(data.permissionFiltered === true);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setMapLayersError(true);
+      });
+    return () => controller.abort();
+  }, [controlCentreUrl, lat, lng, locationPrecision, noticeType]);
 
   // Fetch structured spatial context from CC
   useEffect(() => {
@@ -839,9 +866,11 @@ export default function NoticeStatutoryMap({
         precision,
         refs: layerRefs.current,
       });
+      setMapReady(true);
     });
     return () => {
       cancelled = true;
+      setMapReady(false);
       mapInstanceRef.current?.remove();
       mapInstanceRef.current = null;
       layerRefs.current.clear();
@@ -851,31 +880,32 @@ export default function NoticeStatutoryMap({
   // Render POI/infrastructure layers when they arrive
   useEffect(() => {
     const map = mapInstanceRef.current;
-    if (!map || !mapLayers.length) return;
+    if (!mapReady || !map || !mapLayers.length) return;
     import('leaflet').then((Leaf) => {
       renderPoiLayers(Leaf, map, mapLayers, layerRefs.current);
     });
-  }, [mapLayers]);
+  }, [mapLayers, mapReady]);
 
   // Add admin layers and proximity circle when context arrives
   useEffect(() => {
     const map = mapInstanceRef.current;
-    if (!map || !context) return;
+    if (!mapReady || !map || !context) return;
     import('leaflet').then((Leaf) => {
       addAdminLayers(Leaf, map, context, layerRefs.current);
       // Proximity circle: only drawn when the statutory profile specifies a radius.
-      // Not drawn unconditionally — absence of a radius means no applicable criterion.
+      // It is illustrative and only meaningful for reliable premises coordinates.
       const radius = context.proximityRadiusMetres;
-      if (radius != null && !layerRefs.current.has('proximity')) {
-        const precisionNote = precision
-          ? ` (${precision.label})`
-          : ' (location precision unverified)';
-        const label = `${radius}m illustrative context radius${precisionNote}`;
+      if (
+        radius != null &&
+        reliableSiteLocation &&
+        !layerRefs.current.has('proximity')
+      ) {
+        const label = `${radius}m illustrative context radius (${precision?.label})`;
         const circle = addProximityCircle(Leaf, map, lat, lng, radius, label);
         layerRefs.current.set('proximity', circle);
       }
     });
-  }, [context, lat, lng, precision]);
+  }, [context, lat, lng, mapReady, precision, reliableSiteLocation]);
 
   // Sync visibility
   useEffect(() => {
@@ -924,8 +954,7 @@ export default function NoticeStatutoryMap({
       key: 'proximity',
       label: `${proximityMetres}m context`,
       colour: '#dc2626',
-      // Only show toggle when the statutory profile specifies a radius
-      show: proximityMetres != null,
+      show: proximityMetres != null && reliableSiteLocation,
     },
   ];
 
@@ -950,6 +979,13 @@ export default function NoticeStatutoryMap({
             Full map →
           </a>
         )}
+        {(mapLayersError || mapLayersPermissionNotice) && (
+          <div className="absolute bottom-3 left-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
+            {mapLayersError
+              ? 'External spatial layers temporarily unavailable.'
+              : 'Some spatial data is withheld pending redistribution permission verification.'}
+          </div>
+        )}
         {!siteBoundary && locationPrecision !== 'verified' && (
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] bg-white/90 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] text-gray-500 shadow whitespace-nowrap">
             Operator-provided location — ward boundary is geographic context
@@ -957,6 +993,30 @@ export default function NoticeStatutoryMap({
           </div>
         )}
       </div>
+
+      {mapLayers.length > 0 && (
+        <div className="border-x border-gray-200 bg-white px-3 py-2">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+            Nearby external spatial context
+          </p>
+          <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+            {mapLayers.map((layer) => (
+              <span key={layer.id} className="text-[10px] text-gray-500">
+                {layer.label}:{' '}
+                {layer.truncated
+                  ? `at least ${layer.returnedCount}`
+                  : layer.returnedCount}
+                {layer.radiusFiltered && layer.radiusKm !== null
+                  ? ` within ${layer.radiusKm} km`
+                  : ''}
+                {layer.attribution ? ` · ${layer.attribution}` : ''}
+                {layer.datasetDate ? ` · ${layer.datasetDate}` : ''}
+                {layer.truncated ? ' · partial coverage' : ''}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Zone B — Structured spatial findings */}
       <div className="rounded-b-xl border border-gray-200 border-t bg-white shadow-sm">

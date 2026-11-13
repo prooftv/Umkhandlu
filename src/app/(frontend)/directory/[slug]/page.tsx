@@ -194,7 +194,16 @@ function ListingCover({ listing }: { listing: ListingData }) {
 }
 
 function ListingMap({ listing }: { listing: ListingData }) {
-  if (!listing.geopoint?.lat || !listing.geopoint?.lng) return null;
+  const geopoint = listing.geopoint;
+  if (
+    !geopoint ||
+    typeof geopoint.lat !== 'number' ||
+    typeof geopoint.lng !== 'number' ||
+    !Number.isFinite(geopoint.lat) ||
+    !Number.isFinite(geopoint.lng)
+  ) {
+    return null;
+  }
   const controlCentreUrl =
     process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
     'https://unami-platform-core-umkhandlu.vercel.app';
@@ -202,8 +211,8 @@ function ListingMap({ listing }: { listing: ListingData }) {
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4">Location</h2>
       <LocationPin
-        lat={listing.geopoint.lat}
-        lng={listing.geopoint.lng}
+        lat={geopoint.lat}
+        lng={geopoint.lng}
         name={listing.name || ''}
         listingType={listing.listingType ?? undefined}
         verifiedByInduna={listing.verifiedByInduna ?? undefined}
@@ -213,9 +222,10 @@ function ListingMap({ listing }: { listing: ListingData }) {
           Nearby facilities
         </h3>
         <ListingSpatialContext
-          lat={listing.geopoint.lat}
-          lng={listing.geopoint.lng}
+          lat={geopoint.lat}
+          lng={geopoint.lng}
           controlCentreUrl={controlCentreUrl}
+          listingName={listing.name || 'Community listing'}
           listingType={listing.listingType ?? undefined}
         />
       </div>

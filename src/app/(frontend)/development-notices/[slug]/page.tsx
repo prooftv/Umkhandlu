@@ -627,13 +627,20 @@ function NoticeSpatialSection({
   mapControlCentreUrl: string;
   wardNumber: number | null | undefined;
 }) {
-  if (!notice.geopoint?.lat || !notice.geopoint?.lng) return null;
+  const geopoint = notice.geopoint;
+  if (
+    !geopoint ||
+    !Number.isFinite(geopoint.lat) ||
+    !Number.isFinite(geopoint.lng)
+  ) {
+    return null;
+  }
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold mb-4">Spatial Context</h2>
       <NoticeStatutoryMapClient
-        lat={notice.geopoint.lat}
-        lng={notice.geopoint.lng}
+        lat={geopoint.lat}
+        lng={geopoint.lng}
         name={notice.title ?? 'Development Site'}
         noticeType={notice.noticeType ?? 'other'}
         locationPrecision={notice.locationPrecision}
