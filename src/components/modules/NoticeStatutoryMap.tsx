@@ -22,6 +22,23 @@ type SpatialFeature = {
   properties: Record<string, unknown>;
 };
 
+type MapLayer = {
+  id: string;
+  label: string;
+  colour: string;
+  weight: number;
+  fillOpacity: number;
+  featureCount: number;
+  loadOnDemand: boolean;
+  features: SpatialFeature[];
+  attribution: string | null;
+};
+
+type MapLayersResponse = {
+  layers: MapLayer[];
+  generatedAt: string;
+};
+
 type DatasetResult = {
   status:
     | 'found'
@@ -337,6 +354,43 @@ function addAdminLayers(
       l.bindTooltip('Amajuba District Municipality (DC25)', { sticky: true });
       refs.set('district', l);
     }
+  }
+}
+
+// ─── POI layer rendering (module-level to reduce component complexity) ──────
+
+function renderPoiLayers(
+  Leaf: typeof L,
+  map: L.Map,
+  mapLayers: MapLayer[],
+  refs: Map<string, L.Layer>
+) {
+  for (const layer of mapLayers) {
+    if (layer.loadOnDemand || !layer.features.length) continue;
+    if (refs.has(`poi-${layer.id}`)) continue;
+    const style: L.PathOptions = {
+      color: layer.colour,
+      fillColor: layer.colour,
+      weight: layer.weight,
+      fillOpacity: layer.fillOpacity,
+      opacity: 0.9,
+    };
+    const l = addFeatureCollection(
+      Leaf,
+      map,
+      layer.features,
+      style,
+      (f, fl) => {
+        const p = (f.properties ?? {}) as Record<string, unknown>;
+        const name =
+          (p.name as string) ??
+          (p.NAME as string) ??
+          (p.amenity as string) ??
+          layer.label;
+        fl.bindTooltip(name, { sticky: true });
+      }
+    );
+    if (l) refs.set(`poi-${layer.id}`, l);
   }
 }
 
@@ -700,6 +754,7 @@ export default function NoticeStatutoryMap({
 
   const [context, setContext] = useState<NoticeContextResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mapLayers, setMapLayers] = useState<MapLayer[]>([]);
   const [visibility, setVisibility] = useState<Record<LayerKey, boolean>>({
     ward: true,
     municipality: true,
@@ -708,6 +763,16 @@ export default function NoticeStatutoryMap({
   });
 
   const precision = PRECISION_META[locationPrecision ?? ''] ?? null;
+
+  // Fetch POI/infrastructure layers from CC
+  useEffect(() => {
+    fetch(`${controlCentreUrl}/api/spatial/map-layers`)
+      .then((r) => (r.ok ? (r.json() as Promise<MapLayersResponse>) : null))
+      .then((data) => {
+        if (data) setMapLayers(data.layers);
+      })
+      .catch(() => {});
+  }, [controlCentreUrl]);
 
   // Fetch structured spatial context from CC
   useEffect(() => {
@@ -772,6 +837,15 @@ export default function NoticeStatutoryMap({
       layerRefs.current.clear();
     };
   }, [lat, lng, name, wardBoundary, siteBoundary, wardName, precision]);
+
+  // Render POI/infrastructure layers when they arrive
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !mapLayers.length) return;
+    import('leaflet').then((Leaf) => {
+      renderPoiLayers(Leaf, map, mapLayers, layerRefs.current);
+    });
+  }, [mapLayers]);
 
   // Add admin layers and proximity circle when context arrives
   useEffect(() => {
