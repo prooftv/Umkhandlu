@@ -191,6 +191,36 @@ Community notices (`notice`) + statutory development notices (`developmentNotice
 
 ---
 
+### `GET /spatial`
+
+Authenticated spatial summary for the Control Centre. It returns municipality and ward
+summaries plus up to 20 recent GeoRefs for records, development notices and campaigns.
+When a development notice has its own `geopoint`, that point is used. If only its related
+area has a geopoint, the response identifies that coordinate as an area reference rather
+than a site location.
+
+GeoRefs may include:
+
+```json
+{
+  "recordId": "<Sanity document _id>",
+  "recordType": "notice",
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "coordinateSource": "Sanity developmentNotice.geopoint",
+  "coordinateRole": "site",
+  "locationPrecision": "approximate"
+}
+```
+
+`coordinateSource` records the originating Sanity field. `coordinateRole` is `site` or
+`area-reference`. `locationPrecision`, when present, is declared content metadata; it is
+not independent verification. Area-reference coordinates do not inherit a notice's
+site precision. Consumers must preserve these distinctions and must not present an area
+reference as the notice's site point.
+
+---
+
 ### `GET /participation/summary`
 
 Public participation aggregated from campaign `participationLog[]` entries.

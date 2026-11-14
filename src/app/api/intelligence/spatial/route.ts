@@ -30,6 +30,9 @@ const spatialQuery = `{
     "timestamp": _createdAt,
     "lat": relatedArea->geopoint.lat,
     "lng": relatedArea->geopoint.lng,
+    "coordinateSource": "Sanity record.relatedArea.geopoint",
+    "coordinateRole": "area-reference",
+    "locationPrecision": null,
     "ward": relatedArea->wardNumber,
     "municipality": relatedArea->municipality
   },
@@ -39,6 +42,18 @@ const spatialQuery = `{
     "timestamp": _createdAt,
     "lat": coalesce(geopoint.lat, relatedArea->geopoint.lat),
     "lng": coalesce(geopoint.lng, relatedArea->geopoint.lng),
+    "coordinateSource": select(
+      defined(geopoint) => "Sanity developmentNotice.geopoint",
+      defined(relatedArea->geopoint) => "Sanity relatedArea.geopoint"
+    ),
+    "coordinateRole": select(
+      defined(geopoint) => "site",
+      defined(relatedArea->geopoint) => "area-reference"
+    ),
+    "locationPrecision": select(
+      defined(geopoint) => locationPrecision,
+      defined(relatedArea->geopoint) => null
+    ),
     "ward": relatedArea->wardNumber,
     "municipality": relatedArea->municipality
   },
@@ -48,6 +63,15 @@ const spatialQuery = `{
     "timestamp": _updatedAt,
     "lat": coalesce(siteGeopoint.lat, geographicAssociations[0].area->geopoint.lat),
     "lng": coalesce(siteGeopoint.lng, geographicAssociations[0].area->geopoint.lng),
+    "coordinateSource": select(
+      defined(siteGeopoint) => "Sanity campaign.siteGeopoint",
+      defined(geographicAssociations[0].area->geopoint) => "Sanity campaign.geographicAssociations[0].area.geopoint"
+    ),
+    "coordinateRole": select(
+      defined(siteGeopoint) => "site",
+      defined(geographicAssociations[0].area->geopoint) => "area-reference"
+    ),
+    "locationPrecision": null,
     "municipality": geographicAssociations[0].area->municipality
   }
 }`;
@@ -59,6 +83,9 @@ type SpatialRow = {
   timestamp: string;
   lat: number | null;
   lng: number | null;
+  coordinateSource: string;
+  coordinateRole: 'site' | 'area-reference';
+  locationPrecision: string | null;
   ward?: number | null;
   municipality?: string | null;
 };
@@ -67,7 +94,14 @@ function toGeoRef(
   row: SpatialRow,
   recordType: 'record' | 'notice' | 'project'
 ) {
-  if (!row.lat || !row.lng) return null;
+  if (
+    row.lat === null ||
+    row.lng === null ||
+    !Number.isFinite(row.lat) ||
+    !Number.isFinite(row.lng)
+  ) {
+    return null;
+  }
   return {
     recordId: row.id,
     recordType,
@@ -75,6 +109,9 @@ function toGeoRef(
     timestamp: row.timestamp,
     latitude: row.lat,
     longitude: row.lng,
+    coordinateSource: row.coordinateSource,
+    coordinateRole: row.coordinateRole,
+    locationPrecision: row.locationPrecision,
     district: 'Amajuba',
     municipality: row.municipality ?? undefined,
     ward: row.ward != null ? `Ward ${row.ward}` : undefined,
