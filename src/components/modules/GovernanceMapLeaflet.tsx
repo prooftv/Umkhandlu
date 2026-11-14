@@ -38,6 +38,24 @@ export interface MapBoundary {
   boundaryPermission: string | null;
 }
 
+function getBoundaryInitializationError(boundaries: MapBoundary[]): string {
+  return boundaries.length === 0
+    ? 'Administrative boundaries are unavailable; map layers cannot be positioned for this view.'
+    : 'No valid administrative boundary geometry is available for this view.';
+}
+
+function MapInitializationStatus({ message }: { message: string | null }) {
+  if (!message) return null;
+  return (
+    <div
+      role="status"
+      className="absolute inset-0 z-[900] flex items-center justify-center rounded-xl bg-gray-50/95 p-6 text-center text-sm text-gray-600"
+    >
+      {message}
+    </div>
+  );
+}
+
 interface Props {
   records: MapRecord[];
   boundaries: MapBoundary[];
@@ -426,6 +444,9 @@ export default function GovernanceMapLeaflet({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const renderedLayersRef = useRef<Map<string, L.Layer>>(new Map());
+  const [mapInitializationError, setMapInitializationError] = useState<
+    string | null
+  >(null);
   const [mapReady, setMapReady] = useState(false);
   const [viewport, setViewport] = useState<SpatialMapBounds | null>(null);
   const [spatialVisibility, setSpatialVisibility] = useState<
@@ -551,8 +572,12 @@ export default function GovernanceMapLeaflet({
     import('leaflet').then((Leaf) => {
       if (cancelled || !containerRef.current) return;
       const coverage = getBoundaryCoverage(Leaf, boundaries);
-      if (!coverage.isValid()) return;
+      if (!coverage.isValid()) {
+        setMapInitializationError(getBoundaryInitializationError(boundaries));
+        return;
+      }
 
+      setMapInitializationError(null);
       const centre = coverage.getCenter();
       const map = createMap(
         Leaf,
@@ -711,13 +736,16 @@ export default function GovernanceMapLeaflet({
         ref={containerRef}
         className="absolute inset-0 rounded-xl overflow-hidden border border-gray-200 shadow-sm"
       />
-      <SpatialLayerControls
-        layers={spatialLayers}
-        visibility={spatialVisibility}
-        onToggle={toggleSpatialLayer}
-        error={spatialLayersError}
-        onRetry={retrySpatialLayers}
-      />
+      <MapInitializationStatus message={mapInitializationError} />
+      <div hidden={!mapReady}>
+        <SpatialLayerControls
+          layers={spatialLayers}
+          visibility={spatialVisibility}
+          onToggle={toggleSpatialLayer}
+          error={spatialLayersError}
+          onRetry={retrySpatialLayers}
+        />
+      </div>
       {(spatialLayersLoading ||
         spatialLayersError ||
         spatialPermissionFiltered) && (
