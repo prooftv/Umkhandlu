@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { Image } from 'next-sanity/image';
 import AreaBoundaryLeaflet from '@/components/modules/AreaBoundaryLeaflet';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
-import LocationPin from '@/components/modules/LocationPin';
 import { NoticeListItem } from '@/components/modules/NoticeListItem';
 import { RecordListItem } from '@/components/modules/RecordListItem';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
@@ -518,12 +517,10 @@ function CampaignCard({
 function AreaBoundarySection({
   boundary,
   name,
-  geopoint,
   wardLink,
 }: {
   boundary: ActiveBoundary;
   name: string;
-  geopoint?: { lat: number; lng: number } | null;
   wardLink?: string | null;
 }) {
   if (!boundary) return null;
@@ -534,7 +531,6 @@ function AreaBoundarySection({
       <AreaBoundaryLeaflet
         boundary={boundary.geometry}
         name={name}
-        geopoint={geopoint}
         boundarySource={boundary.source ?? undefined}
         boundaryDate={boundary.date ?? undefined}
         boundaryPermission={boundary.permission ?? undefined}
@@ -582,24 +578,11 @@ export default async function AreaPage(props: Props) {
       <AreaBoundarySection
         boundary={activeBoundary}
         name={area.name || ''}
-        geopoint={area.geopoint}
         wardLink={computeWardLink(areaExt)}
       />
 
-      {/* Map + Listings — only render LocationPin when a real geopoint is available */}
       {area.relatedListings && area.relatedListings.length > 0 && (
         <>
-          {area.geopoint?.lat && area.geopoint?.lng && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">Area Map</h2>
-              <LocationPin
-                lat={area.geopoint.lat}
-                lng={area.geopoint.lng}
-                name={area.name || ''}
-                listingType="area"
-              />
-            </section>
-          )}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">In This Area</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

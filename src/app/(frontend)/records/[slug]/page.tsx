@@ -238,7 +238,7 @@ function RecordEvidence({ record }: { record: RecordData }) {
   );
 }
 
-type Geopoint = { lat: number; lng: number } | null | undefined;
+type Geopoint = { lat?: number; lng?: number } | null | undefined;
 
 async function resolveWeather(
   _id: string,
@@ -247,7 +247,14 @@ async function resolveWeather(
   hasStoredContext: boolean
 ) {
   if (!date) return null;
-  const { lat, lng } = geo ?? NODE_GEOPOINT;
+  const lat =
+    typeof geo?.lat === 'number' && Number.isFinite(geo.lat)
+      ? geo.lat
+      : NODE_GEOPOINT.lat;
+  const lng =
+    typeof geo?.lng === 'number' && Number.isFinite(geo.lng)
+      ? geo.lng
+      : NODE_GEOPOINT.lng;
   const weather = await fetchWeather(date, lat, lng);
   if (!weather) return null;
   if (!hasStoredContext) {
@@ -353,7 +360,11 @@ export default async function RecordPage(props: Props) {
           location: record.location ?? null,
           externalUrl: record.externalUrl ?? null,
           lineageCount,
-          evidence: record.evidence ?? [],
+          evidence: (record.evidence ?? []).map((item) => ({
+            _key: item._key,
+            title: item.title ?? '',
+            url: item.url ?? null,
+          })),
         };
         return (
           <div className="mt-4">

@@ -2,12 +2,12 @@
 
 import type L from 'leaflet';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  createMap,
-  fitToLayer,
-  fitToPoints,
-  loadLeafletCss,
-} from '@/lib/map/leaflet-utils';
+import { createMap, loadLeafletCss } from '@/lib/map/leaflet-utils';
+import type { SpatialMapBounds } from '@/lib/spatial/map-layers';
+import { toggleSpatialDatasetSelection } from '@/lib/spatial/map-layers';
+import { renderSpatialMapLayers } from '@/lib/spatial/render-map-layers';
+import { useSpatialMapLayers } from '@/lib/spatial/use-spatial-map-layers';
+import SpatialLayerControls from './SpatialLayerControls';
 
 export interface MapRecord {
   id: string;
@@ -15,8 +15,6 @@ export interface MapRecord {
   label: string;
   type: 'record' | 'notice' | 'project';
   subtype: string;
-  lat: number;
-  lng: number;
   date: string | null;
   status: string | null;
   municipality: string | null;
@@ -38,15 +36,14 @@ export interface MapBoundary {
   boundarySource: string | null;
   boundaryDate: string | null;
   boundaryPermission: string | null;
-  geopoint: { lat: number; lng: number } | null;
 }
 
 interface Props {
   records: MapRecord[];
   boundaries: MapBoundary[];
-  centre: [number, number];
   zoom: number;
   initialWard?: string | null; // WardLink slug e.g. KZN253_7 — auto-selects on mount
+  controlCentreUrl: string;
 }
 
 const TYPE_COLOUR: Record<string, string> = {
@@ -98,26 +95,25 @@ function addBoundaries(
   }
 }
 
-function buildMarkers(
+function getBoundaryCoverage(
   Leaf: typeof L,
-  map: L.Map,
-  records: MapRecord[],
-  onSelect: (r: MapRecord) => void
-): L.Marker[] {
-  return records.map((rec) => {
-    const colour = TYPE_COLOUR[rec.type] ?? '#6b7280';
-    const shape = rec.type === 'project' ? '2px' : '50%';
-    const icon = Leaf.divIcon({
-      className: '',
-      html: `<div style="width:12px;height:12px;border-radius:${shape};background:${colour};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4)"></div>`,
-      iconSize: [12, 12],
-      iconAnchor: [6, 6],
-    });
-    const marker = Leaf.marker([rec.lat, rec.lng], { icon });
-    marker.on('click', () => onSelect(rec));
-    marker.addTo(map);
-    return marker;
-  });
+  boundaries: MapBoundary[]
+): L.LatLngBounds {
+  const coverage = Leaf.latLngBounds([]);
+  for (const boundary of boundaries) {
+    try {
+      const geometry = Leaf.geoJSON({
+        type: 'Feature',
+        geometry: boundary.boundary,
+        properties: {},
+      } as GeoJSON.Feature);
+      const bounds = geometry.getBounds();
+      if (bounds.isValid()) coverage.extend(bounds);
+    } catch {
+      // Invalid boundaries are skipped; valid boundaries still define the map extent.
+    }
+  }
+  return coverage;
 }
 
 function TypePill({
@@ -423,13 +419,33 @@ function AreaPanel({
 export default function GovernanceMapLeaflet({
   records,
   boundaries,
-  centre,
   zoom,
   initialWard,
+  controlCentreUrl,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<L.Marker[]>([]);
+  const renderedLayersRef = useRef<Map<string, L.Layer>>(new Map());
+  const [mapReady, setMapReady] = useState(false);
+  const [viewport, setViewport] = useState<SpatialMapBounds | null>(null);
+  const [spatialVisibility, setSpatialVisibility] = useState<
+    Record<string, boolean>
+  >({});
+  const [selectedDatasetIds, setSelectedDatasetIds] = useState<
+    string[] | undefined
+  >(undefined);
+  const {
+    layers: spatialLayers,
+    loading: spatialLayersLoading,
+    error: spatialLayersError,
+    permissionFiltered: spatialPermissionFiltered,
+    retry: retrySpatialLayers,
+  } = useSpatialMapLayers({
+    controlCentreUrl,
+    bounds: viewport,
+    datasetIds: selectedDatasetIds,
+    enabled: mapReady,
+  });
 
   const [selectedRecord, setSelectedRecord] = useState<MapRecord | null>(null);
   const [selectedArea, setSelectedArea] = useState<MapBoundary | null>(null);
@@ -484,16 +500,21 @@ export default function GovernanceMapLeaflet({
   const selectRecord = useCallback((rec: MapRecord) => {
     setSelectedRecord(rec);
     setSelectedArea(null);
-    mapRef.current?.flyTo([rec.lat, rec.lng], 13, { duration: 0.8 });
     setPanelOpen(true);
   }, []);
 
   const selectArea = useCallback((area: MapBoundary) => {
     setSelectedArea(area);
     setSelectedRecord(null);
-    if (area.geopoint) {
-      mapRef.current?.flyTo([area.geopoint.lat, area.geopoint.lng], 11, {
-        duration: 0.8,
+    const map = mapRef.current;
+    if (map) {
+      import('leaflet').then((Leaf) => {
+        const bounds = Leaf.geoJSON({
+          type: 'Feature',
+          geometry: area.boundary,
+          properties: {},
+        } as GeoJSON.Feature).getBounds();
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
       });
     }
     setPanelOpen(true);
@@ -502,6 +523,16 @@ export default function GovernanceMapLeaflet({
   function clearSelection() {
     setSelectedRecord(null);
     setSelectedArea(null);
+  }
+
+  function toggleSpatialLayer(layerId: string) {
+    setSpatialVisibility((current) => ({
+      ...current,
+      [layerId]: !(current[layerId] ?? true),
+    }));
+    setSelectedDatasetIds((current) =>
+      toggleSpatialDatasetSelection(current, spatialLayers, layerId)
+    );
   }
 
   // Auto-select ward from deep link — runs after map init
@@ -519,52 +550,60 @@ export default function GovernanceMapLeaflet({
 
     import('leaflet').then((Leaf) => {
       if (cancelled || !containerRef.current) return;
-      const map = createMap(Leaf, containerRef.current, centre, zoom, {
-        scrollWheelZoom: true,
-      });
+      const coverage = getBoundaryCoverage(Leaf, boundaries);
+      if (!coverage.isValid()) return;
+
+      const centre = coverage.getCenter();
+      const map = createMap(
+        Leaf,
+        containerRef.current,
+        [centre.lat, centre.lng],
+        zoom,
+        {
+          scrollWheelZoom: true,
+        }
+      );
       addBoundaries(Leaf, map, boundaries, selectArea);
-      markersRef.current = buildMarkers(Leaf, map, records, selectRecord);
       mapRef.current = map;
-      if (records.length > 0) {
-        fitToPoints(
-          Leaf,
-          map,
-          records.map((r) => [r.lat, r.lng] as [number, number])
-        );
-      } else if (boundaries.length > 0) {
-        // Fit to first valid boundary if no records
-        try {
-          const first = Leaf.geoJSON({
-            type: 'Feature',
-            geometry: boundaries[0].boundary,
-            properties: {},
-          } as GeoJSON.Feature);
-          fitToLayer(map, first, [60, 60], 13);
-        } catch {}
-      }
+      map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
+      const updateViewport = () => {
+        const bounds = map.getBounds();
+        setViewport({
+          west: bounds.getWest(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          north: bounds.getNorth(),
+        });
+      };
+      map.on('moveend', updateViewport);
+      updateViewport();
+      setMapReady(true);
     });
 
     return () => {
       cancelled = true;
+      setMapReady(false);
+      setViewport(null);
       mapRef.current?.remove();
       mapRef.current = null;
+      renderedLayersRef.current.clear();
     };
-  }, [centre, zoom, boundaries, records, selectRecord, selectArea]);
+  }, [zoom, boundaries, selectArea]);
 
-  // Show/hide markers based on filter
   useEffect(() => {
-    if (!mapRef.current) return;
-    const filteredIds = new Set(filtered.map((r) => r.id));
-    for (let i = 0; i < records.length; i++) {
-      const marker = markersRef.current[i];
-      if (!marker) continue;
-      if (filteredIds.has(records[i].id)) {
-        if (!mapRef.current.hasLayer(marker)) marker.addTo(mapRef.current);
-      } else {
-        marker.remove();
-      }
-    }
-  }, [filtered, records]);
+    const map = mapRef.current;
+    if (!mapReady || !map) return;
+    import('leaflet').then((Leaf) => {
+      renderSpatialMapLayers({
+        Leaf,
+        map,
+        layers: spatialLayers,
+        visibility: spatialVisibility,
+        renderedLayers: renderedLayersRef.current,
+        prefix: 'governance-map:',
+      });
+    });
+  }, [mapReady, spatialLayers, spatialVisibility]);
 
   const panelContent = (
     <div className="flex flex-col h-full bg-white">
@@ -652,7 +691,8 @@ export default function GovernanceMapLeaflet({
 
       <div className="p-3 border-t border-gray-50 shrink-0">
         <p className="text-[10px] text-gray-400">
-          Only georeferenced items shown.{' '}
+          Record locations are shown only when linked to verified spatial
+          features.{' '}
           <a href="/records" className="underline">
             All records
           </a>
@@ -671,6 +711,24 @@ export default function GovernanceMapLeaflet({
         ref={containerRef}
         className="absolute inset-0 rounded-xl overflow-hidden border border-gray-200 shadow-sm"
       />
+      <SpatialLayerControls
+        layers={spatialLayers}
+        visibility={spatialVisibility}
+        onToggle={toggleSpatialLayer}
+        error={spatialLayersError}
+        onRetry={retrySpatialLayers}
+      />
+      {(spatialLayersLoading ||
+        spatialLayersError ||
+        spatialPermissionFiltered) && (
+        <div className="absolute left-3 bottom-3 z-[1000] max-w-[min(32rem,60vw)] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
+          {spatialLayersError
+            ? `Spatial layers unavailable: ${spatialLayersError}`
+            : spatialLayersLoading
+              ? 'Loading spatial layers for this map view…'
+              : 'Some spatial data is withheld pending redistribution permission verification.'}
+        </div>
+      )}
 
       {/* Desktop panel — right overlay */}
       <div className="hidden md:flex absolute top-3 right-3 bottom-3 w-72 flex-col rounded-xl border border-gray-100 shadow-lg overflow-hidden z-[1000]">

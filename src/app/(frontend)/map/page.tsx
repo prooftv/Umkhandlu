@@ -87,7 +87,6 @@ async function fetchControlCentreWards(): Promise<MapBoundary[]> {
         boundarySource: json.meta?.dataset ?? 'MDB 2026',
         boundaryDate: json.meta?.datasetDate ?? '2026',
         boundaryPermission: 'public-domain',
-        geopoint: null,
       } satisfies MapBoundary;
     });
   } catch {
@@ -108,39 +107,33 @@ type MapPageProps = {
 };
 
 const mapQuery = `{
-  "records": *[_type == "record" && defined(relatedArea->geopoint)] | order(_updatedAt desc) [0...100] {
+  "records": *[_type == "record"] | order(_updatedAt desc) [0...100] {
     "id": _id,
     "slug": slug.current,
     "label": title,
     "subtype": recordType,
     "date": date,
     "status": status,
-    "lat": relatedArea->geopoint.lat,
-    "lng": relatedArea->geopoint.lng,
     "municipality": relatedArea->municipality,
     "ward": relatedArea->wardNumber
   },
-  "devNotices": *[_type == "developmentNotice" && (defined(geopoint) || defined(relatedArea->geopoint))] | order(_updatedAt desc) [0...100] {
+  "devNotices": *[_type == "developmentNotice"] | order(_updatedAt desc) [0...100] {
     "id": _id,
     "slug": slug.current,
     "label": title,
     "subtype": noticeType,
     "date": commentDeadline,
     "status": status,
-    "lat": coalesce(geopoint.lat, relatedArea->geopoint.lat),
-    "lng": coalesce(geopoint.lng, relatedArea->geopoint.lng),
     "municipality": relatedArea->municipality,
     "ward": relatedArea->wardNumber
   },
-  "campaigns": *[_type == "campaign" && (defined(siteGeopoint) || defined(geographicAssociations[0].area->geopoint))] | order(_updatedAt desc) [0...100] {
+  "campaigns": *[_type == "campaign"] | order(_updatedAt desc) [0...100] {
     "id": _id,
     "slug": slug.current,
     "label": title,
     "subtype": campaignType,
     "date": startDate,
     "status": status,
-    "lat": coalesce(siteGeopoint.lat, geographicAssociations[0].area->geopoint.lat),
-    "lng": coalesce(siteGeopoint.lng, geographicAssociations[0].area->geopoint.lng),
     "municipality": geographicAssociations[0].area->municipality,
     "ward": null
   },
@@ -158,8 +151,7 @@ const mapQuery = `{
     "boundary": boundary,
     "boundarySource": boundarySource,
     "boundaryDate": boundaryDate,
-    "boundaryPermission": boundaryPermission,
-    "geopoint": geopoint
+    "boundaryPermission": boundaryPermission
   }
 }`;
 
@@ -170,8 +162,6 @@ type RawItem = {
   subtype: string | null;
   date: string | null;
   status: string | null;
-  lat: number | null;
-  lng: number | null;
   municipality: string | null;
   ward: number | null;
 };
@@ -200,7 +190,6 @@ export default async function MapPage({ searchParams }: MapPageProps) {
         boundarySource: string | null;
         boundaryDate: string | null;
         boundaryPermission: string | null;
-        geopoint: { lat: number; lng: number } | null;
       }[];
     }>(mapQuery, {}, { cache: 'no-store' }),
   ]);
@@ -209,15 +198,13 @@ export default async function MapPage({ searchParams }: MapPageProps) {
     item: RawItem,
     type: MapRecord['type']
   ): MapRecord | null {
-    if (!item.lat || !item.lng || !item.slug) return null;
+    if (!item.slug) return null;
     return {
       id: item.id,
       slug: item.slug,
       label: item.label ?? item.id,
       type,
       subtype: item.subtype ?? type,
-      lat: item.lat,
-      lng: item.lng,
       date: item.date,
       status: item.status,
       municipality: item.municipality,
@@ -276,8 +263,10 @@ export default async function MapPage({ searchParams }: MapPageProps) {
     boundaries = sanityBoundaries;
   }
 
-  // Centre on Amajuba District; if boundaries exist, map will fit to them
-  const AMAJUBA_CENTRE: [number, number] = [-28.05, 29.0];
+  const controlCentreUrl =
+    process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
+    process.env.CONTROL_CENTRE_URL ??
+    '';
 
   return (
     <div className="container mx-auto py-12">
@@ -286,8 +275,8 @@ export default async function MapPage({ searchParams }: MapPageProps) {
       <header className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-3">Geographic View</h1>
         <p className="text-gray-600 max-w-2xl text-sm md:text-base">
-          Governance records, development notices and campaigns in their
-          geographic context. Select a marker to view the underlying record.
+          Governance Records, development notices and campaigns alongside
+          authoritative administrative and public spatial layers.
         </p>
         <div className="flex gap-4 mt-3 text-sm text-gray-500">
           <Link href="/records" className="hover:text-primary hover:underline">
@@ -311,17 +300,17 @@ export default async function MapPage({ searchParams }: MapPageProps) {
             No georeferenced content available
           </p>
           <p className="text-sm text-gray-500">
-            Records, notices and campaigns appear here when they have geographic
-            coordinates or are associated with an area that has a geopoint.
+            Spatial context appears when authoritative administrative boundaries
+            and published spatial layers are available for this map view.
           </p>
         </div>
       ) : (
         <GovernanceMapClient
           records={records}
           boundaries={boundaries}
-          centre={AMAJUBA_CENTRE}
           zoom={9}
           initialWard={initialWard ?? null}
+          controlCentreUrl={controlCentreUrl}
         />
       )}
     </div>

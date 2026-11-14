@@ -15,9 +15,9 @@ const GovernanceMapLeaflet = dynamic(() => import('./GovernanceMapLeaflet'), {
 export default function GovernanceMapClient(props: {
   records: MapRecord[];
   boundaries: MapBoundary[];
-  centre: [number, number];
   zoom: number;
   initialWard?: string | null;
+  controlCentreUrl: string;
 }) {
   return <GovernanceMapLeaflet {...props} />;
 }

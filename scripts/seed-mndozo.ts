@@ -114,7 +114,6 @@ const area = {
   description:
     'A rural traditional authority area under the Mndozo Traditional Council, comprising multiple isigodi, schools, clinics, and community infrastructure.',
   location: 'Amajuba District, KwaZulu-Natal',
-  geopoint: { _type: 'geopoint', lat: -27.82, lng: 30.05 },
   featured: true,
   induna: { _type: 'reference', _ref: 'person-induna-1' },
 };
@@ -130,7 +129,6 @@ const listings = [
     listingType: 'school',
     description: 'Primary school serving the Mndozo rural community.',
     location: 'Mndozo, KwaZulu-Natal',
-    geopoint: { _type: 'geopoint', lat: -27.818, lng: 30.047 },
     contactInfo: '036 004 0015',
     servicesOffered: ['Primary Education'],
     verifiedByInduna: 'induna',
@@ -144,7 +142,6 @@ const listings = [
     listingType: 'school',
     description: 'Secondary school serving learners in the Mndozo area.',
     location: 'Mndozo, KwaZulu-Natal',
-    geopoint: { _type: 'geopoint', lat: -27.825, lng: 30.055 },
     contactInfo: '034 183 9920',
     servicesOffered: ['Secondary Education'],
     verifiedByInduna: 'induna',
@@ -158,7 +155,6 @@ const listings = [
     listingType: 'school',
     description: 'Secondary school located near Dicks Holt Farm.',
     location: 'Dicks Holt Farm, KwaZulu-Natal',
-    geopoint: { _type: 'geopoint', lat: -27.835, lng: 30.062 },
     contactInfo: '034 366 7485',
     servicesOffered: ['Secondary Education'],
     verifiedByInduna: 'council',
@@ -172,7 +168,6 @@ const listings = [
     listingType: 'school',
     description: 'Primary school serving the surrounding rural community.',
     location: 'Mndozo, KwaZulu-Natal',
-    geopoint: { _type: 'geopoint', lat: -27.812, lng: 30.04 },
     servicesOffered: ['Primary Education'],
     verifiedByInduna: 'induna',
     relatedArea: { _type: 'reference', _ref: AREA_ID },
@@ -186,7 +181,6 @@ const listings = [
     description:
       'Primary healthcare clinic serving the Mndozo community. Walk-in and referral services.',
     location: 'Mndozo, KwaZulu-Natal',
-    geopoint: { _type: 'geopoint', lat: -27.822, lng: 30.052 },
     contactInfo: '034 212 1100',
     servicesOffered: [
       'Primary Care',
@@ -207,7 +201,6 @@ const listings = [
     description:
       'River sand excavation and supply for building and construction. Delivery available within Amajuba District.',
     location: 'Mzinyathi River, Mndozo',
-    geopoint: { _type: 'geopoint', lat: -27.83, lng: 30.035 },
     contactInfo: '072 555 1234',
     whatsappContact: '+27725551234',
     servicesOffered: ['River Sand', 'Building Sand', 'Delivery'],
@@ -225,7 +218,6 @@ const listings = [
     description:
       'Community spaza shop and general store. Groceries, airtime, and basic supplies.',
     location: 'KwaNtuli, Mndozo',
-    geopoint: { _type: 'geopoint', lat: -27.815, lng: 30.048 },
     contactInfo: '073 888 5678',
     whatsappContact: '+27738885678',
     servicesOffered: ['Groceries', 'Airtime', 'Basic Supplies'],
@@ -241,7 +233,6 @@ const listings = [
     listingType: 'church',
     description: 'Community church serving the Mndozo area.',
     location: 'Mndozo, KwaZulu-Natal',
-    geopoint: { _type: 'geopoint', lat: -27.819, lng: 30.044 },
     verifiedByInduna: 'community',
     relatedArea: { _type: 'reference', _ref: AREA_ID },
   },

@@ -13,7 +13,6 @@ import {
 type Props = {
   boundary: GeoJSONGeometry;
   name: string;
-  geopoint?: { lat: number; lng: number } | null;
   boundarySource?: string | null;
   boundaryDate?: string | null;
   boundaryPermission?: string | null;
@@ -24,13 +23,16 @@ function initAreaMap(
   Leaf: typeof L,
   container: HTMLDivElement,
   boundary: GeoJSONGeometry,
-  name: string,
-  geopoint?: { lat: number; lng: number } | null
+  _name: string
 ): L.Map {
-  const centre: [number, number] = geopoint
-    ? [geopoint.lat, geopoint.lng]
-    : [-28.05, 29.0];
-  const map = createMap(Leaf, container, centre, 11);
+  const geometryLayer = Leaf.geoJSON({
+    type: 'Feature',
+    geometry: boundary as GeoJSON.Geometry,
+    properties: {},
+  } as GeoJSON.Feature);
+  const bounds = geometryLayer.getBounds();
+  const centre = bounds.getCenter();
+  const map = createMap(Leaf, container, [centre.lat, centre.lng], 11);
   const layer = addGeoJSON(Leaf, map, boundary, {
     color: '#16a34a',
     weight: 2,
@@ -39,24 +41,12 @@ function initAreaMap(
     fillOpacity: 0.08,
   });
   if (layer) fitToLayer(map, layer, [20, 20]);
-  if (geopoint?.lat && geopoint?.lng) {
-    Leaf.circleMarker([geopoint.lat, geopoint.lng], {
-      radius: 6,
-      fillColor: '#16a34a',
-      color: '#fff',
-      weight: 2,
-      fillOpacity: 1,
-    })
-      .addTo(map)
-      .bindTooltip(name, { permanent: false });
-  }
   return map;
 }
 
 export default function AreaBoundaryLeaflet({
   boundary,
   name,
-  geopoint,
   boundarySource,
   boundaryDate,
   boundaryPermission,
@@ -76,8 +66,7 @@ export default function AreaBoundaryLeaflet({
         Leaf,
         mapRef.current,
         boundary,
-        name,
-        geopoint
+        name
       );
     });
     return () => {
@@ -85,7 +74,7 @@ export default function AreaBoundaryLeaflet({
       mapInstanceRef.current?.remove();
       mapInstanceRef.current = null;
     };
-  }, [boundary, name, geopoint]);
+  }, [boundary, name]);
 
   return (
     <div className="space-y-2">

@@ -164,7 +164,7 @@ function NoticeLineage({
   );
 }
 
-type Geopoint = { lat: number; lng: number } | null | undefined;
+type Geopoint = { lat?: number; lng?: number } | null | undefined;
 
 async function resolveWeather(
   _id: string,
@@ -173,7 +173,14 @@ async function resolveWeather(
   hasStoredContext: boolean
 ) {
   if (!date) return null;
-  const { lat, lng } = geo ?? NODE_GEOPOINT;
+  const lat =
+    typeof geo?.lat === 'number' && Number.isFinite(geo.lat)
+      ? geo.lat
+      : NODE_GEOPOINT.lat;
+  const lng =
+    typeof geo?.lng === 'number' && Number.isFinite(geo.lng)
+      ? geo.lng
+      : NODE_GEOPOINT.lng;
   const weather = await fetchWeather(date, lat, lng);
   if (!weather) return null;
   const isFuture = new Date(date) >= new Date();
@@ -395,8 +402,19 @@ export default async function NoticePage(props: Props) {
               date: notice.date ?? null,
               location: notice.location ?? null,
               attendance: notice.attendance ?? null,
-              relatedArea: notice.relatedArea ?? null,
-              relatedCampaign: notice.relatedCampaign ?? null,
+              relatedArea: notice.relatedArea
+                ? {
+                    name: notice.relatedArea.name ?? '',
+                    slug: notice.relatedArea.slug ?? '',
+                  }
+                : null,
+              relatedCampaign: notice.relatedCampaign
+                ? {
+                    title: notice.relatedCampaign.title ?? '',
+                    slug: notice.relatedCampaign.slug ?? '',
+                    status: notice.relatedCampaign.status ?? null,
+                  }
+                : null,
               originNotice:
                 (notice.originNotice as GemRecord['originNotice']) ?? null,
               lineageCount,

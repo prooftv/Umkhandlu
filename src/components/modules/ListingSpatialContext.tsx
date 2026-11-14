@@ -3,94 +3,132 @@
 import type L from 'leaflet';
 import { useEffect, useRef, useState } from 'react';
 import { createMap, loadLeafletCss } from '@/lib/map/leaflet-utils';
+import type {
+  PublishedSpatialFeature,
+  SpatialMapBounds,
+} from '@/lib/spatial/map-layers';
+import {
+  isPublishedSpatialFeature,
+  toggleSpatialDatasetSelection,
+} from '@/lib/spatial/map-layers';
+import { renderSpatialMapLayers } from '@/lib/spatial/render-map-layers';
+import { useSpatialMapLayers } from '@/lib/spatial/use-spatial-map-layers';
+import SpatialLayerControls from './SpatialLayerControls';
 
-type SpatialFeature = {
-  type: 'Feature';
-  geometry: GeoJSON.Geometry;
-  properties: Record<string, unknown>;
-};
-
-type MapLayer = {
-  id: string;
-  datasetId: string;
-  label: string;
-  colour: string;
-  featureCount: number;
-  returnedCount: number;
-  loadOnDemand: boolean;
-  truncated: boolean;
-  radiusKm: number | null;
-  features: SpatialFeature[];
-  attribution: string | null;
-  datasetDate: string | null;
-  radiusFiltered: boolean;
-};
-
-type MapLayersResponse = {
-  layers: MapLayer[];
-  filterLat: number | null;
-  filterLng: number | null;
-  permissionFiltered?: boolean;
-  generatedAt: string;
-};
-
-type Props = {
-  lat: number;
-  lng: number;
-  controlCentreUrl: string;
-  listingName: string;
-  listingType?: string;
-};
-
-// Layers relevant to directory listings (community facilities focus)
-const DIRECTORY_LAYER_IDS = new Set([
-  'giga-schools',
-  'hot-osm-education',
-  'hot-osm-health',
-  'hot-osm-cultural',
-  'hot-osm-financial',
-  'hot-osm-populated-places',
-  'hot-osm-points-of-interest',
-]);
-
-const LAYER_ICONS: Record<string, string> = {
-  'giga-schools': '🏫',
-  'hot-osm-education': '🏫',
-  'hot-osm-health': '🏥',
-  'hot-osm-cultural': '⛪',
-  'hot-osm-financial': '🏦',
-  'hot-osm-populated-places': '🏘️',
-};
-
-function featureName(f: SpatialFeature): string {
-  const p = f.properties;
-  const stringValue = (value: unknown) =>
-    typeof value === 'string' && value.trim() ? value : null;
+function isErrorResponse(value: unknown): value is { error: string } {
   return (
-    stringValue(p.name) ??
-    stringValue(p.NAME) ??
-    stringValue(p.amenity) ??
-    stringValue(p.school_name) ??
-    'Unnamed'
+    value !== null &&
+    typeof value === 'object' &&
+    'error' in value &&
+    typeof value.error === 'string'
   );
 }
 
-function NearbyFacilitiesMap({
-  lat,
-  lng,
-  listingName,
-  layers,
+function getSpatialStatusMessage({
+  featureError,
+  layersError,
+  layersLoading,
+  permissionFiltered,
 }: {
-  lat: number;
-  lng: number;
+  featureError: string | null;
+  layersError: string | null;
+  layersLoading: boolean;
+  permissionFiltered: boolean;
+}): string {
+  if (featureError) return `Verified map location unavailable: ${featureError}`;
+  if (layersError) return `Nearby spatial layers unavailable: ${layersError}`;
+  if (layersLoading) return 'Loading nearby spatial context…';
+  if (permissionFiltered) {
+    return 'Some spatial data is withheld pending redistribution permission verification.';
+  }
+  return 'Loading published location…';
+}
+
+type Props = {
+  spatialFeatureId: string;
+  controlCentreUrl: string;
   listingName: string;
-  layers: MapLayer[];
-}) {
+};
+
+export default function ListingSpatialContext({
+  spatialFeatureId,
+  controlCentreUrl,
+  listingName,
+}: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const renderedLayersRef = useRef<Map<string, L.Layer>>(new Map());
+  const [feature, setFeature] = useState<PublishedSpatialFeature | null>(null);
+  const [featureError, setFeatureError] = useState<string | null>(null);
+  const [featureRetry, setFeatureRetry] = useState(0);
+  const [mapReady, setMapReady] = useState(false);
+  const [bounds, setBounds] = useState<SpatialMapBounds | null>(null);
+  const [visibility, setVisibility] = useState<Record<string, boolean>>({});
+  const [selectedDatasetIds, setSelectedDatasetIds] = useState<
+    string[] | undefined
+  >(undefined);
+  const {
+    layers,
+    loading: layersLoading,
+    error: layersError,
+    permissionFiltered,
+    retry: retryLayers,
+  } = useSpatialMapLayers({
+    controlCentreUrl,
+    bounds,
+    datasetIds: selectedDatasetIds,
+    enabled: mapReady,
+  });
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    const controller = new AbortController();
+    let active = true;
+    setFeature(null);
+    setFeatureError(null);
+    const featureUrl = new URL(
+      `${controlCentreUrl.replace(/\/$/, '')}/api/spatial/features/${encodeURIComponent(spatialFeatureId)}`
+    );
+    if (featureRetry > 0) {
+      featureUrl.searchParams.set('_retry', String(featureRetry));
+    }
+    void fetch(featureUrl.toString(), { signal: controller.signal })
+      .then(async (response) => {
+        const body: unknown = await response.json();
+        if (!response.ok) {
+          throw new Error(
+            isErrorResponse(body)
+              ? body.error
+              : `Published feature request failed (${response.status})`
+          );
+        }
+        if (!isPublishedSpatialFeature(body)) {
+          throw new Error('Published feature response has an invalid format');
+        }
+        return body;
+      })
+      .then((data) => {
+        if (active) setFeature(data);
+      })
+      .catch((cause: unknown) => {
+        if (cause instanceof DOMException && cause.name === 'AbortError')
+          return;
+        if (active) {
+          setFeatureError(
+            cause instanceof Error
+              ? cause.message
+              : 'Published feature unavailable'
+          );
+        }
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [controlCentreUrl, spatialFeatureId, featureRetry]);
+
+  useEffect(() => {
+    if (!mapRef.current || !feature) return;
     loadLeafletCss();
     let cancelled = false;
 
@@ -98,208 +136,156 @@ function NearbyFacilitiesMap({
       if (cancelled || !mapRef.current) return;
       mapInstanceRef.current?.remove();
 
-      const map = createMap(Leaf, mapRef.current, [lat, lng], 13, {
-        scrollWheelZoom: false,
-      });
+      const sourceLayer = Leaf.geoJSON(
+        {
+          type: 'Feature',
+          id: feature.id,
+          geometry: feature.geometry as GeoJSON.Geometry,
+          properties: feature.properties,
+        } as GeoJSON.Feature,
+        {
+          style: {
+            color: '#1d4ed8',
+            weight: 3,
+            fillColor: '#1d4ed8',
+            fillOpacity: 0.18,
+          },
+          pointToLayer: (_geoFeature, point) =>
+            Leaf.circleMarker(point, {
+              radius: 8,
+              color: '#ffffff',
+              weight: 2,
+              fillColor: '#1d4ed8',
+              fillOpacity: 1,
+            }),
+          onEachFeature: (_geoFeature, featureLayer) => {
+            const popup = document.createElement('div');
+            const title = document.createElement('strong');
+            title.textContent = listingName;
+            const dataset = document.createElement('p');
+            dataset.className = 'text-xs';
+            dataset.textContent = feature.meta.dataset;
+            const properties = document.createElement('pre');
+            properties.className =
+              'mt-1 max-h-40 overflow-auto whitespace-pre-wrap text-xs';
+            properties.textContent = JSON.stringify(
+              feature.properties,
+              null,
+              2
+            );
+            popup.append(title, dataset, properties);
+            featureLayer.bindPopup(popup);
+          },
+        }
+      );
+      const featureBounds = sourceLayer.getBounds();
+      if (!featureBounds.isValid()) {
+        setFeatureError('The linked spatial feature has no mappable geometry.');
+        return;
+      }
+
+      const centre = featureBounds.getCenter();
+      const map = createMap(
+        Leaf,
+        mapRef.current,
+        [centre.lat, centre.lng],
+        13,
+        { scrollWheelZoom: false }
+      );
+      sourceLayer.addTo(map);
+      map.fitBounds(featureBounds, { padding: [28, 28], maxZoom: 14 });
       mapInstanceRef.current = map;
 
-      const listingMarker = Leaf.circleMarker([lat, lng], {
-        radius: 8,
-        color: '#fff',
-        weight: 2,
-        fillColor: '#1d4ed8',
-        fillOpacity: 1,
-      }).addTo(map);
-      const listingTooltip = document.createElement('span');
-      listingTooltip.textContent = `${listingName} · community listing`;
-      listingMarker.bindTooltip(listingTooltip);
-
-      const bounds = Leaf.latLngBounds([Leaf.latLng(lat, lng)]);
-      for (const layer of layers) {
-        const collection: GeoJSON.FeatureCollection = {
-          type: 'FeatureCollection',
-          features: layer.features,
-        };
-        const geoJson = Leaf.geoJSON(collection, {
-          style: {
-            color: layer.colour,
-            fillColor: layer.colour,
-            weight: 1.5,
-            fillOpacity: 0.35,
-          },
-          pointToLayer: (_feature, point) =>
-            Leaf.circleMarker(point, {
-              radius: 5,
-              color: '#fff',
-              weight: 1,
-              fillColor: layer.colour,
-              fillOpacity: 0.9,
-            }),
-          onEachFeature: (feature, featureLayer) => {
-            const label = document.createElement('span');
-            label.textContent = featureName({
-              type: 'Feature',
-              geometry: feature.geometry,
-              properties: (feature.properties ?? {}) as Record<string, unknown>,
-            });
-            featureLayer.bindTooltip(label);
-          },
-        }).addTo(map);
-        if (geoJson.getBounds().isValid()) bounds.extend(geoJson.getBounds());
-      }
-
-      if (bounds.isValid()) {
-        map.fitBounds(bounds, { padding: [24, 24], maxZoom: 14 });
-      }
+      const updateBounds = () => {
+        const viewport = map.getBounds();
+        setBounds({
+          west: viewport.getWest(),
+          south: viewport.getSouth(),
+          east: viewport.getEast(),
+          north: viewport.getNorth(),
+        });
+      };
+      map.on('moveend', updateBounds);
+      updateBounds();
+      setMapReady(true);
     });
 
     return () => {
       cancelled = true;
+      setMapReady(false);
+      setBounds(null);
       mapInstanceRef.current?.remove();
       mapInstanceRef.current = null;
+      renderedLayersRef.current.clear();
     };
-  }, [lat, lng, listingName, layers]);
-
-  return <div ref={mapRef} className="h-[240px] w-full rounded-lg" />;
-}
-
-export default function ListingSpatialContext({
-  lat,
-  lng,
-  controlCentreUrl,
-  listingName,
-}: Props) {
-  const [layers, setLayers] = useState<MapLayer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [ccUnavailable, setCcUnavailable] = useState(false);
-  const [permissionFiltered, setPermissionFiltered] = useState(false);
+  }, [feature, listingName]);
 
   useEffect(() => {
-    setLoading(true);
-    setCcUnavailable(false);
-    setPermissionFiltered(false);
-    setLayers([]);
-    const params = new URLSearchParams();
-    params.set('lat', String(lat));
-    params.set('lng', String(lng));
-    const controller = new AbortController();
-    fetch(`${controlCentreUrl}/api/spatial/map-layers?${params}`, {
-      signal: controller.signal,
-    })
-      .then((r) => {
-        if (!r.ok)
-          throw new Error(`Spatial layer request failed (${r.status})`);
-        return r.json() as Promise<MapLayersResponse>;
-      })
-      .then((data) => {
-        setPermissionFiltered(data.permissionFiltered === true);
-        setLayers(
-          data.layers.filter(
-            (layer) =>
-              DIRECTORY_LAYER_IDS.has(layer.id) &&
-              layer.returnedCount > 0 &&
-              layer.features.length > 0
-          )
-        );
-      })
-      .catch((e) => {
-        if (!(e instanceof Error) || e.name !== 'AbortError') {
-          setCcUnavailable(true);
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+    const map = mapInstanceRef.current;
+    if (!mapReady || !map) return;
+    import('leaflet').then((Leaf) => {
+      renderSpatialMapLayers({
+        Leaf,
+        map,
+        layers,
+        visibility,
+        renderedLayers: renderedLayersRef.current,
+        prefix: 'directory:',
       });
-    return () => controller.abort();
-  }, [lat, lng, controlCentreUrl]);
+    });
+  }, [layers, mapReady, visibility]);
 
-  if (loading) {
-    return (
-      <p className="text-xs text-gray-400 animate-pulse">
-        Loading nearby facilities…
-      </p>
-    );
-  }
-
-  if (ccUnavailable) {
-    return (
-      <p className="text-xs text-gray-400">
-        Nearby facility data temporarily unavailable.
-      </p>
-    );
-  }
-
-  if (!layers.length) {
-    return (
-      <p className="text-xs text-gray-400">
-        {permissionFiltered
-          ? 'Some nearby spatial data is withheld pending redistribution permission verification. Missing data does not indicate that no facilities are present.'
-          : 'No published facility data found within 5 km of this listing.'}
-      </p>
+  function toggleLayer(layerId: string) {
+    setVisibility((current) => ({
+      ...current,
+      [layerId]: !(current[layerId] ?? true),
+    }));
+    setSelectedDatasetIds((current) =>
+      toggleSpatialDatasetSelection(current, layers, layerId)
     );
   }
 
   return (
-    <div className="space-y-3">
-      {permissionFiltered && (
-        <p className="text-[10px] text-amber-700">
-          Some nearby spatial data is withheld pending redistribution permission
-          verification.
-        </p>
+    <div className="relative h-[280px] w-full overflow-hidden rounded-lg">
+      <div ref={mapRef} className="absolute inset-0" />
+      {mapReady && (
+        <SpatialLayerControls
+          layers={layers}
+          visibility={visibility}
+          onToggle={toggleLayer}
+          error={layersError}
+          onRetry={retryLayers}
+        />
       )}
-      <NearbyFacilitiesMap
-        lat={lat}
-        lng={lng}
-        listingName={listingName}
-        layers={layers}
-      />
-      {layers.map((layer) => (
-        <div key={layer.id}>
-          <p className="text-xs font-semibold text-gray-600 mb-1.5 flex items-center gap-1.5">
-            <span>{LAYER_ICONS[layer.id] ?? '📍'}</span>
-            {layer.label}
-            <span className="text-[10px] font-normal text-gray-400">
-              (
-              {layer.truncated
-                ? `at least ${layer.returnedCount}`
-                : layer.returnedCount}
-              {layer.radiusKm !== null ? ` within ${layer.radiusKm} km` : ''})
-            </span>
-          </p>
-          <div className="space-y-1">
-            {layer.features.slice(0, 5).map((f, i) => (
-              <p
-                // biome-ignore lint/suspicious/noArrayIndexKey: stable ordered list
-                key={i}
-                className="text-xs text-gray-600 pl-5 truncate"
-              >
-                {featureName(f)}
-              </p>
-            ))}
-            {layer.returnedCount > 5 && (
-              <p className="text-[10px] text-gray-400 pl-5">
-                +{layer.returnedCount - 5} more
-              </p>
-            )}
-            {layer.truncated && (
-              <p className="text-[10px] text-amber-700 pl-5">
-                Nearby results are capped; coverage is incomplete.
-              </p>
-            )}
-          </div>
-          {layer.attribution && (
-            <p className="text-[10px] text-gray-400 mt-1 pl-5">
-              {layer.attribution}
-              {layer.datasetDate ? ` · ${layer.datasetDate}` : ''}
-            </p>
+      {(featureError ||
+        layersError ||
+        layersLoading ||
+        permissionFiltered ||
+        !feature) && (
+        <div className="absolute bottom-2 left-2 z-[1000] max-w-[70%] rounded bg-white/95 px-2 py-1 text-[10px] text-amber-800 shadow">
+          {getSpatialStatusMessage({
+            featureError,
+            layersError,
+            layersLoading,
+            permissionFiltered,
+          })}
+          {featureError && (
+            <button
+              type="button"
+              onClick={() => setFeatureRetry((current) => current + 1)}
+              className="ml-2 underline"
+            >
+              Retry
+            </button>
           )}
         </div>
-      ))}
-      <p className="text-[10px] text-gray-400 pt-1 border-t border-gray-100">
-        External facility data from Unami Control Centre spatial catalogue.
-        These are externally sourced features — not verified community directory
-        listings.
-      </p>
+      )}
+      {feature?.meta.attribution && mapReady && (
+        <div className="absolute bottom-2 right-2 z-[1000] max-w-[45%] rounded bg-white/90 px-2 py-1 text-[9px] text-gray-600 shadow">
+          {feature.meta.attribution}
+          {feature.meta.datasetDate ? ` · ${feature.meta.datasetDate}` : ''}
+        </div>
+      )}
     </div>
   );
 }

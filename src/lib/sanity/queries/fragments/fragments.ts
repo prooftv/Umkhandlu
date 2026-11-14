@@ -309,6 +309,7 @@ export const listingFragment = /* groq */ `
   description,
   location,
   geopoint,
+  spatialFeatureId,
   contactInfo,
   whatsappContact,
   website,
@@ -535,7 +536,7 @@ export const communityMapSectionFragment = /* groq */ `
   centerLng,
   zoom,
   filterType,
-  "listings": *[_type == 'listing' && defined(geopoint) && select(
+  "listings": *[_type == 'listing' && defined(spatialFeatureId) && select(
     ^.filterType == 'all' || !defined(^.filterType) => true,
     listingType == ^.filterType
   )] | order(featured desc, name asc) {

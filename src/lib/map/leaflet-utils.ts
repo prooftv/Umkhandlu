@@ -125,7 +125,7 @@ export function addSiteMarker(
   map: L.Map,
   lat: number,
   lng: number,
-  popupHtml: string,
+  popupContent: string | HTMLElement,
   colour = '#dc2626'
 ): L.Marker {
   const icon = Leaf.divIcon({
@@ -134,7 +134,7 @@ export function addSiteMarker(
     iconSize: [14, 14],
     iconAnchor: [7, 7],
   });
-  return Leaf.marker([lat, lng], { icon }).addTo(map).bindPopup(popupHtml);
+  return Leaf.marker([lat, lng], { icon }).addTo(map).bindPopup(popupContent);
 }
 
 /** Dashed circle overlay (proximity context). */

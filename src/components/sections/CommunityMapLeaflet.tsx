@@ -1,17 +1,25 @@
 'use client';
 
 import type L from 'leaflet';
-import { useEffect, useRef } from 'react';
-import { loadLeafletCss } from '@/lib/map/leaflet-utils';
+import { useEffect, useRef, useState } from 'react';
+import SpatialLayerControls from '@/components/modules/SpatialLayerControls';
+import { createMap, loadLeafletCss } from '@/lib/map/leaflet-utils';
+import type {
+  SpatialMapBounds,
+  SpatialMapFeature,
+  SpatialMapLayer,
+} from '@/lib/spatial/map-layers';
+import { toggleSpatialDatasetSelection } from '@/lib/spatial/map-layers';
+import { renderSpatialMapLayers } from '@/lib/spatial/render-map-layers';
+import { useSpatialMapLayers } from '@/lib/spatial/use-spatial-map-layers';
 
 type Listing = {
   _id: string;
   name: string;
   slug: string;
   listingType: string;
-  description?: string;
+  spatialFeatureId?: string | null;
   location?: string;
-  geopoint?: { lat: number; lng: number } | null;
   contactInfo?: string;
   featured?: boolean;
   verifiedByInduna?: string;
@@ -26,123 +34,106 @@ type Props = {
   zoom: number;
   typeColors: Record<string, string>;
   typeIcons: Record<string, string>;
+  controlCentreUrl: string;
 };
 
-function injectMapStyles() {
-  if (document.getElementById('umkhandlu-map-styles')) return;
-  const style = document.createElement('style');
-  style.id = 'umkhandlu-map-styles';
-  style.textContent = `
-    .map-marker{display:flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;transition:transform .15s}
-    .map-marker:hover{transform:scale(1.3);z-index:999!important}
-    .map-marker-featured{animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.3)}50%{box-shadow:0 0 0 8px rgba(0,0,0,.08)}}
-    .map-popup .leaflet-popup-content-wrapper{border-radius:12px;padding:0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-    .map-popup .leaflet-popup-content{margin:0;min-width:220px}
-    .map-popup .leaflet-popup-tip{display:none}
-    .map-label{background:none;border:none;box-shadow:none;font-size:11px;font-weight:600;color:#1f2937;white-space:nowrap;padding:0;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
-    .map-label::before{display:none}
-    .popup-img{width:100%;height:120px;object-fit:cover;display:block}
-    .popup-inner{padding:12px 14px}
-    .popup-name{font-weight:700;font-size:14px;margin-bottom:2px}
-    .popup-meta{font-size:12px;color:#666;line-height:1.6}
-    .popup-verify{color:#16a34a;font-weight:600}
-    .popup-actions{display:flex;gap:10px;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0f0}
-    .popup-actions a{font-size:12px;font-weight:600;text-decoration:none}
-  `;
-  document.head.appendChild(style);
-}
+function listingPopup(listing: Listing, typeColor: string): HTMLElement {
+  const popup = document.createElement('div');
+  const title = document.createElement('strong');
+  title.textContent = listing.name;
+  popup.append(title);
 
-function createMarkerIcon(
-  Leaf: typeof L,
-  icon: string,
-  color: string,
-  featured: boolean,
-  size: number
-) {
-  return Leaf.divIcon({
-    className: '',
-    html: `<div class="map-marker ${featured ? 'map-marker-featured' : ''}" style="width:${size}px;height:${size}px;background:${color};font-size:${size * 0.5}px">${icon}</div>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -(size / 2 + 4)],
-  });
-}
-
-function buildPopup(
-  listing: Listing,
-  icon: string,
-  color: string,
-  href: string
-) {
-  const img = listing.imageUrl
-    ? `<img src="${listing.imageUrl}?w=400&h=240&fit=crop" alt="${listing.name}" class="popup-img" loading="lazy" />`
-    : '';
-  const area = listing.areaName
-    ? `<div class="popup-meta">${listing.areaName}</div>`
-    : '';
-  const verify =
-    listing.verifiedByInduna === 'council'
-      ? '<div class="popup-meta popup-verify">✓✓ Council Verified</div>'
-      : listing.verifiedByInduna === 'induna'
-        ? '<div class="popup-meta popup-verify">✓ Verified by Induna</div>'
-        : '';
-  const loc = listing.location
-    ? `<div class="popup-meta">📍 ${listing.location}</div>`
-    : '';
-  const phone = listing.contactInfo
-    ? `<div class="popup-meta">📞 ${listing.contactInfo}</div>`
-    : '';
-  const gmaps = `https://www.google.com/maps?q=${listing.geopoint?.lat},${listing.geopoint?.lng}`;
-  return `${img}<div class="popup-inner"><div class="popup-name">${icon} ${listing.name}</div>${area}${verify}${loc}${phone}<div class="popup-actions"><a href="${href}" style="color:${color}">View details →</a><a href="${gmaps}" target="_blank" rel="noopener" style="color:#6b7280">🗺️ Directions</a></div></div>`;
-}
-
-function addMarkers(
-  Leaf: typeof L,
-  map: L.Map,
-  listings: Listing[],
-  typeColors: Record<string, string>,
-  typeIcons: Record<string, string>
-) {
-  for (const listing of listings) {
-    if (!listing.geopoint?.lat || !listing.geopoint?.lng) continue;
-
-    const color = typeColors[listing.listingType] || '#6b7280';
-    const icon = typeIcons[listing.listingType] || '📍';
-    const featured = listing.featured ?? false;
-    const size = featured ? 40 : 32;
-    const href =
-      listing.listingType === 'area'
-        ? `/areas/${listing.slug}`
-        : `/directory/${listing.slug}`;
-
-    const markerIcon = createMarkerIcon(Leaf, icon, color, featured, size);
-
-    Leaf.marker([listing.geopoint.lat, listing.geopoint.lng], {
-      icon: markerIcon,
-    })
-      .addTo(map)
-      .bindTooltip(listing.name, {
-        permanent: true,
-        direction: 'right',
-        offset: [size / 2 + 4, 0],
-        className: 'map-label',
-      })
-      .bindPopup(buildPopup(listing, icon, color, href), {
-        className: 'map-popup',
-        maxWidth: 280,
-      });
+  for (const value of [
+    listing.areaName,
+    listing.location,
+    listing.contactInfo,
+    listing.verifiedByInduna,
+  ]) {
+    if (!value) continue;
+    const detail = document.createElement('p');
+    detail.className = 'text-xs text-gray-600';
+    detail.textContent = value;
+    popup.append(detail);
   }
+
+  const link = document.createElement('a');
+  link.href =
+    listing.listingType === 'area'
+      ? `/areas/${listing.slug}`
+      : `/directory/${listing.slug}`;
+  link.className = 'mt-2 inline-block text-xs font-semibold';
+  link.style.color = typeColor;
+  link.textContent = 'View details →';
+  popup.append(link);
+  return popup;
 }
 
-function fitMapBounds(Leaf: typeof L, map: L.Map, listings: Listing[]) {
-  const points = listings
-    .filter((l) => l.geopoint?.lat && l.geopoint?.lng)
-    .map(
-      (l) => [l.geopoint?.lat ?? 0, l.geopoint?.lng ?? 0] as [number, number]
-    );
-  if (points.length > 1) {
-    map.fitBounds(Leaf.latLngBounds(points), { padding: [40, 40] });
+function renderLinkedListings({
+  Leaf,
+  map,
+  layers,
+  listings,
+  typeColors,
+  typeIcons,
+  renderedLayers,
+}: {
+  Leaf: typeof L;
+  map: L.Map;
+  layers: SpatialMapLayer[];
+  listings: Listing[];
+  typeColors: Record<string, string>;
+  typeIcons: Record<string, string>;
+  renderedLayers: Map<string, L.Layer>;
+}) {
+  for (const [key, layer] of renderedLayers) {
+    if (!key.startsWith('linked:')) continue;
+    map.removeLayer(layer);
+    renderedLayers.delete(key);
+  }
+
+  const listingsByFeatureId = new Map(
+    listings.flatMap((listing) =>
+      listing.spatialFeatureId
+        ? [[listing.spatialFeatureId, listing] as const]
+        : []
+    )
+  );
+  for (const spatialLayer of layers) {
+    for (const feature of spatialLayer.features) {
+      if (!feature.id) continue;
+      const listing = listingsByFeatureId.get(feature.id);
+      if (!listing) continue;
+      const colour = typeColors[listing.listingType] ?? spatialLayer.colour;
+      const icon = typeIcons[listing.listingType] ?? '';
+      const geoJsonFeature: GeoJSON.Feature = {
+        type: 'Feature',
+        id: feature.id,
+        geometry: feature.geometry as GeoJSON.Geometry,
+        properties: feature.properties as GeoJSON.GeoJsonProperties,
+      };
+      const layer = Leaf.geoJSON(geoJsonFeature, {
+        style: {
+          color: colour,
+          weight: 3,
+          fillColor: colour,
+          fillOpacity: 0.25,
+        },
+        pointToLayer: (_geoFeature, point) =>
+          Leaf.marker(point, {
+            icon: Leaf.divIcon({
+              className: '',
+              html: `<div style="width:32px;height:32px;border-radius:50%;border:2px solid #fff;background:${colour};display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3)">${icon}</div>`,
+              iconSize: [32, 32],
+              iconAnchor: [16, 16],
+            }),
+          }),
+        onEachFeature: (_geoFeature, featureLayer) => {
+          featureLayer.bindTooltip(listing.name);
+          featureLayer.bindPopup(listingPopup(listing, colour));
+        },
+      }).addTo(map);
+      renderedLayers.set(`linked:${listing._id}`, layer);
+    }
   }
 }
 
@@ -153,48 +144,144 @@ export default function CommunityMapLeaflet({
   zoom,
   typeColors,
   typeIcons,
+  controlCentreUrl,
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const renderedLayersRef = useRef<Map<string, L.Layer>>(new Map());
+  const [mapReady, setMapReady] = useState(false);
+  const [bounds, setBounds] = useState<SpatialMapBounds | null>(null);
+  const [visibility, setVisibility] = useState<Record<string, boolean>>({});
+  const [selectedDatasetIds, setSelectedDatasetIds] = useState<
+    string[] | undefined
+  >(undefined);
+  const { layers, loading, error, permissionFiltered, retry } =
+    useSpatialMapLayers({
+      controlCentreUrl,
+      bounds,
+      datasetIds: selectedDatasetIds,
+      enabled: mapReady,
+    });
 
   useEffect(() => {
     if (!mapRef.current) return;
     loadLeafletCss();
-    injectMapStyles();
-
     let cancelled = false;
 
     import('leaflet').then((Leaf) => {
       if (cancelled || !mapRef.current) return;
-
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
-
-      const map = Leaf.map(mapRef.current).setView(
+      const map = createMap(
+        Leaf,
+        mapRef.current,
         [centerLat, centerLng],
-        zoom
+        zoom,
+        { scrollWheelZoom: true }
       );
       mapInstanceRef.current = map;
 
-      Leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 18,
-      }).addTo(map);
-
-      addMarkers(Leaf, map, listings, typeColors, typeIcons);
-      if (listings.length > 0) fitMapBounds(Leaf, map, listings);
+      const updateBounds = () => {
+        const viewport = map.getBounds();
+        setBounds({
+          west: viewport.getWest(),
+          south: viewport.getSouth(),
+          east: viewport.getEast(),
+          north: viewport.getNorth(),
+        });
+      };
+      map.on('moveend', updateBounds);
+      updateBounds();
+      setMapReady(true);
     });
 
     return () => {
       cancelled = true;
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
+      setMapReady(false);
+      setBounds(null);
+      mapInstanceRef.current?.remove();
+      mapInstanceRef.current = null;
+      renderedLayersRef.current.clear();
     };
-  }, [listings, centerLat, centerLng, zoom, typeColors, typeIcons]);
+  }, [centerLat, centerLng, zoom]);
 
-  return <div ref={mapRef} className="h-[500px] md:h-[600px] w-full" />;
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!mapReady || !map) return;
+    import('leaflet').then((Leaf) => {
+      const linkedFeatureIds = new Set(
+        listings.map((listing) => listing.spatialFeatureId)
+      );
+      const contextLayers = layers
+        .map((layer) => ({
+          ...layer,
+          features: layer.features.filter(
+            (feature) => !feature.id || !linkedFeatureIds.has(feature.id)
+          ),
+        }))
+        .filter((layer) => layer.features.length > 0);
+      renderSpatialMapLayers({
+        Leaf,
+        map,
+        layers: contextLayers,
+        visibility,
+        renderedLayers: renderedLayersRef.current,
+        prefix: 'context:',
+      });
+      renderLinkedListings({
+        Leaf,
+        map,
+        layers,
+        listings,
+        typeColors,
+        typeIcons,
+        renderedLayers: renderedLayersRef.current,
+      });
+    });
+  }, [layers, listings, mapReady, typeColors, typeIcons, visibility]);
+
+  function toggleLayer(layerId: string) {
+    setVisibility((current) => ({
+      ...current,
+      [layerId]: !(current[layerId] ?? true),
+    }));
+    setSelectedDatasetIds((current) =>
+      toggleSpatialDatasetSelection(current, layers, layerId)
+    );
+  }
+
+  const linkedFeatureIds = new Set(
+    listings.flatMap((listing) =>
+      listing.spatialFeatureId ? [listing.spatialFeatureId] : []
+    )
+  );
+  const controlLayers = layers.map((layer) => ({
+    ...layer,
+    features: layer.features.filter(
+      (feature: SpatialMapFeature) =>
+        !feature.id || !linkedFeatureIds.has(feature.id)
+    ),
+  }));
+
+  return (
+    <div className="relative h-[500px] w-full md:h-[600px]">
+      <div ref={mapRef} className="absolute inset-0" />
+      {mapReady && (
+        <SpatialLayerControls
+          layers={controlLayers}
+          visibility={visibility}
+          onToggle={toggleLayer}
+          error={error}
+          onRetry={retry}
+        />
+      )}
+      {(loading || error || permissionFiltered) && (
+        <div className="absolute bottom-3 left-3 z-[1000] max-w-[min(32rem,70%)] rounded bg-white/95 px-2.5 py-1.5 text-xs text-amber-800 shadow">
+          {error
+            ? `Spatial layers unavailable: ${error}`
+            : loading
+              ? 'Loading spatial layers for this map view…'
+              : 'Some spatial data is withheld pending redistribution permission verification.'}
+        </div>
+      )}
+    </div>
+  );
 }

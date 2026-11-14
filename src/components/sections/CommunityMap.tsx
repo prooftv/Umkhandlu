@@ -13,7 +13,7 @@ type Listing = {
   listingType: string;
   description?: string;
   location?: string;
-  geopoint?: { lat: number; lng: number } | null;
+  spatialFeatureId?: string | null;
   contactInfo?: string;
   featured?: boolean;
   verifiedByInduna?: string;
@@ -171,7 +171,7 @@ export default function CommunityMap({ section }: Props) {
     section;
 
   const geoListings = useMemo(
-    () => listings?.filter((l) => l.geopoint?.lat && l.geopoint?.lng) ?? [],
+    () => listings?.filter((listing) => listing.spatialFeatureId) ?? [],
     [listings]
   );
 
@@ -210,7 +210,9 @@ export default function CommunityMap({ section }: Props) {
           {heading && (
             <h2 className="text-3xl md:text-4xl font-bold mb-4">{heading}</h2>
           )}
-          <p className="text-gray-500">No listings with map coordinates yet.</p>
+          <p className="text-gray-500">
+            No listings are linked to verified published spatial features yet.
+          </p>
         </div>
       </section>
     );
@@ -257,6 +259,9 @@ export default function CommunityMap({ section }: Props) {
                 zoom={zoom ?? 12}
                 typeColors={typeColors}
                 typeIcons={typeIcons}
+                controlCentreUrl={
+                  process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ?? ''
+                }
               />
             </div>
 

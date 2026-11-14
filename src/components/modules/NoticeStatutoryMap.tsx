@@ -1,7 +1,14 @@
 'use client';
 
 import type L from 'leaflet';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   addFeatureCollection,
   addGeoJSON,
@@ -13,43 +20,23 @@ import {
   loadLeafletCss,
   syncLayerVisibility,
 } from '@/lib/map/leaflet-utils';
+import type { SpatialMapBounds } from '@/lib/spatial/map-layers';
+import { toggleSpatialDatasetSelection } from '@/lib/spatial/map-layers';
+import { renderSpatialMapLayers } from '@/lib/spatial/render-map-layers';
+import { useSpatialMapLayers } from '@/lib/spatial/use-spatial-map-layers';
+import SpatialLayerControls from './SpatialLayerControls';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type SpatialFeature = {
   type: 'Feature';
+  id: string;
   geometry: GeoJSONGeometry;
   properties: Record<string, unknown>;
 };
 
-type MapLayer = {
-  id: string;
-  datasetId: string;
-  label: string;
-  colour: string;
-  weight: number;
-  fillOpacity: number;
-  featureCount: number;
-  returnedCount: number;
-  loadOnDemand: boolean;
-  truncated: boolean;
-  radiusKm: number | null;
+type SpatialContextLayer = {
   features: SpatialFeature[];
-  attribution: string | null;
-  publishedAt: string | null;
-  datasetDate: string | null;
-  radiusFiltered: boolean;
-};
-
-type MapLayersResponse = {
-  layers: MapLayer[];
-  permissionFiltered?: boolean;
-  filterLat: number | null;
-  filterLng: number | null;
-  generatedAt: string;
-};
-
-type DatasetResult = {
   status:
     | 'found'
     | 'not-found'
@@ -60,7 +47,6 @@ type DatasetResult = {
   attribution: string | null;
   datasetDate: string | null;
   featureCount: number;
-  features: SpatialFeature[];
   note: string | null;
 };
 
@@ -108,21 +94,21 @@ type NoticeContextResponse = {
   wardNumber: number | null;
   catB: string | null;
   administrative: {
-    ward: DatasetResult;
-    municipality: DatasetResult;
-    district: DatasetResult;
+    municipality: SpatialContextLayer;
+    district: SpatialContextLayer;
+    ward: SpatialContextLayer;
   };
   wardDemographics: WardDemographics | null;
   proximity: {
-    traditionalAreas: DatasetResult;
-    licensedPremises: DatasetResult;
-    schools: DatasetResult;
-    religiousInstitutions: DatasetResult;
-    recreationFacilities: DatasetResult;
+    traditionalAreas: SpatialContextLayer;
+    licensedPremises: SpatialContextLayer;
+    schools: SpatialContextLayer;
+    religiousInstitutions: SpatialContextLayer;
+    recreationFacilities: SpatialContextLayer;
   };
   siteContext: {
-    landUse: DatasetResult;
-    cadastre: DatasetResult;
+    landUse: SpatialContextLayer;
+    cadastre: SpatialContextLayer;
   };
   proximityRadiusMetres: number | null;
   proximityRadiusNote: string | null;
@@ -215,9 +201,315 @@ const STATUS_LABEL: Record<string, string> = {
 
 type LayerKey = 'ward' | 'municipality' | 'district' | 'proximity';
 
+function useNoticeSpatialContext({
+  noticeType,
+  controlCentreUrl,
+  wardNumber,
+  catB,
+  lat,
+  lng,
+  locationPrecision,
+}: {
+  noticeType: string;
+  controlCentreUrl: string;
+  wardNumber?: number | null;
+  catB?: string | null;
+  lat: number;
+  lng: number;
+  locationPrecision?: string | null;
+}) {
+  const [context, setContext] = useState<NoticeContextResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [contextError, setContextError] = useState<string | null>(null);
+  const [contextRetry, setContextRetry] = useState(0);
+
+  useEffect(() => {
+    setLoading(true);
+    setContext(null);
+    setContextError(null);
+    const controller = new AbortController();
+    let active = true;
+    const params = new URLSearchParams({ noticeType });
+    if (wardNumber != null) params.set('wardNumber', String(wardNumber));
+    if (catB) params.set('catB', catB);
+    params.set('lat', String(lat));
+    params.set('lng', String(lng));
+    if (locationPrecision) params.set('locationPrecision', locationPrecision);
+    if (contextRetry > 0) params.set('_retry', String(contextRetry));
+    fetch(`${controlCentreUrl}/api/spatial/notice-context?${params}`, {
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        const body = (await response.json()) as
+          | NoticeContextResponse
+          | { error?: string };
+        if (!response.ok) {
+          throw new Error(
+            'error' in body && body.error
+              ? body.error
+              : `Notice spatial context request failed (${response.status})`
+          );
+        }
+        return body as NoticeContextResponse;
+      })
+      .then((data) => {
+        if (active) setContext(data);
+      })
+      .catch((cause: unknown) => {
+        if (cause instanceof DOMException && cause.name === 'AbortError')
+          return;
+        if (active) {
+          setContextError(
+            cause instanceof Error
+              ? cause.message
+              : 'Notice spatial context is unavailable'
+          );
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [
+    noticeType,
+    controlCentreUrl,
+    wardNumber,
+    catB,
+    lat,
+    lng,
+    locationPrecision,
+    contextRetry,
+  ]);
+
+  return {
+    context,
+    loading,
+    contextError,
+    retryContext: () => setContextRetry((current) => current + 1),
+  };
+}
+
+function useNoticeMapInitialization({
+  mapRef,
+  mapInstanceRef,
+  layerRefs,
+  lat,
+  lng,
+  name,
+  wardBoundary,
+  siteBoundary,
+  wardName,
+  precision,
+  setMapReady,
+  setMapViewport,
+}: {
+  mapRef: { current: HTMLDivElement | null };
+  mapInstanceRef: { current: L.Map | null };
+  layerRefs: { current: Map<string, L.Layer> };
+  lat: number;
+  lng: number;
+  name: string;
+  wardBoundary: Props['wardBoundary'];
+  siteBoundary: Props['siteBoundary'];
+  wardName: string | null | undefined;
+  precision: { label: string; colour: string } | null;
+  setMapReady: Dispatch<SetStateAction<boolean>>;
+  setMapViewport: Dispatch<SetStateAction<SpatialMapBounds | null>>;
+}) {
+  useEffect(() => {
+    if (!mapRef.current) return;
+    loadLeafletCss();
+    let cancelled = false;
+    import('leaflet').then((Leaf) => {
+      if (cancelled || !mapRef.current) return;
+      mapInstanceRef.current?.remove();
+      layerRefs.current.clear();
+      mapInstanceRef.current = initNoticeMap({
+        Leaf,
+        container: mapRef.current,
+        lat,
+        lng,
+        wardBoundary,
+        siteBoundary,
+        wardName,
+        name,
+        precision,
+        refs: layerRefs.current,
+      });
+      const map = mapInstanceRef.current;
+      const updateViewport = () => {
+        const bounds = map.getBounds();
+        setMapViewport({
+          west: bounds.getWest(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          north: bounds.getNorth(),
+        });
+      };
+      map.on('moveend', updateViewport);
+      updateViewport();
+      setMapReady(true);
+    });
+    return () => {
+      cancelled = true;
+      setMapReady(false);
+      setMapViewport(null);
+      mapInstanceRef.current?.remove();
+      mapInstanceRef.current = null;
+      layerRefs.current.clear();
+    };
+  }, [
+    lat,
+    lng,
+    name,
+    wardBoundary,
+    siteBoundary,
+    wardName,
+    precision,
+    mapRef,
+    mapInstanceRef,
+    layerRefs,
+    setMapReady,
+    setMapViewport,
+  ]);
+}
+
+function useNoticeSpatialMapRendering({
+  mapInstanceRef,
+  layerRefs,
+  mapReady,
+  mapLayers,
+  spatialVisibility,
+  context,
+  reliableSiteLocation,
+  precision,
+  lat,
+  lng,
+  visibility,
+}: {
+  mapInstanceRef: { current: L.Map | null };
+  layerRefs: { current: Map<string, L.Layer> };
+  mapReady: boolean;
+  mapLayers: ReturnType<typeof useSpatialMapLayers>['layers'];
+  spatialVisibility: Record<string, boolean>;
+  context: NoticeContextResponse | null;
+  reliableSiteLocation: boolean;
+  precision: { label: string; colour: string } | null;
+  lat: number;
+  lng: number;
+  visibility: Record<LayerKey, boolean>;
+}) {
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!mapReady || !map) return;
+    import('leaflet').then((Leaf) => {
+      renderSpatialMapLayers({
+        Leaf,
+        map,
+        layers: mapLayers,
+        visibility: spatialVisibility,
+        renderedLayers: layerRefs.current,
+        prefix: 'data:',
+      });
+    });
+  }, [mapLayers, mapReady, spatialVisibility, mapInstanceRef, layerRefs]);
+
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!mapReady || !map || !context) return;
+    import('leaflet').then((Leaf) => {
+      addAdminLayers(Leaf, map, context, layerRefs.current);
+      const radius = context.proximityRadiusMetres;
+      if (
+        radius != null &&
+        reliableSiteLocation &&
+        !layerRefs.current.has('proximity')
+      ) {
+        const label = `${radius}m illustrative context radius (${precision?.label})`;
+        const circle = addProximityCircle(Leaf, map, lat, lng, radius, label);
+        layerRefs.current.set('proximity', circle);
+      }
+    });
+  }, [
+    context,
+    lat,
+    lng,
+    mapReady,
+    precision,
+    reliableSiteLocation,
+    mapInstanceRef,
+    layerRefs,
+  ]);
+
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+    for (const [key, layer] of layerRefs.current) {
+      if (key in visibility) {
+        syncLayerVisibility(map, layer, visibility[key as LayerKey]);
+      }
+    }
+  }, [visibility, mapInstanceRef, layerRefs]);
+}
+
+function NoticeSpatialStatus({
+  mapLayersError,
+  mapLayersPermissionNotice,
+  mapLayersLoading,
+  contextError,
+  loading,
+  onRetry,
+}: {
+  mapLayersError: string | null;
+  mapLayersPermissionNotice: boolean;
+  mapLayersLoading: boolean;
+  contextError: string | null;
+  loading: boolean;
+  onRetry: () => void;
+}) {
+  if (
+    !mapLayersError &&
+    !mapLayersPermissionNotice &&
+    !mapLayersLoading &&
+    !contextError &&
+    !loading
+  ) {
+    return null;
+  }
+
+  let message =
+    'Some spatial data is withheld pending redistribution permission verification.';
+  if (contextError) {
+    message = `Notice spatial context unavailable: ${contextError}`;
+  } else if (mapLayersError) {
+    message = `Spatial layers unavailable: ${mapLayersError}`;
+  } else if (loading) {
+    message = 'Loading notice spatial context…';
+  } else if (mapLayersLoading) {
+    message = 'Loading spatial layers for this map view…';
+  }
+
+  return (
+    <div
+      role={contextError || mapLayersError ? 'alert' : 'status'}
+      className="absolute bottom-3 left-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow"
+    >
+      {message}
+      {contextError && (
+        <button type="button" onClick={onRetry} className="ml-2 underline">
+          Retry notice context
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function StatusBadge({ status }: { status: DatasetResult['status'] }) {
+function StatusBadge({ status }: { status: SpatialContextLayer['status'] }) {
   return (
     <span
       className={`inline-block text-[10px] font-medium px-1.5 py-0.5 rounded border ${STATUS_COLOUR[status]}`}
@@ -233,7 +525,7 @@ function FindingRow({
   onFocus,
 }: {
   label: string;
-  result: DatasetResult;
+  result: SpatialContextLayer;
   onFocus?: () => void;
 }) {
   return (
@@ -293,7 +585,7 @@ function LayerToggleBar({
   items: Array<{ key: LayerKey; label: string; colour: string; show: boolean }>;
 }) {
   return (
-    <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-1">
+    <div className="absolute top-3 right-3 z-[1000] flex flex-col gap-1">
       {items
         .filter((i) => i.show)
         .map((item) => (
@@ -327,7 +619,18 @@ function buildSitePopup(
   name: string,
   precision: { label: string; colour: string } | null
 ) {
-  return `<strong>${name}</strong>${precision ? `<br/><small style="color:${precision.colour}">${precision.label}</small>` : ''}`;
+  const content = document.createElement('div');
+  const title = document.createElement('strong');
+  title.textContent = name;
+  content.append(title);
+  if (precision) {
+    const label = document.createElement('small');
+    label.className = 'block';
+    label.style.color = precision.colour;
+    label.textContent = precision.label;
+    content.append(label);
+  }
+  return content;
 }
 
 function addAdminLayers(
@@ -364,45 +667,6 @@ function addAdminLayers(
       l.bindTooltip('Amajuba District Municipality (DC25)', { sticky: true });
       refs.set('district', l);
     }
-  }
-}
-
-// ─── POI layer rendering (module-level to reduce component complexity) ──────
-
-function renderPoiLayers(
-  Leaf: typeof L,
-  map: L.Map,
-  mapLayers: MapLayer[],
-  refs: Map<string, L.Layer>
-) {
-  for (const layer of mapLayers) {
-    if (!layer.features.length) continue;
-    if (refs.has(`poi-${layer.id}`)) continue;
-    const style: L.PathOptions = {
-      color: layer.colour,
-      fillColor: layer.colour,
-      weight: layer.weight,
-      fillOpacity: layer.fillOpacity,
-      opacity: 0.9,
-    };
-    const l = addFeatureCollection(
-      Leaf,
-      map,
-      layer.features,
-      style,
-      (f, fl) => {
-        const p = (f.properties ?? {}) as Record<string, unknown>;
-        const label =
-          (p.name as string) ??
-          (p.NAME as string) ??
-          (p.amenity as string) ??
-          layer.label;
-        const tooltip = document.createElement('span');
-        tooltip.textContent = label;
-        fl.bindTooltip(tooltip, { sticky: true });
-      }
-    );
-    if (l) refs.set(`poi-${layer.id}`, l);
   }
 }
 
@@ -764,13 +1028,36 @@ export default function NoticeStatutoryMap({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerRefs = useRef<Map<string, L.Layer>>(new Map());
   const [mapReady, setMapReady] = useState(false);
+  const [mapViewport, setMapViewport] = useState<SpatialMapBounds | null>(null);
 
-  const [context, setContext] = useState<NoticeContextResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [mapLayers, setMapLayers] = useState<MapLayer[]>([]);
-  const [mapLayersError, setMapLayersError] = useState(false);
-  const [mapLayersPermissionNotice, setMapLayersPermissionNotice] =
-    useState(false);
+  const { context, loading, contextError, retryContext } =
+    useNoticeSpatialContext({
+      noticeType,
+      controlCentreUrl,
+      wardNumber,
+      catB,
+      lat,
+      lng,
+      locationPrecision,
+    });
+  const [selectedDatasetIds, setSelectedDatasetIds] = useState<
+    string[] | undefined
+  >(undefined);
+  const {
+    layers: mapLayers,
+    loading: mapLayersLoading,
+    error: mapLayersError,
+    permissionFiltered: mapLayersPermissionNotice,
+    retry: retryMapLayers,
+  } = useSpatialMapLayers({
+    controlCentreUrl,
+    bounds: mapViewport,
+    datasetIds: selectedDatasetIds,
+    enabled: mapReady,
+  });
+  const [spatialVisibility, setSpatialVisibility] = useState<
+    Record<string, boolean>
+  >({});
   const [visibility, setVisibility] = useState<Record<LayerKey, boolean>>({
     ward: true,
     municipality: true,
@@ -783,59 +1070,34 @@ export default function NoticeStatutoryMap({
     locationPrecision === 'verified' ||
     locationPrecision === 'operator-provided';
 
-  // Fetch nearby published layers; large layers return a capped nearby subset.
-  useEffect(() => {
-    const params = new URLSearchParams({ noticeType });
-    params.set('lat', String(lat));
-    params.set('lng', String(lng));
-    if (locationPrecision) params.set('locationPrecision', locationPrecision);
-    const controller = new AbortController();
-    setMapLayers([]);
-    setMapLayersError(false);
-    setMapLayersPermissionNotice(false);
-    fetch(`${controlCentreUrl}/api/spatial/map-layers?${params}`, {
-      signal: controller.signal,
-    })
-      .then((r) => {
-        if (!r.ok)
-          throw new Error(`Spatial layer request failed (${r.status})`);
-        return r.json() as Promise<MapLayersResponse>;
-      })
-      .then((data) => {
-        setMapLayers(data.layers);
-        setMapLayersPermissionNotice(data.permissionFiltered === true);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setMapLayersError(true);
-      });
-    return () => controller.abort();
-  }, [controlCentreUrl, lat, lng, locationPrecision, noticeType]);
-
-  // Fetch structured spatial context from CC
-  useEffect(() => {
-    setLoading(true);
-    const params = new URLSearchParams({ noticeType });
-    if (wardNumber != null) params.set('wardNumber', String(wardNumber));
-    if (catB) params.set('catB', catB);
-    params.set('lat', String(lat));
-    params.set('lng', String(lng));
-    if (locationPrecision) params.set('locationPrecision', locationPrecision);
-    fetch(`${controlCentreUrl}/api/spatial/notice-context?${params}`)
-      .then((r) => (r.ok ? (r.json() as Promise<NoticeContextResponse>) : null))
-      .then((data) => {
-        if (data) setContext(data);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [
-    noticeType,
-    controlCentreUrl,
-    wardNumber,
-    catB,
+  useNoticeMapInitialization({
+    mapRef,
+    mapInstanceRef,
+    layerRefs,
     lat,
     lng,
-    locationPrecision,
-  ]);
+    name,
+    wardBoundary,
+    siteBoundary,
+    wardName,
+    precision,
+    setMapReady,
+    setMapViewport,
+  });
+
+  useNoticeSpatialMapRendering({
+    mapInstanceRef,
+    layerRefs,
+    mapReady,
+    mapLayers,
+    spatialVisibility,
+    context,
+    reliableSiteLocation,
+    precision,
+    lat,
+    lng,
+    visibility,
+  });
 
   // Focus map on a named layer
   const focusLayer = useCallback((key: string) => {
@@ -845,85 +1107,24 @@ export default function NoticeStatutoryMap({
     fitToLayer(map, layer as L.GeoJSON);
   }, []);
 
-  // Init map once
-  useEffect(() => {
-    if (!mapRef.current) return;
-    loadLeafletCss();
-    let cancelled = false;
-    import('leaflet').then((Leaf) => {
-      if (cancelled || !mapRef.current) return;
-      mapInstanceRef.current?.remove();
-      layerRefs.current.clear();
-      mapInstanceRef.current = initNoticeMap({
-        Leaf,
-        container: mapRef.current,
-        lat,
-        lng,
-        wardBoundary,
-        siteBoundary,
-        wardName,
-        name,
-        precision,
-        refs: layerRefs.current,
-      });
-      setMapReady(true);
-    });
-    return () => {
-      cancelled = true;
-      setMapReady(false);
-      mapInstanceRef.current?.remove();
-      mapInstanceRef.current = null;
-      layerRefs.current.clear();
-    };
-  }, [lat, lng, name, wardBoundary, siteBoundary, wardName, precision]);
-
-  // Render POI/infrastructure layers when they arrive
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    if (!mapReady || !map || !mapLayers.length) return;
-    import('leaflet').then((Leaf) => {
-      renderPoiLayers(Leaf, map, mapLayers, layerRefs.current);
-    });
-  }, [mapLayers, mapReady]);
-
-  // Add admin layers and proximity circle when context arrives
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    if (!mapReady || !map || !context) return;
-    import('leaflet').then((Leaf) => {
-      addAdminLayers(Leaf, map, context, layerRefs.current);
-      // Proximity circle: only drawn when the statutory profile specifies a radius.
-      // It is illustrative and only meaningful for reliable premises coordinates.
-      const radius = context.proximityRadiusMetres;
-      if (
-        radius != null &&
-        reliableSiteLocation &&
-        !layerRefs.current.has('proximity')
-      ) {
-        const label = `${radius}m illustrative context radius (${precision?.label})`;
-        const circle = addProximityCircle(Leaf, map, lat, lng, radius, label);
-        layerRefs.current.set('proximity', circle);
-      }
-    });
-  }, [context, lat, lng, mapReady, precision, reliableSiteLocation]);
-
-  // Sync visibility
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
-    for (const [key, layer] of layerRefs.current) {
-      if (key in visibility)
-        syncLayerVisibility(map, layer, visibility[key as LayerKey]);
-    }
-  }, [visibility]);
-
   function toggleVisibility(key: LayerKey) {
     setVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
+  function toggleSpatialLayer(layerId: string) {
+    setSpatialVisibility((prev) => ({
+      ...prev,
+      [layerId]: !(prev[layerId] ?? true),
+    }));
+    setSelectedDatasetIds((current) =>
+      toggleSpatialDatasetSelection(current, mapLayers, layerId)
+    );
+  }
+
   const hasMunicipality =
-    (context?.administrative.municipality.featureCount ?? 0) > 0;
-  const hasDistrict = (context?.administrative.district.featureCount ?? 0) > 0;
+    (context?.administrative.municipality.features.length ?? 0) > 0;
+  const hasDistrict =
+    (context?.administrative.district.features.length ?? 0) > 0;
   const proximityMetres = context?.proximityRadiusMetres ?? null;
 
   const toggleItems: Array<{
@@ -971,6 +1172,21 @@ export default function NoticeStatutoryMap({
           onToggle={toggleVisibility}
           items={toggleItems}
         />
+        <SpatialLayerControls
+          layers={mapLayers}
+          visibility={spatialVisibility}
+          onToggle={toggleSpatialLayer}
+          error={mapLayersError}
+          onRetry={retryMapLayers}
+        />
+        <NoticeSpatialStatus
+          mapLayersError={mapLayersError}
+          mapLayersPermissionNotice={mapLayersPermissionNotice}
+          mapLayersLoading={mapLayersLoading}
+          contextError={contextError}
+          loading={loading}
+          onRetry={retryContext}
+        />
         {mapDeepLink && (
           <a
             href={mapDeepLink}
@@ -979,59 +1195,25 @@ export default function NoticeStatutoryMap({
             Full map →
           </a>
         )}
-        {(mapLayersError || mapLayersPermissionNotice) && (
-          <div className="absolute bottom-3 left-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
-            {mapLayersError
-              ? 'External spatial layers temporarily unavailable.'
-              : 'Some spatial data is withheld pending redistribution permission verification.'}
-          </div>
+        {context && (
+          <details className="absolute bottom-14 right-3 z-[1000] max-h-[min(70vh,24rem)] w-[min(24rem,90vw)] overflow-y-auto rounded-lg border border-gray-200 bg-white/95 shadow-lg backdrop-blur">
+            <summary className="sticky top-0 cursor-pointer bg-white/95 px-3 py-2 text-xs font-semibold shadow-sm">
+              Spatial context details
+            </summary>
+            <FindingsPanel
+              loading={loading}
+              context={context}
+              noticeType={noticeType}
+              lat={lat}
+              lng={lng}
+              name={name}
+              precision={precision}
+              wardName={wardName}
+              municipality={municipality}
+              focusLayer={focusLayer}
+            />
+          </details>
         )}
-        {!siteBoundary && locationPrecision !== 'verified' && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] bg-white/90 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] text-gray-500 shadow whitespace-nowrap">
-            Operator-provided location — ward boundary is geographic context
-            only
-          </div>
-        )}
-      </div>
-
-      {mapLayers.length > 0 && (
-        <div className="border-x border-gray-200 bg-white px-3 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-            Nearby external spatial context
-          </p>
-          <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
-            {mapLayers.map((layer) => (
-              <span key={layer.id} className="text-[10px] text-gray-500">
-                {layer.label}:{' '}
-                {layer.truncated
-                  ? `at least ${layer.returnedCount}`
-                  : layer.returnedCount}
-                {layer.radiusFiltered && layer.radiusKm !== null
-                  ? ` within ${layer.radiusKm} km`
-                  : ''}
-                {layer.attribution ? ` · ${layer.attribution}` : ''}
-                {layer.datasetDate ? ` · ${layer.datasetDate}` : ''}
-                {layer.truncated ? ' · partial coverage' : ''}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Zone B — Structured spatial findings */}
-      <div className="rounded-b-xl border border-gray-200 border-t bg-white shadow-sm">
-        <FindingsPanel
-          loading={loading}
-          context={context}
-          noticeType={noticeType}
-          lat={lat}
-          lng={lng}
-          name={name}
-          precision={precision}
-          wardName={wardName}
-          municipality={municipality}
-          focusLayer={focusLayer}
-        />
       </div>
     </div>
   );

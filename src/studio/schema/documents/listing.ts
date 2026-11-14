@@ -65,7 +65,19 @@ export default defineType({
       name: 'geopoint',
       title: 'Map Location',
       type: 'geopoint',
-      description: 'Pin this listing on the map. Click to set coordinates.',
+      description:
+        'Legacy operator-entered coordinate. It is not shown as an authoritative map pin; use a published spatial feature reference below.',
+    }),
+    defineField({
+      name: 'spatialFeatureId',
+      title: 'Published spatial feature ID',
+      type: 'string',
+      description:
+        'UUID of the matching approved, publicly redistributable feature in Unami Control Centre. Link only after verifying that it represents this exact listing.',
+      validation: (rule) =>
+        rule.regex(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+        ),
     }),
     defineField({
       name: 'contactInfo',
