@@ -9,7 +9,7 @@ function getLayerStatusLabel(layer: SpatialMapLayer): string {
     return 'Permission required';
   if (layer.requestStatus === 'not-requested') return 'Not loaded';
   if (layer.status === 'empty') return 'No features in dataset';
-  return `${layer.returnedCount.toLocaleString()} in view`;
+  return `${layer.returnedCount.toLocaleString()} in view · ${layer.featureCount.toLocaleString()} in dataset`;
 }
 
 export default function SpatialLayerControls({
@@ -84,6 +84,10 @@ export default function SpatialLayerControls({
                       {layer.attribution}
                     </span>
                   )}
+                  <span className="block break-all text-[9px] leading-snug text-gray-400">
+                    Dataset ID: {layer.datasetId}
+                    {layer.sourceId ? ` · Source ID: ${layer.sourceId}` : ''}
+                  </span>
                 </span>
               </label>
             ))}

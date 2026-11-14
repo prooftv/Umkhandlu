@@ -1,16 +1,50 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   buildSpatialMapLayersUrl,
+  fetchRemainingSpatialMapFeatures,
   isPublishedSpatialFeature,
   isSpatialMapLayersResponse,
   type SpatialMapLayer,
   toggleSpatialDatasetSelection,
 } from './map-layers';
 
-const layer = {
+const layerIdentity = {
   id: 'dataset-a',
   datasetId: 'dataset-a',
 } satisfies Pick<SpatialMapLayer, 'id' | 'datasetId'>;
+
+function makeLayer(overrides: Partial<SpatialMapLayer> = {}): SpatialMapLayer {
+  return {
+    id: 'dataset-a',
+    datasetId: 'dataset-a',
+    status: 'available',
+    label: 'Example dataset',
+    colour: '#2563eb',
+    weight: 2,
+    fillOpacity: 0.2,
+    featureCount: 1,
+    returnedCount: 1,
+    loadOnDemand: false,
+    truncated: false,
+    radiusKm: null,
+    features: [
+      {
+        type: 'Feature',
+        id: 'feature-1',
+        geometry: { type: 'Point', coordinates: [29.92, -27.74] },
+        properties: { name: 'First feature' },
+      },
+    ],
+    attribution: 'Example attribution',
+    sourceId: 'source-a',
+    sourceName: 'Example source',
+    sourceInstitution: 'Example institution',
+    publishedAt: '2026-01-02T00:00:00Z',
+    datasetDate: '2026-01-01',
+    radiusFiltered: false,
+    ...overrides,
+  };
+}
 
 describe('buildSpatialMapLayersUrl', () => {
   const bounds = {
@@ -109,14 +143,121 @@ describe('buildSpatialMapLayersUrl', () => {
   });
 
   it('activates a layer by its stable dataset ID', () => {
-    expect(toggleSpatialDatasetSelection([], [layer], layer.id)).toEqual([
-      layer.datasetId,
-    ]);
+    expect(
+      toggleSpatialDatasetSelection([], [layerIdentity], layerIdentity.id)
+    ).toEqual([layerIdentity.datasetId]);
   });
 
   it('removes a deactivated layer from the request selection', () => {
-    expect(toggleSpatialDatasetSelection(undefined, [layer], layer.id)).toEqual(
-      []
+    expect(
+      toggleSpatialDatasetSelection(
+        undefined,
+        [layerIdentity],
+        layerIdentity.id
+      )
+    ).toEqual([]);
+  });
+
+  it('retrieves additional feature pages when the map-layer response is truncated', async () => {
+    const fetcher = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              id: 'feature-3',
+              geometry: { type: 'Point', coordinates: [29.94, -27.74] },
+              properties: { name: 'Third feature' },
+            },
+          ],
+          meta: {
+            datasetId: 'dataset-a',
+            datasetName: 'Example dataset',
+            attribution: 'Example attribution',
+            sourceId: 'source-a',
+            sourceName: 'Example source',
+            sourceInstitution: 'Example institution',
+            datasetDate: '2026-01-01',
+            publishedAt: '2026-01-02T00:00:00Z',
+            total: 3,
+            offset: 2,
+            limit: 500,
+            returned: 1,
+            radiusMeters: null,
+            bounds,
+            filtered: true,
+            complete: true,
+            hasMore: false,
+            nextOffset: null,
+          },
+        }),
+        { status: 200 }
+      )
     );
+    const truncated = makeLayer({
+      featureCount: 3,
+      returnedCount: 2,
+      truncated: true,
+      features: [
+        {
+          type: 'Feature',
+          id: 'feature-1',
+          geometry: { type: 'Point', coordinates: [29.92, -27.74] },
+          properties: { name: 'First feature' },
+        },
+        {
+          type: 'Feature',
+          id: 'feature-2',
+          geometry: { type: 'Point', coordinates: [29.93, -27.74] },
+          properties: { name: 'Second feature' },
+        },
+      ],
+    });
+
+    const result = await fetchRemainingSpatialMapFeatures({
+      controlCentreUrl: 'https://control.example/',
+      bounds,
+      layer: truncated,
+      signal: new AbortController().signal,
+      fetcher,
+    });
+
+    expect(new URL(String(fetcher.mock.calls[0][0])).pathname).toBe(
+      '/api/spatial/features'
+    );
+    expect(
+      new URL(String(fetcher.mock.calls[0][0])).searchParams.get('offset')
+    ).toBe('2');
+    expect(result.features.map((feature) => feature.id)).toEqual([
+      'feature-1',
+      'feature-2',
+      'feature-3',
+    ]);
+    expect(result.returnedCount).toBe(3);
+    expect(result.truncated).toBe(false);
+  });
+
+  it('surfaces a denied feature page rather than treating the partial layer as complete', async () => {
+    const fetcher = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          error: 'Dataset is not cleared for public redistribution',
+        }),
+        {
+          status: 403,
+        }
+      )
+    );
+
+    await expect(
+      fetchRemainingSpatialMapFeatures({
+        controlCentreUrl: 'https://control.example',
+        bounds,
+        layer: makeLayer({ truncated: true }),
+        signal: new AbortController().signal,
+        fetcher,
+      })
+    ).rejects.toThrow('Dataset is not cleared for public redistribution');
   });
 });

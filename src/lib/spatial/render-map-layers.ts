@@ -59,6 +59,15 @@ export function renderSpatialMapLayers({
         const featureId = document.createElement('p');
         featureId.className = 'text-[10px] text-gray-500';
         featureId.textContent = `Feature ID: ${feature.id ?? 'unknown'}`;
+        const dataset = document.createElement('p');
+        dataset.className = 'text-[10px] text-gray-500';
+        dataset.textContent = `Dataset: ${layer.label} (${layer.datasetId})`;
+        const source = document.createElement('p');
+        source.className = 'text-[10px] text-gray-500';
+        source.textContent = `Source: ${layer.sourceName ?? 'not provided'} (${layer.sourceId ?? 'source ID not provided'})`;
+        const vintage = document.createElement('p');
+        vintage.className = 'text-[10px] text-gray-500';
+        vintage.textContent = `Vintage: ${layer.datasetDate ?? 'not provided'}`;
         const properties = document.createElement('pre');
         properties.className =
           'mt-1 max-h-48 overflow-auto whitespace-pre-wrap text-xs';
@@ -70,7 +79,7 @@ export function renderSpatialMapLayers({
         const attribution = document.createElement('p');
         attribution.className = 'mt-1 text-[10px] text-gray-500';
         attribution.textContent = layer.attribution ?? layer.sourceName ?? '';
-        content.append(title, featureId, properties);
+        content.append(title, featureId, dataset, source, vintage, properties);
         if (attribution.textContent) content.append(attribution);
         featureLayer.bindPopup(content);
       },

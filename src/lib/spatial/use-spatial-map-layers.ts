@@ -16,6 +16,7 @@ import type {
 } from './map-layers';
 import {
   buildSpatialMapLayersUrl,
+  fetchRemainingSpatialMapFeatures,
   isSpatialMapLayersResponse,
 } from './map-layers';
 
@@ -126,6 +127,60 @@ async function readLayersResponse(
   return body;
 }
 
+async function completeTruncatedLayers(
+  body: SpatialMapLayersResponse,
+  {
+    controlCentreUrl,
+    bounds,
+    signal,
+  }: {
+    controlCentreUrl: string;
+    bounds: SpatialMapBounds;
+    signal: AbortSignal;
+  }
+): Promise<SpatialMapLayersResponse> {
+  const layers = [...body.layers];
+  const truncatedIndexes = layers.flatMap((layer, index) =>
+    layer.truncated ? [index] : []
+  );
+  const concurrency = 4;
+
+  for (
+    let offset = 0;
+    offset < truncatedIndexes.length;
+    offset += concurrency
+  ) {
+    const batch = truncatedIndexes.slice(offset, offset + concurrency);
+    const completed = await Promise.all(
+      batch.map((index) => {
+        const layer = layers[index];
+        if (!layer) {
+          throw new Error(
+            `Missing spatial layer at catalogue position ${index}.`
+          );
+        }
+        return fetchRemainingSpatialMapFeatures({
+          controlCentreUrl,
+          bounds,
+          layer,
+          signal,
+        });
+      })
+    );
+    batch.forEach((index, batchIndex) => {
+      const layer = completed[batchIndex];
+      if (!layer) {
+        throw new Error(
+          `Spatial layer completion failed at position ${index}.`
+        );
+      }
+      layers[index] = layer;
+    });
+  }
+
+  return { ...body, layers };
+}
+
 function isAbortError(cause: unknown): boolean {
   return cause instanceof DOMException && cause.name === 'AbortError';
 }
@@ -183,13 +238,23 @@ function applyLayerFailure(
 function startSpatialLayerRequest(
   requestUrl: URL,
   abortController: AbortController,
+  controlCentreUrl: string,
+  bounds: SpatialMapBounds,
   requestedIds: string[] | undefined,
   selectedIds: string[] | undefined,
   state: SpatialLayerRequestState
 ): () => void {
   let active = true;
   void fetch(requestUrl.toString(), { signal: abortController.signal })
-    .then(readLayersResponse)
+    .then((response) =>
+      readLayersResponse(response).then((body) =>
+        completeTruncatedLayers(body, {
+          controlCentreUrl,
+          bounds,
+          signal: abortController.signal,
+        })
+      )
+    )
     .then((body) => {
       if (active) {
         applyLayerResponse(body, requestedIds, selectedIds, state);
@@ -354,6 +419,8 @@ export function useSpatialMapLayers({
     return startSpatialLayerRequest(
       requestUrl,
       abortController,
+      controlCentreUrl,
+      { west, south, east, north },
       requestedDatasetIds,
       selectedIds,
       {

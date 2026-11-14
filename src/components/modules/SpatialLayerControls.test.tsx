@@ -46,6 +46,8 @@ describe('SpatialLayerControls', () => {
     fireEvent.click(summary);
     expect(container.textContent).toContain('Unavailable');
     expect(screen.getByText('OpenStreetMap contributors')).toBeTruthy();
+    expect(container.textContent).toContain('Dataset ID: schools-dataset');
+    expect(container.textContent).toContain('Source ID: osm');
     fireEvent.click(screen.getByRole('checkbox'));
     expect(onToggle).toHaveBeenCalledWith('schools-layer');
     fireEvent.click(screen.getByRole('button', { name: /Retry/ }));

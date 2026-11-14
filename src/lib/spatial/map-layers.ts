@@ -56,6 +56,29 @@ export type SpatialMapLayersResponse = {
   generatedAt: string;
 };
 
+export type SpatialFeaturesResponse = {
+  type: 'FeatureCollection';
+  features: SpatialMapFeature[];
+  meta: {
+    datasetId: string;
+    datasetName: string;
+    attribution: string | null;
+    sourceId: string | null;
+    sourceName: string | null;
+    sourceInstitution: string | null;
+    datasetDate: string | null;
+    publishedAt: string | null;
+    total: number | null;
+    offset: number;
+    limit: number;
+    returned: number;
+    complete: boolean;
+    hasMore: boolean;
+    nextOffset: number | null;
+    filtered: boolean;
+  };
+};
+
 export type PublishedSpatialFeature = SpatialMapFeature & {
   meta: {
     dataset: string;
@@ -154,6 +177,38 @@ export function isSpatialMapLayersResponse(
   );
 }
 
+export function isSpatialFeaturesResponse(
+  value: unknown
+): value is SpatialFeaturesResponse {
+  if (!isRecord(value) || value.type !== 'FeatureCollection') return false;
+  const meta = value.meta;
+  if (!isRecord(meta) || !Array.isArray(value.features)) return false;
+  return (
+    typeof meta.datasetId === 'string' &&
+    typeof meta.datasetName === 'string' &&
+    isNullableString(meta.attribution) &&
+    isNullableString(meta.sourceId) &&
+    isNullableString(meta.sourceName) &&
+    isNullableString(meta.sourceInstitution) &&
+    isNullableString(meta.datasetDate) &&
+    isNullableString(meta.publishedAt) &&
+    isNullableNumber(meta.total) &&
+    typeof meta.offset === 'number' &&
+    Number.isInteger(meta.offset) &&
+    typeof meta.limit === 'number' &&
+    Number.isInteger(meta.limit) &&
+    typeof meta.returned === 'number' &&
+    Number.isInteger(meta.returned) &&
+    typeof meta.complete === 'boolean' &&
+    typeof meta.hasMore === 'boolean' &&
+    (meta.nextOffset === null ||
+      (typeof meta.nextOffset === 'number' &&
+        Number.isInteger(meta.nextOffset))) &&
+    typeof meta.filtered === 'boolean' &&
+    value.features.every(isSpatialMapFeature)
+  );
+}
+
 export function isPublishedSpatialFeature(
   value: unknown
 ): value is PublishedSpatialFeature {
@@ -182,6 +237,146 @@ export function buildSpatialMapLayersUrl({
   });
   if (datasetIds !== undefined) query.set('datasetIds', datasetIds.join(','));
   return `${controlCentreUrl.replace(/\/$/, '')}/api/spatial/map-layers?${query}`;
+}
+
+export function buildSpatialFeaturesUrl({
+  controlCentreUrl,
+  datasetId,
+  bounds,
+  limit,
+  offset,
+}: {
+  controlCentreUrl: string;
+  datasetId: string;
+  bounds: SpatialMapBounds;
+  limit: number;
+  offset: number;
+}): string {
+  const query = new URLSearchParams({
+    id: datasetId,
+    bbox: [bounds.west, bounds.south, bounds.east, bounds.north].join(','),
+    limit: String(limit),
+    offset: String(offset),
+  });
+  return `${controlCentreUrl.replace(/\/$/, '')}/api/spatial/features?${query}`;
+}
+
+async function fetchSpatialFeaturePage({
+  url,
+  datasetId,
+  offset,
+  signal,
+  fetcher,
+}: {
+  url: string;
+  datasetId: string;
+  offset: number;
+  signal: AbortSignal;
+  fetcher: typeof fetch;
+}): Promise<SpatialFeaturesResponse> {
+  const response = await fetcher(url, { cache: 'no-store', signal });
+  const body: unknown = await response.json();
+  if (!response.ok) {
+    const message =
+      isRecord(body) && typeof body.error === 'string'
+        ? body.error
+        : `Feature page request failed (${response.status})`;
+    throw new Error(message);
+  }
+  if (!isSpatialFeaturesResponse(body)) {
+    throw new Error('Spatial feature page response has an invalid format.');
+  }
+  if (
+    body.meta.datasetId !== datasetId ||
+    body.meta.offset !== offset ||
+    !body.meta.filtered ||
+    body.meta.returned !== body.features.length
+  ) {
+    throw new Error(
+      `Spatial feature page identity or pagination mismatch for ${datasetId}.`
+    );
+  }
+  return body;
+}
+
+function appendSpatialFeaturePage(
+  features: SpatialMapFeature[],
+  seenFeatureIds: Set<string>,
+  page: SpatialFeaturesResponse,
+  datasetId: string
+): void {
+  for (const feature of page.features) {
+    if (seenFeatureIds.has(feature.id)) {
+      throw new Error(
+        `Duplicate feature ${feature.id} returned while paging dataset ${datasetId}.`
+      );
+    }
+    seenFeatureIds.add(feature.id);
+    features.push(feature);
+  }
+}
+
+export async function fetchRemainingSpatialMapFeatures({
+  controlCentreUrl,
+  bounds,
+  layer,
+  signal,
+  fetcher = fetch,
+}: {
+  controlCentreUrl: string;
+  bounds: SpatialMapBounds;
+  layer: SpatialMapLayer;
+  signal: AbortSignal;
+  fetcher?: typeof fetch;
+}): Promise<SpatialMapLayer> {
+  if (!layer.truncated) return layer;
+  if (layer.features.length !== layer.returnedCount) {
+    throw new Error(
+      `Spatial layer ${layer.datasetId} has an inconsistent initial feature count.`
+    );
+  }
+
+  const features = [...layer.features];
+  const seenFeatureIds = new Set(features.map((feature) => feature.id));
+  let offset = layer.returnedCount;
+  let complete = false;
+
+  while (offset <= 20_000) {
+    const url = buildSpatialFeaturesUrl({
+      controlCentreUrl,
+      datasetId: layer.datasetId,
+      bounds,
+      limit: 500,
+      offset,
+    });
+    const page = await fetchSpatialFeaturePage({
+      url,
+      datasetId: layer.datasetId,
+      offset,
+      signal,
+      fetcher,
+    });
+    appendSpatialFeaturePage(features, seenFeatureIds, page, layer.datasetId);
+    if (!page.meta.hasMore) {
+      complete = page.meta.complete;
+      break;
+    }
+    if (page.meta.nextOffset === null || page.meta.nextOffset <= offset) {
+      throw new Error(
+        `Spatial feature pagination did not advance for ${layer.datasetId}.`
+      );
+    }
+    if (page.meta.nextOffset > 20_000) break;
+    offset = page.meta.nextOffset;
+  }
+
+  return {
+    ...layer,
+    features,
+    returnedCount: features.length,
+    loadOnDemand: false,
+    truncated: !complete,
+  };
 }
 
 export function toggleSpatialDatasetSelection(
