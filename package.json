@@ -21,6 +21,7 @@
     "typecheck": "tsc --noEmit",
     "watch-typegen": "tsx watch-typegen.ts",
     "test": "vitest",
+    "test:e2e": "playwright test",
     "seed:pages": "tsx scripts/seed-pages.ts",
     "seed:menu": "tsx scripts/seed-menu.ts",
     "seed:trust": "tsx scripts/seed-trust-resources.ts",
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.1",
+    "@playwright/test": "^1.65.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
