@@ -114,6 +114,51 @@ describe('buildSpatialMapLayersUrl', () => {
         })
       ).toBe(false);
     });
+
+    it('accepts verified source metadata and an upstream feature ID', () => {
+      const layer = makeLayer({
+        provenance: 'Authoritative dataset metadata',
+        sourcePermission: 'redistribute',
+        datasetPermission: 'redistribute',
+        sourceLicenseTerms: 'Source attribution terms',
+        datasetLicenseTerms: 'Dataset attribution terms',
+        features: [
+          {
+            type: 'Feature',
+            id: 'control-centre-feature-id',
+            sourceFeatureId: 'original-ogc-feature-id',
+            geometry: { type: 'Point', coordinates: [29.92, -27.74] },
+            properties: {},
+          },
+        ],
+      });
+
+      expect(
+        isSpatialMapLayersResponse({
+          layers: [layer],
+          permissionFiltered: false,
+          generatedAt: '2026-01-01T00:00:00Z',
+          filterLat: null,
+          filterLng: null,
+          filterBounds: null,
+        })
+      ).toBe(true);
+      expect(
+        isSpatialMapLayersResponse({
+          layers: [
+            {
+              ...layer,
+              features: [{ ...layer.features[0], sourceFeatureId: 12 }],
+            },
+          ],
+          permissionFiltered: false,
+          generatedAt: '2026-01-01T00:00:00Z',
+          filterLat: null,
+          filterLng: null,
+          filterBounds: null,
+        })
+      ).toBe(false);
+    });
   });
 
   it('requests only the activated dataset IDs when provided', () => {

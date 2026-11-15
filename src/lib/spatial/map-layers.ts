@@ -8,6 +8,7 @@ export type SpatialMapBounds = {
 export type SpatialMapFeature = {
   type: 'Feature';
   id: string;
+  sourceFeatureId?: string | null;
   geometry: {
     type: string;
     coordinates?: unknown;
@@ -41,6 +42,12 @@ export type SpatialMapLayer = {
   sourceId: string | null;
   sourceName: string | null;
   sourceInstitution: string | null;
+  datasetLicenseTerms?: string | null;
+  sourceLicenseTerms?: string | null;
+  provenance?: string | null;
+  datasetPermission?: string | null;
+  sourcePermission?: string | null;
+  sourceVintage?: string | null;
   publishedAt: string | null;
   datasetDate: string | null;
   radiusFiltered: boolean;
@@ -66,6 +73,12 @@ export type SpatialFeaturesResponse = {
     sourceId: string | null;
     sourceName: string | null;
     sourceInstitution: string | null;
+    datasetLicenseTerms?: string | null;
+    sourceLicenseTerms?: string | null;
+    datasetProvenance?: string | null;
+    datasetPermission?: string | null;
+    sourcePermission?: string | null;
+    sourceVintage?: string | null;
     datasetDate: string | null;
     publishedAt: string | null;
     total: number | null;
@@ -84,6 +97,15 @@ export type PublishedSpatialFeature = SpatialMapFeature & {
     dataset: string;
     attribution: string | null;
     datasetDate: string | null;
+    sourceId?: string | null;
+    sourceName?: string | null;
+    sourceInstitution?: string | null;
+    sourceLicenseTerms?: string | null;
+    datasetLicenseTerms?: string | null;
+    sourcePermission?: string | null;
+    datasetPermission?: string | null;
+    sourceVintage?: string | null;
+    datasetProvenance?: string | null;
   };
 };
 
@@ -116,6 +138,9 @@ function isSpatialMapFeature(value: unknown): value is SpatialMapFeature {
     isRecord(value) &&
     value.type === 'Feature' &&
     typeof value.id === 'string' &&
+    (value.sourceFeatureId === undefined ||
+      value.sourceFeatureId === null ||
+      typeof value.sourceFeatureId === 'string') &&
     isRecord(value.geometry) &&
     typeof value.geometry.type === 'string' &&
     isRecord(value.properties)
@@ -147,6 +172,17 @@ function isSpatialMapLayer(value: unknown): value is SpatialMapLayer {
     isNullableString(value.sourceId) &&
     isNullableString(value.sourceName) &&
     isNullableString(value.sourceInstitution) &&
+    (value.sourceLicenseTerms === undefined ||
+      isNullableString(value.sourceLicenseTerms)) &&
+    (value.datasetLicenseTerms === undefined ||
+      isNullableString(value.datasetLicenseTerms)) &&
+    (value.sourcePermission === undefined ||
+      isNullableString(value.sourcePermission)) &&
+    (value.sourceVintage === undefined ||
+      isNullableString(value.sourceVintage)) &&
+    (value.datasetPermission === undefined ||
+      isNullableString(value.datasetPermission)) &&
+    (value.provenance === undefined || isNullableString(value.provenance)) &&
     isNullableString(value.publishedAt) &&
     isNullableString(value.datasetDate) &&
     typeof value.radiusFiltered === 'boolean' &&
@@ -190,6 +226,18 @@ export function isSpatialFeaturesResponse(
     isNullableString(meta.sourceId) &&
     isNullableString(meta.sourceName) &&
     isNullableString(meta.sourceInstitution) &&
+    (meta.datasetLicenseTerms === undefined ||
+      isNullableString(meta.datasetLicenseTerms)) &&
+    (meta.sourceLicenseTerms === undefined ||
+      isNullableString(meta.sourceLicenseTerms)) &&
+    (meta.datasetProvenance === undefined ||
+      isNullableString(meta.datasetProvenance)) &&
+    (meta.datasetPermission === undefined ||
+      isNullableString(meta.datasetPermission)) &&
+    (meta.sourcePermission === undefined ||
+      isNullableString(meta.sourcePermission)) &&
+    (meta.sourceVintage === undefined ||
+      isNullableString(meta.sourceVintage)) &&
     isNullableString(meta.datasetDate) &&
     isNullableString(meta.publishedAt) &&
     isNullableNumber(meta.total) &&
@@ -219,7 +267,23 @@ export function isPublishedSpatialFeature(
     isRecord(meta) &&
     typeof meta.dataset === 'string' &&
     isNullableString(meta.attribution) &&
-    isNullableString(meta.datasetDate)
+    isNullableString(meta.datasetDate) &&
+    (meta.sourceId === undefined || isNullableString(meta.sourceId)) &&
+    (meta.sourceName === undefined || isNullableString(meta.sourceName)) &&
+    (meta.sourceInstitution === undefined ||
+      isNullableString(meta.sourceInstitution)) &&
+    (meta.sourceLicenseTerms === undefined ||
+      isNullableString(meta.sourceLicenseTerms)) &&
+    (meta.datasetLicenseTerms === undefined ||
+      isNullableString(meta.datasetLicenseTerms)) &&
+    (meta.sourcePermission === undefined ||
+      isNullableString(meta.sourcePermission)) &&
+    (meta.datasetPermission === undefined ||
+      isNullableString(meta.datasetPermission)) &&
+    (meta.sourceVintage === undefined ||
+      isNullableString(meta.sourceVintage)) &&
+    (meta.datasetProvenance === undefined ||
+      isNullableString(meta.datasetProvenance))
   );
 }
 
