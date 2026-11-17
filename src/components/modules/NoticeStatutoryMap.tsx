@@ -24,7 +24,6 @@ import type { SpatialMapBounds } from '@/lib/spatial/map-layers';
 import { toggleSpatialDatasetSelection } from '@/lib/spatial/map-layers';
 import { renderSpatialMapLayers } from '@/lib/spatial/render-map-layers';
 import { useSpatialMapLayers } from '@/lib/spatial/use-spatial-map-layers';
-import SpatialLayerControls from './SpatialLayerControls';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -1007,6 +1006,197 @@ function FindingsPanel({
   );
 }
 
+// ─── Desktop inspector panel (extracted to reduce component complexity) ────
+
+function DesktopInspector({
+  toggleItems,
+  visibility,
+  toggleVisibility,
+  mapLayers,
+  mapLayersError,
+  retryMapLayers,
+  spatialVisibility,
+  toggleSpatialLayer,
+  loading,
+  context,
+  noticeType,
+  lat,
+  lng,
+  name,
+  precision,
+  wardName,
+  municipality,
+  focusLayer,
+  contextError,
+  mapLayersLoading,
+  retryContext,
+  mapDeepLink,
+}: {
+  toggleItems: Array<{
+    key: LayerKey;
+    label: string;
+    colour: string;
+    show: boolean;
+  }>;
+  visibility: Record<LayerKey, boolean>;
+  toggleVisibility: (key: LayerKey) => void;
+  mapLayers: ReturnType<typeof useSpatialMapLayers>['layers'];
+  mapLayersError: string | null;
+  retryMapLayers: () => void;
+  spatialVisibility: Record<string, boolean>;
+  toggleSpatialLayer: (id: string) => void;
+  loading: boolean;
+  context: NoticeContextResponse | null;
+  noticeType: string;
+  lat: number;
+  lng: number;
+  name: string;
+  precision: { label: string; colour: string } | null;
+  wardName: string | null | undefined;
+  municipality: string | null | undefined;
+  focusLayer: (key: string) => void;
+  contextError: string | null;
+  mapLayersLoading: boolean;
+  retryContext: () => void;
+  mapDeepLink: string | null | undefined;
+}) {
+  return (
+    <div
+      className="w-[35%] shrink-0 flex flex-col border-r border-gray-200 bg-white overflow-y-auto"
+      style={{ maxHeight: 600 }}
+    >
+      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex items-center justify-between gap-2">
+        <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+          Spatial Inspector
+        </span>
+        {mapDeepLink && (
+          <a
+            href={mapDeepLink}
+            className="text-xs text-primary hover:underline font-medium"
+          >
+            Full map →
+          </a>
+        )}
+      </div>
+      {toggleItems.some((i) => i.show) && (
+        <div className="px-4 py-3 border-b border-gray-100">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
+            Boundary layers
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {toggleItems
+              .filter((i) => i.show)
+              .map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => toggleVisibility(item.key)}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium border transition-opacity ${
+                    visibility[item.key]
+                      ? 'border-gray-200 bg-white opacity-100'
+                      : 'border-gray-100 bg-gray-50 opacity-50'
+                  }`}
+                >
+                  <span
+                    className="shrink-0 w-2.5 h-2.5 rounded-sm border"
+                    style={{
+                      background: visibility[item.key]
+                        ? item.colour
+                        : 'transparent',
+                      borderColor: item.colour,
+                    }}
+                  />
+                  {item.label}
+                </button>
+              ))}
+          </div>
+        </div>
+      )}
+      {mapLayers.length > 0 && (
+        <div className="px-4 py-3 border-b border-gray-100">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
+            Spatial layers ({mapLayers.length})
+          </p>
+          {mapLayersError && (
+            <button
+              type="button"
+              onClick={retryMapLayers}
+              className="w-full rounded border border-amber-200 px-2 py-1.5 text-left text-xs text-amber-800 hover:bg-amber-50 mb-2"
+            >
+              Layers unavailable — retry
+            </button>
+          )}
+          <div className="space-y-2">
+            {mapLayers.map((layer) => (
+              <label
+                key={layer.id}
+                className="flex cursor-pointer gap-2 text-xs"
+              >
+                <input
+                  type="checkbox"
+                  checked={spatialVisibility[layer.id] ?? true}
+                  onChange={() => toggleSpatialLayer(layer.id)}
+                  className="mt-0.5 shrink-0"
+                />
+                <span
+                  className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: layer.colour }}
+                  aria-hidden="true"
+                />
+                <span className="min-w-0">
+                  <span className="block leading-snug">{layer.label}</span>
+                  <span className="block text-[10px] text-gray-500">
+                    {layer.returnedCount > 0
+                      ? `${layer.returnedCount} in view`
+                      : layer.status === 'empty'
+                        ? 'No features'
+                        : 'Loading…'}
+                    {layer.attribution ? ` · ${layer.attribution}` : ''}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="flex-1 overflow-y-auto">
+        <FindingsPanel
+          loading={loading}
+          context={context}
+          noticeType={noticeType}
+          lat={lat}
+          lng={lng}
+          name={name}
+          precision={precision}
+          wardName={wardName}
+          municipality={municipality}
+          focusLayer={focusLayer}
+        />
+      </div>
+      {(loading || mapLayersLoading || contextError) && (
+        <div className="px-4 py-2 border-t border-gray-100 bg-gray-50">
+          <p className="text-[10px] text-amber-700">
+            {contextError
+              ? `Context unavailable: ${contextError}`
+              : loading
+                ? 'Loading spatial context…'
+                : 'Loading layers…'}
+            {contextError && (
+              <button
+                type="button"
+                onClick={retryContext}
+                className="ml-2 underline"
+              >
+                Retry
+              </button>
+            )}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function NoticeStatutoryMap({
@@ -1160,60 +1350,122 @@ export default function NoticeStatutoryMap({
   ];
 
   return (
-    <div className="space-y-0">
-      {/* Zone A — Map */}
+    <div className="w-full">
+      {/* Desktop: two-column Spatial Inspector layout */}
       <div
-        className="relative w-full rounded-t-xl overflow-hidden border border-gray-200 border-b-0 shadow-sm"
-        style={{ height: 400 }}
+        className="hidden md:flex gap-0 rounded-xl border border-gray-200 shadow-sm overflow-hidden"
+        style={{ minHeight: 520 }}
       >
-        <div ref={mapRef} className="absolute inset-0" />
-        <LayerToggleBar
+        {/* Left inspector panel — 35% — extracted to DesktopInspector */}
+        <DesktopInspector
+          toggleItems={toggleItems}
           visibility={visibility}
-          onToggle={toggleVisibility}
-          items={toggleItems}
-        />
-        <SpatialLayerControls
-          layers={mapLayers}
-          visibility={spatialVisibility}
-          onToggle={toggleSpatialLayer}
-          error={mapLayersError}
-          onRetry={retryMapLayers}
-        />
-        <NoticeSpatialStatus
+          toggleVisibility={toggleVisibility}
+          mapLayers={mapLayers}
           mapLayersError={mapLayersError}
-          mapLayersPermissionNotice={mapLayersPermissionNotice}
-          mapLayersLoading={mapLayersLoading}
-          contextError={contextError}
+          retryMapLayers={retryMapLayers}
+          spatialVisibility={spatialVisibility}
+          toggleSpatialLayer={toggleSpatialLayer}
           loading={loading}
-          onRetry={retryContext}
+          context={context}
+          noticeType={noticeType}
+          lat={lat}
+          lng={lng}
+          name={name}
+          precision={precision}
+          wardName={wardName}
+          municipality={municipality}
+          focusLayer={focusLayer}
+          contextError={contextError}
+          mapLayersLoading={mapLayersLoading}
+          retryContext={retryContext}
+          mapDeepLink={mapDeepLink}
         />
-        {mapDeepLink && (
-          <a
-            href={mapDeepLink}
-            className="absolute bottom-3 right-3 z-[1000] bg-white/95 border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Full map →
-          </a>
-        )}
-        {context && (
-          <details className="absolute bottom-14 right-3 z-[1000] max-h-[min(70vh,24rem)] w-[min(24rem,90vw)] overflow-y-auto rounded-lg border border-gray-200 bg-white/95 shadow-lg backdrop-blur">
-            <summary className="sticky top-0 cursor-pointer bg-white/95 px-3 py-2 text-xs font-semibold shadow-sm">
-              Spatial context details
-            </summary>
-            <FindingsPanel
-              loading={loading}
-              context={context}
-              noticeType={noticeType}
-              lat={lat}
-              lng={lng}
-              name={name}
-              precision={precision}
-              wardName={wardName}
-              municipality={municipality}
-              focusLayer={focusLayer}
-            />
-          </details>
-        )}
+
+        {/* Right map canvas — 65% */}
+        <div className="flex-1 relative" style={{ minHeight: 520 }}>
+          <div ref={mapRef} className="absolute inset-0" />
+          {mapLayersPermissionNotice && (
+            <div className="absolute bottom-3 left-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
+              Some datasets withheld pending redistribution permission.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile: stacked layout — map first, inspector below */}
+      <div className="md:hidden">
+        <div
+          className="relative w-full rounded-t-xl overflow-hidden border border-gray-200 border-b-0 shadow-sm"
+          style={{ height: 320 }}
+        >
+          <div ref={mapRef} className="absolute inset-0" />
+          <LayerToggleBar
+            visibility={visibility}
+            onToggle={toggleVisibility}
+            items={toggleItems}
+          />
+          <NoticeSpatialStatus
+            mapLayersError={mapLayersError}
+            mapLayersPermissionNotice={mapLayersPermissionNotice}
+            mapLayersLoading={mapLayersLoading}
+            contextError={contextError}
+            loading={loading}
+            onRetry={retryContext}
+          />
+          {mapDeepLink && (
+            <a
+              href={mapDeepLink}
+              className="absolute bottom-3 right-3 z-[1000] bg-white/95 border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Full map →
+            </a>
+          )}
+        </div>
+        {/* Mobile inspector below map */}
+        <div className="border border-gray-200 border-t-0 rounded-b-xl bg-white overflow-hidden">
+          {mapLayers.length > 0 && (
+            <details className="border-b border-gray-100">
+              <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-gray-700 list-none flex items-center justify-between">
+                <span>Spatial layers ({mapLayers.length})</span>
+                <span className="text-gray-400">▾</span>
+              </summary>
+              <div className="px-4 pb-3 space-y-2">
+                {mapLayers.map((layer) => (
+                  <label
+                    key={layer.id}
+                    className="flex cursor-pointer gap-2 text-xs"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={spatialVisibility[layer.id] ?? true}
+                      onChange={() => toggleSpatialLayer(layer.id)}
+                      className="mt-0.5 shrink-0"
+                    />
+                    <span
+                      className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: layer.colour }}
+                      aria-hidden="true"
+                    />
+                    <span className="block leading-snug">{layer.label}</span>
+                  </label>
+                ))}
+              </div>
+            </details>
+          )}
+          <FindingsPanel
+            loading={loading}
+            context={context}
+            noticeType={noticeType}
+            lat={lat}
+            lng={lng}
+            name={name}
+            precision={precision}
+            wardName={wardName}
+            municipality={municipality}
+            focusLayer={focusLayer}
+          />
+        </div>
       </div>
     </div>
   );

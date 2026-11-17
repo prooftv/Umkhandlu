@@ -606,7 +606,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-function NoticeSpatialSection({
+function SpatialBlock({
   notice,
   wardBoundary,
   siteBoundary,
@@ -632,12 +632,13 @@ function NoticeSpatialSection({
     !geopoint ||
     !Number.isFinite(geopoint.lat) ||
     !Number.isFinite(geopoint.lng)
-  ) {
+  )
     return null;
-  }
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-bold mb-4">Spatial Context</h2>
+      <div className="max-w-3xl mx-auto mb-4">
+        <h2 className="text-xl font-bold">Spatial Context</h2>
+      </div>
       <NoticeStatutoryMapClient
         lat={geopoint.lat}
         lng={geopoint.lng}
@@ -702,38 +703,40 @@ export default async function DevelopmentNoticePage(props: Props) {
     'https://unami-platform-core-umkhandlu.vercel.app';
 
   return (
-    <div className="container mx-auto max-w-3xl py-12">
-      <Breadcrumbs
-        items={[
-          { label: 'Development Notices', href: '/development-notices' },
-          { label: notice.title || '' },
-        ]}
-      />
+    <div className="container mx-auto py-12">
+      <div className="max-w-3xl mx-auto">
+        <Breadcrumbs
+          items={[
+            { label: 'Development Notices', href: '/development-notices' },
+            { label: notice.title || '' },
+          ]}
+        />
 
-      <NoticeHeader notice={notice} />
+        <NoticeHeader notice={notice} />
 
-      {/* Deadline countdown */}
-      {notice.commentDeadline && (
-        <div className="mb-6">
-          <DeadlineCountdownClient
-            deadline={notice.commentDeadline}
-            isOpen={isOpen}
-          />
-        </div>
-      )}
+        {/* Deadline countdown */}
+        {notice.commentDeadline && (
+          <div className="mb-6">
+            <DeadlineCountdownClient
+              deadline={notice.commentDeadline}
+              isOpen={isOpen}
+            />
+          </div>
+        )}
 
-      <NoticeDetails notice={notice} acceptingComments={acceptingComments} />
+        <NoticeDetails notice={notice} acceptingComments={acceptingComments} />
 
-      {notice.content && (
-        <div className="mb-8 prose max-w-none">
-          <CustomPortableText value={notice.content as PortableTextBlock[]} />
-        </div>
-      )}
+        {notice.content && (
+          <div className="mb-8 prose max-w-none">
+            <CustomPortableText value={notice.content as PortableTextBlock[]} />
+          </div>
+        )}
 
-      <NoticeDocuments documents={notice.documents} />
+        <NoticeDocuments documents={notice.documents} />
+      </div>
 
-      {/* Spatial context map */}
-      <NoticeSpatialSection
+      {/* Spatial context map — full width breakout for the inspector layout */}
+      <SpatialBlock
         notice={notice}
         wardBoundary={wardBoundary}
         siteBoundary={siteBoundary}
@@ -745,32 +748,34 @@ export default async function DevelopmentNoticePage(props: Props) {
         wardNumber={area?.wardNumber}
       />
 
-      {/* Risk and planning considerations — from Control Centre */}
-      <RiskPanel intelligence={intelligence} />
+      <div className="max-w-3xl mx-auto">
+        {/* Risk and planning considerations — from Control Centre */}
+        <RiskPanel intelligence={intelligence} />
 
-      {/* Liquor-specific statutory process note */}
-      {notice.noticeType === 'liquor' && <LiquorStatutoryNote />}
+        {/* Liquor-specific statutory process note */}
+        {notice.noticeType === 'liquor' && <LiquorStatutoryNote />}
 
-      <CommentSection notice={notice} acceptingComments={acceptingComments} />
+        <CommentSection notice={notice} acceptingComments={acceptingComments} />
 
-      <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-200">
-        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-          For applicants
-        </p>
-        <Link
-          href={`/notices/certificate/${notice._id}`}
-          className="text-sm font-medium text-primary hover:underline"
-        >
-          View Digital Publication Evidence Record →
-        </Link>
-        <p className="text-xs text-gray-400 mt-1">
-          Records platform publication activity only. Does not certify statutory
-          compliance.
-        </p>
-      </div>
+        <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-200">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+            For applicants
+          </p>
+          <Link
+            href={`/notices/certificate/${notice._id}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            View Digital Publication Evidence Record →
+          </Link>
+          <p className="text-xs text-gray-400 mt-1">
+            Records platform publication activity only. Does not certify
+            statutory compliance.
+          </p>
+        </div>
 
-      <div className="mt-8 pt-6 border-t border-gray-100">
-        <ShareWhatsApp title={notice.title || ''} />
+        <div className="mt-8 pt-6 border-t border-gray-100">
+          <ShareWhatsApp title={notice.title || ''} />
+        </div>
       </div>
     </div>
   );
