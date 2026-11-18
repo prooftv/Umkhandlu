@@ -322,6 +322,7 @@ function useNoticeMapInitialization({
     if (!mapRef.current) return;
     loadLeafletCss();
     let cancelled = false;
+    let resizeObserver: ResizeObserver | null = null;
     import('leaflet').then((Leaf) => {
       if (cancelled || !mapRef.current) return;
       mapInstanceRef.current?.remove();
@@ -339,6 +340,17 @@ function useNoticeMapInitialization({
         refs: layerRefs.current,
       });
       const map = mapInstanceRef.current;
+      // invalidateSize after first paint so Leaflet measures the real container
+      requestAnimationFrame(() => {
+        if (!cancelled) map.invalidateSize();
+      });
+      // ResizeObserver keeps map correct when inspector collapses/expands
+      if (typeof ResizeObserver !== 'undefined' && mapRef.current) {
+        resizeObserver = new ResizeObserver(() => {
+          if (!cancelled) map.invalidateSize();
+        });
+        resizeObserver.observe(mapRef.current);
+      }
       const updateViewport = () => {
         const bounds = map.getBounds();
         setMapViewport({
@@ -354,6 +366,7 @@ function useNoticeMapInitialization({
     });
     return () => {
       cancelled = true;
+      resizeObserver?.disconnect();
       setMapReady(false);
       setMapViewport(null);
       mapInstanceRef.current?.remove();
@@ -1006,6 +1019,16 @@ function FindingsPanel({
   );
 }
 
+function layerStatusText(
+  layer: ReturnType<typeof useSpatialMapLayers>['layers'][number]
+): string {
+  if (layer.requestStatus === 'loading') return 'Loading…';
+  if (layer.requestStatus === 'error') return 'Unavailable';
+  if (layer.requestStatus === 'not-requested') return 'Not loaded';
+  if (layer.returnedCount > 0) return `${layer.returnedCount} in view`;
+  return layer.status === 'empty' ? 'No features' : 'None in view';
+}
+
 // ─── Desktop inspector panel (extracted to reduce component complexity) ────
 
 function InspectorHeader({
@@ -1181,11 +1204,7 @@ function DesktopInspector({
                 <span className="min-w-0">
                   <span className="block leading-snug">{layer.label}</span>
                   <span className="block text-[10px] text-gray-500">
-                    {layer.returnedCount > 0
-                      ? `${layer.returnedCount} in view`
-                      : layer.status === 'empty'
-                        ? 'No features'
-                        : 'Loading…'}
+                    {layerStatusText(layer)}
                     {layer.attribution ? ` · ${layer.attribution}` : ''}
                   </span>
                 </span>

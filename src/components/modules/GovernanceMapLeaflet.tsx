@@ -591,6 +591,10 @@ export default function GovernanceMapLeaflet({
       addBoundaries(Leaf, map, boundaries, selectArea);
       mapRef.current = map;
       map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
+      // invalidateSize after first paint — container may not have dimensions yet
+      requestAnimationFrame(() => {
+        if (!cancelled) map.invalidateSize();
+      });
       const updateViewport = () => {
         const bounds = map.getBounds();
         setViewport({
