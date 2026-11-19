@@ -742,78 +742,80 @@ export default function GovernanceMapLeaflet({
 
   return (
     <div
-      className="relative w-full"
+      className="relative w-full flex"
       style={{ height: 'calc(100vh - 12rem)', minHeight: 480 }}
     >
-      {/* Map — always full width/height */}
-      <div
-        ref={containerRef}
-        className="absolute inset-0 rounded-xl overflow-hidden border border-gray-200 shadow-sm"
-      />
-      <MapInitializationStatus message={mapInitializationError} />
-      <div hidden={!mapReady}>
-        <SpatialLayerControls
-          layers={spatialLayers}
-          visibility={spatialVisibility}
-          onToggle={toggleSpatialLayer}
-          error={spatialLayersError}
-          onRetry={retrySpatialLayers}
-        />
-      </div>
-      {(spatialLayersLoading ||
-        spatialLayersError ||
-        spatialPermissionFiltered) && (
-        <div className="absolute left-3 bottom-3 z-[1000] max-w-[min(32rem,60vw)] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
-          {spatialLayersError
-            ? `Spatial layers unavailable: ${spatialLayersError}`
-            : spatialLayersLoading
-              ? 'Loading spatial layers for this map view…'
-              : 'Some spatial data is withheld pending redistribution permission verification.'}
-        </div>
-      )}
-
-      {/* Desktop panel — right overlay */}
-      <div className="hidden md:flex absolute top-3 right-3 bottom-3 w-72 flex-col rounded-xl border border-gray-100 shadow-lg overflow-hidden z-[1000]">
+      {/* Desktop panel — left */}
+      <div className="hidden md:flex flex-col w-72 shrink-0 border-r border-gray-100 shadow-sm overflow-hidden z-[1000] bg-white">
         {panelContent}
       </div>
 
-      {/* Mobile — floating toggle button (only when drawer is closed) */}
-      {!panelOpen && (
-        <button
-          type="button"
-          onClick={() => setPanelOpen(true)}
-          className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700"
-        >
-          <span
-            style={{
-              display: 'inline-block',
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              background: '#7c3aed',
-            }}
-          />
-          {filtered.length} items ↑
-        </button>
-      )}
-
-      {/* Mobile — bottom drawer (close button is inside the panel header) */}
-      {panelOpen && (
+      {/* Map — fills remaining space */}
+      <div className="relative flex-1">
         <div
-          className="md:hidden absolute left-0 right-0 bottom-0 z-[1001] rounded-t-2xl border-t border-gray-200 shadow-2xl overflow-hidden"
-          style={{ height: '60vh' }}
-        >
-          <div className="flex justify-center pt-2 pb-1 bg-white">
-            <div className="w-8 h-1 rounded-full bg-gray-300" />
-          </div>
-          <div
-            style={{ height: 'calc(100% - 20px)' }}
-            className="bg-white overflow-hidden"
-          >
-            {panelContent}
-          </div>
+          ref={containerRef}
+          className="absolute inset-0 overflow-hidden border border-gray-200 shadow-sm"
+        />
+        <MapInitializationStatus message={mapInitializationError} />
+        <div hidden={!mapReady}>
+          <SpatialLayerControls
+            layers={spatialLayers}
+            visibility={spatialVisibility}
+            onToggle={toggleSpatialLayer}
+            error={spatialLayersError}
+            onRetry={retrySpatialLayers}
+          />
         </div>
-      )}
+        {(spatialLayersLoading ||
+          spatialLayersError ||
+          spatialPermissionFiltered) && (
+          <div className="absolute left-3 bottom-3 z-[1000] max-w-[min(32rem,60vw)] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
+            {spatialLayersError
+              ? `Spatial layers unavailable: ${spatialLayersError}`
+              : spatialLayersLoading
+                ? 'Loading spatial layers for this map view…'
+                : 'Some spatial data is withheld pending redistribution permission verification.'}
+          </div>
+        )}
+
+        {/* Mobile — floating toggle button (only when drawer is closed) */}
+        {!panelOpen && (
+          <button
+            type="button"
+            onClick={() => setPanelOpen(true)}
+            className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700"
+          >
+            <span
+              style={{
+                display: 'inline-block',
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                background: '#7c3aed',
+              }}
+            />
+            {filtered.length} items ↑
+          </button>
+        )}
+
+        {/* Mobile — bottom drawer */}
+        {panelOpen && (
+          <div
+            className="md:hidden absolute left-0 right-0 bottom-0 z-[1001] rounded-t-2xl border-t border-gray-200 shadow-2xl overflow-hidden"
+            style={{ height: '60vh' }}
+          >
+            <div className="flex justify-center pt-2 pb-1 bg-white">
+              <div className="w-8 h-1 rounded-full bg-gray-300" />
+            </div>
+            <div
+              style={{ height: 'calc(100% - 20px)' }}
+              className="bg-white overflow-hidden"
+            >
+              {panelContent}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
