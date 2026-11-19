@@ -59,21 +59,6 @@ function clampViewportBounds(map: L.Map): SpatialMapBounds {
   };
 }
 
-function getBoundaryInitializationError(boundaries: MapBoundary[]): string {
-  return boundaries.length === 0
-    ? 'Administrative boundaries are unavailable; map layers cannot be positioned for this view.'
-    : 'No valid administrative boundary geometry is available for this view.';
-}
-
-function MapInitializationStatus({ message }: { message: string | null }) {
-  if (!message) return null;
-  return (
-    <output className="absolute inset-0 z-[900] flex items-center justify-center rounded-xl bg-gray-50/95 p-6 text-center text-sm text-gray-600">
-      {message}
-    </output>
-  );
-}
-
 interface Props {
   records: MapRecord[];
   boundaries: MapBoundary[];
@@ -129,6 +114,23 @@ function addBoundaries(
       layer.addTo(map);
     } catch {}
   }
+}
+
+function initMapWithBoundaries(
+  Leaf: typeof L,
+  container: HTMLDivElement,
+  coverage: L.LatLngBounds,
+  zoom: number,
+  boundaries: MapBoundary[],
+  onSelect: (b: MapBoundary) => void
+): L.Map {
+  const centre = coverage.getCenter();
+  const map = createMap(Leaf, container, [centre.lat, centre.lng], zoom, {
+    scrollWheelZoom: true,
+  });
+  addBoundaries(Leaf, map, boundaries, onSelect);
+  map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
+  return map;
 }
 
 function getBoundaryCoverage(
@@ -452,6 +454,46 @@ function AreaPanel({
   );
 }
 
+function fitBoundaryOnMap(
+  map: import('leaflet').Map,
+  boundary: MapBoundary['boundary']
+) {
+  import('leaflet').then((Leaf) => {
+    const bounds = Leaf.geoJSON({
+      type: 'Feature',
+      geometry: boundary,
+      properties: {},
+    } as GeoJSON.Feature).getBounds();
+    if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
+  });
+}
+
+function matchesFilter(
+  r: MapRecord,
+  activeTypes: Set<string>,
+  activeMuni: string,
+  q: string
+): boolean {
+  return (
+    activeTypes.has(r.type) &&
+    (!activeMuni || r.municipality === activeMuni) &&
+    (!q ||
+      r.label.toLowerCase().includes(q) ||
+      (r.subtype ?? '').toLowerCase().includes(q))
+  );
+}
+
+function toggleTypeFilter(prev: Set<string>, type: string): Set<string> {
+  const next = new Set(prev);
+  if (next.has(type)) {
+    if (next.size > 1) next.delete(type);
+  } else {
+    next.add(type);
+  }
+  return next;
+}
+
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: large map component — complexity is managed via extracted helpers
 export default function GovernanceMapLeaflet({
   records,
   boundaries,
@@ -462,9 +504,6 @@ export default function GovernanceMapLeaflet({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const renderedLayersRef = useRef<Map<string, L.Layer>>(new Map());
-  const [mapInitializationError, setMapInitializationError] = useState<
-    string | null
-  >(null);
   const [mapReady, setMapReady] = useState(false);
   const [viewport, setViewport] = useState<SpatialMapBounds | null>(null);
   const [spatialVisibility, setSpatialVisibility] = useState<
@@ -505,14 +544,7 @@ export default function GovernanceMapLeaflet({
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return records.filter(
-      (r) =>
-        activeTypes.has(r.type) &&
-        (!activeMuni || r.municipality === activeMuni) &&
-        (!q ||
-          r.label.toLowerCase().includes(q) ||
-          (r.subtype ?? '').toLowerCase().includes(q))
-    );
+    return records.filter((r) => matchesFilter(r, activeTypes, activeMuni, q));
   }, [records, activeTypes, activeMuni, search]);
 
   const counts = useMemo(
@@ -525,15 +557,7 @@ export default function GovernanceMapLeaflet({
   );
 
   function toggleType(type: string) {
-    setActiveTypes((prev) => {
-      const next = new Set(prev);
-      if (next.has(type)) {
-        if (next.size > 1) next.delete(type);
-      } else {
-        next.add(type);
-      }
-      return next;
-    });
+    setActiveTypes((prev) => toggleTypeFilter(prev, type));
   }
 
   const selectRecord = useCallback((rec: MapRecord) => {
@@ -546,16 +570,7 @@ export default function GovernanceMapLeaflet({
     setSelectedArea(area);
     setSelectedRecord(null);
     const map = mapRef.current;
-    if (map) {
-      import('leaflet').then((Leaf) => {
-        const bounds = Leaf.geoJSON({
-          type: 'Feature',
-          geometry: area.boundary,
-          properties: {},
-        } as GeoJSON.Feature).getBounds();
-        if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
-      });
-    }
+    if (map) fitBoundaryOnMap(map, area.boundary);
     setPanelOpen(true);
   }, []);
 
@@ -581,7 +596,10 @@ export default function GovernanceMapLeaflet({
     if (match) selectArea(match);
   }, [initialWard, boundaries, selectArea]);
 
-  // Init map — runs once; callbacks stable via useCallback
+  // Init map — runs once on mount. boundaries is intentionally excluded from
+  // deps: it is read once at init time. Adding it would destroy and recreate
+  // the Leaflet instance on every parent render that produces a new array ref.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: boundaries excluded intentionally — see comment above
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     loadLeafletCss();
@@ -590,26 +608,21 @@ export default function GovernanceMapLeaflet({
     import('leaflet').then((Leaf) => {
       if (cancelled || !containerRef.current) return;
       const coverage = getBoundaryCoverage(Leaf, boundaries);
-      if (!coverage.isValid()) {
-        setMapInitializationError(getBoundaryInitializationError(boundaries));
-        return;
-      }
 
-      setMapInitializationError(null);
-      const centre = coverage.getCenter();
-      const map = createMap(
-        Leaf,
-        containerRef.current,
-        [centre.lat, centre.lng],
-        zoom,
-        {
-          scrollWheelZoom: true,
-        }
-      );
-      addBoundaries(Leaf, map, boundaries, selectArea);
+      const map = coverage.isValid()
+        ? initMapWithBoundaries(
+            Leaf,
+            containerRef.current,
+            coverage,
+            zoom,
+            boundaries,
+            selectArea
+          )
+        : createMap(Leaf, containerRef.current, [-27.75, 29.93], zoom, {
+            scrollWheelZoom: true,
+          });
+
       mapRef.current = map;
-      map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
-      // invalidateSize after first paint — container may not have dimensions yet
       requestAnimationFrame(() => {
         if (!cancelled) map.invalidateSize();
       });
@@ -627,7 +640,7 @@ export default function GovernanceMapLeaflet({
       mapRef.current = null;
       renderedLayersRef.current.clear();
     };
-  }, [zoom, boundaries, selectArea]);
+  }, [zoom, selectArea]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -756,8 +769,7 @@ export default function GovernanceMapLeaflet({
           ref={containerRef}
           className="absolute inset-0 overflow-hidden border border-gray-200 shadow-sm"
         />
-        <MapInitializationStatus message={mapInitializationError} />
-        <div hidden={!mapReady}>
+        {mapReady && (
           <SpatialLayerControls
             layers={spatialLayers}
             visibility={spatialVisibility}
@@ -765,7 +777,7 @@ export default function GovernanceMapLeaflet({
             error={spatialLayersError}
             onRetry={retrySpatialLayers}
           />
-        </div>
+        )}
         {(spatialLayersLoading ||
           spatialLayersError ||
           spatialPermissionFiltered) && (

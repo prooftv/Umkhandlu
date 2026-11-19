@@ -263,9 +263,11 @@ export default async function MapPage({ searchParams }: MapPageProps) {
     boundaries = sanityBoundaries;
   }
 
+  // Server component: CONTROL_CENTRE_URL is the reliable server-side var.
+  // NEXT_PUBLIC_CONTROL_CENTRE_URL is build-time only and may be empty at runtime.
   const controlCentreUrl =
-    process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
     process.env.CONTROL_CENTRE_URL ??
+    process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
     '';
 
   return (
@@ -294,25 +296,13 @@ export default async function MapPage({ searchParams }: MapPageProps) {
         </div>
       </header>
 
-      {records.length === 0 && boundaries.length === 0 ? (
-        <div className="rounded-xl border border-gray-100 bg-gray-50 p-8 text-center space-y-2">
-          <p className="font-medium text-gray-700">
-            No georeferenced content available
-          </p>
-          <p className="text-sm text-gray-500">
-            Spatial context appears when authoritative administrative boundaries
-            and published spatial layers are available for this map view.
-          </p>
-        </div>
-      ) : (
-        <GovernanceMapClient
-          records={records}
-          boundaries={boundaries}
-          zoom={9}
-          initialWard={initialWard ?? null}
-          controlCentreUrl={controlCentreUrl}
-        />
-      )}
+      <GovernanceMapClient
+        records={records}
+        boundaries={boundaries}
+        zoom={9}
+        initialWard={initialWard ?? null}
+        controlCentreUrl={controlCentreUrl}
+      />
     </div>
   );
 }
