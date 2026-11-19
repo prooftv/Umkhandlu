@@ -38,7 +38,8 @@ export interface MapBoundary {
   boundaryPermission: string | null;
 }
 
-const MAX_VIEWPORT_SPAN = 4.9;
+// Must be strictly less than both API limits: map-layers (5°) and features (2°).
+const MAX_VIEWPORT_SPAN = 1.9;
 
 function clampViewportBounds(map: L.Map): SpatialMapBounds {
   const b = map.getBounds();
