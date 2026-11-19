@@ -1222,26 +1222,23 @@ export default function NoticeStatutoryMap({
     },
   ];
 
+  // The map container is rendered once and shared across desktop and mobile.
+  // ref={mapRef} is attached to a single div that is always in the DOM.
+  // Desktop: the map div is positioned absolute inside a fixed-height container;
+  //   the inspector panel overlays the left side.
+  // Mobile: the map div is inside a fixed-height wrapper; inspector is below.
+  // Both layouts use the same mapRef — no dual-ref bug.
+  const mapContainer = <div ref={mapRef} className="absolute inset-0" />;
+
   return (
     <div className="w-full">
-      {/*
-        Single-ref map architecture.
-        The map div (ref={mapRef}) is rendered ONCE, always with real dimensions.
-        Desktop: map fills full container; inspector panel overlays the left side.
-        Mobile: map in fixed-height wrapper; inspector below.
-        This avoids the dual-ref bug where React only attaches a ref to the
-        last rendered element, causing the desktop map to never initialise.
-      */}
-
-      {/* Desktop layout: full-width map with inspector overlay */}
+      {/* Desktop layout */}
       <div
         className="hidden md:block relative rounded-xl border border-gray-200 shadow-sm overflow-hidden"
         style={{ minHeight: 520 }}
       >
-        {/* Map fills the full container */}
-        <div ref={mapRef} className="absolute inset-0" />
+        {mapContainer}
 
-        {/* Inspector overlays the left portion */}
         <div
           className="absolute top-0 left-0 bottom-0 z-[500] flex flex-col border-r border-gray-200 bg-white overflow-y-auto transition-all duration-200"
           style={{ width: inspectorCollapsed ? 40 : '35%', maxHeight: 600 }}
@@ -1380,7 +1377,7 @@ export default function NoticeStatutoryMap({
           className="relative w-full rounded-t-xl overflow-hidden border border-gray-200 border-b-0 shadow-sm"
           style={{ height: 320 }}
         >
-          <div ref={mapRef} className="absolute inset-0" />
+          {mapContainer}
           <LayerToggleBar
             visibility={visibility}
             onToggle={toggleVisibility}
