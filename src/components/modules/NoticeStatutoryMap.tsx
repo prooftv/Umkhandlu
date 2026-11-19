@@ -340,11 +340,9 @@ function useNoticeMapInitialization({
         refs: layerRefs.current,
       });
       const map = mapInstanceRef.current;
-      // invalidateSize after first paint so Leaflet measures the real container
       requestAnimationFrame(() => {
         if (!cancelled) map.invalidateSize();
       });
-      // ResizeObserver keeps map correct when inspector collapses/expands
       if (typeof ResizeObserver !== 'undefined' && mapRef.current) {
         resizeObserver = new ResizeObserver(() => {
           if (!cancelled) map.invalidateSize();
@@ -1070,191 +1068,9 @@ function InspectorHeader({
   );
 }
 
-function DesktopInspector({
-  toggleItems,
-  visibility,
-  toggleVisibility,
-  mapLayers,
-  mapLayersError,
-  retryMapLayers,
-  spatialVisibility,
-  toggleSpatialLayer,
-  loading,
-  context,
-  noticeType,
-  lat,
-  lng,
-  name,
-  precision,
-  wardName,
-  municipality,
-  focusLayer,
-  contextError,
-  mapLayersLoading,
-  retryContext,
-  mapDeepLink,
-  collapsed,
-  onToggleCollapse,
-}: {
-  toggleItems: Array<{
-    key: LayerKey;
-    label: string;
-    colour: string;
-    show: boolean;
-  }>;
-  visibility: Record<LayerKey, boolean>;
-  toggleVisibility: (key: LayerKey) => void;
-  mapLayers: ReturnType<typeof useSpatialMapLayers>['layers'];
-  mapLayersError: string | null;
-  retryMapLayers: () => void;
-  spatialVisibility: Record<string, boolean>;
-  toggleSpatialLayer: (id: string) => void;
-  loading: boolean;
-  context: NoticeContextResponse | null;
-  noticeType: string;
-  lat: number;
-  lng: number;
-  name: string;
-  precision: { label: string; colour: string } | null;
-  wardName: string | null | undefined;
-  municipality: string | null | undefined;
-  focusLayer: (key: string) => void;
-  contextError: string | null;
-  mapLayersLoading: boolean;
-  retryContext: () => void;
-  mapDeepLink: string | null | undefined;
-  collapsed: boolean;
-  onToggleCollapse: () => void;
-}) {
-  return (
-    <div
-      className="shrink-0 flex flex-col border-r border-gray-200 bg-white overflow-y-auto transition-all duration-200"
-      style={{ width: collapsed ? 40 : '35%', maxHeight: 600 }}
-    >
-      <InspectorHeader
-        collapsed={collapsed}
-        mapDeepLink={mapDeepLink}
-        onToggleCollapse={onToggleCollapse}
-      />
-      {!collapsed && toggleItems.some((i) => i.show) && (
-        <div className="px-4 py-3 border-b border-gray-100">
-          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
-            Boundary layers
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {toggleItems
-              .filter((i) => i.show)
-              .map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => toggleVisibility(item.key)}
-                  className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium border transition-opacity ${
-                    visibility[item.key]
-                      ? 'border-gray-200 bg-white opacity-100'
-                      : 'border-gray-100 bg-gray-50 opacity-50'
-                  }`}
-                >
-                  <span
-                    className="shrink-0 w-2.5 h-2.5 rounded-sm border"
-                    style={{
-                      background: visibility[item.key]
-                        ? item.colour
-                        : 'transparent',
-                      borderColor: item.colour,
-                    }}
-                  />
-                  {item.label}
-                </button>
-              ))}
-          </div>
-        </div>
-      )}
-      {!collapsed && mapLayers.length > 0 && (
-        <div className="px-4 py-3 border-b border-gray-100">
-          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
-            Spatial layers ({mapLayers.length})
-          </p>
-          {mapLayersError && (
-            <button
-              type="button"
-              onClick={retryMapLayers}
-              className="w-full rounded border border-amber-200 px-2 py-1.5 text-left text-xs text-amber-800 hover:bg-amber-50 mb-2"
-            >
-              Layers unavailable — retry
-            </button>
-          )}
-          <div className="space-y-2">
-            {mapLayers.map((layer) => (
-              <label
-                key={layer.id}
-                className="flex cursor-pointer gap-2 text-xs"
-              >
-                <input
-                  type="checkbox"
-                  checked={spatialVisibility[layer.id] ?? true}
-                  onChange={() => toggleSpatialLayer(layer.id)}
-                  className="mt-0.5 shrink-0"
-                />
-                <span
-                  className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
-                  style={{ backgroundColor: layer.colour }}
-                  aria-hidden="true"
-                />
-                <span className="min-w-0">
-                  <span className="block leading-snug">{layer.label}</span>
-                  <span className="block text-[10px] text-gray-500">
-                    {layerStatusText(layer)}
-                    {layer.attribution ? ` · ${layer.attribution}` : ''}
-                  </span>
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-      {!collapsed && (
-        <div className="flex-1 overflow-y-auto">
-          <FindingsPanel
-            loading={loading}
-            context={context}
-            noticeType={noticeType}
-            lat={lat}
-            lng={lng}
-            name={name}
-            precision={precision}
-            wardName={wardName}
-            municipality={municipality}
-            focusLayer={focusLayer}
-          />
-        </div>
-      )}
-      {!collapsed && (loading || mapLayersLoading || contextError) && (
-        <div className="px-4 py-2 border-t border-gray-100 bg-gray-50">
-          <p className="text-[10px] text-amber-700">
-            {contextError
-              ? `Context unavailable: ${contextError}`
-              : loading
-                ? 'Loading spatial context…'
-                : 'Loading layers…'}
-            {contextError && (
-              <button
-                type="button"
-                onClick={retryContext}
-                className="ml-2 underline"
-              >
-                Retry
-              </button>
-            )}
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ─── Main component ───────────────────────────────────────────────────────────
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: UI component with legitimate state branches
 export default function NoticeStatutoryMap({
   lat,
   lng,
@@ -1408,51 +1224,157 @@ export default function NoticeStatutoryMap({
 
   return (
     <div className="w-full">
-      {/* Desktop: two-column Spatial Inspector layout */}
+      {/*
+        Single-ref map architecture.
+        The map div (ref={mapRef}) is rendered ONCE, always with real dimensions.
+        Desktop: map fills full container; inspector panel overlays the left side.
+        Mobile: map in fixed-height wrapper; inspector below.
+        This avoids the dual-ref bug where React only attaches a ref to the
+        last rendered element, causing the desktop map to never initialise.
+      */}
+
+      {/* Desktop layout: full-width map with inspector overlay */}
       <div
-        className="hidden md:flex gap-0 rounded-xl border border-gray-200 shadow-sm overflow-hidden"
+        className="hidden md:block relative rounded-xl border border-gray-200 shadow-sm overflow-hidden"
         style={{ minHeight: 520 }}
       >
-        {/* Left inspector panel — 35% — extracted to DesktopInspector */}
-        <DesktopInspector
-          toggleItems={toggleItems}
-          visibility={visibility}
-          toggleVisibility={toggleVisibility}
-          mapLayers={mapLayers}
-          mapLayersError={mapLayersError}
-          retryMapLayers={retryMapLayers}
-          spatialVisibility={spatialVisibility}
-          toggleSpatialLayer={toggleSpatialLayer}
-          loading={loading}
-          context={context}
-          noticeType={noticeType}
-          lat={lat}
-          lng={lng}
-          name={name}
-          precision={precision}
-          wardName={wardName}
-          municipality={municipality}
-          focusLayer={focusLayer}
-          contextError={contextError}
-          mapLayersLoading={mapLayersLoading}
-          retryContext={retryContext}
-          mapDeepLink={mapDeepLink}
-          collapsed={inspectorCollapsed}
-          onToggleCollapse={() => setInspectorCollapsed((v) => !v)}
-        />
+        {/* Map fills the full container */}
+        <div ref={mapRef} className="absolute inset-0" />
 
-        {/* Right map canvas — 65% */}
-        <div className="flex-1 relative" style={{ minHeight: 520 }}>
-          <div ref={mapRef} className="absolute inset-0" />
-          {mapLayersPermissionNotice && (
-            <div className="absolute bottom-3 left-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
-              Some datasets withheld pending redistribution permission.
+        {/* Inspector overlays the left portion */}
+        <div
+          className="absolute top-0 left-0 bottom-0 z-[500] flex flex-col border-r border-gray-200 bg-white overflow-y-auto transition-all duration-200"
+          style={{ width: inspectorCollapsed ? 40 : '35%', maxHeight: 600 }}
+        >
+          <InspectorHeader
+            collapsed={inspectorCollapsed}
+            mapDeepLink={mapDeepLink}
+            onToggleCollapse={() => setInspectorCollapsed((v) => !v)}
+          />
+          {!inspectorCollapsed && toggleItems.some((i) => i.show) && (
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                Boundary layers
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {toggleItems
+                  .filter((i) => i.show)
+                  .map((item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() => toggleVisibility(item.key)}
+                      className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium border transition-opacity ${
+                        visibility[item.key]
+                          ? 'border-gray-200 bg-white opacity-100'
+                          : 'border-gray-100 bg-gray-50 opacity-50'
+                      }`}
+                    >
+                      <span
+                        className="shrink-0 w-2.5 h-2.5 rounded-sm border"
+                        style={{
+                          background: visibility[item.key]
+                            ? item.colour
+                            : 'transparent',
+                          borderColor: item.colour,
+                        }}
+                      />
+                      {item.label}
+                    </button>
+                  ))}
+              </div>
             </div>
           )}
+          {!inspectorCollapsed && mapLayers.length > 0 && (
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                Spatial layers ({mapLayers.length})
+              </p>
+              {mapLayersError && (
+                <button
+                  type="button"
+                  onClick={retryMapLayers}
+                  className="w-full rounded border border-amber-200 px-2 py-1.5 text-left text-xs text-amber-800 hover:bg-amber-50 mb-2"
+                >
+                  Layers unavailable — retry
+                </button>
+              )}
+              <div className="space-y-2">
+                {mapLayers.map((layer) => (
+                  <label
+                    key={layer.id}
+                    className="flex cursor-pointer gap-2 text-xs"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={spatialVisibility[layer.id] ?? true}
+                      onChange={() => toggleSpatialLayer(layer.id)}
+                      className="mt-0.5 shrink-0"
+                    />
+                    <span
+                      className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: layer.colour }}
+                      aria-hidden="true"
+                    />
+                    <span className="min-w-0">
+                      <span className="block leading-snug">{layer.label}</span>
+                      <span className="block text-[10px] text-gray-500">
+                        {layerStatusText(layer)}
+                        {layer.attribution ? ` · ${layer.attribution}` : ''}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+          {!inspectorCollapsed && (
+            <div className="flex-1 overflow-y-auto">
+              <FindingsPanel
+                loading={loading}
+                context={context}
+                noticeType={noticeType}
+                lat={lat}
+                lng={lng}
+                name={name}
+                precision={precision}
+                wardName={wardName}
+                municipality={municipality}
+                focusLayer={focusLayer}
+              />
+            </div>
+          )}
+          {!inspectorCollapsed &&
+            (loading || mapLayersLoading || contextError) && (
+              <div className="px-4 py-2 border-t border-gray-100 bg-gray-50">
+                <p className="text-[10px] text-amber-700">
+                  {contextError
+                    ? `Context unavailable: ${contextError}`
+                    : loading
+                      ? 'Loading spatial context…'
+                      : 'Loading layers…'}
+                  {contextError && (
+                    <button
+                      type="button"
+                      onClick={retryContext}
+                      className="ml-2 underline"
+                    >
+                      Retry
+                    </button>
+                  )}
+                </p>
+              </div>
+            )}
         </div>
+
+        {mapLayersPermissionNotice && (
+          <div className="absolute bottom-3 right-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
+            Some datasets withheld pending redistribution permission.
+          </div>
+        )}
       </div>
 
-      {/* Mobile: stacked layout — map first, inspector below */}
+      {/* Mobile layout: map on top, inspector below */}
       <div className="md:hidden">
         <div
           className="relative w-full rounded-t-xl overflow-hidden border border-gray-200 border-b-0 shadow-sm"

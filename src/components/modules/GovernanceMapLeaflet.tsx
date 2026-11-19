@@ -38,6 +38,26 @@ export interface MapBoundary {
   boundaryPermission: string | null;
 }
 
+const MAX_VIEWPORT_SPAN = 4.9;
+
+function clampViewportBounds(map: L.Map): SpatialMapBounds {
+  const b = map.getBounds();
+  const west = b.getWest();
+  const south = b.getSouth();
+  const east = b.getEast();
+  const north = b.getNorth();
+  const midLon = (west + east) / 2;
+  const midLat = (south + north) / 2;
+  const lonSpan = east - west;
+  const latSpan = north - south;
+  return {
+    west: lonSpan > MAX_VIEWPORT_SPAN ? midLon - MAX_VIEWPORT_SPAN / 2 : west,
+    south: latSpan > MAX_VIEWPORT_SPAN ? midLat - MAX_VIEWPORT_SPAN / 2 : south,
+    east: lonSpan > MAX_VIEWPORT_SPAN ? midLon + MAX_VIEWPORT_SPAN / 2 : east,
+    north: latSpan > MAX_VIEWPORT_SPAN ? midLat + MAX_VIEWPORT_SPAN / 2 : north,
+  };
+}
+
 function getBoundaryInitializationError(boundaries: MapBoundary[]): string {
   return boundaries.length === 0
     ? 'Administrative boundaries are unavailable; map layers cannot be positioned for this view.'
@@ -47,12 +67,9 @@ function getBoundaryInitializationError(boundaries: MapBoundary[]): string {
 function MapInitializationStatus({ message }: { message: string | null }) {
   if (!message) return null;
   return (
-    <div
-      role="status"
-      className="absolute inset-0 z-[900] flex items-center justify-center rounded-xl bg-gray-50/95 p-6 text-center text-sm text-gray-600"
-    >
+    <output className="absolute inset-0 z-[900] flex items-center justify-center rounded-xl bg-gray-50/95 p-6 text-center text-sm text-gray-600">
       {message}
-    </div>
+    </output>
   );
 }
 
@@ -595,15 +612,7 @@ export default function GovernanceMapLeaflet({
       requestAnimationFrame(() => {
         if (!cancelled) map.invalidateSize();
       });
-      const updateViewport = () => {
-        const bounds = map.getBounds();
-        setViewport({
-          west: bounds.getWest(),
-          south: bounds.getSouth(),
-          east: bounds.getEast(),
-          north: bounds.getNorth(),
-        });
-      };
+      const updateViewport = () => setViewport(clampViewportBounds(map));
       map.on('moveend', updateViewport);
       updateViewport();
       setMapReady(true);

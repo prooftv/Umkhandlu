@@ -13,6 +13,98 @@ export function clearRenderedSpatialLayers(
   }
 }
 
+const NAME_KEYS = [
+  'name',
+  'NAME',
+  'Name',
+  'NAMECODE',
+  'MUNICNAME',
+  'WardLink',
+  'Ward_Label',
+  'title',
+  'TITLE',
+  'label',
+  'LABEL',
+  'description',
+];
+
+function resolveFeatureName(
+  props: Record<string, unknown>,
+  fallback: string
+): string {
+  for (const k of NAME_KEYS) {
+    if (props[k] && typeof props[k] === 'string') return props[k] as string;
+  }
+  const entries = Object.entries(props).filter(
+    ([k, v]) =>
+      !k.startsWith('_') && typeof v === 'string' && (v as string).length < 80
+  );
+  return (
+    entries
+      .slice(0, 2)
+      .map(([k, v]) => `${k}: ${v}`)
+      .join(' · ') || fallback
+  );
+}
+
+function buildFeaturePopup(
+  props: Record<string, unknown>,
+  featureName: string,
+  layerLabel: string,
+  attribution: string | null
+): HTMLElement {
+  const content = document.createElement('div');
+  content.style.cssText =
+    'min-width:180px;max-width:280px;font-size:12px;line-height:1.5';
+
+  const title = document.createElement('strong');
+  title.style.cssText = 'display:block;margin-bottom:4px;font-size:13px';
+  title.textContent = featureName;
+  content.append(title);
+
+  const badge = document.createElement('span');
+  badge.style.cssText =
+    'display:inline-block;background:#f3f4f6;color:#374151;padding:1px 6px;border-radius:4px;font-size:10px;margin-bottom:6px';
+  badge.textContent = layerLabel;
+  content.append(badge);
+
+  const usefulProps = Object.entries(props)
+    .filter(
+      ([k, v]) =>
+        !k.startsWith('_') &&
+        v != null &&
+        String(v).length < 100 &&
+        !/^[0-9a-f]{8}-[0-9a-f]{4}/.test(String(v))
+    )
+    .slice(0, 8);
+
+  if (usefulProps.length > 0) {
+    const table = document.createElement('table');
+    table.style.cssText = 'width:100%;border-collapse:collapse;margin-top:4px';
+    for (const [k, v] of usefulProps) {
+      const row = table.insertRow();
+      const kCell = row.insertCell();
+      kCell.style.cssText =
+        'color:#6b7280;padding:1px 4px 1px 0;white-space:nowrap;font-size:10px;vertical-align:top';
+      kCell.textContent = k;
+      const vCell = row.insertCell();
+      vCell.style.cssText = 'color:#111827;padding:1px 0;font-size:11px';
+      vCell.textContent = String(v);
+    }
+    content.append(table);
+  }
+
+  if (attribution) {
+    const attr = document.createElement('p');
+    attr.style.cssText =
+      'margin-top:6px;color:#9ca3af;font-size:10px;border-top:1px solid #f3f4f6;padding-top:4px';
+    attr.textContent = attribution;
+    content.append(attr);
+  }
+
+  return content;
+}
+
 export function renderSpatialMapLayers({
   Leaf,
   map,
@@ -53,35 +145,15 @@ export function renderSpatialMapLayers({
           fillOpacity: 0.95,
         }),
       onEachFeature: (feature, featureLayer) => {
-        const content = document.createElement('div');
-        const title = document.createElement('strong');
-        title.textContent = layer.label;
-        const featureId = document.createElement('p');
-        featureId.className = 'text-[10px] text-gray-500';
-        featureId.textContent = `Feature ID: ${feature.id ?? 'unknown'}`;
-        const dataset = document.createElement('p');
-        dataset.className = 'text-[10px] text-gray-500';
-        dataset.textContent = `Dataset: ${layer.label} (${layer.datasetId})`;
-        const source = document.createElement('p');
-        source.className = 'text-[10px] text-gray-500';
-        source.textContent = `Source: ${layer.sourceName ?? 'not provided'} (${layer.sourceId ?? 'source ID not provided'})`;
-        const vintage = document.createElement('p');
-        vintage.className = 'text-[10px] text-gray-500';
-        vintage.textContent = `Vintage: ${layer.datasetDate ?? 'not provided'}`;
-        const properties = document.createElement('pre');
-        properties.className =
-          'mt-1 max-h-48 overflow-auto whitespace-pre-wrap text-xs';
-        properties.textContent = JSON.stringify(
-          feature.properties ?? {},
-          null,
-          2
+        const props = (feature.properties ?? {}) as Record<string, unknown>;
+        const featureName = resolveFeatureName(props, layer.label);
+        const popup = buildFeaturePopup(
+          props,
+          featureName,
+          layer.label,
+          layer.attribution
         );
-        const attribution = document.createElement('p');
-        attribution.className = 'mt-1 text-[10px] text-gray-500';
-        attribution.textContent = layer.attribution ?? layer.sourceName ?? '';
-        content.append(title, featureId, dataset, source, vintage, properties);
-        if (attribution.textContent) content.append(attribution);
-        featureLayer.bindPopup(content);
+        featureLayer.bindPopup(popup, { maxWidth: 300 });
       },
     });
 
