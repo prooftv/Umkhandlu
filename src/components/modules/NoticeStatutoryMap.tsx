@@ -1227,10 +1227,7 @@ export default function NoticeStatutoryMap({
   // Mobile: sits in a fixed-height wrapper above the inspector.
   // CSS hides the relevant wrapper per breakpoint; the map div itself is never duplicated.
   const inspectorPanel = (
-    <div
-      className="flex flex-col border-r border-gray-200 bg-white overflow-hidden transition-all duration-200 shrink-0"
-      style={{ width: inspectorCollapsed ? 40 : '35%' }}
-    >
+    <>
       <InspectorHeader
         collapsed={inspectorCollapsed}
         mapDeepLink={mapDeepLink}
@@ -1349,64 +1346,66 @@ export default function NoticeStatutoryMap({
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 
   return (
     <div className="w-full">
       {/*
-        Single map container — ref={mapRef} appears exactly once.
-        Desktop (md+): 560px tall, inspector overlays left side as absolute panel.
-        Mobile (<md): 320px tall, inspector rendered below as a separate div.
-        The map div is always in the DOM so Leaflet always has a container.
+        The map div (ref={mapRef}) is rendered exactly once inside a container
+        that is always in the DOM. On desktop the inspector sits beside it in a
+        flex row; on mobile the inspector is rendered below as a separate div.
+
+        We achieve a single map div by making the outer wrapper always visible
+        and using CSS to control the inspector position per breakpoint.
       */}
+
+      {/* Outer wrapper — always rendered, flex row on desktop */}
       <div
-        className="relative rounded-xl border border-gray-200 shadow-sm overflow-hidden"
+        className="flex rounded-xl border border-gray-200 shadow-sm overflow-hidden"
         style={{ height: 560 }}
       >
-        {/* The one and only map container */}
-        <div ref={mapRef} className="absolute inset-0" />
-
-        {/* Desktop inspector — absolute left overlay */}
+        {/* Inspector — 300px on desktop, hidden on mobile via CSS */}
         <div
-          className="hidden md:flex absolute top-0 left-0 bottom-0 z-[500] flex-col border-r border-gray-200 bg-white overflow-hidden transition-all duration-200"
-          style={{ width: inspectorCollapsed ? 40 : '35%' }}
+          className="hidden md:flex flex-col border-r border-gray-200 bg-white overflow-hidden transition-all duration-200 shrink-0"
+          style={{ width: inspectorCollapsed ? 40 : 300 }}
         >
           {inspectorPanel}
         </div>
 
-        {/* Desktop permission notice */}
-        {mapLayersPermissionNotice && (
-          <div className="hidden md:block absolute bottom-3 right-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
-            Some datasets withheld pending redistribution permission.
-          </div>
-        )}
-
-        {/* Mobile overlays — layer toggles and status inside the map */}
-        <LayerToggleBar
-          visibility={visibility}
-          onToggle={toggleVisibility}
-          items={toggleItems}
-        />
-        <NoticeSpatialStatus
-          mapLayersError={mapLayersError}
-          mapLayersPermissionNotice={mapLayersPermissionNotice}
-          mapLayersLoading={mapLayersLoading}
-          contextError={contextError}
-          loading={loading}
-          onRetry={retryContext}
-        />
-        {mapDeepLink && (
-          <a
-            href={mapDeepLink}
-            className="md:hidden absolute bottom-3 right-3 z-[1000] bg-white/95 border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Full map →
-          </a>
-        )}
+        {/* Map — always fills remaining space; on mobile this is the full width */}
+        <div className="relative flex-1 min-w-0">
+          <div ref={mapRef} className="absolute inset-0" />
+          {mapLayersPermissionNotice && (
+            <div className="hidden md:block absolute bottom-3 right-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
+              Some datasets withheld pending redistribution permission.
+            </div>
+          )}
+          <LayerToggleBar
+            visibility={visibility}
+            onToggle={toggleVisibility}
+            items={toggleItems}
+          />
+          <NoticeSpatialStatus
+            mapLayersError={mapLayersError}
+            mapLayersPermissionNotice={mapLayersPermissionNotice}
+            mapLayersLoading={mapLayersLoading}
+            contextError={contextError}
+            loading={loading}
+            onRetry={retryContext}
+          />
+          {mapDeepLink && (
+            <a
+              href={mapDeepLink}
+              className="absolute bottom-3 left-3 z-[1000] bg-white/95 border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Full map →
+            </a>
+          )}
+        </div>
       </div>
 
-      {/* Mobile inspector — below map */}
+      {/* Mobile inspector — below map, hidden on desktop */}
       <div className="md:hidden border border-gray-200 border-t-0 rounded-b-xl bg-white overflow-hidden">
         {mapLayers.length > 0 && (
           <details className="border-b border-gray-100">
