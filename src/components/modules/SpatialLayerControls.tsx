@@ -2,14 +2,50 @@
 
 import type { SpatialMapLayer } from '@/lib/spatial/map-layers';
 
-function getLayerStatusLabel(layer: SpatialMapLayer): string {
-  if (layer.requestStatus === 'loading') return 'Loading…';
-  if (layer.requestStatus === 'error') return 'Unavailable';
-  if (layer.requestStatus === 'permission-required')
-    return 'Permission required';
-  if (layer.requestStatus === 'not-requested') return 'Not loaded';
-  if (layer.status === 'empty') return 'No features in dataset';
-  return `${layer.returnedCount.toLocaleString()} in view · ${layer.featureCount.toLocaleString()} in dataset`;
+function LayerLoadStatus({ layer }: { layer: SpatialMapLayer }) {
+  const { requestStatus, featureCount, returnedCount, truncated } = layer;
+
+  if (requestStatus === 'loading') {
+    return (
+      <span className="block text-[10px] text-blue-600 animate-pulse">
+        Loading…
+      </span>
+    );
+  }
+  if (requestStatus === 'error') {
+    return <span className="block text-[10px] text-red-500">Unavailable</span>;
+  }
+  if (requestStatus === 'permission-required') {
+    return (
+      <span className="block text-[10px] text-amber-600">
+        Permission required
+      </span>
+    );
+  }
+  if (requestStatus === 'not-requested') {
+    return <span className="block text-[10px] text-gray-400">Not loaded</span>;
+  }
+  if (layer.status === 'empty') {
+    return (
+      <span className="block text-[10px] text-gray-400">
+        No features in dataset
+      </span>
+    );
+  }
+
+  const total = featureCount;
+  const loaded = returnedCount;
+  const pct = total > 0 ? Math.round((loaded / total) * 100) : 100;
+
+  return (
+    <span className="block text-[10px] text-gray-500">
+      {loaded.toLocaleString()} of {total.toLocaleString()} features
+      {truncated && (
+        <span className="ml-1 text-amber-600 font-medium">· {pct}% loaded</span>
+      )}
+      {layer.datasetDate ? ` · ${layer.datasetDate}` : ''}
+    </span>
+  );
 }
 
 export default function SpatialLayerControls({
@@ -33,11 +69,26 @@ export default function SpatialLayerControls({
     groupedLayers.set(source, group);
   }
 
+  const truncatedCount = layers.filter((l) => l.truncated).length;
+  const loadingCount = layers.filter(
+    (l) => l.requestStatus === 'loading'
+  ).length;
+
   return (
     <details className="absolute left-3 top-3 z-[1000] max-h-[min(60vh,28rem)] w-[min(18rem,calc(100vw-1.5rem))] overflow-y-auto rounded-lg border border-gray-200 bg-white/95 text-gray-800 shadow-lg backdrop-blur">
       <summary className="sticky top-0 cursor-pointer list-none bg-white/95 px-3 py-2 text-xs font-semibold shadow-sm">
         Spatial layers{' '}
         <span className="font-normal text-gray-500">({layers.length})</span>
+        {loadingCount > 0 && (
+          <span className="ml-1.5 text-blue-600 animate-pulse font-normal">
+            ·{loadingCount} loading
+          </span>
+        )}
+        {truncatedCount > 0 && loadingCount === 0 && (
+          <span className="ml-1.5 text-amber-600 font-normal">
+            · {truncatedCount} partial
+          </span>
+        )}
       </summary>
       <div className="space-y-3 p-3">
         {error && onRetry && (
@@ -48,6 +99,14 @@ export default function SpatialLayerControls({
           >
             Spatial layers unavailable. Retry
           </button>
+        )}
+        {truncatedCount > 0 && (
+          <p className="text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1">
+            {truncatedCount === 1
+              ? '1 dataset is partially loaded'
+              : `${truncatedCount} datasets are partially loaded`}{' '}
+            — large datasets are capped at 20,000 features.
+          </p>
         )}
         {[...groupedLayers.entries()].map(([source, sourceLayers]) => (
           <fieldset key={source || 'unattributed'} className="space-y-2">
@@ -74,20 +133,12 @@ export default function SpatialLayerControls({
                 />
                 <span className="min-w-0">
                   <span className="block leading-snug">{layer.label}</span>
-                  <span className="block text-[10px] text-gray-500">
-                    {getLayerStatusLabel(layer)}
-                    {layer.truncated ? ' · results limited' : ''}
-                    {layer.datasetDate ? ` · ${layer.datasetDate}` : ''}
-                  </span>
+                  <LayerLoadStatus layer={layer} />
                   {layer.attribution && (
                     <span className="block text-[10px] leading-snug text-gray-500">
                       {layer.attribution}
                     </span>
                   )}
-                  <span className="block break-all text-[9px] leading-snug text-gray-400">
-                    Dataset ID: {layer.datasetId}
-                    {layer.sourceId ? ` · Source ID: ${layer.sourceId}` : ''}
-                  </span>
                 </span>
               </label>
             ))}

@@ -493,6 +493,53 @@ function toggleTypeFilter(prev: Set<string>, type: string): Set<string> {
   return next;
 }
 
+function buildWardMarkerGroup(
+  Leaf: typeof import('leaflet'),
+  records: MapRecord[],
+  boundaries: MapBoundary[]
+): import('leaflet').LayerGroup {
+  const group = Leaf.layerGroup();
+  for (const rec of records) {
+    if (rec.ward == null) continue;
+    const boundary = boundaries.find(
+      (b) =>
+        b.wardNumber === rec.ward &&
+        (rec.municipality == null ||
+          b.municipality
+            ?.toLowerCase()
+            .includes(rec.municipality.toLowerCase()) ||
+          rec.municipality
+            .toLowerCase()
+            .includes(b.municipality?.toLowerCase() ?? ''))
+    );
+    if (!boundary) continue;
+    try {
+      const centre = Leaf.geoJSON({
+        type: 'Feature',
+        geometry: boundary.boundary,
+        properties: {},
+      } as GeoJSON.Feature)
+        .getBounds()
+        .getCenter();
+      const colour = TYPE_COLOUR[rec.type] ?? '#6b7280';
+      const icon = Leaf.divIcon({
+        className: '',
+        html: `<div style="width:10px;height:10px;border-radius:50%;background:${colour};border:2px solid white;opacity:0.7;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`,
+        iconSize: [10, 10],
+        iconAnchor: [5, 5],
+      });
+      const marker = Leaf.marker([centre.lat, centre.lng], { icon });
+      marker.bindPopup(
+        `<div style="font-size:12px;min-width:160px"><strong>${rec.label}</strong><br/><span style="color:#6b7280;font-size:10px">${rec.subtype}</span><br/><span style="color:#d97706;font-size:10px">⚠ Ward reference only — not a verified site location</span><br/><a href="${TYPE_PATH[rec.type]}/${rec.slug}" style="font-size:11px;color:#7c3aed">View record →</a></div>`
+      );
+      group.addLayer(marker);
+    } catch {
+      // skip invalid boundary geometry
+    }
+  }
+  return group;
+}
+
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: large map component — complexity is managed via extracted helpers
 export default function GovernanceMapLeaflet({
   records,
@@ -656,6 +703,24 @@ export default function GovernanceMapLeaflet({
       });
     });
   }, [mapReady, spatialLayers, spatialVisibility]);
+
+  // Ward centroid markers — records/notices/campaigns matched by ward number.
+  // Markers are labelled as approximate ward references, not site locations.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!mapReady || !map || !boundaries.length || !records.length) return;
+    const KEY = 'governance-map:ward-markers';
+    const existing = renderedLayersRef.current.get(KEY);
+    if (existing) {
+      map.removeLayer(existing);
+      renderedLayersRef.current.delete(KEY);
+    }
+    import('leaflet').then((Leaf) => {
+      const group = buildWardMarkerGroup(Leaf, records, boundaries);
+      group.addTo(map);
+      renderedLayersRef.current.set(KEY, group);
+    });
+  }, [mapReady, records, boundaries]);
 
   const panelContent = (
     <div className="flex flex-col h-full bg-white">
