@@ -127,60 +127,6 @@ async function readLayersResponse(
   return body;
 }
 
-async function completeTruncatedLayers(
-  body: SpatialMapLayersResponse,
-  {
-    controlCentreUrl,
-    bounds,
-    signal,
-  }: {
-    controlCentreUrl: string;
-    bounds: SpatialMapBounds;
-    signal: AbortSignal;
-  }
-): Promise<SpatialMapLayersResponse> {
-  const layers = [...body.layers];
-  const truncatedIndexes = layers.flatMap((layer, index) =>
-    layer.truncated ? [index] : []
-  );
-  const concurrency = 4;
-
-  for (
-    let offset = 0;
-    offset < truncatedIndexes.length;
-    offset += concurrency
-  ) {
-    const batch = truncatedIndexes.slice(offset, offset + concurrency);
-    const completed = await Promise.all(
-      batch.map((index) => {
-        const layer = layers[index];
-        if (!layer) {
-          throw new Error(
-            `Missing spatial layer at catalogue position ${index}.`
-          );
-        }
-        return fetchRemainingSpatialMapFeatures({
-          controlCentreUrl,
-          bounds,
-          layer,
-          signal,
-        });
-      })
-    );
-    batch.forEach((index, batchIndex) => {
-      const layer = completed[batchIndex];
-      if (!layer) {
-        throw new Error(
-          `Spatial layer completion failed at position ${index}.`
-        );
-      }
-      layers[index] = layer;
-    });
-  }
-
-  return { ...body, layers };
-}
-
 function isAbortError(cause: unknown): boolean {
   return cause instanceof DOMException && cause.name === 'AbortError';
 }
@@ -245,27 +191,49 @@ function startSpatialLayerRequest(
   state: SpatialLayerRequestState
 ): () => void {
   let active = true;
+
   void fetch(requestUrl.toString(), { signal: abortController.signal })
-    .then((response) =>
-      readLayersResponse(response).then((body) =>
-        completeTruncatedLayers(body, {
-          controlCentreUrl,
-          bounds,
-          signal: abortController.signal,
-        })
-      )
-    )
+    .then((response) => readLayersResponse(response))
     .then((body) => {
-      if (active) {
-        applyLayerResponse(body, requestedIds, selectedIds, state);
-      }
+      if (!active) return;
+
+      // Apply immediately — renders the first 500 features per layer without
+      // waiting for pagination. Users see data within one round-trip.
+      applyLayerResponse(body, requestedIds, selectedIds, state);
+      state.setLoading(false);
+
+      // Paginate truncated layers in the background, updating each as it
+      // completes. A pan/zoom abort cancels remaining background work.
+      const truncated = body.layers.filter((l) => l.truncated);
+      if (!truncated.length) return;
+
+      void Promise.all(
+        truncated.map((layer) =>
+          fetchRemainingSpatialMapFeatures({
+            controlCentreUrl,
+            bounds,
+            layer,
+            signal: abortController.signal,
+          }).then((completed) => {
+            if (!active) return;
+            state.setLayers((current) =>
+              current.map((l) =>
+                l.datasetId === completed.datasetId ? completed : l
+              )
+            );
+          })
+        )
+      ).catch((cause: unknown) => {
+        if (!active || isAbortError(cause)) return;
+        // Background pagination failure — layers already rendered with partial
+        // data, so only log; don't overwrite the already-visible features.
+        console.warn('[spatial] Background pagination error:', cause);
+      });
     })
     .catch((cause: unknown) => {
       if (!active || isAbortError(cause)) return;
       applyLayerFailure(cause, requestedIds, selectedIds, state);
-    })
-    .finally(() => {
-      if (active) state.setLoading(false);
+      state.setLoading(false);
     });
 
   return () => {
