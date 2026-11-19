@@ -1222,210 +1222,99 @@ export default function NoticeStatutoryMap({
     },
   ];
 
-  return (
-    <div className="w-full">
-      {/* Desktop layout: inspector left, map right */}
-      <div
-        className="hidden md:flex rounded-xl border border-gray-200 shadow-sm overflow-hidden"
-        style={{ height: 560 }}
-      >
-        {/* Inspector panel — left */}
-        <div
-          className="relative flex flex-col border-r border-gray-200 bg-white overflow-hidden transition-all duration-200 shrink-0"
-          style={{ width: inspectorCollapsed ? 40 : '35%' }}
-        >
-          <InspectorHeader
-            collapsed={inspectorCollapsed}
-            mapDeepLink={mapDeepLink}
-            onToggleCollapse={() => setInspectorCollapsed((v) => !v)}
-          />
-          {!inspectorCollapsed && toggleItems.some((i) => i.show) && (
-            <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
-                Boundary layers
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {toggleItems
-                  .filter((i) => i.show)
-                  .map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() => toggleVisibility(item.key)}
-                      className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium border transition-opacity ${
-                        visibility[item.key]
-                          ? 'border-gray-200 bg-white opacity-100'
-                          : 'border-gray-100 bg-gray-50 opacity-50'
-                      }`}
-                    >
-                      <span
-                        className="shrink-0 w-2.5 h-2.5 rounded-sm border"
-                        style={{
-                          background: visibility[item.key]
-                            ? item.colour
-                            : 'transparent',
-                          borderColor: item.colour,
-                        }}
-                      />
-                      {item.label}
-                    </button>
-                  ))}
-              </div>
-            </div>
-          )}
-          {!inspectorCollapsed && mapLayers.length > 0 && (
-            <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
-                Spatial layers ({mapLayers.length})
-              </p>
-              {mapLayersError && (
+  // Single map container — always in DOM, ref attached once.
+  // Desktop: sits inside flex row to the right of inspector.
+  // Mobile: sits in a fixed-height wrapper above the inspector.
+  // CSS hides the relevant wrapper per breakpoint; the map div itself is never duplicated.
+  const inspectorPanel = (
+    <div
+      className="flex flex-col border-r border-gray-200 bg-white overflow-hidden transition-all duration-200 shrink-0"
+      style={{ width: inspectorCollapsed ? 40 : '35%' }}
+    >
+      <InspectorHeader
+        collapsed={inspectorCollapsed}
+        mapDeepLink={mapDeepLink}
+        onToggleCollapse={() => setInspectorCollapsed((v) => !v)}
+      />
+      {!inspectorCollapsed && toggleItems.some((i) => i.show) && (
+        <div className="px-4 py-3 border-b border-gray-100">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
+            Boundary layers
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {toggleItems
+              .filter((i) => i.show)
+              .map((item) => (
                 <button
+                  key={item.key}
                   type="button"
-                  onClick={retryMapLayers}
-                  className="w-full rounded border border-amber-200 px-2 py-1.5 text-left text-xs text-amber-800 hover:bg-amber-50 mb-2"
+                  onClick={() => toggleVisibility(item.key)}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium border transition-opacity ${
+                    visibility[item.key]
+                      ? 'border-gray-200 bg-white opacity-100'
+                      : 'border-gray-100 bg-gray-50 opacity-50'
+                  }`}
                 >
-                  Layers unavailable — retry
+                  <span
+                    className="shrink-0 w-2.5 h-2.5 rounded-sm border"
+                    style={{
+                      background: visibility[item.key]
+                        ? item.colour
+                        : 'transparent',
+                      borderColor: item.colour,
+                    }}
+                  />
+                  {item.label}
                 </button>
-              )}
-              <div className="space-y-2">
-                {mapLayers.map((layer) => (
-                  <label
-                    key={layer.id}
-                    className="flex cursor-pointer gap-2 text-xs"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={spatialVisibility[layer.id] ?? true}
-                      onChange={() => toggleSpatialLayer(layer.id)}
-                      className="mt-0.5 shrink-0"
-                    />
-                    <span
-                      className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: layer.colour }}
-                      aria-hidden="true"
-                    />
-                    <span className="min-w-0">
-                      <span className="block leading-snug">{layer.label}</span>
-                      <span className="block text-[10px] text-gray-500">
-                        {layerStatusText(layer)}
-                        {layer.attribution ? ` · ${layer.attribution}` : ''}
-                      </span>
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-          {!inspectorCollapsed && (
-            <div className="flex-1 overflow-y-auto">
-              <FindingsPanel
-                loading={loading}
-                context={context}
-                noticeType={noticeType}
-                lat={lat}
-                lng={lng}
-                name={name}
-                precision={precision}
-                wardName={wardName}
-                municipality={municipality}
-                focusLayer={focusLayer}
-              />
-            </div>
-          )}
-          {!inspectorCollapsed &&
-            (loading || mapLayersLoading || contextError) && (
-              <div className="px-4 py-2 border-t border-gray-100 bg-gray-50 shrink-0">
-                <p className="text-[10px] text-amber-700">
-                  {contextError
-                    ? `Context unavailable: ${contextError}`
-                    : loading
-                      ? 'Loading spatial context…'
-                      : 'Loading layers…'}
-                  {contextError && (
-                    <button
-                      type="button"
-                      onClick={retryContext}
-                      className="ml-2 underline"
-                    >
-                      Retry
-                    </button>
-                  )}
-                </p>
-              </div>
-            )}
+              ))}
+          </div>
         </div>
-
-        {/* Map — right, fills remaining space */}
-        <div className="relative flex-1">
-          <div ref={mapRef} className="absolute inset-0" />
-          {mapLayersPermissionNotice && (
-            <div className="absolute bottom-3 right-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
-              Some datasets withheld pending redistribution permission.
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile layout: map on top, inspector below */}
-      <div className="md:hidden">
-        <div
-          className="relative w-full rounded-t-xl overflow-hidden border border-gray-200 border-b-0 shadow-sm"
-          style={{ height: 320 }}
-        >
-          <div ref={mapRef} className="absolute inset-0" />
-          <LayerToggleBar
-            visibility={visibility}
-            onToggle={toggleVisibility}
-            items={toggleItems}
-          />
-          <NoticeSpatialStatus
-            mapLayersError={mapLayersError}
-            mapLayersPermissionNotice={mapLayersPermissionNotice}
-            mapLayersLoading={mapLayersLoading}
-            contextError={contextError}
-            loading={loading}
-            onRetry={retryContext}
-          />
-          {mapDeepLink && (
-            <a
-              href={mapDeepLink}
-              className="absolute bottom-3 right-3 z-[1000] bg-white/95 border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+      )}
+      {!inspectorCollapsed && mapLayers.length > 0 && (
+        <div className="px-4 py-3 border-b border-gray-100">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
+            Spatial layers ({mapLayers.length})
+          </p>
+          {mapLayersError && (
+            <button
+              type="button"
+              onClick={retryMapLayers}
+              className="w-full rounded border border-amber-200 px-2 py-1.5 text-left text-xs text-amber-800 hover:bg-amber-50 mb-2"
             >
-              Full map →
-            </a>
+              Layers unavailable — retry
+            </button>
           )}
+          <div className="space-y-2">
+            {mapLayers.map((layer) => (
+              <label
+                key={layer.id}
+                className="flex cursor-pointer gap-2 text-xs"
+              >
+                <input
+                  type="checkbox"
+                  checked={spatialVisibility[layer.id] ?? true}
+                  onChange={() => toggleSpatialLayer(layer.id)}
+                  className="mt-0.5 shrink-0"
+                />
+                <span
+                  className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: layer.colour }}
+                  aria-hidden="true"
+                />
+                <span className="min-w-0">
+                  <span className="block leading-snug">{layer.label}</span>
+                  <span className="block text-[10px] text-gray-500">
+                    {layerStatusText(layer)}
+                    {layer.attribution ? ` · ${layer.attribution}` : ''}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
-        {/* Mobile inspector below map */}
-        <div className="border border-gray-200 border-t-0 rounded-b-xl bg-white overflow-hidden">
-          {mapLayers.length > 0 && (
-            <details className="border-b border-gray-100">
-              <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-gray-700 list-none flex items-center justify-between">
-                <span>Spatial layers ({mapLayers.length})</span>
-                <span className="text-gray-400">▾</span>
-              </summary>
-              <div className="px-4 pb-3 space-y-2">
-                {mapLayers.map((layer) => (
-                  <label
-                    key={layer.id}
-                    className="flex cursor-pointer gap-2 text-xs"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={spatialVisibility[layer.id] ?? true}
-                      onChange={() => toggleSpatialLayer(layer.id)}
-                      className="mt-0.5 shrink-0"
-                    />
-                    <span
-                      className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: layer.colour }}
-                      aria-hidden="true"
-                    />
-                    <span className="block leading-snug">{layer.label}</span>
-                  </label>
-                ))}
-              </div>
-            </details>
-          )}
+      )}
+      {!inspectorCollapsed && (
+        <div className="flex-1 overflow-y-auto">
           <FindingsPanel
             loading={loading}
             context={context}
@@ -1439,6 +1328,127 @@ export default function NoticeStatutoryMap({
             focusLayer={focusLayer}
           />
         </div>
+      )}
+      {!inspectorCollapsed && (loading || mapLayersLoading || contextError) && (
+        <div className="px-4 py-2 border-t border-gray-100 bg-gray-50 shrink-0">
+          <p className="text-[10px] text-amber-700">
+            {contextError
+              ? `Context unavailable: ${contextError}`
+              : loading
+                ? 'Loading spatial context…'
+                : 'Loading layers…'}
+            {contextError && (
+              <button
+                type="button"
+                onClick={retryContext}
+                className="ml-2 underline"
+              >
+                Retry
+              </button>
+            )}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="w-full">
+      {/*
+        Single map container — ref={mapRef} appears exactly once.
+        Desktop (md+): 560px tall, inspector overlays left side as absolute panel.
+        Mobile (<md): 320px tall, inspector rendered below as a separate div.
+        The map div is always in the DOM so Leaflet always has a container.
+      */}
+      <div
+        className="relative rounded-xl border border-gray-200 shadow-sm overflow-hidden"
+        style={{ height: 560 }}
+      >
+        {/* The one and only map container */}
+        <div ref={mapRef} className="absolute inset-0" />
+
+        {/* Desktop inspector — absolute left overlay */}
+        <div
+          className="hidden md:flex absolute top-0 left-0 bottom-0 z-[500] flex-col border-r border-gray-200 bg-white overflow-hidden transition-all duration-200"
+          style={{ width: inspectorCollapsed ? 40 : '35%' }}
+        >
+          {inspectorPanel}
+        </div>
+
+        {/* Desktop permission notice */}
+        {mapLayersPermissionNotice && (
+          <div className="hidden md:block absolute bottom-3 right-3 z-[1000] max-w-[55%] rounded bg-white/95 px-2.5 py-1.5 text-[10px] text-amber-800 shadow">
+            Some datasets withheld pending redistribution permission.
+          </div>
+        )}
+
+        {/* Mobile overlays — layer toggles and status inside the map */}
+        <LayerToggleBar
+          visibility={visibility}
+          onToggle={toggleVisibility}
+          items={toggleItems}
+        />
+        <NoticeSpatialStatus
+          mapLayersError={mapLayersError}
+          mapLayersPermissionNotice={mapLayersPermissionNotice}
+          mapLayersLoading={mapLayersLoading}
+          contextError={contextError}
+          loading={loading}
+          onRetry={retryContext}
+        />
+        {mapDeepLink && (
+          <a
+            href={mapDeepLink}
+            className="md:hidden absolute bottom-3 right-3 z-[1000] bg-white/95 border border-gray-200 shadow rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Full map →
+          </a>
+        )}
+      </div>
+
+      {/* Mobile inspector — below map */}
+      <div className="md:hidden border border-gray-200 border-t-0 rounded-b-xl bg-white overflow-hidden">
+        {mapLayers.length > 0 && (
+          <details className="border-b border-gray-100">
+            <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-gray-700 list-none flex items-center justify-between">
+              <span>Spatial layers ({mapLayers.length})</span>
+              <span className="text-gray-400">▾</span>
+            </summary>
+            <div className="px-4 pb-3 space-y-2">
+              {mapLayers.map((layer) => (
+                <label
+                  key={layer.id}
+                  className="flex cursor-pointer gap-2 text-xs"
+                >
+                  <input
+                    type="checkbox"
+                    checked={spatialVisibility[layer.id] ?? true}
+                    onChange={() => toggleSpatialLayer(layer.id)}
+                    className="mt-0.5 shrink-0"
+                  />
+                  <span
+                    className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: layer.colour }}
+                    aria-hidden="true"
+                  />
+                  <span className="block leading-snug">{layer.label}</span>
+                </label>
+              ))}
+            </div>
+          </details>
+        )}
+        <FindingsPanel
+          loading={loading}
+          context={context}
+          noticeType={noticeType}
+          lat={lat}
+          lng={lng}
+          name={name}
+          precision={precision}
+          wardName={wardName}
+          municipality={municipality}
+          focusLayer={focusLayer}
+        />
       </div>
     </div>
   );
