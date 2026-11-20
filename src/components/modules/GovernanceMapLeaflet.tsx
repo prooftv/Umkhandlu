@@ -2,7 +2,12 @@
 
 import type L from 'leaflet';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createMap, loadLeafletCss } from '@/lib/map/leaflet-utils';
+import {
+  type BasemapId,
+  createMap,
+  loadLeafletCss,
+  switchBasemap,
+} from '@/lib/map/leaflet-utils';
 import type { SpatialMapBounds } from '@/lib/spatial/map-layers';
 import { toggleSpatialDatasetSelection } from '@/lib/spatial/map-layers';
 import { renderSpatialMapLayers } from '@/lib/spatial/render-map-layers';
@@ -551,7 +556,9 @@ export default function GovernanceMapLeaflet({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const renderedLayersRef = useRef<Map<string, L.Layer>>(new Map());
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [basemap, setBasemap] = useState<BasemapId>('osm');
   const [viewport, setViewport] = useState<SpatialMapBounds | null>(null);
   const [spatialVisibility, setSpatialVisibility] = useState<
     Record<string, boolean>
@@ -670,6 +677,11 @@ export default function GovernanceMapLeaflet({
           });
 
       mapRef.current = map;
+      // Capture the tile layer so switchBasemap can replace it later
+      map.eachLayer((l) => {
+        if (l instanceof Leaf.TileLayer)
+          tileLayerRef.current = l as L.TileLayer;
+      });
       requestAnimationFrame(() => {
         if (!cancelled) map.invalidateSize();
       });
@@ -703,6 +715,15 @@ export default function GovernanceMapLeaflet({
       });
     });
   }, [mapReady, spatialLayers, spatialVisibility]);
+
+  // Basemap switcher — replaces tile layer without affecting spatial overlays
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!mapReady || !map) return;
+    import('leaflet').then((Leaf) => {
+      switchBasemap(Leaf, map, basemap, tileLayerRef);
+    });
+  }, [mapReady, basemap]);
 
   // Ward centroid markers — records/notices/campaigns matched by ward number.
   // Markers are labelled as approximate ward references, not site locations.
@@ -842,6 +863,25 @@ export default function GovernanceMapLeaflet({
             error={spatialLayersError}
             onRetry={retrySpatialLayers}
           />
+        )}
+        {/* Basemap switcher — bottom-right, above attribution */}
+        {mapReady && (
+          <div className="absolute bottom-8 right-3 z-[1000] flex gap-1">
+            {(['osm', 'satellite'] as const).map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setBasemap(id)}
+                className={`px-2 py-1 text-[10px] font-medium rounded border shadow-sm transition-all ${
+                  basemap === id
+                    ? 'bg-white border-gray-400 text-gray-800'
+                    : 'bg-white/80 border-gray-200 text-gray-500 hover:bg-white'
+                }`}
+              >
+                {id === 'osm' ? 'Map' : 'Satellite'}
+              </button>
+            ))}
+          </div>
         )}
         {(spatialLayersLoading ||
           spatialLayersError ||

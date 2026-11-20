@@ -14,10 +14,12 @@ import {
   addGeoJSON,
   addProximityCircle,
   addSiteMarker,
+  type BasemapId,
   createMap,
   fitToLayer,
   type GeoJSONGeometry,
   loadLeafletCss,
+  switchBasemap,
   syncLayerVisibility,
 } from '@/lib/map/leaflet-utils';
 import type { SpatialMapBounds } from '@/lib/spatial/map-layers';
@@ -1089,7 +1091,9 @@ export default function NoticeStatutoryMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerRefs = useRef<Map<string, L.Layer>>(new Map());
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [basemap, setBasemap] = useState<BasemapId>('osm');
   const [mapViewport, setMapViewport] = useState<SpatialMapBounds | null>(null);
 
   const { context, loading, contextError, retryContext } =
@@ -1169,6 +1173,22 @@ export default function NoticeStatutoryMap({
     if (!map || !layer || !('getBounds' in layer)) return;
     fitToLayer(map, layer as L.GeoJSON);
   }, []);
+
+  // Basemap switcher — replaces tile layer without affecting spatial overlays
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!mapReady || !map) return;
+    import('leaflet').then((Leaf) => {
+      // On first run, capture the existing tile layer created by initNoticeMap
+      if (!tileLayerRef.current) {
+        map.eachLayer((l) => {
+          if (l instanceof Leaf.TileLayer)
+            tileLayerRef.current = l as L.TileLayer;
+        });
+      }
+      switchBasemap(Leaf, map, basemap, tileLayerRef);
+    });
+  }, [mapReady, basemap]);
 
   function toggleVisibility(key: LayerKey) {
     setVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -1386,6 +1406,23 @@ export default function NoticeStatutoryMap({
             onToggle={toggleVisibility}
             items={toggleItems}
           />
+          {/* Basemap switcher */}
+          <div className="absolute bottom-8 right-3 z-[1000] flex gap-1">
+            {(['osm', 'satellite'] as const).map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setBasemap(id)}
+                className={`px-2 py-1 text-[10px] font-medium rounded border shadow-sm transition-all ${
+                  basemap === id
+                    ? 'bg-white border-gray-400 text-gray-800'
+                    : 'bg-white/80 border-gray-200 text-gray-500 hover:bg-white'
+                }`}
+              >
+                {id === 'osm' ? 'Map' : 'Satellite'}
+              </button>
+            ))}
+          </div>
           <NoticeSpatialStatus
             mapLayersError={mapLayersError}
             mapLayersPermissionNotice={mapLayersPermissionNotice}

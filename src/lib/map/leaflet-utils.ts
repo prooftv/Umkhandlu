@@ -13,6 +13,28 @@ export const OSM_TILE_URL =
 export const OSM_ATTRIBUTION =
   '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+// Esri World Imagery — free for non-commercial use, no API key required.
+// Terms: https://www.esri.com/en-us/legal/terms/full-master-agreement
+// Attribution required per Esri terms.
+export const ESRI_SATELLITE_URL =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+export const ESRI_SATELLITE_ATTRIBUTION =
+  'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community';
+
+export type BasemapId = 'osm' | 'satellite';
+
+export const BASEMAPS: Record<
+  BasemapId,
+  { url: string; attribution: string; label: string }
+> = {
+  osm: { url: OSM_TILE_URL, attribution: OSM_ATTRIBUTION, label: 'Street map' },
+  satellite: {
+    url: ESRI_SATELLITE_URL,
+    attribution: ESRI_SATELLITE_ATTRIBUTION,
+    label: 'Satellite',
+  },
+};
+
 /** Inject Leaflet CSS once per page. */
 export function loadLeafletCss() {
   if (document.querySelector('link[href*="leaflet"]')) return;
@@ -22,7 +44,7 @@ export function loadLeafletCss() {
   document.head.appendChild(link);
 }
 
-/** Create a map with OSM tiles. scrollWheelZoom defaults to false. */
+/** Create a map with a configurable basemap. scrollWheelZoom defaults to false. */
 export function createMap(
   Leaf: typeof L,
   container: HTMLDivElement,
@@ -32,18 +54,43 @@ export function createMap(
     scrollWheelZoom?: boolean;
     dragging?: boolean;
     zoomControl?: boolean;
+    basemap?: BasemapId;
   } = {}
 ): L.Map {
+  const bm = BASEMAPS[options.basemap ?? 'osm'];
   const map = Leaf.map(container, {
     scrollWheelZoom: options.scrollWheelZoom ?? false,
     dragging: options.dragging ?? true,
     zoomControl: options.zoomControl ?? true,
   }).setView(centre, zoom);
-  Leaf.tileLayer(OSM_TILE_URL, {
-    attribution: OSM_ATTRIBUTION,
+  Leaf.tileLayer(bm.url, {
+    attribution: bm.attribution,
     maxZoom: 19,
   }).addTo(map);
   return map;
+}
+
+/**
+ * Replace the current basemap tile layer with a different one.
+ * Spatial overlays (boundaries, markers, etc.) are unaffected.
+ */
+export function switchBasemap(
+  Leaf: typeof L,
+  map: L.Map,
+  basemapId: BasemapId,
+  currentTileLayerRef: { current: L.TileLayer | null }
+) {
+  if (currentTileLayerRef.current) {
+    map.removeLayer(currentTileLayerRef.current);
+  }
+  const bm = BASEMAPS[basemapId];
+  const layer = Leaf.tileLayer(bm.url, {
+    attribution: bm.attribution,
+    maxZoom: 19,
+  });
+  layer.addTo(map);
+  layer.bringToBack();
+  currentTileLayerRef.current = layer;
 }
 
 /** Add a GeoJSON polygon/line layer. Returns null on invalid geometry. */
