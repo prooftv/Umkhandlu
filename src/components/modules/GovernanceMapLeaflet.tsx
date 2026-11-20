@@ -109,12 +109,12 @@ function addBoundaries(
         } as GeoJSON.Feature,
         {
           style: {
-            // Yellow ward — matches NoticeStatutoryMap LAYER_STYLE.ward
+            // Yellow ward outline — fillOpacity near-zero so 55 stacked fills don't compound
             color: '#facc15',
-            weight: 3,
-            opacity: 1,
+            weight: 2,
+            opacity: 0.85,
             fillColor: '#facc15',
-            fillOpacity: 0.2,
+            fillOpacity: 0.03,
           },
         }
       );
@@ -131,14 +131,34 @@ function initMapWithBoundaries(
   coverage: L.LatLngBounds,
   zoom: number,
   boundaries: MapBoundary[],
-  onSelect: (b: MapBoundary) => void
+  onSelect: (b: MapBoundary) => void,
+  initialWard?: string | null
 ): L.Map {
   const centre = coverage.getCenter();
   const map = createMap(Leaf, container, [centre.lat, centre.lng], zoom, {
     scrollWheelZoom: true,
   });
   addBoundaries(Leaf, map, boundaries, onSelect);
-  map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
+  // If a specific ward is deep-linked, fit to it immediately on init
+  const wardMatch = initialWard
+    ? boundaries.find((b) => b.slug === initialWard)
+    : null;
+  if (wardMatch) {
+    try {
+      const wardBounds = Leaf.geoJSON({
+        type: 'Feature',
+        geometry: wardMatch.boundary,
+        properties: {},
+      } as GeoJSON.Feature).getBounds();
+      if (wardBounds.isValid())
+        map.fitBounds(wardBounds, { padding: [60, 60], maxZoom: 13 });
+      else map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
+    } catch {
+      map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
+    }
+  } else {
+    map.fitBounds(coverage, { padding: [60, 60], maxZoom: zoom });
+  }
   return map;
 }
 
@@ -657,7 +677,7 @@ export default function GovernanceMapLeaflet({
   // Init map — runs once on mount. boundaries is intentionally excluded from
   // deps: it is read once at init time. Adding it would destroy and recreate
   // the Leaflet instance on every parent render that produces a new array ref.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: boundaries excluded intentionally — see comment above
+  // biome-ignore lint/correctness/useExhaustiveDependencies: boundaries and initialWard excluded intentionally — read once at init time
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     loadLeafletCss();
@@ -674,7 +694,8 @@ export default function GovernanceMapLeaflet({
             coverage,
             zoom,
             boundaries,
-            selectArea
+            selectArea,
+            initialWard
           )
         : createMap(Leaf, containerRef.current, [-27.75, 29.93], zoom, {
             scrollWheelZoom: true,
