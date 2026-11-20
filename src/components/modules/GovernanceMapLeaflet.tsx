@@ -10,7 +10,10 @@ import {
 } from '@/lib/map/leaflet-utils';
 import type { SpatialMapBounds } from '@/lib/spatial/map-layers';
 import { toggleSpatialDatasetSelection } from '@/lib/spatial/map-layers';
-import { renderSpatialMapLayers } from '@/lib/spatial/render-map-layers';
+import {
+  deduplicateBoundaryLayers,
+  renderSpatialMapLayers,
+} from '@/lib/spatial/render-map-layers';
 import { useSpatialMapLayers } from '@/lib/spatial/use-spatial-map-layers';
 import SpatialLayerControls from './SpatialLayerControls';
 
@@ -106,11 +109,12 @@ function addBoundaries(
         } as GeoJSON.Feature,
         {
           style: {
-            color: '#3b82f6',
-            weight: 2,
-            opacity: 0.9,
-            fillColor: '#3b82f6',
-            fillOpacity: 0.15,
+            // Yellow ward — matches NoticeStatutoryMap LAYER_STYLE.ward
+            color: '#facc15',
+            weight: 3,
+            opacity: 1,
+            fillColor: '#facc15',
+            fillOpacity: 0.2,
           },
         }
       );
@@ -712,6 +716,9 @@ export default function GovernanceMapLeaflet({
         visibility: spatialVisibility,
         renderedLayers: renderedLayersRef.current,
         prefix: 'governance-map:',
+        // Ward boundaries are already rendered by addBoundaries() from the CC
+        // wards API. Skip the MDB Wards spatial layer to avoid double-rendering.
+        skipWardBoundaries: true,
       });
     });
   }, [mapReady, spatialLayers, spatialVisibility]);
@@ -857,12 +864,33 @@ export default function GovernanceMapLeaflet({
         />
         {mapReady && (
           <SpatialLayerControls
-            layers={spatialLayers}
+            layers={deduplicateBoundaryLayers(spatialLayers)}
             visibility={spatialVisibility}
             onToggle={toggleSpatialLayer}
             error={spatialLayersError}
             onRetry={retrySpatialLayers}
           />
+        )}
+        {/* Boundary legend — bottom-left, matches NoticeStatutoryMap legend */}
+        {mapReady && (
+          <div className="absolute left-3 bottom-8 z-[1000] flex flex-col gap-1 bg-white/95 rounded-lg border border-gray-200 shadow-sm px-2.5 py-2">
+            <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">
+              Boundaries
+            </p>
+            {[
+              { colour: '#facc15', label: 'Ward' },
+              { colour: '#f97316', label: 'Municipality' },
+              { colour: '#22c55e', label: 'District' },
+            ].map(({ colour, label }) => (
+              <div key={label} className="flex items-center gap-1.5">
+                <span
+                  className="inline-block w-4 h-2 rounded-sm border"
+                  style={{ background: colour, borderColor: colour }}
+                />
+                <span className="text-[10px] text-gray-600">{label}</span>
+              </div>
+            ))}
+          </div>
         )}
         {/* Basemap switcher — bottom-right, above attribution */}
         {mapReady && (

@@ -61,8 +61,9 @@ export function isBoundaryCategory(cat: SpatialCategory): boolean {
 }
 
 // ─── Boundary polygon styles ──────────────────────────────────────────────────
-// Very low fill opacity — boundaries provide geographic context without
-// dominating the map. Multiple stacked boundary layers must remain readable.
+// Match the LAYER_STYLE values used in NoticeStatutoryMap so all three
+// map experiences show the same boundary colours and opacities.
+// Ward=yellow, Municipality=orange, District=green.
 
 export const BOUNDARY_STYLES: Record<
   'boundary-ward' | 'boundary-municipality' | 'boundary-district',
@@ -70,27 +71,24 @@ export const BOUNDARY_STYLES: Record<
 > = {
   'boundary-ward': {
     color: '#facc15',
-    weight: 1.5,
-    opacity: 0.85,
+    weight: 3,
+    opacity: 1,
     fillColor: '#facc15',
-    fillOpacity: 0.04,
-    dashArray: undefined,
+    fillOpacity: 0.2,
   },
   'boundary-municipality': {
     color: '#f97316',
-    weight: 2,
-    opacity: 0.9,
+    weight: 2.5,
+    opacity: 1,
     fillColor: '#f97316',
-    fillOpacity: 0.05,
-    dashArray: undefined,
+    fillOpacity: 0.15,
   },
   'boundary-district': {
     color: '#22c55e',
-    weight: 2.5,
+    weight: 2,
     opacity: 0.9,
     fillColor: '#22c55e',
-    fillOpacity: 0.04,
-    dashArray: undefined,
+    fillOpacity: 0.08,
   },
 };
 

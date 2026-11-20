@@ -40,7 +40,7 @@ function boundaryPriority(label: string): number {
   return BOUNDARY_PRIORITY.length;
 }
 
-function deduplicateBoundaryLayers(
+export function deduplicateBoundaryLayers(
   layers: SpatialMapLayer[]
 ): SpatialMapLayer[] {
   // Group boundary layers by their sub-category (ward/municipality/district)
@@ -86,6 +86,7 @@ export function renderSpatialMapLayers({
   visibility,
   renderedLayers,
   prefix,
+  skipWardBoundaries = false,
 }: {
   Leaf: typeof L;
   map: L.Map;
@@ -93,6 +94,9 @@ export function renderSpatialMapLayers({
   visibility: Record<string, boolean>;
   renderedLayers: Map<string, L.Layer>;
   prefix: string;
+  // Pass true when the caller already renders ward boundaries via addBoundaries()
+  // to avoid double-rendering the MDB Wards layer from the spatial API.
+  skipWardBoundaries?: boolean;
 }) {
   clearRenderedSpatialLayers(map, renderedLayers, prefix);
 
@@ -103,6 +107,10 @@ export function renderSpatialMapLayers({
     if (visibility[layer.id] === false || !layer.features.length) continue;
 
     const category = detectSpatialCategory(layer.label);
+
+    // Skip ward boundaries when the caller already renders them via addBoundaries()
+    if (skipWardBoundaries && category === 'boundary-ward') continue;
+
     const isBoundary = isBoundaryCategory(category);
     const isRoad = category === 'road';
     const isRailway = category === 'railway';
