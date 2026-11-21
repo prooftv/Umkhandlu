@@ -4,9 +4,11 @@ import { authenticate } from '../_auth';
 
 export const dynamic = 'force-dynamic';
 
+// noticeCount includes both community notices (_type=="notice") and
+// statutory development notices (_type=="developmentNotice").
 const healthQuery = `{
   "recordCount": count(*[_type == "record"]),
-  "noticeCount": count(*[_type == "notice"])
+  "noticeCount": count(*[_type == "notice"]) + count(*[_type == "developmentNotice"])
 }`;
 
 export async function GET(request: NextRequest) {
