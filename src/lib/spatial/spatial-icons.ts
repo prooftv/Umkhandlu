@@ -1,12 +1,12 @@
 /**
- * Centralised spatial icon catalogue.
- * All SVG marker definitions live here. Map components import from this module.
- * No React. No Leaflet import — accepts Leaf as a parameter to stay tree-shakeable.
+ * Centralised spatial presentation catalogue.
+ * Category resolution uses the authoritative DB category field first,
+ * with label-substring matching as a fallback only.
  */
 
 import type L from 'leaflet';
 
-// ─── Category detection ───────────────────────────────────────────────────────
+// ─── Category types ───────────────────────────────────────────────────────────
 
 export type SpatialCategory =
   | 'boundary-ward'
@@ -24,36 +24,89 @@ export type SpatialCategory =
   | 'poi'
   | 'default';
 
-// Ordered — first match wins. More specific patterns before general ones.
-const CATEGORY_PATTERNS: [string, SpatialCategory][] = [
+// ─── DB category → SpatialCategory mapping ───────────────────────────────────
+// Maps the authoritative category values stored in spatial_layer_config.category
+// to our internal SpatialCategory. This is the primary resolution path.
+
+const DB_CATEGORY_MAP: Record<string, SpatialCategory> = {
+  administrative: 'boundary-district', // refined by label below
+  education: 'education',
+  health: 'health',
+  transport: 'road', // refined by label below
+  environment: 'waterway', // refined by label below
+  cultural: 'cultural',
+  general: 'poi',
+};
+
+// Label-substring fallback — ordered, first match wins.
+// Only used when DB category is absent or maps to a coarse category.
+const LABEL_PATTERNS: [string, SpatialCategory][] = [
   ['ward', 'boundary-ward'],
   ['district', 'boundary-district'],
   ['municipalit', 'boundary-municipality'],
   ['boundary', 'boundary-district'],
   ['giga', 'school'],
-  ['health', 'health'],
-  ['education', 'education'],
   ['school', 'school'],
+  ['health', 'health'],
+  ['clinic', 'health'],
+  ['hospital', 'health'],
+  ['education', 'education'],
   ['road', 'road'],
   ['rail', 'railway'],
   ['waterway', 'waterway'],
+  ['river', 'waterway'],
   ['water', 'waterway'],
   ['financial', 'financial'],
   ['bank', 'financial'],
+  ['atm', 'financial'],
   ['cultural', 'cultural'],
   ['heritage', 'cultural'],
+  ['museum', 'cultural'],
   ['populated', 'populated-place'],
   ['settlement', 'populated-place'],
   ['place', 'populated-place'],
   ['poi', 'poi'],
 ];
 
-export function detectSpatialCategory(label: string): SpatialCategory {
+function detectByLabel(label: string): SpatialCategory {
   const l = label.toLowerCase();
-  for (const [pattern, cat] of CATEGORY_PATTERNS) {
+  for (const [pattern, cat] of LABEL_PATTERNS) {
     if (l.includes(pattern)) return cat;
   }
   return 'default';
+}
+
+/**
+ * Resolve category from DB category field (authoritative) + label (refinement/fallback).
+ * Pass dbCategory from layer.category when available.
+ */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: two-stage resolution (DB + label) is inherently branchy
+export function detectSpatialCategory(
+  label: string,
+  dbCategory?: string | null
+): SpatialCategory {
+  const labelCat = detectByLabel(label);
+
+  // If label gives a specific boundary sub-type, trust it over DB
+  if (labelCat.startsWith('boundary-')) return labelCat;
+  // If label gives railway (DB says transport), trust label
+  if (labelCat === 'railway' || labelCat === 'road') {
+    if (dbCategory?.toLowerCase() === 'transport') return labelCat;
+  }
+
+  // Use DB category if available and maps to something specific
+  if (dbCategory) {
+    const mapped = DB_CATEGORY_MAP[dbCategory.toLowerCase()];
+    if (mapped) {
+      // For transport, refine with label (road vs railway)
+      if (mapped === 'road') return labelCat === 'railway' ? 'railway' : 'road';
+      // For environment, refine with label
+      if (mapped === 'waterway') return 'waterway';
+      return mapped;
+    }
+  }
+
+  return labelCat;
 }
 
 export function isBoundaryCategory(cat: SpatialCategory): boolean {
@@ -61,8 +114,7 @@ export function isBoundaryCategory(cat: SpatialCategory): boolean {
 }
 
 // ─── Boundary polygon styles ──────────────────────────────────────────────────
-// Match the LAYER_STYLE values used in NoticeStatutoryMap so all three
-// map experiences show the same boundary colours and opacities.
+// These must match NoticeStatutoryMap LAYER_STYLE exactly.
 // Ward=yellow, Municipality=orange, District=green.
 
 export const BOUNDARY_STYLES: Record<
@@ -71,10 +123,10 @@ export const BOUNDARY_STYLES: Record<
 > = {
   'boundary-ward': {
     color: '#facc15',
-    weight: 3,
+    weight: 2,
     opacity: 1,
     fillColor: '#facc15',
-    fillOpacity: 0.2,
+    fillOpacity: 0.12,
   },
   'boundary-municipality': {
     color: '#f97316',
@@ -93,7 +145,6 @@ export const BOUNDARY_STYLES: Record<
 };
 
 // ─── Road hierarchy styles ────────────────────────────────────────────────────
-// Based on OSM highway tag values present in the HOT export.
 
 const ROAD_HIERARCHY: Record<string, L.PathOptions> = {
   motorway: { color: '#e11d48', weight: 4, opacity: 0.9 },
@@ -119,12 +170,13 @@ export function roadStyle(highway: string | undefined): L.PathOptions {
 }
 
 // ─── Railway style ────────────────────────────────────────────────────────────
+// Classic railway convention: dark line with tick marks via dashArray
 
 export const RAILWAY_STYLE: L.PathOptions = {
-  color: '#44403c',
-  weight: 2.5,
+  color: '#292524',
+  weight: 3,
   opacity: 0.85,
-  dashArray: '8 4',
+  dashArray: '12 4',
 };
 
 // ─── Waterway style ───────────────────────────────────────────────────────────
@@ -132,106 +184,143 @@ export const RAILWAY_STYLE: L.PathOptions = {
 export const WATERWAY_STYLE: L.PathOptions = {
   color: '#0ea5e9',
   weight: 2,
-  opacity: 0.8,
+  opacity: 0.85,
   fillColor: '#0ea5e9',
   fillOpacity: 0.15,
 };
 
-// ─── SVG icon builders ────────────────────────────────────────────────────────
-// Each returns an HTML string. Leaflet DivIcon wraps it.
+// ─── Category colours ─────────────────────────────────────────────────────────
 
-function svgIcon(svg: string, size: number): string {
-  return `<div style="width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center">${svg}</div>`;
-}
+export const CATEGORY_COLOURS: Record<SpatialCategory, string> = {
+  school: '#7c3aed',
+  health: '#dc2626',
+  education: '#2563eb',
+  financial: '#059669',
+  cultural: '#d97706',
+  'populated-place': '#6b7280',
+  poi: '#3b82f6',
+  road: '#9ca3af',
+  railway: '#292524',
+  waterway: '#0ea5e9',
+  'boundary-ward': '#facc15',
+  'boundary-municipality': '#f97316',
+  'boundary-district': '#22c55e',
+  default: '#6b7280',
+};
+
+// ─── Icon sizes ───────────────────────────────────────────────────────────────
 
 export const ICON_SIZE: Record<SpatialCategory, number> = {
-  school: 20,
-  health: 20,
-  education: 18,
-  financial: 16,
-  cultural: 16,
-  'populated-place': 14,
-  poi: 14,
+  school: 22,
+  health: 22,
+  education: 20,
+  financial: 18,
+  cultural: 18,
+  'populated-place': 16,
+  poi: 16,
   road: 0,
   railway: 0,
   waterway: 0,
   'boundary-ward': 0,
   'boundary-municipality': 0,
   'boundary-district': 0,
-  default: 14,
+  default: 16,
 };
 
+// ─── SVG icon builders ────────────────────────────────────────────────────────
+// Lucide-style: 24×24 viewBox, 2px stroke, round caps/joins, no fill on strokes.
+
+function wrap(inner: string, size: number, colour: string): string {
+  return `<div style="width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.35))">
+    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="11" fill="${colour}" opacity="0.95"/>
+      ${inner}
+    </svg>
+  </div>`;
+}
+
+// School: building with roof peak
 function schoolSvg(colour: string): string {
-  return svgIcon(
-    `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="8" width="16" height="10" rx="1" fill="${colour}" stroke="white" stroke-width="1.5"/>
-      <polygon points="10,1 1,8 19,8" fill="${colour}" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-      <rect x="8" y="12" width="4" height="6" fill="white" opacity="0.75"/>
-      <rect x="4" y="10" width="3" height="3" fill="white" opacity="0.6"/>
-      <rect x="13" y="10" width="3" height="3" fill="white" opacity="0.6"/>
-    </svg>`,
-    20
+  return wrap(
+    `<path d="M4 10L12 4L20 10V20H15V15H9V20H4V10Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+     <rect x="10" y="15" width="4" height="5" rx="0.5" fill="white" opacity="0.8"/>
+     <rect x="6" y="11" width="3" height="3" rx="0.5" fill="white" opacity="0.7"/>
+     <rect x="15" y="11" width="3" height="3" rx="0.5" fill="white" opacity="0.7"/>`,
+    22,
+    colour
   );
 }
 
+// Health: cross in circle
 function healthSvg(colour: string): string {
-  return svgIcon(
-    `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="10" cy="10" r="9" fill="${colour}" stroke="white" stroke-width="1.5"/>
-      <rect x="8.5" y="4.5" width="3" height="11" rx="1" fill="white"/>
-      <rect x="4.5" y="8.5" width="11" height="3" rx="1" fill="white"/>
-    </svg>`,
-    20
+  return wrap(
+    `<rect x="10.5" y="6" width="3" height="12" rx="1" fill="white"/>
+     <rect x="6" y="10.5" width="12" height="3" rx="1" fill="white"/>`,
+    22,
+    colour
   );
 }
 
+// Education: open book
 function educationSvg(colour: string): string {
-  return svgIcon(
-    `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="7" width="14" height="9" rx="1" fill="${colour}" stroke="white" stroke-width="1.5"/>
-      <polygon points="9,1 1,7 17,7" fill="${colour}" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-      <rect x="7" y="11" width="4" height="5" fill="white" opacity="0.7"/>
-    </svg>`,
-    18
+  return wrap(
+    `<path d="M4 6C4 6 8 5 12 7C16 5 20 6 20 6V18C20 18 16 17 12 19C8 17 4 18 4 18V6Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+     <line x1="12" y1="7" x2="12" y2="19" stroke="white" stroke-width="1.5"/>`,
+    20,
+    colour
   );
 }
 
+// Financial: currency symbol in rounded square
 function financialSvg(colour: string): string {
-  return svgIcon(
-    `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="14" height="14" rx="3" fill="${colour}" stroke="white" stroke-width="1.5"/>
-      <text x="8" y="12" text-anchor="middle" font-size="9" font-weight="bold" fill="white" font-family="sans-serif">$</text>
-    </svg>`,
-    16
+  return wrap(
+    `<rect x="5" y="5" width="14" height="14" rx="3" stroke="white" stroke-width="1.8" fill="none"/>
+     <path d="M12 8V9M12 15V16M9.5 10.5C9.5 9.7 10.6 9 12 9C13.4 9 14.5 9.7 14.5 10.5C14.5 11.3 13.4 12 12 12C10.6 12 9.5 12.7 9.5 13.5C9.5 14.3 10.6 15 12 15C13.4 15 14.5 14.3 14.5 13.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>`,
+    18,
+    colour
   );
 }
 
+// Cultural: classical building / museum columns
 function culturalSvg(colour: string): string {
-  return svgIcon(
-    `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="8,1 15,15 1,15" fill="${colour}" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-      <rect x="6.5" y="9" width="3" height="4" fill="white" opacity="0.7"/>
-    </svg>`,
-    16
+  return wrap(
+    `<rect x="4" y="18" width="16" height="2" rx="0.5" fill="white"/>
+     <rect x="4" y="8" width="16" height="2" rx="0.5" fill="white"/>
+     <polygon points="12,4 4,8 20,8" fill="white"/>
+     <rect x="6" y="10" width="2" height="8" rx="0.5" fill="white" opacity="0.8"/>
+     <rect x="11" y="10" width="2" height="8" rx="0.5" fill="white" opacity="0.8"/>
+     <rect x="16" y="10" width="2" height="8" rx="0.5" fill="white" opacity="0.8"/>`,
+    18,
+    colour
   );
 }
 
+// Populated place: concentric circles (settlement dot)
 function populatedPlaceSvg(colour: string): string {
-  return svgIcon(
-    `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="7" cy="7" r="6" fill="${colour}" stroke="white" stroke-width="1.5"/>
-      <circle cx="7" cy="7" r="2.5" fill="white" opacity="0.8"/>
-    </svg>`,
-    14
+  return wrap(
+    `<circle cx="12" cy="12" r="5" fill="white" opacity="0.9"/>
+     <circle cx="12" cy="12" r="2.5" fill="${colour}"/>`,
+    16,
+    colour
   );
 }
 
+// Generic POI: location pin
+function poiSvg(colour: string): string {
+  return wrap(
+    `<path d="M12 4C9.24 4 7 6.24 7 9C7 12.75 12 19 12 19C12 19 17 12.75 17 9C17 6.24 14.76 4 12 4Z" stroke="white" stroke-width="1.8" fill="none"/>
+     <circle cx="12" cy="9" r="2" fill="white"/>`,
+    16,
+    colour
+  );
+}
+
+// Default: simple dot
 function defaultSvg(colour: string): string {
-  return svgIcon(
-    `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="7" cy="7" r="6" fill="${colour}" stroke="white" stroke-width="1.5"/>
-    </svg>`,
-    14
+  return wrap(
+    `<circle cx="12" cy="12" r="4" fill="white" opacity="0.9"/>`,
+    16,
+    colour
   );
 }
 
@@ -244,6 +333,7 @@ const SVG_BUILDERS: Partial<
   financial: financialSvg,
   cultural: culturalSvg,
   'populated-place': populatedPlaceSvg,
+  poi: poiSvg,
   default: defaultSvg,
 };
 
@@ -252,14 +342,14 @@ export function buildDivIcon(
   category: SpatialCategory,
   colour: string
 ): L.DivIcon {
-  const size = ICON_SIZE[category] || 14;
+  const size = ICON_SIZE[category] || 16;
   const builder = SVG_BUILDERS[category] ?? defaultSvg;
   return Leaf.divIcon({
     className: '',
     html: builder(colour),
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -(size / 2)],
+    popupAnchor: [0, -(size / 2 + 2)],
   });
 }
 
@@ -299,7 +389,6 @@ export function resolveFeatureName(
   );
 }
 
-// Keys to suppress from public popups
 const SUPPRESS_KEYS = new Set([
   'id',
   'osm_id',
@@ -311,9 +400,15 @@ const SUPPRESS_KEYS = new Set([
   'adm0_name',
   'adm1_name',
   'source',
+  'FID',
+  'Shape_Area',
+  'Shape_Leng',
+  'Shape__Area',
+  'Shape__Length',
+  'DATE',
+  'DISTRICTCO',
 ]);
 
-// Human-readable labels for known OSM/dataset property keys
 export const PROP_LABELS: Record<string, string> = {
   amenity: 'Type',
   healthcare: 'Healthcare type',
@@ -338,6 +433,13 @@ export const PROP_LABELS: Record<string, string> = {
   width: 'Width',
   tourism: 'Tourism type',
   website: 'Website',
+  WardNo: 'Ward number',
+  CAT_B: 'Municipality code',
+  MUNICNAME: 'Municipality',
+  WardLink: 'Ward ID',
+  DISTRICT: 'District',
+  Province: 'Province',
+  WardID: 'Ward ID (national)',
 };
 
 export function buildFeaturePopup(
@@ -351,7 +453,8 @@ export function buildFeaturePopup(
     'min-width:180px;max-width:280px;font-size:12px;line-height:1.5';
 
   const title = document.createElement('strong');
-  title.style.cssText = 'display:block;margin-bottom:4px;font-size:13px';
+  title.style.cssText =
+    'display:block;margin-bottom:4px;font-size:13px;color:#111827';
   title.textContent = featureName;
   content.append(title);
 
@@ -379,7 +482,7 @@ export function buildFeaturePopup(
       const row = table.insertRow();
       const kCell = row.insertCell();
       kCell.style.cssText =
-        'color:#6b7280;padding:1px 4px 1px 0;white-space:nowrap;font-size:10px;vertical-align:top';
+        'color:#6b7280;padding:1px 6px 1px 0;white-space:nowrap;font-size:10px;vertical-align:top';
       kCell.textContent = PROP_LABELS[k] ?? k;
       const vCell = row.insertCell();
       vCell.style.cssText = 'color:#111827;padding:1px 0;font-size:11px';

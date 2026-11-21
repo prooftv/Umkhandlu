@@ -106,7 +106,7 @@ export function renderSpatialMapLayers({
   for (const layer of deduplicated) {
     if (visibility[layer.id] === false || !layer.features.length) continue;
 
-    const category = detectSpatialCategory(layer.label);
+    const category = detectSpatialCategory(layer.label, layer.category);
 
     // Skip ward boundaries when the caller already renders them via addBoundaries()
     if (skipWardBoundaries && category === 'boundary-ward') continue;

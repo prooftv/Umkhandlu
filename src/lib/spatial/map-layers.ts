@@ -29,11 +29,16 @@ export type SpatialMapLayer = {
   status: 'available' | 'empty';
   requestStatus?: SpatialLayerRequestStatus;
   label: string;
+  category?: string;
   colour: string;
   weight: number;
   fillOpacity: number;
+  visibleDefault?: boolean;
+  displayOrder?: number;
+  legendLabel?: string | null;
   featureCount: number;
   returnedCount: number;
+  geometryType?: string | null;
   loadOnDemand: boolean;
   truncated: boolean;
   radiusKm: number | null;
@@ -154,6 +159,7 @@ function isSpatialMapLayer(value: unknown): value is SpatialMapLayer {
     typeof value.datasetId === 'string' &&
     (value.status === 'available' || value.status === 'empty') &&
     typeof value.label === 'string' &&
+    (typeof value.category === 'string' || value.category === undefined) &&
     typeof value.colour === 'string' &&
     typeof value.weight === 'number' &&
     Number.isFinite(value.weight) &&

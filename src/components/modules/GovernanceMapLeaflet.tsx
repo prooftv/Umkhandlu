@@ -109,12 +109,12 @@ function addBoundaries(
         } as GeoJSON.Feature,
         {
           style: {
-            // Yellow ward outline — fillOpacity near-zero so 55 stacked fills don't compound
+            // Yellow ward — matches BOUNDARY_STYLES ward style
             color: '#facc15',
             weight: 2,
-            opacity: 0.85,
+            opacity: 1,
             fillColor: '#facc15',
-            fillOpacity: 0.03,
+            fillOpacity: 0.12,
           },
         }
       );
