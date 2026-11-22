@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import { defineQuery } from 'next-sanity';
 import Breadcrumbs from '@/components/modules/Breadcrumbs';
+import EventContext from '@/components/modules/EventContext';
 import {
   DeadlineCountdownClient,
   NoticeStatutoryMapClient,
@@ -13,6 +14,7 @@ import PublicCommentForm from '@/components/modules/PublicCommentForm';
 import ShareWhatsApp from '@/components/modules/ShareWhatsApp';
 import { Badge } from '@/components/ui/Badge';
 import { serverEnv } from '@/env/serverEnv';
+import { resolveDevNoticeWeather } from '@/lib/resolveDevNoticeWeather';
 import { client } from '@/lib/sanity/client/client';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { devNoticeSlugs } from '@/lib/sanity/queries/queries';
@@ -44,8 +46,9 @@ const devNoticeQuery = defineQuery(`
     commentContact,
     publishDate,
     image,
+    weatherContext,
     documents[] { _key, title, "url": asset->url },
-    "relatedArea": relatedArea->{ name, "slug": slug.current, wardNumber, municipality, areaLevel }
+    "relatedArea": relatedArea->{ name, "slug": slug.current, wardNumber, municipality, areaLevel, "geopoint": geopoint }
   }
 `);
 
@@ -661,17 +664,44 @@ function SpatialBlock({
 async function resolveNoticeSpatial(notice: NoticeData) {
   const area = notice.relatedArea as RelatedArea | null;
   const { wardName, wardLink } = resolveWardContext(area);
-  const [wardBoundary, siteBoundary, intelligence] = await Promise.all([
-    area?.wardNumber != null && area.municipality
-      ? fetchWardBoundary(area.wardNumber, area.municipality)
-      : Promise.resolve(null),
-    notice.siteFeatureId
-      ? fetchSiteBoundary(notice.siteFeatureId)
-      : Promise.resolve(null),
-    // Use Sanity _id as the stable node reference — CC looks up by node_notice_ref
-    fetchNoticeIntelligence(notice._id),
-  ]);
-  return { area, wardName, wardLink, wardBoundary, siteBoundary, intelligence };
+  const [wardBoundary, siteBoundary, intelligence, weather] = await Promise.all(
+    [
+      area?.wardNumber != null && area.municipality
+        ? fetchWardBoundary(area.wardNumber, area.municipality)
+        : Promise.resolve(null),
+      notice.siteFeatureId
+        ? fetchSiteBoundary(notice.siteFeatureId)
+        : Promise.resolve(null),
+      fetchNoticeIntelligence(notice._id),
+      resolveDevNoticeWeather({
+        _id: notice._id,
+        publishDate: notice.publishDate ?? null,
+        commentDeadline: notice.commentDeadline ?? null,
+        weatherContext: notice.weatherContext ?? null,
+        geopoint: notice.geopoint ?? null,
+        relatedArea:
+          area && 'geopoint' in area
+            ? {
+                geopoint:
+                  (
+                    area as RelatedArea & {
+                      geopoint?: { lat: unknown; lng: unknown };
+                    }
+                  ).geopoint ?? null,
+              }
+            : null,
+      }),
+    ]
+  );
+  return {
+    area,
+    wardName,
+    wardLink,
+    wardBoundary,
+    siteBoundary,
+    intelligence,
+    weather,
+  };
 }
 
 export default async function DevelopmentNoticePage(props: Props) {
@@ -689,8 +719,20 @@ export default async function DevelopmentNoticePage(props: Props) {
     : false;
   const acceptingComments = isOpen && !deadlinePassed;
 
-  const { area, wardName, wardLink, wardBoundary, siteBoundary, intelligence } =
-    await resolveNoticeSpatial(notice);
+  const {
+    area,
+    wardName,
+    wardLink,
+    wardBoundary,
+    siteBoundary,
+    intelligence,
+    weather,
+  } = await resolveNoticeSpatial(notice);
+
+  const resolvedWeather =
+    weather ??
+    (notice.weatherContext as import('@/lib/weather').WeatherSnapshot | null) ??
+    null;
 
   const mapMunicipality = area?.municipality
     ? (MUNIC_LABELS[area.municipality] ?? area.municipality)
@@ -725,6 +767,15 @@ export default async function DevelopmentNoticePage(props: Props) {
         )}
 
         <NoticeDetails notice={notice} acceptingComments={acceptingComments} />
+
+        {resolvedWeather && (
+          <EventContext
+            weather={resolvedWeather}
+            location={null}
+            attendance={null}
+            variant="strip"
+          />
+        )}
 
         {notice.content && (
           <div className="mb-8 prose max-w-none">

@@ -11,11 +11,13 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { _id, date, lat, lng } = body as {
+  const { _id, date, lat, lng, coordinateRole, coordinateSource } = body as {
     _id: string;
     date: string;
     lat: number;
     lng: number;
+    coordinateRole?: string;
+    coordinateSource?: string;
   };
 
   if (!_id || !date || lat == null || lng == null) {
@@ -38,9 +40,13 @@ export async function POST(req: NextRequest) {
     token: writeToken,
   });
 
+  const patch = { ...weather } as Record<string, unknown>;
+  if (coordinateRole) patch.coordinateRole = coordinateRole;
+  if (coordinateSource) patch.coordinateSource = coordinateSource;
+
   await writeClient
     .patch(_id)
-    .set({ weatherContext: weather })
+    .set({ weatherContext: patch })
     .commit({ autoGenerateArrayKeys: true });
 
   return NextResponse.json({ ok: true, type: weather.type });
