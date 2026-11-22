@@ -9,10 +9,12 @@ import type {
 import { client } from '@/lib/sanity/client/client';
 
 // Control Centre public ward boundaries — authoritative MDB 2026 geometry.
-// Falls back to Sanity-managed boundaries if unavailable.
-const CONTROL_CENTRE_WARDS_URL = process.env.CONTROL_CENTRE_URL
-  ? `${process.env.CONTROL_CENTRE_URL}/api/spatial/wards`
-  : null;
+// Falls back to known production CC URL if env var is not set on this deployment.
+const CC_BASE_URL =
+  process.env.CONTROL_CENTRE_URL ||
+  process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ||
+  'https://unami-platform-core-umkhandlu.vercel.app';
+const CONTROL_CENTRE_WARDS_URL = `${CC_BASE_URL}/api/spatial/wards`;
 
 // MDB property keys — confirmed from live dataset
 // WardNo: ward number within municipality (resets per municipality)
@@ -50,7 +52,6 @@ function validateWardResponse(json: unknown): json is {
 }
 
 async function fetchControlCentreWards(): Promise<MapBoundary[]> {
-  if (!CONTROL_CENTRE_WARDS_URL) return [];
   try {
     const res = await fetch(CONTROL_CENTRE_WARDS_URL, {
       next: { revalidate: 3600 },
@@ -265,10 +266,13 @@ export default async function MapPage({ searchParams }: MapPageProps) {
 
   // Server component: CONTROL_CENTRE_URL is the reliable server-side var.
   // NEXT_PUBLIC_CONTROL_CENTRE_URL is build-time only and may be empty at runtime.
+  // CC_FALLBACK_URL is the known production URL — used when neither env var is set
+  // so that spatial layers always load on the public /map page.
+  const CC_FALLBACK_URL = 'https://unami-platform-core-umkhandlu.vercel.app';
   const controlCentreUrl =
-    process.env.CONTROL_CENTRE_URL ??
-    process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ??
-    '';
+    process.env.CONTROL_CENTRE_URL ||
+    process.env.NEXT_PUBLIC_CONTROL_CENTRE_URL ||
+    CC_FALLBACK_URL;
 
   return (
     <div className="container mx-auto py-12">
