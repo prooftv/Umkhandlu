@@ -7,6 +7,7 @@ import {
   createMap,
   loadLeafletCss,
   switchBasemap,
+  syncLayerVisibility,
 } from '@/lib/map/leaflet-utils';
 import type { SpatialMapBounds } from '@/lib/spatial/map-layers';
 import { toggleSpatialDatasetSelection } from '@/lib/spatial/map-layers';
@@ -14,6 +15,7 @@ import {
   deduplicateBoundaryLayers,
   renderSpatialMapLayers,
 } from '@/lib/spatial/render-map-layers';
+import { detectSpatialCategory } from '@/lib/spatial/spatial-icons';
 import { useSpatialMapLayers } from '@/lib/spatial/use-spatial-map-layers';
 import SpatialLayerControls from './SpatialLayerControls';
 
@@ -45,6 +47,14 @@ export interface MapBoundary {
   boundaryDate: string | null;
   boundaryPermission: string | null;
 }
+
+type BoundaryKey = 'ward' | 'municipality' | 'district';
+
+const BOUNDARY_COLOURS: Record<BoundaryKey, string> = {
+  ward: '#facc15',
+  municipality: '#f97316',
+  district: '#22c55e',
+};
 
 // Must be strictly less than both API limits: map-layers (5°) and features (2°).
 const MAX_VIEWPORT_SPAN = 1.9;
@@ -93,53 +103,19 @@ const TYPE_PATH: Record<string, string> = {
   project: '/campaigns',
 };
 
-function addBoundaries(
-  Leaf: typeof L,
-  map: L.Map,
-  boundaries: MapBoundary[],
-  onSelect: (b: MapBoundary) => void
-) {
-  for (const b of boundaries) {
-    try {
-      const layer = Leaf.geoJSON(
-        {
-          type: 'Feature',
-          geometry: b.boundary,
-          properties: { name: b.name },
-        } as GeoJSON.Feature,
-        {
-          style: {
-            // Yellow ward — matches BOUNDARY_STYLES ward style
-            color: '#facc15',
-            weight: 2,
-            opacity: 1,
-            fillColor: '#facc15',
-            fillOpacity: 0.12,
-          },
-        }
-      );
-      layer.on('click', () => onSelect(b));
-      layer.bindTooltip(b.name, { sticky: true });
-      layer.addTo(map);
-    } catch {}
-  }
-}
-
-function initMapWithBoundaries(
+function initMapWithCoverage(
   Leaf: typeof L,
   container: HTMLDivElement,
   coverage: L.LatLngBounds,
   zoom: number,
   boundaries: MapBoundary[],
-  onSelect: (b: MapBoundary) => void,
   initialWard?: string | null
 ): L.Map {
   const centre = coverage.getCenter();
   const map = createMap(Leaf, container, [centre.lat, centre.lng], zoom, {
     scrollWheelZoom: true,
   });
-  addBoundaries(Leaf, map, boundaries, onSelect);
-  // If a specific ward is deep-linked, fit to it immediately on init
+  // Fit to deep-linked ward if present, otherwise fit full coverage
   const wardMatch = initialWard
     ? boundaries.find((b) => b.slug === initialWard)
     : null;
@@ -522,6 +498,30 @@ function toggleTypeFilter(prev: Set<string>, type: string): Set<string> {
   return next;
 }
 
+function syncBoundaryLayerVisibility(
+  map: import('leaflet').Map,
+  renderedLayers: Map<string, import('leaflet').Layer>,
+  spatialLayers: { id: string; label: string; category?: string }[],
+  boundaryVisibility: Record<BoundaryKey, boolean>
+) {
+  for (const [key, layer] of renderedLayers) {
+    if (!key.startsWith('governance-map:')) continue;
+    const matchingLayer = spatialLayers.find(
+      (l) => `governance-map:${l.id}` === key
+    );
+    if (!matchingLayer) continue;
+    const cat = detectSpatialCategory(
+      matchingLayer.label,
+      matchingLayer.category
+    );
+    let bk: BoundaryKey | null = null;
+    if (cat === 'boundary-ward') bk = 'ward';
+    else if (cat === 'boundary-municipality') bk = 'municipality';
+    else if (cat === 'boundary-district') bk = 'district';
+    if (bk) syncLayerVisibility(map, layer, boundaryVisibility[bk]);
+  }
+}
+
 function buildWardMarkerGroup(
   Leaf: typeof import('leaflet'),
   records: MapRecord[],
@@ -590,6 +590,9 @@ export default function GovernanceMapLeaflet({
   const [selectedDatasetIds, setSelectedDatasetIds] = useState<
     string[] | undefined
   >(undefined);
+  const [boundaryVisibility, setBoundaryVisibility] = useState<
+    Record<BoundaryKey, boolean>
+  >({ ward: true, municipality: true, district: true });
   const {
     layers: spatialLayers,
     loading: spatialLayersLoading,
@@ -667,6 +670,10 @@ export default function GovernanceMapLeaflet({
     );
   }
 
+  function toggleBoundaryLayer(key: BoundaryKey) {
+    setBoundaryVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
   // Auto-select ward from deep link — runs after map init
   useEffect(() => {
     if (!initialWard || !mapRef.current) return;
@@ -688,13 +695,12 @@ export default function GovernanceMapLeaflet({
       const coverage = getBoundaryCoverage(Leaf, boundaries);
 
       const map = coverage.isValid()
-        ? initMapWithBoundaries(
+        ? initMapWithCoverage(
             Leaf,
             containerRef.current,
             coverage,
             zoom,
             boundaries,
-            selectArea,
             initialWard
           )
         : createMap(Leaf, containerRef.current, [-27.75, 29.93], zoom, {
@@ -724,7 +730,7 @@ export default function GovernanceMapLeaflet({
       mapRef.current = null;
       renderedLayersRef.current.clear();
     };
-  }, [zoom, selectArea]);
+  }, [zoom]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -737,12 +743,21 @@ export default function GovernanceMapLeaflet({
         visibility: spatialVisibility,
         renderedLayers: renderedLayersRef.current,
         prefix: 'governance-map:',
-        // Ward boundaries are already rendered by addBoundaries() from the CC
-        // wards API. Skip the MDB Wards spatial layer to avoid double-rendering.
-        skipWardBoundaries: true,
       });
     });
   }, [mapReady, spatialLayers, spatialVisibility]);
+
+  // Sync boundary layer visibility — mirrors NoticeStatutoryMap syncLayerVisibility pattern.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!mapReady || !map) return;
+    syncBoundaryLayerVisibility(
+      map,
+      renderedLayersRef.current,
+      spatialLayers,
+      boundaryVisibility
+    );
+  }, [mapReady, boundaryVisibility, spatialLayers]);
 
   // Basemap switcher — replaces tile layer without affecting spatial overlays
   useEffect(() => {
@@ -755,6 +770,7 @@ export default function GovernanceMapLeaflet({
 
   // Ward centroid markers — records/notices/campaigns matched by ward number.
   // Markers are labelled as approximate ward references, not site locations.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: boundaries read once at marker build time
   useEffect(() => {
     const map = mapRef.current;
     if (!mapReady || !map || !boundaries.length || !records.length) return;
@@ -769,7 +785,7 @@ export default function GovernanceMapLeaflet({
       group.addTo(map);
       renderedLayersRef.current.set(KEY, group);
     });
-  }, [mapReady, records, boundaries]);
+  }, [mapReady, records]);
 
   const panelContent = (
     <div className="flex flex-col h-full bg-white">
@@ -883,35 +899,49 @@ export default function GovernanceMapLeaflet({
           ref={containerRef}
           className="absolute inset-0 overflow-hidden border border-gray-200 shadow-sm"
         />
+        {/* Boundary toggle bar — top-right, matches NoticeStatutoryMap LayerToggleBar */}
+        {mapReady && (
+          <div className="absolute top-3 right-3 z-[1000] flex flex-col gap-1">
+            {[
+              { key: 'ward' as BoundaryKey, label: 'Ward' },
+              { key: 'municipality' as BoundaryKey, label: 'Municipality' },
+              { key: 'district' as BoundaryKey, label: 'District' },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => toggleBoundaryLayer(item.key)}
+                className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium bg-white/95 border shadow-sm transition-opacity ${
+                  boundaryVisibility[item.key]
+                    ? 'border-gray-200 opacity-100'
+                    : 'border-gray-100 opacity-50'
+                }`}
+              >
+                <span
+                  className="shrink-0 w-2.5 h-2.5 rounded-sm border"
+                  style={{
+                    background: boundaryVisibility[item.key]
+                      ? BOUNDARY_COLOURS[item.key]
+                      : 'transparent',
+                    borderColor: BOUNDARY_COLOURS[item.key],
+                  }}
+                />
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
         {mapReady && (
           <SpatialLayerControls
-            layers={deduplicateBoundaryLayers(spatialLayers)}
+            layers={deduplicateBoundaryLayers(spatialLayers).filter((l) => {
+              const cat = detectSpatialCategory(l.label, l.category);
+              return !cat.startsWith('boundary-');
+            })}
             visibility={spatialVisibility}
             onToggle={toggleSpatialLayer}
             error={spatialLayersError}
             onRetry={retrySpatialLayers}
           />
-        )}
-        {/* Boundary legend — bottom-left, matches NoticeStatutoryMap legend */}
-        {mapReady && (
-          <div className="absolute left-3 bottom-8 z-[1000] flex flex-col gap-1 bg-white/95 rounded-lg border border-gray-200 shadow-sm px-2.5 py-2">
-            <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">
-              Boundaries
-            </p>
-            {[
-              { colour: '#facc15', label: 'Ward' },
-              { colour: '#f97316', label: 'Municipality' },
-              { colour: '#22c55e', label: 'District' },
-            ].map(({ colour, label }) => (
-              <div key={label} className="flex items-center gap-1.5">
-                <span
-                  className="inline-block w-4 h-2 rounded-sm border"
-                  style={{ background: colour, borderColor: colour }}
-                />
-                <span className="text-[10px] text-gray-600">{label}</span>
-              </div>
-            ))}
-          </div>
         )}
         {/* Basemap switcher — bottom-right, above attribution */}
         {mapReady && (
