@@ -38,7 +38,15 @@ const q = `{
     "updatedAt": _updatedAt,
     "geoRefLat": coalesce(siteGeopoint.lat, geographicAssociations[0].area->geopoint.lat),
     "geoRefLng": coalesce(siteGeopoint.lng, geographicAssociations[0].area->geopoint.lng),
-    "geoRefMunicipality": geographicAssociations[0].area->municipality
+    "geoRefMunicipality": geographicAssociations[0].area->municipality,
+    "geoRefCoordinateRole": select(
+      defined(siteGeopoint) => "site",
+      defined(geographicAssociations[0].area->geopoint) => "area-reference"
+    ),
+    "geoRefCoordinateSource": select(
+      defined(siteGeopoint) => "Sanity campaign.siteGeopoint",
+      defined(geographicAssociations[0].area->geopoint) => "Sanity campaign.geographicAssociations[0].area.geopoint"
+    )
   }
 }`;
 
@@ -52,6 +60,8 @@ type RawCampaign = {
   geoRefLat?: number | null;
   geoRefLng?: number | null;
   geoRefMunicipality?: string | null;
+  geoRefCoordinateRole?: 'site' | 'area-reference' | null;
+  geoRefCoordinateSource?: string | null;
 };
 
 export async function GET(request: NextRequest) {
@@ -83,6 +93,8 @@ export async function GET(request: NextRequest) {
         item.geoRef = {
           latitude: r.geoRefLat,
           longitude: r.geoRefLng,
+          coordinateRole: r.geoRefCoordinateRole ?? undefined,
+          coordinateSource: r.geoRefCoordinateSource ?? undefined,
           district: 'Amajuba',
           municipality: r.geoRefMunicipality ?? undefined,
         };

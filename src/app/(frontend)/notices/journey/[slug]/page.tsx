@@ -4,11 +4,10 @@ import { notFound } from 'next/navigation';
 import { NoticeJourney } from '@/components/modules/GovernanceJourney';
 import type { LineageRecord as LR } from '@/components/modules/LineageNode';
 import PrintButton from '@/components/modules/PrintButton';
-import { clientEnv } from '@/env/clientEnv';
+import { resolveWeatherLine } from '@/lib/resolveWeatherLine';
 import { sanityFetch } from '@/lib/sanity/client/live';
 import { noticeLineageQuery } from '@/lib/sanity/queries/queries';
 import { SITE_NAME } from '@/lib/siteConfig';
-import { fetchWeather } from '@/lib/weather';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -30,33 +29,6 @@ function fmt(date: string | null) {
     month: 'long',
     year: 'numeric',
   });
-}
-
-async function resolveWeatherLine(
-  notice: NonNullable<
-    Awaited<ReturnType<typeof sanityFetch<typeof noticeLineageQuery>>>['data']
-  >
-): Promise<string | null> {
-  const geo = notice.relatedArea?.geopoint as
-    | { lat: number; lng: number }
-    | null
-    | undefined;
-  if (!notice.date || !geo?.lat || !geo?.lng) return null;
-  const w = await fetchWeather(notice.date, geo.lat, geo.lng);
-  if (!w) return null;
-  if (!notice.weatherContext) {
-    fetch(`${clientEnv.NEXT_PUBLIC_SITE_URL}/api/weather-patch`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        _id: notice._id,
-        date: notice.date,
-        lat: geo.lat,
-        lng: geo.lng,
-      }),
-    }).catch(() => null);
-  }
-  return `${w.temperatureCelsius}°C · ${w.condition}${w.type === 'forecast' ? ' (forecast)' : ' (recorded)'}`;
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
