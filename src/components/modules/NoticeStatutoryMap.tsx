@@ -858,10 +858,47 @@ function WardDemographicsPanel({
   );
 }
 
+function ProximityRows({
+  proximity,
+}: {
+  proximity: NoticeContextResponse['proximity'];
+}) {
+  return (
+    <>
+      {proximity.traditionalAreas.status !== 'not-applicable' && (
+        <FindingRow
+          label="Traditional authority / community area"
+          result={proximity.traditionalAreas}
+        />
+      )}
+      {proximity.licensedPremises.status !== 'not-applicable' && (
+        <FindingRow
+          label="Existing licensed premises"
+          result={proximity.licensedPremises}
+        />
+      )}
+      {proximity.schools.status !== 'not-applicable' && (
+        <FindingRow label="Learning institutions" result={proximity.schools} />
+      )}
+      {proximity.religiousInstitutions.status !== 'not-applicable' && (
+        <FindingRow
+          label="Religious institutions"
+          result={proximity.religiousInstitutions}
+        />
+      )}
+      {proximity.recreationFacilities.status !== 'not-applicable' && (
+        <FindingRow
+          label="Public recreation facilities"
+          result={proximity.recreationFacilities}
+        />
+      )}
+    </>
+  );
+}
+
 function FindingsPanel({
   loading,
   context,
-  noticeType,
   lat,
   lng,
   name,
@@ -872,7 +909,6 @@ function FindingsPanel({
 }: {
   loading: boolean;
   context: NoticeContextResponse | null;
-  noticeType: string;
   lat: number;
   lng: number;
   name: string;
@@ -952,7 +988,9 @@ function FindingsPanel({
           </div>
         )}
       </div>
-      {noticeType === 'liquor' && (
+      {Object.values(context.proximity).some(
+        (r) => r.status !== 'not-applicable'
+      ) && (
         <div className="px-4 py-4">
           <SectionHeading>
             Proximity context (statutory considerations)
@@ -962,26 +1000,7 @@ function FindingsPanel({
               {context.proximityRadiusNote}
             </p>
           )}
-          <FindingRow
-            label="Traditional authority / community area"
-            result={context.proximity.traditionalAreas}
-          />
-          <FindingRow
-            label="Existing licensed premises"
-            result={context.proximity.licensedPremises}
-          />
-          <FindingRow
-            label="Learning institutions"
-            result={context.proximity.schools}
-          />
-          <FindingRow
-            label="Religious institutions"
-            result={context.proximity.religiousInstitutions}
-          />
-          <FindingRow
-            label="Public recreation facilities"
-            result={context.proximity.recreationFacilities}
-          />
+          <ProximityRows proximity={context.proximity} />
         </div>
       )}
       <div className="px-4 py-4">
@@ -1335,7 +1354,6 @@ export default function NoticeStatutoryMap({
           <FindingsPanel
             loading={loading}
             context={context}
-            noticeType={noticeType}
             lat={lat}
             lng={lng}
             name={name}
@@ -1476,7 +1494,6 @@ export default function NoticeStatutoryMap({
         <FindingsPanel
           loading={loading}
           context={context}
-          noticeType={noticeType}
           lat={lat}
           lng={lng}
           name={name}
