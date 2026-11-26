@@ -247,21 +247,31 @@ async function resolveWeather(
   hasStoredContext: boolean
 ) {
   if (!date) return null;
-  const lat =
-    typeof geo?.lat === 'number' && Number.isFinite(geo.lat)
-      ? geo.lat
-      : NODE_GEOPOINT.lat;
-  const lng =
-    typeof geo?.lng === 'number' && Number.isFinite(geo.lng)
-      ? geo.lng
-      : NODE_GEOPOINT.lng;
+  const hasAreaGeo =
+    typeof geo?.lat === 'number' &&
+    Number.isFinite(geo.lat) &&
+    typeof geo?.lng === 'number' &&
+    Number.isFinite(geo.lng);
+  const lat = hasAreaGeo ? (geo?.lat as number) : NODE_GEOPOINT.lat;
+  const lng = hasAreaGeo ? (geo?.lng as number) : NODE_GEOPOINT.lng;
+  const coordinateRole = hasAreaGeo ? 'area-reference' : 'node-fallback';
+  const coordinateSource = hasAreaGeo
+    ? 'Sanity relatedArea.geopoint'
+    : 'NODE_GEOPOINT (Newcastle council fallback)';
   const weather = await fetchWeather(date, lat, lng);
   if (!weather) return null;
   if (!hasStoredContext) {
     fetch(`${clientEnv.NEXT_PUBLIC_SITE_URL}/api/weather-patch`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ _id, date, lat, lng }),
+      body: JSON.stringify({
+        _id,
+        date,
+        lat,
+        lng,
+        coordinateRole,
+        coordinateSource,
+      }),
     }).catch(() => null);
   }
   return weather;

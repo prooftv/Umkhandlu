@@ -3,24 +3,10 @@ import { fetchWeather } from '@/lib/weather';
 
 type GeoInput = { lat: unknown; lng: unknown } | null | undefined;
 
-/**
- * Returns true only when value is a finite number.
- * Correctly handles 0, rejects null/undefined/NaN/Infinity.
- */
 function isFiniteCoord(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
-/**
- * Resolve a weather summary line for a notice lineage/journey print page.
- *
- * Uses relatedArea.geopoint when both coordinates are finite numbers.
- * Returns null (no weather line) when date is absent or coordinates are
- * missing or non-finite — including when lat or lng is exactly 0.
- *
- * D-02 fix: replaced falsy guards (!geo?.lat, !geo?.lng) with
- * Number.isFinite() checks so that valid zero coordinates are not rejected.
- */
 export async function resolveWeatherLine(notice: {
   _id: string;
   date: string | null | undefined;
@@ -42,6 +28,8 @@ export async function resolveWeatherLine(notice: {
         date: notice.date,
         lat: geo.lat,
         lng: geo.lng,
+        coordinateRole: 'area-reference',
+        coordinateSource: 'Sanity relatedArea.geopoint',
       }),
     }).catch(() => null);
   }
