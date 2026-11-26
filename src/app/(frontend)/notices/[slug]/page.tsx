@@ -164,7 +164,10 @@ function NoticeLineage({
   );
 }
 
-type Geopoint = { lat?: number; lng?: number } | null | undefined;
+type Geopoint =
+  | { _type?: string; lat?: number; lng?: number }
+  | null
+  | undefined;
 
 async function resolveWeather(
   _id: string,
