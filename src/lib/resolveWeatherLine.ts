@@ -1,7 +1,10 @@
 import { clientEnv } from '@/env/clientEnv';
 import { fetchWeather } from '@/lib/weather';
 
-type GeoInput = { lat: unknown; lng: unknown } | null | undefined;
+type GeoInput =
+  | { _type?: string; lat: unknown; lng: unknown }
+  | null
+  | undefined;
 
 function isFiniteCoord(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
